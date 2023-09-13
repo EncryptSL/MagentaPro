@@ -1,0 +1,63 @@
+prefix: '<gray>(<green>MAGENTAPRO<gray>)<reset>'
+
+#########################################################
+#                     MAGENTA PRO                       #
+#               DEVELOPED BY ENCRYPTSL                  #
+#########################################################
+database:
+  host: localhost:3306
+  username: root
+  password: root
+  database: magenta
+
+
+#########################################################
+#                       HOMES                           #
+# permission: magenta.homes.<group>                     #
+#########################################################
+homes:
+  groups:
+    player: 3
+    vip: 4
+    moderator: -1
+    admin: -1
+
+#########################################################
+#                       WARPS                           #
+# permission: magenta.warps.<group>                     #
+#########################################################
+warps:
+  groups:
+    player: 3
+    vip: 4
+    moderator: -1
+    admin: -1
+
+
+#########################################################
+#                   MAGENTA PRO                         #
+#               DEVELOPED BY ENCRYPTSL                  #
+#########################################################
+chat:
+  filters:
+    antispam:
+      action: [notify, kick]
+      similarity: 80
+      control: true
+    advanced_filter:
+      action: [notify, kick]
+      control: true
+      ip_regex: '\d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}'
+      web_regex:
+        - '(http\:\/\/|https\:\/\/)?([a-z0-9\-\s\.\W\s\S\_]*\.)+[a-z0-9\s][a-z0-9\-\s\.]*'
+        - '^(.* + \W|\d|_|.*|)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+( .*)?$'
+        - '([a-z\_\S]*[\#\.\$\@\!|,|\_|\€]+(\w{2,4}))'
+      whitelist:
+        - https://youtube.com
+    swear:
+      action: [replace]
+      control: true
+    capslock:
+      action: [notify]
+      sensitive: 15
+      control: true

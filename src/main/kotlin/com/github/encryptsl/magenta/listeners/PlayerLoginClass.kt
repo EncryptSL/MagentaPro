@@ -1,0 +1,45 @@
+package com.github.encryptsl.magenta.listeners
+
+import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.PlayerAccount
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerLoginEvent
+
+class PlayerLoginClass(private val magenta: Magenta) : Listener {
+
+    @EventHandler
+    fun onLogin(event: PlayerLoginEvent) {
+        val player = event.player
+        val playerAccount = PlayerAccount(magenta, player.uniqueId)
+        val account = playerAccount.getAccount()
+
+        if (player.hasPlayedBefore()) {
+            account.set("timestamps.login", System.currentTimeMillis())
+            playerAccount.save()
+            playerAccount.reload()
+            return
+        }
+
+        account.set("teleportenabled", true)
+        account.set("godmode", false)
+        account.set("jailed", false)
+        account.set("ip-address", player.address.address.hostAddress)
+        account.set("socialspy", false)
+        account.set("timestamps.lastteleport", 0)
+        account.set("timestamps.lastheal", 0)
+        account.set("timestamps.jail", 0)
+        account.set("timestamps.onlinejail", 0)
+        account.set("timestamps.logout", 0)
+        account.set("timestamps.login", System.currentTimeMillis())
+        account.set("lastlocation.world-name", player.world.name)
+        account.set("lastlocation.x", player.location.x)
+        account.set("lastlocation.y", player.location.y)
+        account.set("lastlocation.z", player.location.z)
+        account.set("lastlocation.yaw", player.location.yaw)
+        account.set("lastlocation.pitch", player.location.pitch)
+        playerAccount.save()
+        playerAccount.reload()
+    }
+
+}
