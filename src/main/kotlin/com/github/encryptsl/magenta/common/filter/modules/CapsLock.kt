@@ -2,9 +2,8 @@ package com.github.encryptsl.magenta.common.filter.modules
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.AbstractChatFilter
-import com.github.encryptsl.magenta.api.chat.Violations
+import com.github.encryptsl.magenta.api.chat.enums.Violations
 import io.papermc.paper.event.player.AsyncChatEvent
-import jdk.internal.joptsimple.internal.Messages.message
 import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 
@@ -27,7 +26,7 @@ class CapsLock(private val magenta: Magenta, private val violations: Violations)
 
         if (count > sensitive.getInt("sensitive", 15)) {
             if (!sensitive.getBoolean("control")) {
-                filterManager().action(player, event, magenta.locale.getProperty("magenta.filter.caps").toString().format(sensitive.getInt("sensitive"), count), null, null)
+                filterManager().action(player, event, magenta.locale.getMessage("magenta.filter.caps").toString().format(sensitive.getInt("sensitive"), count), null, null)
                 event.isCancelled = true
             } else {
                 event.renderer { _, _, message, _ -> message.replaceText(TextReplacementConfig.builder().match("[a-zA-Z]+").replacement(chatMessage.lowercase()).build()) }

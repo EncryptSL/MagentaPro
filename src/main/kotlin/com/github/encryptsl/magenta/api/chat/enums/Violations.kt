@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.chat
+package com.github.encryptsl.magenta.api.chat.enums
 
 enum class Violations {
     SPAM,

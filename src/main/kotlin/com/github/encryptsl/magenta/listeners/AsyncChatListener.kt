@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.chat.Violations
+import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.common.filter.modules.AdvancedFilter
 import com.github.encryptsl.magenta.common.filter.modules.AntiSpam
 import com.github.encryptsl.magenta.common.filter.modules.CapsLock
