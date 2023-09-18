@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.common.config.locale
+package com.github.encryptsl.magenta.api.config.locale
 
 import com.github.encryptsl.magenta.Magenta
 import java.io.FileInputStream

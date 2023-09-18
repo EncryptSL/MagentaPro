@@ -26,7 +26,7 @@ class CapsLock(private val magenta: Magenta, private val violations: Violations)
 
         if (count > sensitive.getInt("sensitive", 15)) {
             if (!sensitive.getBoolean("control")) {
-                filterManager().action(player, event, magenta.locale.getMessage("magenta.filter.caps").toString().format(sensitive.getInt("sensitive"), count), null, null)
+                punishAction().punish(player, event, magenta.localeConfig.getMessage("magenta.filter.caps").toString().format(sensitive.getInt("sensitive"), count), null, null)
                 event.isCancelled = true
             } else {
                 event.renderer { _, _, message, _ -> message.replaceText(TextReplacementConfig.builder().match("[a-zA-Z]+").replacement(chatMessage.lowercase()).build()) }

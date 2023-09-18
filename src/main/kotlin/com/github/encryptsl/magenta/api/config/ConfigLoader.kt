@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.common.config
+package com.github.encryptsl.magenta.api.config
 
 import com.github.encryptsl.magenta.Magenta
 import java.io.File

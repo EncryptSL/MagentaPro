@@ -6,6 +6,8 @@ import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -15,41 +17,21 @@ class GmCmd(private val magenta: Magenta) {
 
     @CommandMethod("gamemode|gm <mode>")
     @CommandPermission("magenta.gamemode")
-    fun onGamemodeSelf(player: Player, @Argument(value = "mode", suggestions = "modes") gameMode: GameMode) {
-        when(gameMode) {
-            GameMode.CREATIVE -> {
-                player.gameMode = gameMode
-            }
-            GameMode.SURVIVAL -> {
-                player.gameMode = gameMode
-            }
-            GameMode.ADVENTURE -> {
-                player.gameMode = gameMode
-            }
-            GameMode.SPECTATOR -> {
-                player.gameMode = gameMode
-            }
-        }
+    fun onGameModeSelf(player: Player, @Argument(value = "mode", suggestions = "modes") gameMode: GameMode) {
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("mode", gameMode.name))))
+        player.gameMode = gameMode
     }
 
     @CommandMethod("gamemode|gm <target> <mode>")
     @CommandPermission("magenta.gamemode.other")
-    fun onGamemodeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "online") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
-        when(gameMode) {
-            GameMode.CREATIVE -> {
-                commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
-                target.gameMode = gameMode
-            }
-            GameMode.SURVIVAL -> {
-                target.gameMode = gameMode
-            }
-            GameMode.ADVENTURE -> {
-                target.gameMode = gameMode
-            }
-            GameMode.SPECTATOR -> {
-                target.gameMode = gameMode
-            }
-        }
+    fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "online") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
+
+        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("mode", gameMode.name))))
+        target.gameMode = gameMode
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.to"), TagResolver.resolver(
+            Placeholder.parsed("player", target.name),
+            Placeholder.parsed("mode", gameMode.name)
+        )))
 
     }
 }

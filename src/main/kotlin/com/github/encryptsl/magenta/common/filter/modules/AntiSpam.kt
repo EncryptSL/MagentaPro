@@ -27,7 +27,7 @@ class AntiSpam(val magenta: Magenta, private val violations: Violations) : Abstr
             spam[uuid] = message
 
         if (algorithms.checkSimilarity(message, spam[uuid].toString()) > magenta.config.getInt("chat.filters.antispam.similarity")) {
-            filterManager().action(player, event, magenta.locale.getMessage("magenta.filter.antispam"), null, null)
+            punishAction().punish(player, event, magenta.localeConfig.getMessage("magenta.filter.antispam"), null, null)
             magenta.server.asyncScheduler.runDelayed(magenta, {
                 spam.remove(uuid)
             }, 5, TimeUnit.SECONDS)

@@ -2,14 +2,14 @@ package com.github.encryptsl.magenta.api.chat
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.common.filter.FilterManager
+import com.github.encryptsl.magenta.common.filter.ChatPunishManager
 
 abstract class AbstractChatFilter(magenta: Magenta, violations: Violations) : Chat {
 
-    private val filterManager = FilterManager(magenta, violations)
+    private val chatPunishManager = ChatPunishManager(magenta, violations)
 
-    override fun filterManager(): FilterManager {
-        return filterManager
+    override fun punishAction(): ChatPunishManager {
+        return chatPunishManager
     }
 
 }
