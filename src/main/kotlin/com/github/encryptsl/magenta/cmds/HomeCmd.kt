@@ -14,7 +14,7 @@ class HomeCmd {
 
     @CommandMethod("tp <home>")
     @CommandPermission("magenta.home.tp")
-    fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String?) {
+    fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
 
     }
 
@@ -30,9 +30,9 @@ class HomeCmd {
 
     }
 
-    @CommandMethod("rename <oldname> <newname>")
+    @CommandMethod("rename <oldName> <newName>")
     @CommandPermission("magenta.home.rename")
-    fun onRenameHome(player: Player, @Argument(value = "oldname") oldName: String, @Argument(value = "newname") newName: String) {
+    fun onRenameHome(player: Player, @Argument(value = "oldName") oldName: String, @Argument(value = "newName") newName: String) {
 
     }
 
