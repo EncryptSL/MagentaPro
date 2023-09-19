@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta.api.database
 
-interface Database {
+interface DatabaseProvider {
     /**
      * This method connecting to database
      * @param jdbcHost - Host of database, or path to file.
