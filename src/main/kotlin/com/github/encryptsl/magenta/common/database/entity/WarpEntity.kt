@@ -2,7 +2,8 @@ package com.github.encryptsl.magenta.common.database.entity
 
 data class WarpEntity(
     val owner: String,
-    val homeName: String,
+    val uuuid: String,
+    val warpName: String,
     val world: String,
     val x: Int,
     val y: Int,

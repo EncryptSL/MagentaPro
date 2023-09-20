@@ -5,6 +5,9 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.KitManager
+import com.github.encryptsl.magenta.api.events.kit.KitAdminGiveEvent
+import com.github.encryptsl.magenta.api.events.kit.KitRecieveEvent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -14,13 +17,13 @@ class KitCmd(private val magenta: Magenta) {
     @CommandMethod("kit <kit>")
     @CommandPermission("magenta.kit")
     fun onKit(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-
+        magenta.pluginManager.callEvent(KitRecieveEvent(player, kit, magenta.kitConfig.getKit().getLong("kits.$kit.delay"), KitManager(magenta)))
     }
 
     @CommandMethod("kit <player> <kit>")
     @CommandPermission("magenta.kit.other")
-    fun onKitOther(commandSender: CommandSender, player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-
+    fun onKitOther(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
+        magenta.pluginManager.callEvent(KitAdminGiveEvent(commandSender, target, kit, KitManager(magenta)))
     }
 
     @CommandMethod("createkit <kit>")

@@ -17,6 +17,9 @@ class CapsLock(private val magenta: Magenta, private val violations: Violations)
 
         if (!magenta.config.getBoolean("chat.filters.${violations.name}.control")) return
 
+        if (player.hasPermission("magenta.chat.filter.bypass.capslock") || player.hasPermission("magenta.chat.filter.bypass.*"))
+            return
+
         var count = 0
         for (s in chatMessage.toCharArray()) {
             if (Character.isUpperCase(s)) {

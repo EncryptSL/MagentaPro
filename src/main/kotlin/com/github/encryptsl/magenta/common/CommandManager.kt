@@ -60,6 +60,17 @@ class CommandManager(private val magenta: Magenta) {
                 }
                 .mapNotNull { it.name }
         }
+        commandManager.parserRegistry().registerSuggestionProvider("kits") { _, input ->
+            magenta.kitConfig.getKit().getConfigurationSection("kits")!!.getKeys(false).toList().filter { p ->
+                p.startsWith(input)
+            }
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
+            magenta.homeModel.getHomes().filter { a -> a.uuid == Bukkit.getOfflinePlayer(sender.sender.name).uniqueId.toString() }.map { s -> s.homeName }
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
+            magenta.warpModel.getWarps().map { s -> s.warpName }
+        }
     }
 
     fun registerCommands() {

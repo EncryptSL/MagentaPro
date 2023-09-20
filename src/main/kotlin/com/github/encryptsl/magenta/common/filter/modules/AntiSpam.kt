@@ -21,9 +21,12 @@ class AntiSpam(val magenta: Magenta, private val violations: Violations) : Abstr
         val uuid = player.uniqueId
         val message = PlainTextComponentSerializer.plainText().serialize(event.message())
 
+        if (player.hasPermission("magenta.chat.filter.bypass.antispam") || player.hasPermission("magenta.chat.filter.bypass.*"))
+            return
+
         if (!magenta.config.getBoolean("chat.filters.${violations.name}.control")) return
 
-        if (!spam.containsKey(uuid) || !spam.get(uuid).equals(message, true))
+        if (!spam.containsKey(uuid) || !spam[uuid].equals(message, true))
             spam[uuid] = message
 
         if (algorithms.checkSimilarity(message, spam[uuid].toString()) > magenta.config.getInt("chat.filters.antispam.similarity")) {

@@ -1,0 +1,19 @@
+name: ${name}
+main: com.github.encryptsl.magenta.Magenta
+version: ${version}
+api-version: 1.13
+
+prefix: MagentaPro
+author: EncryptSL
+website: https://encryptsl.github.io/
+
+load: STARTUP
+libraries:
+  - com.zaxxer:HikariCP:5.0.1
+  - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0
+  - org.jetbrains.exposed:exposed-core:0.43.0
+  - org.jetbrains.exposed:exposed-jdbc:0.43.0
+
+description: ${description}
+
+permissions:

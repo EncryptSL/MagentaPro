@@ -6,7 +6,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class KitRecieveEvent(player: Player, val kitName: String, val kitManager: KitManager) : Event(), Cancellable {
+class KitRecieveEvent(val player: Player, val kitName: String, val cooldown: Long, val kitManager: KitManager) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

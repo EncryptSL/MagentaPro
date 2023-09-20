@@ -14,13 +14,16 @@ class AdvancedFilter(private val magenta: Magenta, private val violations: Viola
 
         if (!magenta.config.getBoolean("chat.filters.${violations.name}.control")) return
 
+        if (player.hasPermission("magenta.chat.filter.bypass.advanced.filter") || player.hasPermission("magenta.chat.filter.bypass.*"))
+            return
+
         message.split(" ").forEach { messages ->
             if (messages.matches(Regex(magenta.config.getConfigurationSection("chat.filters.${violations.name}")?.getString("ip_regex").toString()))) {
                 punishAction().punish(player, event, magenta.localeConfig.getMessage("magenta.filter.ip_filter"), null, null)
                 event.isCancelled = true
                 return
             }
-            magenta.config.getConfigurationSection("chat.filters.${violations.name}")?.getStringList("web_regex")?.forEach { it ->
+            magenta.config.getConfigurationSection("chat.filters.${violations.name}")?.getStringList("web_regex")?.forEach {
                 if (messages.matches(Regex(it))) {
                     punishAction().punish(player, event, magenta.localeConfig.getMessage("magenta.filter.web_filter"), null, null)
                     event.isCancelled = true

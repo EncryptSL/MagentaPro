@@ -21,6 +21,7 @@ class Magenta : JavaPlugin() {
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta(this) }
     val homeModel: HomeModel by lazy { HomeModel() }
     val warpModel: WarpModel by lazy { WarpModel() }
+    val pluginManager = server.pluginManager
 
     override fun onLoad() {
         configLoader

@@ -1,8 +1,7 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.api.database.WarpSQL
-import com.github.encryptsl.magenta.common.database.entity.HomeEntity
-import com.github.encryptsl.magenta.common.database.tables.HomeTable
+import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.tables.WarpTable
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -60,9 +59,9 @@ class WarpModel : WarpSQL {
         }
     }
 
-    override fun getWarps(): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().map { r ->
-            HomeEntity(
+    override fun getWarps(): List<WarpEntity> {
+        return transaction { WarpTable.selectAll().map { r ->
+            WarpEntity(
                 r[WarpTable.username],
                 r[WarpTable.uuid],
                 r[WarpTable.warpName],
