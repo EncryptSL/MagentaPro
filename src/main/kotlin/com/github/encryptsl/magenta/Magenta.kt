@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta
 
+import com.github.encryptsl.magenta.api.KitConfig
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
@@ -16,6 +17,7 @@ class Magenta : JavaPlugin() {
     val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     val teamIntegration: TeamIntegration by lazy { TeamIntegration() }
     val localeConfig: Locale by lazy { Locale(this) }
+    val kitConfig: KitConfig by lazy { KitConfig(this) }
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta(this) }
     val homeModel: HomeModel by lazy { HomeModel() }
     val warpModel: WarpModel by lazy { WarpModel() }
@@ -23,6 +25,7 @@ class Magenta : JavaPlugin() {
     override fun onLoad() {
         configLoader
             .createFromResources("locale/cs_cz.yml", this)
+            .createFromResources("kits.yml", this)
             .createFromResources("config.yml", this)
         localeConfig.loadLocale("locale/cs_cz.properties")
         DatabaseConnector().connect(
