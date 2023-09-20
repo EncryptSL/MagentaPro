@@ -8,7 +8,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.attribute.Attribute
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

@@ -1,8 +1,6 @@
 package com.github.encryptsl.magenta.common.utils
 
-import com.github.encryptsl.magenta.Magenta
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Scoreboard

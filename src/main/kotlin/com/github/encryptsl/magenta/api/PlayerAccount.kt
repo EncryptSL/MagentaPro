@@ -2,9 +2,8 @@ package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.entity.Player
 import java.io.File
-import java.util.UUID
+import java.util.*
 
 class PlayerAccount(private val magenta: Magenta, private val uuid: UUID) {
 

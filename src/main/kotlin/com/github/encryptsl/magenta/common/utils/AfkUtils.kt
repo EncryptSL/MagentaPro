@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.expire
 import org.bukkit.entity.Player
 import java.util.*
-import kotlin.collections.HashMap
 
 class AfkUtils(private val magenta: Magenta) {
 

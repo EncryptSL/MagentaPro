@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerLoginEvent
 
-class PlayerLoginClass(private val magenta: Magenta) : Listener {
+class PlayerLoginListener(private val magenta: Magenta) : Listener {
 
     @EventHandler
     fun onLogin(event: PlayerLoginEvent) {

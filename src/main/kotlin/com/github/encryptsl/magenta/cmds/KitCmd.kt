@@ -4,11 +4,12 @@ import cloud.commandframework.annotations.Argument
 import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
+import com.github.encryptsl.magenta.Magenta
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 @CommandDescription("Provided by plugin MagentaPro")
-class KitCmd {
+class KitCmd(private val magenta: Magenta) {
 
     @CommandMethod("kit <kit>")
     @CommandPermission("magenta.kit")

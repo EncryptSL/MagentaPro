@@ -5,10 +5,9 @@ prefix: '<gray>(<green>MAGENTAPRO<gray>)<reset>'
 #               DEVELOPED BY ENCRYPTSL                  #
 #########################################################
 database:
-  host: localhost:3306
+  host: 'jdbc:sqlite:plugins/LiteEco/database.db'
   username: root
   password: root
-  database: magenta
 
 
 #########################################################
@@ -32,6 +31,9 @@ warps:
     vip: 4
     moderator: -1
     admin: -1
+  whitelist:
+    - world
+    - world_nether
 
 
 #########################################################

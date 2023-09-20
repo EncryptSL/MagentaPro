@@ -1,13 +1,12 @@
-package com.github.encryptsl.magenta.api.events
+package com.github.encryptsl.magenta.api.events.warp
 
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class HomeRenameEvent(val player: Player, val fromHomeName: String, val toHomeName: String) : Event(), Cancellable {
+class WarpTeleportEvent(val player: Player, val homeName: String) : Event(), Cancellable {
     private var isCancelled: Boolean = false
-
     override fun getHandlers(): HandlerList
             = handlerList
     override fun isCancelled(): Boolean

@@ -1,11 +1,13 @@
-package com.github.encryptsl.magenta.api.events
+package com.github.encryptsl.magenta.api.events.home
 
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class HomeDeleteEvent(val player: Player, val homeName: String) : Event(), Cancellable {
+class HomeMoveLocationEvent(val player: Player, val location: Location, val homeName: String) : Event(), Cancellable {
+
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList
@@ -20,4 +22,5 @@ class HomeDeleteEvent(val player: Player, val homeName: String) : Event(), Cance
         fun getHandlerList(): HandlerList
                 = handlerList
     }
+
 }

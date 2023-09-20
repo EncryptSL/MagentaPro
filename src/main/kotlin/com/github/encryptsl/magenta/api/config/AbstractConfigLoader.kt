@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.api.config
 
-import com.github.encryptsl.magenta.api.chat.Chat
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import java.io.File
