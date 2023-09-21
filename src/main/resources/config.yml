@@ -9,6 +9,17 @@ database:
   username: root
   password: root
 
+newbies:
+  # Announcement to player who first join on server.
+  announcement: '<blue>Vítej <displayname> <blue>na serveru !'
+
+  # We teleport player on first join on spawnpoint.
+  # for not spawn on point set spawnpoint: none
+  spawnpoint: spawn
+
+  # We want give newbie player someone kit ? To disable set to kit: ''
+  # Kit will be free, without cost and delay.
+  kit: hrac
 
 #########################################################
 #                       HOMES                           #

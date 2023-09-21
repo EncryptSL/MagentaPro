@@ -13,12 +13,18 @@ class PlayerLoginListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val playerAccount = PlayerAccount(magenta, player.uniqueId)
         val account = playerAccount.getAccount()
+        val newbies = magenta.config.getConfigurationSection("newbies")!!
+        val kit = newbies.getString("kit") ?: "hrac"
 
         if (player.hasPlayedBefore()) {
             account.set("timestamps.login", System.currentTimeMillis())
             playerAccount.save()
             playerAccount.reload()
             return
+        }
+
+        if (kit.isNotEmpty()) {
+            magenta.kitManager.giveKit(player, kit)
         }
 
         account.set("teleportenabled", true)

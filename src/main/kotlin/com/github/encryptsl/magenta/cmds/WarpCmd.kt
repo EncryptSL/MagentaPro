@@ -46,12 +46,7 @@ class WarpCmd(private val magenta: Magenta) {
     @ProxiedBy("warps")
     @CommandMethod("warps")
     fun onWarps(commandSender: CommandSender) {
-        if (commandSender is Player) {
-            val list = magenta.warpModel.getWarps().filter { a -> a.uuid.equals(commandSender.uniqueId.toString(), false) }.joinToString { s -> "${s.homeName}," }
-            commandSender.sendMessage(ModernText.miniModernText(list))
-        } else {
-            val list = magenta.warpModel.getWarps().joinToString { s -> s.homeName }
-            commandSender.sendMessage(ModernText.miniModernText("<gray> $list"))
-        }
+        val list = magenta.warpModel.getWarps().joinToString { s -> "${s.warpName}," }
+        commandSender.sendMessage(ModernText.miniModernText("<gray> $list"))
     }
 }

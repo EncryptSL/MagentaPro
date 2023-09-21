@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta
 
 import com.github.encryptsl.magenta.api.KitConfig
+import com.github.encryptsl.magenta.api.KitManager
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
@@ -21,6 +22,7 @@ class Magenta : JavaPlugin() {
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta(this) }
     val homeModel: HomeModel by lazy { HomeModel() }
     val warpModel: WarpModel by lazy { WarpModel() }
+    val kitManager: KitManager by lazy { KitManager(this) }
     val pluginManager = server.pluginManager
 
     override fun onLoad() {
