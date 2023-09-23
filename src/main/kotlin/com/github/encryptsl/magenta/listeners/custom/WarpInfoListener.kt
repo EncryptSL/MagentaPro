@@ -16,19 +16,23 @@ class WarpInfoListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onWarpInfo(event: WarpInfoEvent) {
         val commandSender = event.commandSender
-        val warpName = event.warpName
         val warpInfoType = event.warpInfoType
-
-        if (!magenta.warpModel.getWarpExist(warpName))
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist")))
 
         when(warpInfoType) {
             WarpInfoType.LIST -> {
+                val list = magenta.warpModel.getWarps().joinToString { s ->
+                    magenta.localeConfig.getMessage("magenta.command.warp.success.list.component").replace("<warp>", s.warpName)
+                }
+
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.list"), TagResolver.resolver(
-                    Placeholder.component("warps", ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.list.component")))
+                    Placeholder.component("warps", ModernText.miniModernText(magenta.localeConfig.getMessage(list)))
                 )))
             }
             WarpInfoType.INFO -> {
+                val warpName = event.warpName ?: return
+                if (!magenta.warpModel.getWarpExist(warpName))
+                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist")))
+
                 magenta.config.getStringList("warp-info-format").forEach { s ->
                     commandSender.sendMessage(ModernText.miniModernText(s, TagResolver.resolver(
                         Placeholder.parsed("warp", magenta.warpModel.getWarp(warpName, WarpTable.warpName)),

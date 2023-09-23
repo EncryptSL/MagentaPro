@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.api.database.HomeSQL
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import org.bukkit.Location
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

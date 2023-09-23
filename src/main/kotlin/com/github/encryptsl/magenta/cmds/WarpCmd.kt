@@ -5,8 +5,8 @@ import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import cloud.commandframework.annotations.ProxiedBy
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.WarpInfoType
 import com.github.encryptsl.magenta.api.events.warp.*
-import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -19,6 +19,7 @@ class WarpCmd(private val magenta: Magenta) {
 
     @CommandMethod("info|i <warp>")
     fun onInfo(commandSender: CommandSender, @Argument(value = "warp", suggestions = "warps") warpName: String) {
+        magenta.server.pluginManager.callEvent(WarpInfoEvent(commandSender, warpName, WarpInfoType.INFO))
     }
 
     @CommandMethod("create|c <warp>")
@@ -53,7 +54,6 @@ class WarpCmd(private val magenta: Magenta) {
     @ProxiedBy("warps")
     @CommandMethod("warps")
     fun onWarps(commandSender: CommandSender) {
-        val list = magenta.warpModel.getWarps().joinToString { s -> "${s.warpName}," }
-        commandSender.sendMessage(ModernText.miniModernText("<gray> $list"))
+        magenta.server.pluginManager.callEvent(WarpInfoEvent(commandSender, null, WarpInfoType.LIST))
     }
 }

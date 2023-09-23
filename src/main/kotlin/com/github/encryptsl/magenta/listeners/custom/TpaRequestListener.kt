@@ -2,8 +2,8 @@ package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
-import com.github.encryptsl.magenta.common.utils.ModernText
 import com.github.encryptsl.magenta.common.TpaRequestManager
+import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.event.EventHandler
