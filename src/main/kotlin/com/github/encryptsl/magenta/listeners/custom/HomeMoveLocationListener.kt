@@ -19,29 +19,17 @@ class HomeMoveLocationListener(private val magenta: Magenta) : Listener {
 
         val worlds = magenta.config.getStringList("warp.whitelist").contains(player.location.world.name)
 
-        if (!worlds) {
-            player.sendMessage(
+        if (!worlds)
+            return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.blocked"),
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
-            return
-        }
 
-        if (!magenta.homeModel.getHomeExist(homeName)) {
-            player.sendMessage(
+        if (!magenta.homeModel.getHomeExist(player, homeName))
+           return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.not.exist"),
                     TagResolver.resolver(Placeholder.parsed("home", homeName))))
-            return
-        }
-        magenta.homeModel.getHomes().filter { s -> s.homeName == homeName && s.owner != player.uniqueId.toString() }.find {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("command-lynx-owner-modify-error"),
-                TagResolver.resolver(
-                    Placeholder.parsed("home", it.homeName),
-                )
-            ))
-            return
-        }
 
-        magenta.homeModel.moveHome(homeName, location)
+        magenta.homeModel.moveHome(player, homeName, location)
         player.sendMessage(
             ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.success.moved"),
                 TagResolver.resolver(

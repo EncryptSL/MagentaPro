@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.kit.KitRecieveEvent
-import com.github.encryptsl.magenta.common.CooldownManager
+import com.github.encryptsl.magenta.api.events.kit.KitReceiveEvent
+import com.github.encryptsl.magenta.common.PlayerCooldownManager
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -13,12 +13,12 @@ import java.time.Duration
 class KitRecieveListener(private val magenta: Magenta) : Listener {
 
     @EventHandler
-    fun onKitRecieve(event: KitRecieveEvent) {
+    fun onKitReceive(event: KitReceiveEvent) {
         val player = event.player
         val kitName = event.kitName
         val cooldown = event.cooldown
         val kitManager = event.kitManager
-        val cooldownManager = CooldownManager(player, magenta, "kits.$kitName")
+        val cooldownManager = PlayerCooldownManager(player, magenta, "kits.$kitName")
 
         val timeLeft: Duration = cooldownManager.getRemainingCooldown()
 

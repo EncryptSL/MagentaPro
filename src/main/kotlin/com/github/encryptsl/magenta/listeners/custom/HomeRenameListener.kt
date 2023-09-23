@@ -20,27 +20,17 @@ class HomeRenameListener(private val magenta: Magenta) : Listener {
 
         val worlds = magenta.config.getStringList("warp.whitelist").contains(player.location.world.name)
 
-        if (!worlds) {
-            player.sendMessage(
+        if (!worlds)
+            return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.blocked"),
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
-            return
-        }
 
-        if (!magenta.homeModel.getHomeExist(oldHomeName)) {
-            player.sendMessage(
+        if (!magenta.homeModel.getHomeExist(player, oldHomeName))
+            return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.not.exist"),
                     TagResolver.resolver(Placeholder.parsed("home", oldHomeName))))
-            return
-        }
 
-
-        magenta.homeModel.getHomes().filter { s -> s.homeName == oldHomeName && s.owner != player.uniqueId.toString() }.find {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("command-lynx-owner-modify-error")))
-            return
-        }
-
-        magenta.homeModel.renameHome(oldHomeName, newHomeName)
+        magenta.homeModel.renameHome(player, oldHomeName, newHomeName)
         player.sendMessage(
             ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.success.renamed"),
                 TagResolver.resolver(

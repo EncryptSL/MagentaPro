@@ -1,12 +1,10 @@
 package com.github.encryptsl.magenta.api.events.kit
 
-import com.github.encryptsl.magenta.api.KitManager
-import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class KitRecieveEvent(val player: Player, val kitName: String, val cooldown: Long, val kitManager: KitManager) : Event(), Cancellable {
+class KitAdminCreateEvent(val kitName: String) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

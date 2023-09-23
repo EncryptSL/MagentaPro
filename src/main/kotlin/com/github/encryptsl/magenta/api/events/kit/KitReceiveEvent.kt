@@ -1,13 +1,12 @@
-package com.github.encryptsl.magenta.api.events.warp
+package com.github.encryptsl.magenta.api.events.kit
 
-import org.bukkit.command.CommandSender
+import com.github.encryptsl.magenta.api.KitManager
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class WarpTeleportEvent(val commandSender: CommandSender, val target: Player?, val warpName: String) : Event(), Cancellable {
-
+class KitReceiveEvent(val player: Player, val kitName: String, val cooldown: Long, val kitManager: KitManager) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

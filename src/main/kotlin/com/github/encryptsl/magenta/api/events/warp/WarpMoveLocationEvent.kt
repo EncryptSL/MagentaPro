@@ -6,7 +6,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class WarpMoveLocationEvent(val player: Player, val location: Location, val homeName: String) : Event(), Cancellable {
+class WarpMoveLocationEvent(val player: Player, val location: Location, val warpName: String) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

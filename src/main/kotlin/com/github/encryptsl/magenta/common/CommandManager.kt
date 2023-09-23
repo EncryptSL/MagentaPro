@@ -11,6 +11,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import java.util.function.Function
 
 
@@ -61,12 +62,11 @@ class CommandManager(private val magenta: Magenta) {
                 .mapNotNull { it.name }
         }
         commandManager.parserRegistry().registerSuggestionProvider("kits") { _, input ->
-            magenta.kitConfig.getKit().getConfigurationSection("kits")!!.getKeys(false).toList().filter { p ->
-                p.startsWith(input)
-            }
+            magenta.kitConfig.getKit().getConfigurationSection("kits")!!.getKeys(false).toList()
         }
         commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
-            magenta.homeModel.getHomes().filter { a -> a.uuid == Bukkit.getOfflinePlayer(sender.sender.name).uniqueId.toString() }.map { s -> s.homeName }
+            val player = sender as Player
+            return@registerSuggestionProvider magenta.homeModel.getHomesByOwner(player).map { s -> s.homeName }
         }
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
             magenta.warpModel.getWarps().map { s -> s.warpName }
@@ -86,6 +86,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(HealCmd(magenta))
         annotationParser.parse(HomeCmd(magenta))
         annotationParser.parse(KitCmd(magenta))
+        annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))
     }
 

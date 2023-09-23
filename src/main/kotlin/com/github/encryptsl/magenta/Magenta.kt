@@ -10,7 +10,10 @@ import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.utils.TeamIntegration
+import com.github.encryptsl.magenta.listeners.custom.*
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import kotlin.time.measureTimedValue
 
 class Magenta : JavaPlugin() {
 
@@ -20,8 +23,8 @@ class Magenta : JavaPlugin() {
     val localeConfig: Locale by lazy { Locale(this) }
     val kitConfig: KitConfig by lazy { KitConfig(this) }
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta(this) }
-    val homeModel: HomeModel by lazy { HomeModel() }
-    val warpModel: WarpModel by lazy { WarpModel() }
+    val homeModel: HomeModel by lazy { HomeModel(this) }
+    val warpModel: WarpModel by lazy { WarpModel(this) }
     val kitManager: KitManager by lazy { KitManager(this) }
     val pluginManager = server.pluginManager
 
@@ -49,5 +52,38 @@ class Magenta : JavaPlugin() {
 
     override fun onDisable() {
         super.onDisable()
+    }
+
+    private fun handlerListener() {
+        val list: ArrayList<Listener> = arrayListOf(
+            HomeCreateListener(this),
+            HomeDeleteListener(this),
+            HomeMoveLocationListener(this),
+            HomeRenameListener(this),
+            HomeTeleportListener(this),
+            KitAdminGiveListener(this),
+            KitRecieveListener(this),
+            TpaDenyListener(this),
+            TpaRequestListener(this),
+            WarpCreateListener(this),
+            WarpDeleteListener(this),
+            WarpInfoListener(this),
+            WarpMoveLocationListener(this),
+            WarpRenameListener(this),
+            WarpTeleportListener(this),
+        )
+
+        val (value, time) = measureTimedValue {
+            if (list.isEmpty()) {
+                logger.info("Registering list of listeners is empty !")
+            }
+
+            list.forEach {pluginManager.registerEvents(it, this)
+                logger.info("Discord adapter ${it.javaClass.simpleName} registered () -> ok")
+            }
+        }
+
+        logger.info("Bukkit listeners registered (${list.size}) in time ${time.inWholeSeconds}s -> $value")
+        list.removeAll(list.toSet())
     }
 }

@@ -30,9 +30,9 @@ class KitManager(private val magenta: Magenta) {
                 if (split[4].isNotEmpty()) {
                     player.inventory.addItem(itemFactory.item(
                         Material.getMaterial(item[0].toString())!!,
-                        item[1].toInt(),
+                        item[1].code,
                         Enchantment.getByKey(NamespacedKey.fromString(item[2].toString()))!!,
-                        item[3].toInt(),
+                        item[3].code,
                         listOf(ModernText.miniModernText(item[4].toString()))
                     ))
                 }
@@ -41,5 +41,9 @@ class KitManager(private val magenta: Magenta) {
             player.sendMessage(e.message ?: e.localizedMessage)
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }
+    }
+
+    fun createKit(kitName: String) {
+        magenta.kitConfig.getKit().getConfigurationSection("kits.$kitName")?.set("", "")
     }
 }

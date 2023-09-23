@@ -1,15 +1,17 @@
 package com.github.encryptsl.magenta.common.database.models
 
+import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.database.HomeSQL
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import org.bukkit.Location
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class HomeModel : HomeSQL {
+class HomeModel(private val magenta: Magenta) : HomeSQL {
     override fun createHome(player: Player, location: Location, home: String) {
         transaction {
             HomeTable.insert {
@@ -26,12 +28,12 @@ class HomeModel : HomeSQL {
         }
     }
 
-    override fun deleteHome(home: String) {
-        transaction { HomeTable.deleteWhere { HomeTable.home eq home } }
+    override fun deleteHome(player: Player, home: String) {
+        transaction { HomeTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) } }
     }
 
-    override fun moveHome(home: String, location: Location) {
-        transaction { HomeTable.update( { HomeTable.home eq home }) {
+    override fun moveHome(player: Player, home: String, location: Location) {
+        transaction { HomeTable.update( {  (HomeTable.uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) }) {
             it[world] = location.world.name
             it[x] = location.x.toInt()
             it[y] = location.y.toInt()
@@ -41,22 +43,49 @@ class HomeModel : HomeSQL {
         } }
     }
 
-    override fun renameHome(oldHomeName: String, newHomeName: String) {
+    override fun renameHome(player: Player, oldHomeName: String, newHomeName: String) {
         transaction {
-            HomeTable.update({ HomeTable.home eq oldHomeName }) {
+            HomeTable.update({ HomeTable.uuid eq player.uniqueId.toString() and (HomeTable.home eq oldHomeName) }) {
                 it[home] = newHomeName
             }
         }
     }
 
-    override fun getHomeExist(home: String): Boolean {
+    override fun getHomeExist(player: Player, home: String): Boolean {
         return transaction { !HomeTable.select(HomeTable.home eq home).empty() }
+    }
+
+    override fun canSetHome(player: Player): Boolean {
+        if (player.hasPermission("magenta.homes.unlimited")) return true
+
+        val section = magenta.config.getConfigurationSection("homes.groups") ?: return false
+
+        val max = section.getKeys(false).filter { player.hasPermission("magenta.homes.$it") }.map { section.getInt(it) }.first()
+
+        if (max == -1) return true
+
+        return transaction { HomeTable.select(HomeTable.uuid eq player.uniqueId.toString()).count() < max }
     }
 
     override fun <T> getHome(home: String, columnName: Expression<T>): T {
         return transaction {
             HomeTable.select(HomeTable.home eq home).first()[columnName]
         }
+    }
+
+    override fun getHomesByOwner(player: Player): List<HomeEntity> {
+        return transaction { HomeTable.select { HomeTable.uuid eq player.uniqueId.toString() }.map { r ->
+            HomeEntity(
+                r[HomeTable.username],
+                r[HomeTable.uuid],
+                r[HomeTable.home],
+                r[HomeTable.world],
+                r[HomeTable.x],
+                r[HomeTable.y],
+                r[HomeTable.z],
+                r[HomeTable.pitch],
+                r[HomeTable.yaw])
+        } }
     }
 
     override fun getHomes(): List<HomeEntity> {

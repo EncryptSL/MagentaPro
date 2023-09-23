@@ -20,18 +20,17 @@ class HomeCreateListener(private val magenta: Magenta) : Listener {
 
         val worlds = magenta.config.getStringList("warps.whitelist").contains(location.world.name)
 
-        if (!worlds) {
-            player.sendMessage(
+        if (!worlds)
+            return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.blocked"),
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
-            return
-        }
 
-        if (magenta.homeModel.getHomeExist(homeName)) {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.exist"),
+        if (magenta.homeModel.getHomeExist(player, homeName))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.exist"),
                 TagResolver.resolver(Placeholder.parsed("home", homeName))))
-            return
-        }
+
+        if (!magenta.homeModel.canSetHome(player))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.limit")))
 
         magenta.homeModel.createHome(player, location, homeName)
         player.sendMessage(

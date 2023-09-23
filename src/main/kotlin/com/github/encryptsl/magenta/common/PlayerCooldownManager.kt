@@ -7,7 +7,7 @@ import java.time.Duration
 import java.time.Instant
 
 
-class CooldownManager(player: Player, magenta: Magenta, private val type: String) {
+class PlayerCooldownManager(player: Player, magenta: Magenta, private val type: String) {
 
     private val playerAccount = PlayerAccount(magenta, player.uniqueId)
 

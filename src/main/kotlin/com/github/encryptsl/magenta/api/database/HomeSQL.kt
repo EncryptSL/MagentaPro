@@ -8,12 +8,16 @@ import org.jetbrains.exposed.sql.Expression
 interface HomeSQL {
 
     fun createHome(player: Player, location: Location, home: String)
-    fun deleteHome(home: String)
-    fun moveHome(home: String, location: Location)
-    fun renameHome(oldHomeName: String, newHomeName: String)
-    fun getHomeExist(home: String): Boolean
+    fun deleteHome(player: Player, home: String)
+    fun moveHome(player: Player, home: String, location: Location)
+    fun renameHome(player: Player, oldHomeName: String, newHomeName: String)
+    fun getHomeExist(player: Player, home: String): Boolean
+
+    fun canSetHome(player: Player): Boolean
 
     fun <T> getHome(home: String, columnName: Expression<T>): T
+
+    fun getHomesByOwner(player: Player): List<HomeEntity>
 
     fun getHomes(): List<HomeEntity>
 

@@ -20,21 +20,17 @@ class HomeTeleportListener(private val magenta: Magenta) : Listener {
 
         val worlds = magenta.config.getStringList("warp.whitelist").contains(player.location.world.name)
 
-        if (!worlds) {
-            player.sendMessage(
+        if (!worlds)
+            return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.blocked"),
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
-            return
-        }
 
-        if (!magenta.homeModel.getHomeExist(homeName)) {
-            player.sendMessage(
+        if (!magenta.homeModel.getHomeExist(player, homeName))
+            return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.not.exist"),
                     TagResolver.resolver(Placeholder.parsed("home", homeName))))
-            return
-        }
 
-        magenta.homeModel.getHomes().filter { s -> s.homeName == homeName }.first {
+        magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {
             player.teleport(Location(Bukkit.getWorld(it.world), it.x.toDouble(), it.y.toDouble(), it.z.toDouble(), it.yaw, it.pitch))
         }
 

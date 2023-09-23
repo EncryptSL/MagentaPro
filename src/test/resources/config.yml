@@ -1,3 +1,5 @@
+prefix: '<gray>(<green>MAGENTAPRO<gray>)<reset>'
+
 #########################################################
 #                     MAGENTA PRO                       #
 #               DEVELOPED BY ENCRYPTSL                  #
@@ -18,21 +20,6 @@ newbies:
   # We want give newbie player someone kit ? To disable set to kit: ''
   # Kit will be free, without cost and delay.
   kit: hrac
-
-#########################################################
-#                 MAGENTA PRO (GLOBAL)                  #
-#########################################################
-prefix: '<gray>(<green>MAGENTAPRO<gray>)<reset>'
-
-teleport-cooldown: 5
-
-tpa-accept-cancellation: 120
-
-warp-info-format:
-  - "<gray>Warp <green><warp>"
-  - "<gray>Majitel warpu <green><owner>"
-  - "<gray>Souřadnice <green><x> <y> <z>"
-  - "<gray>Svět <green><world>"
 
 #########################################################
 #                       HOMES                           #
