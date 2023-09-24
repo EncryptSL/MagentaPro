@@ -10,6 +10,7 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 @CommandMethod("home")
 class HomeCmd(private val magenta: Magenta) {
@@ -28,7 +29,7 @@ class HomeCmd(private val magenta: Magenta) {
     }
 
     @CommandMethod("delete <home>")
-    @CommandPermission("magenta.delhome")
+    @CommandPermission("magenta.home.delhome")
     fun onDeleteHome(player: Player, @Argument(value = "home") home: String) {
         magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
 

@@ -1,11 +1,12 @@
-package com.github.encryptsl.magenta.api.events.teleport
+package com.github.encryptsl.magenta.api.events.jail
 
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class TpaDenyEvent(val sender: Player) : Event(), Cancellable {
+class JailCreateEvent(val player: Player, val jailName: String, val location: Location) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

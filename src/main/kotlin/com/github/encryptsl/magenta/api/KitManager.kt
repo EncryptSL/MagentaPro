@@ -14,33 +14,14 @@ class KitManager(private val magenta: Magenta) {
     fun giveKit(player: Player, kitName: String) {
 
         runCatching {
-            magenta.kitConfig.getKit().getConfigurationSection("kits.$kitName")
+            magenta.kitConfig.getKit().getConfigurationSection("kits")
         }.onSuccess { section ->
-            section?.getStringList("items")?.forEach { item ->
-                val split = item.split(" ")
-
-                if (split[0].isNotEmpty() && split[1].isNotEmpty()) {
-                    player.inventory.addItem(itemFactory.item(Material.getMaterial(item[0].toString())!!, item[1].toInt()))
-                }
-                if (split[2].isNotEmpty()) {
-                    player.inventory.addItem(itemFactory.item(
-                        Material.getMaterial(item[0].toString())!!, item[1].toInt(), Enchantment.getByKey(
-                            NamespacedKey.fromString(item[2].toString()))!!, item[3].toInt()))
-                }
-                if (split[4].isNotEmpty()) {
-                    player.inventory.addItem(itemFactory.item(
-                        Material.getMaterial(item[0].toString())!!,
-                        item[1].code,
-                        Enchantment.getByKey(NamespacedKey.fromString(item[2].toString()))!!,
-                        item[3].code,
-                        listOf(ModernText.miniModernText(item[4].toString()))
-                    ))
-                }
+            val k = section?.get("kits.$kitName") as HashMap<String, Any>
+            val items = k["items"] as List<HashMap<String, Any>>
+            items.forEach { item ->
+                println(item["id"])
             }
-        }.onFailure { e ->
-            player.sendMessage(e.message ?: e.localizedMessage)
-            magenta.logger.severe(e.message ?: e.localizedMessage)
-        }
+        }.exceptionOrNull()
     }
 
     fun createKit(kitName: String) {

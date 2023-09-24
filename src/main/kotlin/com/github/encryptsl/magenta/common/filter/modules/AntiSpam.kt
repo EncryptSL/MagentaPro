@@ -21,7 +21,7 @@ class AntiSpam(val magenta: Magenta, private val violations: Violations) : Abstr
         val uuid = player.uniqueId
         val message = PlainTextComponentSerializer.plainText().serialize(event.message())
 
-        if (player.hasPermission("magenta.chat.filter.bypass.antispam") || player.hasPermission("magenta.chat.filter.bypass.*"))
+        if (player.hasPermission("magenta.chat.filter.bypass.antispam"))
             return
 
         if (!magenta.config.getBoolean("chat.filters.${violations.name}.control")) return

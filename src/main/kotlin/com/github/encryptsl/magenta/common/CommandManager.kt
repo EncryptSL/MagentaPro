@@ -10,6 +10,7 @@ import cloud.commandframework.paper.PaperCommandManager
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.function.Function
@@ -51,6 +52,9 @@ class CommandManager(private val magenta: Magenta) {
     }
 
     private fun registerSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
+        commandManager.parserRegistry().registerSuggestionProvider("modes") {sender, _ ->
+            GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { it.name }
+        }
         commandManager.parserRegistry().registerSuggestionProvider("players") {_, input ->
             Bukkit.getOnlinePlayers().toList().filter { p -> p.name.startsWith(input) }.mapNotNull { it.name }
         }
@@ -85,7 +89,9 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(GmCmd(magenta))
         annotationParser.parse(HealCmd(magenta))
         annotationParser.parse(HomeCmd(magenta))
+        annotationParser.parse(JailCmd(magenta))
         annotationParser.parse(KitCmd(magenta))
+        annotationParser.parse(RepairCmd(magenta))
         annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))
     }

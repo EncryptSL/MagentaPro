@@ -18,11 +18,11 @@ class KitRecieveListener(private val magenta: Magenta) : Listener {
         val kitName = event.kitName
         val cooldown = event.cooldown
         val kitManager = event.kitManager
-        val cooldownManager = PlayerCooldownManager(player, magenta, "kits.$kitName")
+        val cooldownManager = PlayerCooldownManager(player.uniqueId, magenta, "kits.$kitName")
 
         val timeLeft: Duration = cooldownManager.getRemainingCooldown()
 
-        if (timeLeft.isZero || timeLeft.isNegative) {
+        if (!cooldownManager.hasCooldown()) {
             kitManager.giveKit(player, kitName)
             cooldownManager.setCooldown(Duration.ofSeconds(cooldown))
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(

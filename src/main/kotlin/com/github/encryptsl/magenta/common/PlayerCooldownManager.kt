@@ -2,14 +2,14 @@ package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PlayerAccount
-import org.bukkit.entity.Player
 import java.time.Duration
 import java.time.Instant
+import java.util.UUID
 
 
-class PlayerCooldownManager(player: Player, magenta: Magenta, private val type: String) {
+class PlayerCooldownManager(uuid: UUID, magenta: Magenta, private val type: String) {
 
-    private val playerAccount = PlayerAccount(magenta, player.uniqueId)
+    private val playerAccount = PlayerAccount(magenta, uuid)
 
     fun setCooldown(duration: Duration?) {
         playerAccount.getAccount().set("timestamps.$type", Instant.now().plus(duration))

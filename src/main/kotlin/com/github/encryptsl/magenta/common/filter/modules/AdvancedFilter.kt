@@ -14,7 +14,7 @@ class AdvancedFilter(private val magenta: Magenta, private val violations: Viola
 
         if (!magenta.config.getBoolean("chat.filters.${violations.name}.control")) return
 
-        if (player.hasPermission("magenta.chat.filter.bypass.advanced.filter") || player.hasPermission("magenta.chat.filter.bypass.*"))
+        if (player.hasPermission("magenta.chat.filter.bypass.advanced.filter"))
             return
 
         message.split(" ").forEach { messages ->

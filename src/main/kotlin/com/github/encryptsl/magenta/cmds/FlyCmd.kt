@@ -11,6 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class FlyCmd(private val magenta: Magenta) {
 
@@ -19,10 +20,10 @@ class FlyCmd(private val magenta: Magenta) {
     fun onFlySelf(player: Player) {
         if (player.isFlying) {
             player.isFlying = false
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.deactivated")))
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated")))
         } else {
             player.isFlying = true
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.activated")))
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated")))
         }
     }
 
@@ -31,12 +32,12 @@ class FlyCmd(private val magenta: Magenta) {
     fun onFlyTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "online") target: Player) {
         if (target.isFlying) {
             target.isFlying = false
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.deactivated")))
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.deactivated.to"), TagResolver.resolver(Placeholder.parsed("player", target.name))))
+            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated")))
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated.to"), TagResolver.resolver(Placeholder.parsed("player", target.name))))
         } else {
             target.isFlying = true
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.deactivated")))
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.activated.to"), TagResolver.resolver(Placeholder.parsed("player", target.name))))
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated.to"), TagResolver.resolver(Placeholder.parsed("player", target.name))))
         }
     }
 

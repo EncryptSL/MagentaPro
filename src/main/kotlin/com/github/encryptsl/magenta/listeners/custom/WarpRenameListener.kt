@@ -22,7 +22,7 @@ class WarpRenameListener(private val magenta: Magenta) : Listener {
                     TagResolver.resolver(Placeholder.parsed("warp", fromWarpName))))
 
 
-        if (player.hasPermission("magenta.warp.move.other"))
+        if (player.hasPermission("magenta.warp.rename.other"))
             magenta.warpModel.renameWarp(fromWarpName, toWarpName)
         else
             magenta.warpModel.renameWarp(player, fromWarpName, toWarpName)

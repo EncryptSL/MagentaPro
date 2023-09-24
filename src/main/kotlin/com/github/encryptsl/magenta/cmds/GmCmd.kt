@@ -12,13 +12,19 @@ import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class GmCmd(private val magenta: Magenta) {
 
     @CommandMethod("gamemode|gm <mode>")
     @CommandPermission("magenta.gamemode")
     fun onGameModeSelf(player: Player, @Argument(value = "mode", suggestions = "modes") gameMode: GameMode) {
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("mode", gameMode.name))))
+        if (!player.hasPermission("magenta.gamemodes.${gameMode.name.lowercase()}"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+                Placeholder.parsed("gamemode", gameMode.name)
+            )))
+
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
         player.gameMode = gameMode
     }
 
@@ -26,11 +32,11 @@ class GmCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.gamemode.other")
     fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "online") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
 
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("mode", gameMode.name))))
+        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
         target.gameMode = gameMode
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.to"), TagResolver.resolver(
             Placeholder.parsed("player", target.name),
-            Placeholder.parsed("mode", gameMode.name)
+            Placeholder.parsed("gamemode", gameMode.name)
         )))
 
     }

@@ -8,15 +8,20 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.KitManager
 import com.github.encryptsl.magenta.api.events.kit.KitAdminGiveEvent
 import com.github.encryptsl.magenta.api.events.kit.KitReceiveEvent
+import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class KitCmd(private val magenta: Magenta) {
 
     @CommandMethod("kit <kit>")
     @CommandPermission("magenta.kit")
     fun onKit(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
+        if (player.hasPermission("magenta.kit.$kit"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
+
         magenta.pluginManager.callEvent(KitReceiveEvent(player, kit, magenta.kitConfig.getKit().getLong("kits.$kit.delay"), KitManager(magenta)))
     }
 

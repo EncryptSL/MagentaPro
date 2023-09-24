@@ -17,3 +17,97 @@ libraries:
 description: ${description}
 
 permissions:
+  magenta.*:
+    description: Permissions full access and bypass
+    default: op
+    children:
+      magenta.chat.filter.bypass.*: true
+      magenta.home.*: true
+      magenta.warps.*: true
+      magenta.jail.*: true
+      magenta.fly.*: true
+      magenta.gamemodes.*: true
+  magenta.moderator:
+    description: Permissions for moderator
+    children:
+      magenta.fly: true
+      magenta.player: true
+      magenta.warp.default: true
+      magenta.chat.filter.bypass.*: true
+  magenta.player:
+    description: Permissions for player
+    default: true
+    children:
+      magenta.home.*: true
+      magenta.warp: true
+      magenta.tpaccept: true
+      magenta.tpadeny: true
+  magenta.fly.*:
+    description: All permissions for fly commands
+    default: false
+    children:
+      magenta.fly: true
+      magenta.fly.other: true
+  magenta.gamemode.*:
+    description: All permisisosn for gamemode commands
+    default: false
+    children:
+      magenta.gamemode: true
+      magenta.gamemode.other: true
+  magenta.gamemodes.*:
+    description: All permissions for gamemodes
+    default: false
+    children:
+      magenta.gamemodes.creative: true
+      magenta.gamemodes.survival: true
+      magenta.gamemodes.spectator: true
+      magenta.gamemodes.adventure: true
+  magenta.home.*:
+    description: Permissions for all home commands
+    default: false
+    children:
+      magenta.home.tp: true
+      magenta.home.create: true
+      magenta.home.delete: true
+      magenta.home.rename: true
+      magenta.home.list: true
+      magenta.homes.unlimited: true
+  magenta.jail.*:
+    description: Permissions for all jail commands
+    default: false
+    children:
+      magenta.jail: true
+      magenta.jail.create: true
+      magenta.jail.delete: true
+      magenta.jail.list: true
+      magenta.jail.except: true
+  magenta.warp.*:
+    description: Permissions for all warp commands
+    default: false
+    children:
+      magenta.warp: true
+      magenta.warp.other: true
+      magenta.warp.create: true
+      magenta.warp.delete: true
+      magenta.warp.delete.other: true
+      magenta.warp.move.here: true
+      magenta.warp.move.other: true
+      magenta.warp.rename: true
+      magenta.warp.rename.other: true
+      magenta.warp.list: true
+      magenta.warps.unlimited: true
+  magenta.warp.default:
+    description: Permissions for all warp commands
+    default: false
+    children:
+      magenta.warp: true
+      magenta.warp.create: true
+      magenta.warp.delete: true
+      magenta.warp.move.here: true
+      magenta.warp.rename: true
+      magenta.warp.list: true
+  magenta.chat.filter.bypass.*:
+    children:
+      magenta.chat.filter.bypass.advanced.filter: true
+      magenta.chat.filter.bypass.antispam: true
+      magenta.chat.filter.bypass.capslock: true

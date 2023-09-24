@@ -17,12 +17,12 @@ newbies:
 
   # We want give newbie player someone kit ? To disable set to kit: ''
   # Kit will be free, without cost and delay.
-  kit: hrac
+  kit: tools
 
 #########################################################
 #                 MAGENTA PRO (GLOBAL)                  #
 #########################################################
-prefix: '<gray>(<green>MAGENTAPRO<gray>)<reset>'
+prefix: '<gray>(<purple>MAGENTAPRO<gray>)<reset>'
 
 teleport-cooldown: 5
 
@@ -51,7 +51,6 @@ homes:
 #########################################################
 warps:
   groups:
-    player: 3
     vip: 4
     moderator: -1
     admin: -1

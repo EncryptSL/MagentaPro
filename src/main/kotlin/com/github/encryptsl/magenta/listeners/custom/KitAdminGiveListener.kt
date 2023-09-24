@@ -28,6 +28,8 @@ class KitAdminGiveListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))
+        }.onFailure {
+            commandSender.sendMessage(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist"))
         }
     }
 

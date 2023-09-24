@@ -10,6 +10,7 @@ import com.github.encryptsl.magenta.api.events.warp.*
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandMethod("warp")
 class WarpCmd(private val magenta: Magenta) {
     @CommandMethod("help|h")
@@ -53,6 +54,7 @@ class WarpCmd(private val magenta: Magenta) {
 
     @ProxiedBy("warps")
     @CommandMethod("warps")
+    @CommandPermission("magenta.warp.list")
     fun onWarps(commandSender: CommandSender) {
         magenta.server.pluginManager.callEvent(WarpInfoEvent(commandSender, null, WarpInfoType.LIST))
     }
