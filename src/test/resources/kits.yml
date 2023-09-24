@@ -3,15 +3,12 @@ kits:
     name: <gray>TOOLS
     delay: 1
     items:
-    - id: stone_pickaxe
-      quantity: 1
+     stone_pickaxe:
+      amount: 1
       enchants:
-      - enchantment: knock_back
-        level: 1
-      - enchantment: knock_back
-        level: 1
+        knock_back: 1
       meta:
-      - lore:
-        - hello
-        - hello
         displayName: <red>TEST
+        lore:
+         - hello
+         - hello
