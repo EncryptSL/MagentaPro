@@ -18,22 +18,25 @@ class GmCmd(private val magenta: Magenta) {
 
     @CommandMethod("gamemode|gm <mode>")
     @CommandPermission("magenta.gamemode")
-    fun onGameModeSelf(player: Player, @Argument(value = "mode", suggestions = "modes") gameMode: GameMode) {
+    fun onGameModeSelf(player: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
         if (!player.hasPermission("magenta.gamemodes.${gameMode.name.lowercase()}"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
                 Placeholder.parsed("gamemode", gameMode.name)
             )))
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
-        player.gameMode = gameMode
+        magenta.schedulerMagenta.runTask(magenta) {
+            player.gameMode = gameMode
+        }
     }
 
-    @CommandMethod("gamemode|gm <target> <mode>")
+    @CommandMethod("gamemode|gm <mode> <target>")
     @CommandPermission("magenta.gamemode.other")
-    fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "online") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
-
+    fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            target.gameMode = gameMode
+        }
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
-        target.gameMode = gameMode
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.to"), TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("gamemode", gameMode.name)

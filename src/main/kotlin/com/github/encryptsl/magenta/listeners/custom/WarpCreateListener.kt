@@ -28,7 +28,7 @@ class WarpCreateListener(private val magenta: Magenta) : Listener {
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.limit")))
 
         magenta.warpModel.creteWarp(player, location, warpName)
-        player.sendMessage(ModernText.miniModernText("magenta.command.warp.success.created", TagResolver.resolver(
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.created"), TagResolver.resolver(
             Placeholder.parsed("warp", warpName)
         )))
     }

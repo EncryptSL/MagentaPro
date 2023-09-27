@@ -15,6 +15,7 @@ interface IScheduler {
 
     fun runTaskTimeSync(plugin: Plugin, runnable: Runnable, initialDelay: Long, period: Long)
 
+    fun runTaskAsync(plugin: Plugin, runnable: Runnable)
     fun runTask(plugin: Plugin, runnable: Runnable)
 
 }

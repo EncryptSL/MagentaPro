@@ -8,32 +8,40 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class ChatPunishManager(private val magenta: Magenta, private val violations: Violations) {
 
+    fun action(player: Player, event: AsyncChatEvent, translation: Component?, replace: TextReplacementConfig?, messageFromChat: String) {
+        val actionList = magenta.config.getStringList("chat.filters.${violations.name.lowercase()}.action")
+        if (actionList.contains("none")) return
 
-    fun punish(player: Player, event: AsyncChatEvent, message: String, replace: String?, replacement: String?) {
-
-        val chatMessage = PlainTextComponentSerializer.plainText().serialize(event.message())
-
-        magenta.config.getConfigurationSection("chat.filters.${violations.name.lowercase()}")?.getStringList("action")?.forEach {
-            if (it.equals("none", false)) return
-
-            if (it.equals("notify", false)) {
-                Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.admin.notify"), TagResolver.resolver(
-                    Placeholder.parsed("player", player.name), Placeholder.parsed("message", chatMessage))), "magenta.admin.notify")
-            } else if (it.equals("kick", false)) {
+        if (actionList.contains("kick")) {
+            magenta.schedulerMagenta.runTask(magenta) {
                 player.kick(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.action.kick"), TagResolver.resolver(
                     Placeholder.parsed("reason", violations.name))
                 ))
-            } else if (it.equals("message", false)) {
-                player.sendMessage(Component.text(message))
-            } else if (it.equals("replace", false)) {
-                event.renderer { _, _, message, _ -> message.replaceText(TextReplacementConfig.builder().match("(.*) + $replace + (.*)").replacement(replacement.toString()).build()) }
             }
+        }
+
+        if (actionList.contains("notify")) {
+            Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.admin.notify"), TagResolver.resolver(
+                Placeholder.parsed("player", player.name), Placeholder.parsed("message", messageFromChat))))
+        }
+
+        if (actionList.contains("message")) {
+            if (translation != null) {
+                player.sendMessage(translation)
+            }
+        }
+        if (actionList.contains("replace")) {
+            replace?.let {
+                event.message(event.message().replaceText(replace))
+            }
+        }
+        if (actionList.contains("cancel")) {
+            event.isCancelled = true
         }
     }
 }

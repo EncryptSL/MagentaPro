@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerLoginEvent
@@ -15,6 +16,13 @@ class PlayerLoginListener(private val magenta: Magenta) : Listener {
         val account = playerAccount.getAccount()
         val newbies = magenta.config.getConfigurationSection("newbies")!!
         val kit = newbies.getString("kit") ?: "hrac"
+        magenta.teamIntegration.setTeam(player)
+
+        val jailCheckEvent = JailCheckEvent(player)
+        magenta.pluginManager.callEvent(jailCheckEvent)
+        if(jailCheckEvent.isCancelled) {
+            magenta.logger.info("Hráč ${player.name} nemá trest ve vězení !")
+        }
 
         if (player.hasPlayedBefore()) {
             account.set("timestamps.login", System.currentTimeMillis())
@@ -30,7 +38,7 @@ class PlayerLoginListener(private val magenta: Magenta) : Listener {
         account.set("teleportenabled", true)
         account.set("godmode", false)
         account.set("jailed", false)
-        account.set("ip-address", player.address.address.hostAddress)
+        account.set("ip-address", event.address.hostAddress)
         account.set("socialspy", false)
         account.set("timestamps.lastteleport", 0)
         account.set("timestamps.lastheal", 0)

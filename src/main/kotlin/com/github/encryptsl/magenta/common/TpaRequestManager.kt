@@ -11,40 +11,47 @@ import java.util.*
 
 class TpaRequestManager(private val magenta: Magenta) {
 
-    private val request = HashMap<UUID, UUID>()
+    val request: MutableMap<UUID, UUID> = HashMap()
 
     fun createRequest(sender: Player, target: Player) : Boolean {
-        if (request.containsKey(sender.uniqueId)) return false
+        if (request.containsKey(sender.uniqueId))
+            return false
 
         request[target.uniqueId] = sender.uniqueId
         return true
     }
 
-    fun acceptRequest(player: Player): Boolean {
-        if (!request.containsKey(player.uniqueId)) return false
+    fun acceptRequest(player: Player) {
+        if (!request.containsKey(player.uniqueId)) {
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.not.exist")))
+        } else {
+            player.sendMessage(request[player.uniqueId])
+            val target = Bukkit.getPlayer(request[player.uniqueId].toString())
 
-        val uuid = request[player.uniqueId] ?: return false
-        val target = Bukkit.getPlayer(uuid) ?: return false
-
-
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted")))
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted.to"), TagResolver.resolver(
-            Placeholder.parsed("player", target.name)
-        )))
-        target.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
-        target.teleport(player)
-
-        return true
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted")))
+            target?.sendMessage(
+                ModernText.miniModernText(
+                    magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted.to"),
+                    TagResolver.resolver(
+                        Placeholder.parsed("player", target.name)
+                    )
+                )
+            )
+            target?.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
+            magenta.schedulerMagenta.runTask(magenta) {
+                target?.teleport(player)
+            }
+            request.remove(player.uniqueId)
+        }
     }
 
     fun denyRequest(player: Player) {
         if (!request.containsKey(player.uniqueId)) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.not.exist")))
         } else {
-            val uuid = request[player.uniqueId] ?: return
-            val expire = Bukkit.getPlayer(uuid)
-            expire?.playSound(expire, Sound.BLOCK_NOTE_BLOCK_BASS, 1.5F, 1.5F)
-            expire?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.denied.to")))
+            val sender = Bukkit.getPlayer(request[player.uniqueId].toString())
+            sender?.playSound(sender, Sound.BLOCK_NOTE_BLOCK_BASS, 1.5F, 1.5F)
+            sender?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.denied.to")))
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.denied")))
             request.remove(player.uniqueId)
         }
@@ -52,10 +59,10 @@ class TpaRequestManager(private val magenta: Magenta) {
 
     fun killRequest(player: Player) {
         if (request.containsKey(player.uniqueId)) {
-            val uuid = request[player.uniqueId] ?: return
-            val expire = Bukkit.getPlayer(uuid)
+            val expire = Bukkit.getPlayer(request[player.uniqueId].toString())
             expire?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.expired")))
-
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.expired.to")))
+            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1.5F, 1.5F)
             request.remove(player.uniqueId)
         }
     }

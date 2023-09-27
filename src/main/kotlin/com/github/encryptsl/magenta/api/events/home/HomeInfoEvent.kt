@@ -1,11 +1,12 @@
 package com.github.encryptsl.magenta.api.events.home
 
-import org.bukkit.command.CommandSender
+import com.github.encryptsl.magenta.api.InfoType
+import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class HomeInfoEvent(val commandSender: CommandSender, val lynxName: String) : Event(), Cancellable {
+class HomeInfoEvent(val player: Player, val homeName: String?, val infoType: InfoType) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

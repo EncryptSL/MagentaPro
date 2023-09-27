@@ -19,9 +19,11 @@ class FlyCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.fly")
     fun onFlySelf(player: Player) {
         if (player.isFlying) {
+            player.allowFlight = false
             player.isFlying = false
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated")))
         } else {
+            player.allowFlight = true
             player.isFlying = true
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated")))
         }
@@ -29,7 +31,7 @@ class FlyCmd(private val magenta: Magenta) {
 
     @CommandMethod("fly <target>")
     @CommandPermission("magenta.fly.other")
-    fun onFlyTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "online") target: Player) {
+    fun onFlyTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player) {
         if (target.isFlying) {
             target.isFlying = false
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated")))

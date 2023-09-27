@@ -9,13 +9,12 @@ import org.bukkit.scoreboard.Team
 object Teams {
     fun createTeam(teamName: String, prefix: String) {
         val scoreboard: Scoreboard = Bukkit.getScoreboardManager().mainScoreboard
-
         if (scoreboard.getTeam(teamName) == null) {
             val team: Team = scoreboard.registerNewTeam(teamName)
             team.setCanSeeFriendlyInvisibles(true)
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER)
             team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS)
-            team.prefix(Component.text(prefix))
+            team.prefix(ModernText.miniModernText(prefix))
         } else {
             Bukkit.getLogger().info("Team $teamName Exist")
         }

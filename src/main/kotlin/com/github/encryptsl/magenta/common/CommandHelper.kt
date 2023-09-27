@@ -18,7 +18,7 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun teleportOffline(sender: Player, target: OfflinePlayer) {
         val playerAccount = PlayerAccount(magenta, target.uniqueId)
-        val world = playerAccount.getAccount().getString("lastlocation.world-name") ?: return
+        val world = playerAccount.getAccount().getString("lastlocation.world-name").toString()
         val x = playerAccount.getAccount().getDouble("lastlocation.x")
         val y = playerAccount.getAccount().getDouble("lastlocation.y")
         val z = playerAccount.getAccount().getDouble("lastlocation.z")

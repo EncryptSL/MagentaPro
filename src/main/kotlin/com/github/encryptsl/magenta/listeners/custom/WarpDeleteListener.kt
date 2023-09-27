@@ -27,7 +27,7 @@ class WarpDeleteListener(private val magenta: Magenta) : Listener {
         else
             magenta.warpModel.deleteWarp(player, warpName)
 
-        player.sendMessage(ModernText.miniModernText("magenta.command.warp.success.deleted", TagResolver.resolver(
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.deleted"), TagResolver.resolver(
             Placeholder.parsed("warp", warpName)
         )))
     }

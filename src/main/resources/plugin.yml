@@ -7,7 +7,7 @@ prefix: MagentaPro
 author: EncryptSL
 website: https://encryptsl.github.io/
 
-load: STARTUP
+load: POSTWORLD
 libraries:
   - com.zaxxer:HikariCP:5.0.1
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0
@@ -21,6 +21,7 @@ permissions:
     description: Permissions full access and bypass
     default: op
     children:
+      magenta.plugin.*: true
       magenta.chat.filter.bypass.*: true
       magenta.home.*: true
       magenta.warps.*: true
@@ -40,8 +41,15 @@ permissions:
     children:
       magenta.home.*: true
       magenta.warp: true
+      magenta.tpa: true
       magenta.tpaccept: true
       magenta.tpadeny: true
+  magenta.plugin.*:
+    description: Permissions for admins
+    default: false
+    children:
+      magenta.plugin.help: true
+      magenta.plugin.reload: true
   magenta.fly.*:
     description: All permissions for fly commands
     default: false

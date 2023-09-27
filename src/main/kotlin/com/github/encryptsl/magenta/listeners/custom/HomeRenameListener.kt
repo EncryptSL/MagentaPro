@@ -18,7 +18,7 @@ class HomeRenameListener(private val magenta: Magenta) : Listener {
         val oldHomeName: String = event.fromHomeName
         val newHomeName: String = event.toHomeName
 
-        val worlds = magenta.config.getStringList("warp.whitelist").contains(player.location.world.name)
+        val worlds = magenta.config.getStringList("homes.whitelist").contains(player.location.world.name)
 
         if (!worlds)
             return player.sendMessage(

@@ -27,7 +27,7 @@ class WarpRenameListener(private val magenta: Magenta) : Listener {
         else
             magenta.warpModel.renameWarp(player, fromWarpName, toWarpName)
 
-        player.sendMessage(ModernText.miniModernText("magenta.command.warp.success.renamed", TagResolver.resolver(
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.renamed"), TagResolver.resolver(
             Placeholder.parsed("from_warp", fromWarpName),
             Placeholder.parsed("to_warp", toWarpName)
         )))

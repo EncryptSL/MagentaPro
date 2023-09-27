@@ -3,7 +3,7 @@
 #               DEVELOPED BY ENCRYPTSL                  #
 #########################################################
 database:
-  host: 'jdbc:sqlite:plugins/LiteEco/database.db'
+  host: 'jdbc:sqlite:plugins/MagentaPro/database.db'
   username: root
   password: root
 
@@ -22,7 +22,7 @@ newbies:
 #########################################################
 #                 MAGENTA PRO (GLOBAL)                  #
 #########################################################
-prefix: '<gray>(<purple>MAGENTAPRO<gray>)<reset>'
+prefix: '<gray>(<light_purple><bold>MAGENTAPRO</bold><gray>)'
 
 teleport-cooldown: 5
 
@@ -44,6 +44,9 @@ homes:
     vip: 4
     moderator: -1
     admin: -1
+  whitelist:
+    - world
+    - world_nether
 
 #########################################################
 #                       WARPS                           #
@@ -69,10 +72,13 @@ chat:
       action: [notify, kick]
       similarity: 80
       control: true
-    advanced_filter:
-      action: [notify, kick]
+    ipfilter:
+      action: [message, cancel]
       control: true
       ip_regex: '\d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}'
+    website:
+      action: [notify, kick]
+      control: true
       web_regex:
         - '(http\:\/\/|https\:\/\/)?([a-z0-9\-\s\.\W\s\S\_]*\.)+[a-z0-9\s][a-z0-9\-\s\.]*'
         - '^(.* + \W|\d|_|.*|)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+( .*)?$'

@@ -12,27 +12,27 @@ class PlayerCooldownManager(uuid: UUID, magenta: Magenta, private val type: Stri
     private val playerAccount = PlayerAccount(magenta, uuid)
 
     fun setCooldown(duration: Duration?) {
-        playerAccount.getAccount().set("timestamps.$type", Instant.now().plus(duration))
+        playerAccount.getAccount().set("timestamps.$type", Instant.now().plus(duration).toEpochMilli())
         playerAccount.save()
         playerAccount.reload()
     }
 
     // Check if cooldown has expired
     fun hasCooldown(): Boolean {
-        val cooldown: Instant = Instant.ofEpochSecond(playerAccount.getAccount().getLong("timestamps.$type"))
+        val cooldown: Instant = Instant.ofEpochMilli(playerAccount.getAccount().getLong("timestamps.$type"))
         return Instant.now().isBefore(cooldown)
     }
 
     // Remove cooldown
     fun removeCooldown() {
-        playerAccount.getAccount().set("timestamps.kits.$type", 0)
+        playerAccount.getAccount().set("timestamps.$type", 0)
         playerAccount.save()
         playerAccount.reload()
     }
 
     // Get remaining cooldown time
     fun getRemainingCooldown(): Duration {
-        val cooldown: Instant = Instant.ofEpochSecond(playerAccount.getAccount().getLong("timestamps.$type"))
+        val cooldown: Instant = Instant.ofEpochMilli(playerAccount.getAccount().getLong("timestamps.$type"))
         val now = Instant.now()
         return if (now.isBefore(cooldown)) {
             Duration.between(now, cooldown)

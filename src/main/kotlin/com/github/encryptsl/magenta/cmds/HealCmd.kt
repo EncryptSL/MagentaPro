@@ -19,14 +19,16 @@ class HealCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.heal")
     fun onHeal(player: Player) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
-        player.sendHealthUpdate()
+        player.health = 20.0
+        player.foodLevel = 20
     }
 
     @CommandMethod("heal <player>")
     @CommandPermission("magenta.heal.other")
-    fun onHeal(commandSender: CommandSender, @Argument(value="player", suggestions = "online") target: Player) {
+    fun onHeal(commandSender: CommandSender, @Argument(value="player", suggestions = "players") target: Player) {
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
-        target.sendHealthUpdate()
+        target.health = 20.0
+        target.foodLevel = 20
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal.to"), TagResolver.resolver(
             Placeholder.parsed("player", target.name)
         )))

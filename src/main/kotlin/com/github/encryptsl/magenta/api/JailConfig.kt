@@ -1,23 +1,20 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 class JailConfig(private val magenta: Magenta) {
 
-    private val yaml: YamlConfiguration = YamlConfiguration()
-    private val file = File("${magenta.dataFolder}/LiteEco/", "jails.yml")
+    private var yaml: FileConfiguration = YamlConfiguration()
+    private val file = File("${magenta.dataFolder}/", "jails.yml")
 
     init {
         yaml.load(file)
     }
 
-    fun createConfig() {
-        magenta.configLoader.create("/jails.yml")
-    }
-
-    fun getJail(): YamlConfiguration {
+    fun getJail(): FileConfiguration {
         return yaml
     }
 

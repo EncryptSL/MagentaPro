@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.database
+package com.github.encryptsl.magenta.common.database
 
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import org.bukkit.Location

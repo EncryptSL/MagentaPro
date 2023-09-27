@@ -23,22 +23,28 @@ class JailCmd(private val magenta: Magenta) {
 
     }
 
-    @CommandMethod("jail <jailName> <player> [time]")
+    @CommandMethod("jail player <jailName> <player> [time]")
     @CommandPermission("magenta.jail")
-    fun onJailPlayer(player: Player, @Argument(value = "jailName", suggestions = "jails") jailName: String, @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer, @Argument(value = "time", defaultValue = "120", suggestions = "times") time: Long) {
-        magenta.pluginManager.callEvent(JailEvent(player, jailName, offlinePlayer, time))
+    fun onJailPlayer(commandSender: CommandSender, @Argument(value = "jailName", suggestions = "jails") jailName: String, @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer, @Argument(value = "time", defaultValue = "120") time: Long) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(JailEvent(commandSender, jailName, offlinePlayer, time))
+        }
     }
 
     @CommandMethod("jail create <name>")
     @CommandPermission("magenta.jail.create")
     fun onJailCreate(player: Player, @Argument(value = "name") jailName: String) {
-        magenta.pluginManager.callEvent(JailCreateEvent(player, jailName, player.location))
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(JailCreateEvent(player, jailName, player.location))
+        }
     }
 
     @CommandMethod("jail delete <name>")
     @CommandPermission("magenta.jail.delete")
     fun onJailDelete(commandSender: CommandSender, @Argument(value = "name") jailName: String) {
-        magenta.pluginManager.callEvent(JailDeleteEvent(commandSender, jailName))
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(JailDeleteEvent(commandSender, jailName))
+        }
     }
 
     @ProxiedBy("jails")

@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.database.HomeSQL
+import com.github.encryptsl.magenta.common.database.HomeSQL
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import org.bukkit.Location
@@ -73,7 +73,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun getHomesByOwner(player: Player): List<HomeEntity> {
-        return transaction { HomeTable.select { HomeTable.uuid eq player.uniqueId.toString() }.map { r ->
+        return transaction { HomeTable.select { HomeTable.uuid eq player.uniqueId.toString() }.mapNotNull { r ->
             HomeEntity(
                 r[HomeTable.username],
                 r[HomeTable.uuid],
@@ -88,7 +88,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun getHomes(): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().map { r ->
+        return transaction { HomeTable.selectAll().mapNotNull { r ->
             HomeEntity(
             r[HomeTable.username],
             r[HomeTable.uuid],

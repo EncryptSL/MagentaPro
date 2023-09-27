@@ -10,7 +10,6 @@ import org.bukkit.event.Listener
 
 class KitAdminGiveListener(private val magenta: Magenta) : Listener {
 
-
     @EventHandler
     fun onKitAdminGive(event: KitAdminGiveEvent) {
         val commandSender = event.commandSender
@@ -28,8 +27,9 @@ class KitAdminGiveListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))
-        }.onFailure {
-            commandSender.sendMessage(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist"))
+        }.onFailure { e ->
+            commandSender.sendMessage(e.message ?: e.localizedMessage)
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist")))
         }
     }
 

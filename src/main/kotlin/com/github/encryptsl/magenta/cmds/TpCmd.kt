@@ -27,32 +27,40 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tpa <target>")
     @CommandPermission("magenta.tpa")
     fun onTpa(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
-        magenta.pluginManager.callEvent(TpaRequestEvent(player, target))
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(TpaRequestEvent(player, target))
+        }
     }
 
     @CommandMethod("tpaccept")
     @CommandPermission("magenta.tpaccept")
     fun onTpaAccept(player: Player) {
-        magenta.pluginManager.callEvent(TpaAcceptEvent(player))
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(TpaAcceptEvent(player))
+        }
     }
 
     @CommandMethod("tpadeny")
     @CommandPermission("magenta.tpadeny")
     fun onTpaDeny(player: Player) {
-        magenta.pluginManager.callEvent(TpaDenyEvent(player))
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(TpaDenyEvent(player))
+        }
     }
 
 
-    @CommandMethod("tp <target>")
+    @CommandMethod("tp <player>")
     @CommandPermission("magenta.tp")
-    fun onTeleport(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
+    fun onTeleport(player: Player, @Argument(value = "player", suggestions = "players") target: Player) {
         val account = PlayerAccount(magenta, target.uniqueId)
         if (account.getAccount().getBoolean("teleportenabled"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.exempt"), TagResolver.resolver(
                 Placeholder.parsed("player", player.name)
             )))
 
-        player.teleport(target)
+        magenta.schedulerMagenta.runTask(magenta) {
+            player.teleport(target)
+        }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.self"), TagResolver.resolver(
             Placeholder.parsed("target", target.name)
         )))
@@ -73,8 +81,9 @@ class TpCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", player.name)
             )))
 
-
-        player.teleport(target.location)
+        magenta.schedulerMagenta.runTask(magenta) {
+            player.teleport(target.location)
+        }
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.to"), TagResolver.resolver(
             Placeholder.parsed("target", target.name)
         )))
@@ -85,28 +94,36 @@ class TpCmd(private val magenta: Magenta) {
 
     @CommandMethod("tpo <target>")
     @CommandPermission("magenta.tpo")
-    fun onTeleportOfflineLocation(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer) {
-        commandHelper.teleportOffline(player, offlinePlayer)
+    fun onTeleportOfflineLocation(player: Player, @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            commandHelper.teleportOffline(player, offlinePlayer)
+        }
     }
 
-    @CommandMethod("tphere [player]")
+    @CommandMethod("tphere [target]")
     @CommandPermission("magenta.tphere")
-    fun onTeleportHere(player: Player, @Argument(value = "player") target: Player?) {
+    fun onTeleportHere(player: Player, @Argument(value = "target") target: Player?) {
 
         if (target == null) {
-            commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
+            magenta.schedulerMagenta.runTask(magenta) {
+                commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
+            }
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
             return
         }
 
-        target.teleport(player)
+        magenta.schedulerMagenta.runTask(magenta) {
+            target.teleport(player)
+        }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
     }
 
     @CommandMethod("tpall")
     @CommandPermission("magenta.tpall")
     fun onTeleportAllHere(player: Player) {
-        commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
+        magenta.schedulerMagenta.runTask(magenta) {
+            commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
+        }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
     }
 

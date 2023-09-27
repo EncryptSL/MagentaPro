@@ -1,29 +1,24 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.events.jail.JailPlayerEvent
-import com.github.encryptsl.magenta.common.filter.modules.AdvancedFilter
-import com.github.encryptsl.magenta.common.filter.modules.AntiSpam
-import com.github.encryptsl.magenta.common.filter.modules.CapsLock
 import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.key.Key
-import net.kyori.adventure.sound.Sound
+import org.bukkit.Sound
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+
 
 class AsyncChatListener(private val magenta: Magenta) : Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun chat(event: AsyncChatEvent) {
         val player = event.player
-        AntiSpam(magenta, Violations.SPAM).detection(event)
-        CapsLock(magenta, Violations.CAPSLOCK).detection(event)
-        AdvancedFilter(magenta, Violations.ADVANCED_FILTER).detection(event)
 
         val jailPlayerEvent = JailPlayerEvent(player, "psát !")
+        magenta.pluginManager.callEvent(jailPlayerEvent)
         if (jailPlayerEvent.isCancelled) {
-            player.playSound(Sound.sound().type(Key.key("minecraft:block.note_block.bass")).source(Sound.Source.BLOCK).volume(1.5F).build())
+            player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_BASS, 1.25f, 1.25f)
             event.isCancelled = true
         }
     }

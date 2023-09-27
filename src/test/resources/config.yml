@@ -1,30 +1,49 @@
-prefix: '<gray>(<green>MAGENTAPRO<gray>)<reset>'
-
-#########################################################
+# ########################################################
 #                     MAGENTA PRO                       #
 #               DEVELOPED BY ENCRYPTSL                  #
-#########################################################
+# ########################################################
 database:
-  host: 'jdbc:sqlite:plugins/LiteEco/database.db'
+  host: jdbc:sqlite:plugins/MagentaPro/database.db
   username: root
   password: root
 
 newbies:
   # Announcement to player who first join on server.
-  announcement: '<blue>Vítej <displayname> <blue>na serveru !'
-
+  announcement: <blue>Vítej <displayname> <blue>na serveru !
+  
   # We teleport player on first join on spawnpoint.
   # for not spawn on point set spawnpoint: none
   spawnpoint: spawn
-
+  
   # We want give newbie player someone kit ? To disable set to kit: ''
   # Kit will be free, without cost and delay.
-  kit: hrac
+  kit: tools
 
-#########################################################
+# ########################################################
+#                 MAGENTA PRO (GLOBAL)                  #
+# ########################################################
+prefix: <gray>(<light_purple><bold>MAGENTAPRO</bold><gray>)
+
+teleport-cooldown: 5
+
+tpa-accept-cancellation: 120
+
+warp-info-format:
+  - <gray>Warp <green><warp>
+  - <gray>Majitel warpu <green><owner>
+  - <gray>Souřadnice <green><x> <y> <z>
+  - <gray>Svět <green><world>
+
+home-info-format:
+  - <gray>Home <green><warp>
+  - <gray>Majitel <green><owner>
+  - <gray>Souřadnice <green><x> <y> <z>
+  - <gray>Svět <green><world>
+
+# ########################################################
 #                       HOMES                           #
 # permission: magenta.homes.<group>                     #
-#########################################################
+# ########################################################
 homes:
   groups:
     player: 3
@@ -32,13 +51,12 @@ homes:
     moderator: -1
     admin: -1
 
-#########################################################
+# ########################################################
 #                       WARPS                           #
 # permission: magenta.warps.<group>                     #
-#########################################################
+# ########################################################
 warps:
   groups:
-    player: 3
     vip: 4
     moderator: -1
     admin: -1
@@ -47,30 +65,43 @@ warps:
     - world_nether
 
 
-#########################################################
+# ########################################################
 #                   MAGENTA PRO                         #
 #               DEVELOPED BY ENCRYPTSL                  #
-#########################################################
+# ########################################################
 chat:
   filters:
     antispam:
-      action: [notify, kick]
+      action:
+        - notify
+        - kick
       similarity: 80
       control: true
-    advanced_filter:
-      action: [notify, kick]
+    ipfilter:
+      action:
+        - replace
       control: true
-      ip_regex: '\d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}'
+      ip_regex: \d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}
+    website:
+      action:
+        - notify
+        - replace
+      control: true
       web_regex:
-        - '(http\:\/\/|https\:\/\/)?([a-z0-9\-\s\.\W\s\S\_]*\.)+[a-z0-9\s][a-z0-9\-\s\.]*'
-        - '^(.* + \W|\d|_|.*|)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+( .*)?$'
-        - '([a-z\_\S]*[\#\.\$\@\!|,|\_|\€]+(\w{2,4}))'
+        - (http|https)[\w|\_|\W|\_]*(\.)*(com|eu|_|sk|de|info|cz|io|COM|EU|SK|DE|INFO|CZ|IO)
+        - ^(.* + \W|\d|_|.*|)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+(
+          .*)?$
       whitelist:
         - https://youtube.com
     swear:
-      action: [replace]
+      action:
+        - notify
+        - replace
       control: true
     capslock:
-      action: [notify]
+      action:
+        - notify
+        - message
+        - cancel
       sensitive: 15
       control: true

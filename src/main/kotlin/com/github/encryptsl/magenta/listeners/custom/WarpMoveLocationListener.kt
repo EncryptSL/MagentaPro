@@ -30,7 +30,7 @@ class WarpMoveLocationListener(private val magenta: Magenta) : Listener {
         else
             magenta.warpModel.moveWarp(player, warpName, location)
 
-        player.sendMessage(ModernText.miniModernText("magenta.command.warp.success.moved", TagResolver.resolver(
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.moved"), TagResolver.resolver(
             Placeholder.parsed("warp", warpName)
         )))
     }

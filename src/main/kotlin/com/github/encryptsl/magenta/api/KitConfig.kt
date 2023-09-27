@@ -1,23 +1,21 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 class KitConfig(private val magenta: Magenta) {
 
-    private val yaml: YamlConfiguration = YamlConfiguration()
-    private val file = File("${magenta.dataFolder}/LiteEco/", "kits.yml")
+    private var yaml: FileConfiguration
+    private val file = File("${magenta.dataFolder}/", "kits.yml")
 
     init {
+        yaml = YamlConfiguration()
         yaml.load(file)
     }
 
-    fun createConfig() {
-        magenta.configLoader.create("/kits.yml")
-    }
-
-    fun getKit(): YamlConfiguration {
+    fun getKit(): FileConfiguration {
         return yaml
     }
 

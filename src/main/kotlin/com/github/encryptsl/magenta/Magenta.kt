@@ -3,14 +3,21 @@ package com.github.encryptsl.magenta
 import com.github.encryptsl.magenta.api.JailConfig
 import com.github.encryptsl.magenta.api.KitConfig
 import com.github.encryptsl.magenta.api.KitManager
+import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.events.jail.JailReleaseEvent
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.CommandManager
+import com.github.encryptsl.magenta.common.TpaRequestManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
+import com.github.encryptsl.magenta.common.filter.modules.CapsLock
+import com.github.encryptsl.magenta.common.filter.modules.IPFilter
+import com.github.encryptsl.magenta.common.filter.modules.Swear
+import com.github.encryptsl.magenta.common.filter.modules.WebsiteFilter
+import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.utils.TeamIntegration
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
@@ -26,21 +33,23 @@ class Magenta : JavaPlugin() {
     val localeConfig: Locale by lazy { Locale(this) }
     val kitConfig: KitConfig by lazy { KitConfig(this) }
     val jailConfig: JailConfig by lazy { JailConfig(this) }
-    val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta(this) }
+    val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
     val kitManager: KitManager by lazy { KitManager(this) }
+    val tpaManager: TpaRequestManager by lazy { TpaRequestManager(this) }
     val pluginManager = server.pluginManager
 
     override fun onLoad() {
         configLoader
-            .createFromResources("locale/cs_cz.yml", this)
+            .createFromResources("locale/cs_cz.properties", this)
             .createFromResources("kits.yml", this)
             .createFromResources("config.yml", this)
+            .createFromResources("swear_list.txt", this)
+            .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
-        jailConfig.createConfig()
-        DatabaseConnector().connect(
-            config.getString("database.host") ?: "jdbc:sqlite:plugins/LiteEco/database.db",
+        DatabaseConnector().initConnect(
+            config.getString("database.host") ?: "jdbc:sqlite:plugins/MagentaPro/database.db",
             config.getString("database.username") ?: "root",
             config.getString("database.password") ?: "admin"
         )
@@ -63,27 +72,36 @@ class Magenta : JavaPlugin() {
 
     private fun registerCustomEvent() {
         pluginManager.callEvent(JailReleaseEvent(server.onlinePlayers))
+        schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
     }
 
     private fun handlerListener() {
         val list: ArrayList<Listener> = arrayListOf(
             AsyncChatListener(this),
+            AsyncFilterChat(CapsLock(this, Violations.CAPSLOCK)),
+            AsyncFilterChat(IPFilter(this, Violations.IPFILTER)),
+            AsyncFilterChat(Swear(this, Violations.SWEAR)),
+            AsyncFilterChat(WebsiteFilter(this, Violations.WEBSITE)),
             EntityAttackListener(this),
-            BlockBreakListener(this),
+            BlockListener(this),
             PlayerAsyncLogin(this),
             PlayerLoginListener(this),
             PlayerQuitListener(this),
+            PlayerTeleportListener(this),
             HomeCreateListener(this),
             HomeDeleteListener(this),
+            HomeInfoListener(this),
             HomeMoveLocationListener(this),
             HomeRenameListener(this),
             HomeTeleportListener(this),
+            JailCheckListener(this),
             JailCreateListener(this),
             JailDeleteListener(this),
             JailListener(this),
             JailPlayerListener(this),
             JailReleaseListener(this),
             KitAdminGiveListener(this),
+            KitInfoListener(this),
             KitRecieveListener(this),
             TpaAcceptListener(this),
             TpaDenyListener(this),
@@ -102,11 +120,11 @@ class Magenta : JavaPlugin() {
             }
 
             list.forEach {pluginManager.registerEvents(it, this)
-                logger.info("Discord adapter ${it.javaClass.simpleName} registered () -> ok")
+                logger.info("Listener ${it.javaClass.simpleName} registered () -> ok")
             }
         }
 
-        logger.info("Bukkit listeners registered (${list.size}) in time ${time.inWholeSeconds}s -> $value")
+        logger.info("Bukkit listeners registered (${list.size}) in time ${time}s -> $value")
         list.removeAll(list.toSet())
     }
 }

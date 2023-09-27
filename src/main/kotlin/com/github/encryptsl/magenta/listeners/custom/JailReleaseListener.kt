@@ -16,10 +16,16 @@ class JailReleaseListener(private val magenta: Magenta) : Listener {
         val players: MutableCollection<out Player> = event.players
 
         magenta.schedulerMagenta.runTaskTimeSync(magenta, {
-            players.filter { !PlayerCooldownManager(it.uniqueId, magenta, "jail").hasCooldown() }.forEach { player ->
-                val account = PlayerAccount(magenta, player.uniqueId)
-                player.sendMessage(ModernText.miniModernText("${player.name} byl propuštěn !"))
-                account.getAccount().set("jailed", false)
+            players.forEach { player ->
+                val cooldownManager = PlayerCooldownManager(player.uniqueId, magenta, "jail")
+                if (!cooldownManager.hasCooldown()) {
+                    val account = PlayerAccount(magenta, player.uniqueId)
+                    player.sendMessage(ModernText.miniModernText("${player.name} byl propuštěn !"))
+                    account.getAccount().set("jailed", false)
+                    account.save()
+                    account.reload()
+                }
+                player.sendMessage("Working ?")
             }
         }, 20, 20)
     }

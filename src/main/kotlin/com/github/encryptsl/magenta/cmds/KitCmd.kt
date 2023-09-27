@@ -4,9 +4,12 @@ import cloud.commandframework.annotations.Argument
 import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.ProxiedBy
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.KitManager
 import com.github.encryptsl.magenta.api.events.kit.KitAdminGiveEvent
+import com.github.encryptsl.magenta.api.events.kit.KitInfoEvent
 import com.github.encryptsl.magenta.api.events.kit.KitReceiveEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
@@ -22,13 +25,33 @@ class KitCmd(private val magenta: Magenta) {
         if (player.hasPermission("magenta.kit.$kit"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
 
-        magenta.pluginManager.callEvent(KitReceiveEvent(player, kit, magenta.kitConfig.getKit().getLong("kits.$kit.delay"), KitManager(magenta)))
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(
+                KitReceiveEvent(
+                    player,
+                    kit,
+                    magenta.kitConfig.getKit().getLong("kits.$kit.delay"),
+                    KitManager(magenta)
+                )
+            )
+        }
     }
 
-    @CommandMethod("kit <player> <kit>")
+    @CommandMethod("kit <kit> <target>")
     @CommandPermission("magenta.kit.other")
     fun onKitOther(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-        magenta.pluginManager.callEvent(KitAdminGiveEvent(commandSender, target, kit, KitManager(magenta)))
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(KitAdminGiveEvent(commandSender, target, kit, KitManager(magenta)))
+        }
+    }
+
+    @ProxiedBy("kits")
+    @CommandMethod("kit list")
+    @CommandPermission("magenta.kit.list")
+    fun onKitList(commandSender: CommandSender) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(KitInfoEvent(commandSender, null, InfoType.LIST))
+        }
     }
 
     @CommandMethod("createkit <kit>")

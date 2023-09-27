@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.database.WarpSQL
+import com.github.encryptsl.magenta.common.database.WarpSQL
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import com.github.encryptsl.magenta.common.database.tables.WarpTable
@@ -98,7 +98,7 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     }
 
     override fun getWarps(): List<WarpEntity> {
-        return transaction { WarpTable.selectAll().map { r ->
+        return transaction { WarpTable.selectAll().mapNotNull { r ->
             WarpEntity(
                 r[WarpTable.username],
                 r[WarpTable.uuid],

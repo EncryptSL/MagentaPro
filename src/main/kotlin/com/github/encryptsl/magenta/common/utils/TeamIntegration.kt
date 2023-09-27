@@ -5,10 +5,10 @@ import org.bukkit.entity.Player
 class TeamIntegration {
 
     fun createTeams() {
-        Teams.createTeam("OWNER", "&4&lOWNER ")
-        Teams.createTeam("MODERATOR", "&3&lOWNER ")
-        Teams.createTeam("VIP", "&e&lVIP ")
-        Teams.createTeam("PLAYER", "&7(&aHRAC&7) ")
+        Teams.createTeam("OWNER", "<red><bold>OWNER</bold></red> ")
+        Teams.createTeam("MODERATOR", "<blue><bold>MODERATOR</blue></bold> ")
+        Teams.createTeam("VIP", "<yellow><bold>VIP</yellow></bold> ")
+        Teams.createTeam("PLAYER", "<gray>(</gray><green>HRAC</gree><gray>)</gray> ")
     }
 
     fun setTeam(player: Player) {

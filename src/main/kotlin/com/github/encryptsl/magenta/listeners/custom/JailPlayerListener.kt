@@ -19,11 +19,13 @@ class JailPlayerListener(private val magenta: Magenta) : Listener {
         val account = PlayerAccount(magenta, player.uniqueId)
         val cooldownManager = PlayerCooldownManager(player.uniqueId, magenta, "jail")
 
-        if (cooldownManager.hasCooldown() && account.getAccount().getBoolean("jailed")) {
+        if (cooldownManager.hasCooldown() || account.getAccount().getBoolean("jailed")) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
                 Placeholder.parsed("action", action)
             )))
             event.isCancelled = true
+        } else {
+            event.isCancelled = false
         }
     }
 

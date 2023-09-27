@@ -1,8 +1,9 @@
 package com.github.encryptsl.magenta.api.chat.enums
 
 enum class Violations {
-    SPAM,
+    ANTISPAM,
     SWEAR,
     CAPSLOCK,
-    ADVANCED_FILTER,
+    WEBSITE,
+    IPFILTER
 }

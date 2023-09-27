@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta.api
 
-enum class WarpInfoType {
+enum class InfoType {
     LIST,
     INFO
 }

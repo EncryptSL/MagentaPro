@@ -17,7 +17,7 @@ class HomeMoveLocationListener(private val magenta: Magenta) : Listener {
         val location: Location = player.location
         val homeName: String = event.homeName
 
-        val worlds = magenta.config.getStringList("warp.whitelist").contains(player.location.world.name)
+        val worlds = magenta.config.getStringList("homes.whitelist").contains(player.location.world.name)
 
         if (!worlds)
             return player.sendMessage(

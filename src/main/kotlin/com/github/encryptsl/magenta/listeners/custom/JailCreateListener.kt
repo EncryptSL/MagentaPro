@@ -25,6 +25,7 @@ class JailCreateListener(private val magenta: Magenta) : Listener {
                 )
             )
 
+        magenta.jailConfig.getJail().set("jails.$jailName.location.world", location.world.name)
         magenta.jailConfig.getJail().set("jails.$jailName.location.x", location.x)
         magenta.jailConfig.getJail().set("jails.$jailName.location.y", location.y)
         magenta.jailConfig.getJail().set("jails.$jailName.location.z", location.z)

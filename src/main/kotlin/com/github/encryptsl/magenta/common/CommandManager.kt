@@ -52,8 +52,8 @@ class CommandManager(private val magenta: Magenta) {
     }
 
     private fun registerSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
-        commandManager.parserRegistry().registerSuggestionProvider("modes") {sender, _ ->
-            GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { it.name }
+        commandManager.parserRegistry().registerSuggestionProvider("gamemodes") {sender, _ ->
+            GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { it.name.lowercase() }
         }
         commandManager.parserRegistry().registerSuggestionProvider("players") {_, input ->
             Bukkit.getOnlinePlayers().toList().filter { p -> p.name.startsWith(input) }.mapNotNull { it.name }
@@ -66,10 +66,13 @@ class CommandManager(private val magenta: Magenta) {
                 .mapNotNull { it.name }
         }
         commandManager.parserRegistry().registerSuggestionProvider("kits") { _, input ->
-            magenta.kitConfig.getKit().getConfigurationSection("kits")!!.getKeys(false).toList()
+            magenta.kitConfig.getKit().getConfigurationSection("kits")?.getKeys(false)?.toList() ?: emptyList()
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("jails") { _, input ->
+            magenta.jailConfig.getJail().getConfigurationSection("jails")?.getKeys(false)?.toList() ?: emptyList()
         }
         commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
-            val player = sender as Player
+            val player = sender.sender as Player
             return@registerSuggestionProvider magenta.homeModel.getHomesByOwner(player).map { s -> s.homeName }
         }
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
@@ -91,6 +94,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(HomeCmd(magenta))
         annotationParser.parse(JailCmd(magenta))
         annotationParser.parse(KitCmd(magenta))
+        annotationParser.parse(MagentaCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))
         annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))

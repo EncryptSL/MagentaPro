@@ -29,7 +29,7 @@ class WarpTeleportListener(private val magenta: Magenta) : Listener {
         }.onSuccess { warp ->
             if (commandSender is Player) {
                 if (target == null) {
-                    commandSender.teleport(Location(Bukkit.getWorld(warp.warpName), warp.x.toDouble(), warp.y.toDouble(), warp.z.toDouble(), warp.yaw, warp.pitch))
+                    commandSender.teleport(Location(Bukkit.getWorld(warp.world), warp.x.toDouble(), warp.y.toDouble(), warp.z.toDouble(), warp.yaw, warp.pitch))
                     commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.teleport.self"), TagResolver.resolver(
                         Placeholder.parsed("warp", warpName)
                     )))
@@ -66,7 +66,7 @@ class WarpTeleportListener(private val magenta: Magenta) : Listener {
                 }
             } else {
                 if (target != null) {
-                    target.teleport(Location(Bukkit.getWorld(warp.warpName), warp.x.toDouble(), warp.y.toDouble(), warp.z.toDouble(), warp.yaw, warp.pitch))
+                    target.teleport(Location(Bukkit.getWorld(warp.world), warp.x.toDouble(), warp.y.toDouble(), warp.z.toDouble(), warp.yaw, warp.pitch))
                     target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.teleport.self"), TagResolver.resolver(
                         Placeholder.parsed("warp", warpName)
                     )))
