@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.common.utils
 
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Scoreboard
