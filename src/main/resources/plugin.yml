@@ -44,6 +44,8 @@ permissions:
       magenta.tpa: true
       magenta.tpaccept: true
       magenta.tpadeny: true
+      magenta.nick: true
+      magenta.unnick: true
   magenta.plugin.*:
     description: Permissions for admins
     default: false
@@ -75,6 +77,7 @@ permissions:
     default: false
     children:
       magenta.home.tp: true
+      magenta.home.info: true
       magenta.home.create: true
       magenta.home.delete: true
       magenta.home.rename: true
@@ -85,6 +88,7 @@ permissions:
     default: false
     children:
       magenta.jail: true
+      magenta.jail.info: true
       magenta.jail.create: true
       magenta.jail.delete: true
       magenta.jail.list: true
@@ -114,8 +118,19 @@ permissions:
       magenta.warp.move.here: true
       magenta.warp.rename: true
       magenta.warp.list: true
+  magenta.nick.*:
+    description: Permissions for all nick commands
+    default: false
+    children:
+      magenta.nick: true
+      magenta.nick.other: true
+      magenta.unnick: true
+      magenta.unnick.other: true
+      magenta.nick.blacklist.bypass: true
   magenta.chat.filter.bypass.*:
     children:
-      magenta.chat.filter.bypass.advanced.filter: true
+      magenta.chat.filter.bypass.websites: true
+      magenta.chat.filter.bypass.ipfilter: true
+      magenta.chat.filter.bypass.swear: true
       magenta.chat.filter.bypass.antispam: true
       magenta.chat.filter.bypass.capslock: true

@@ -95,6 +95,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(JailCmd(magenta))
         annotationParser.parse(KitCmd(magenta))
         annotationParser.parse(MagentaCmd(magenta))
+        annotationParser.parse(NickCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))
         annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))

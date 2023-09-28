@@ -1,12 +1,12 @@
 package com.github.encryptsl.magenta.api.events.jail
 
-import org.bukkit.OfflinePlayer
+import com.github.encryptsl.magenta.api.InfoType
 import org.bukkit.command.CommandSender
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class JailEvent(val commandSender: CommandSender, val jail: String, val target: OfflinePlayer, val jailTime: Long, val reason: String?) : Event(), Cancellable {
+class JailInfoEvent(val commandSender: CommandSender, val jailName: String?, val infoType: InfoType) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

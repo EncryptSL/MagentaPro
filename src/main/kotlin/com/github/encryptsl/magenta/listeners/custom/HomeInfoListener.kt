@@ -29,7 +29,9 @@ class HomeInfoListener(private val magenta: Magenta) : Listener {
             InfoType.INFO -> {
                 val homeName = event.homeName ?: return
                 if (!magenta.homeModel.getHomeExist(player, homeName))
-                    return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist")))
+                    return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.not.exist"),
+                        Placeholder.parsed("home", homeName))
+                    )
 
                 magenta.config.getStringList("home-info-format").forEach { s ->
                     player.sendMessage(ModernText.miniModernText(s, TagResolver.resolver(

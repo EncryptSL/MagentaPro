@@ -20,7 +20,6 @@ class PlayerTeleportListener(private val magenta: Magenta) : Listener {
         playerAccount.getAccount().set("lastlocation.yaw", player.location.yaw)
         playerAccount.getAccount().set("lastlocation.pitch", player.location.pitch)
         playerAccount.save()
-        playerAccount.reload()
     }
 
 }

@@ -4,8 +4,6 @@ import cloud.commandframework.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.home.*
-import com.github.encryptsl.magenta.common.utils.ModernText
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 @Suppress("UNUSED")
@@ -15,7 +13,7 @@ class HomeCmd(private val magenta: Magenta) {
 
     @CommandMethod("info <home>")
     @CommandPermission("magenta.home.info")
-    fun onRenameHome(player: Player, @Argument(value = "home") homeName: String) {
+    fun onRenameHome(player: Player, @Argument(value = "home", suggestions = "homes") homeName: String) {
         magenta.schedulerMagenta.runTask(magenta) {
             magenta.server.pluginManager.callEvent(HomeInfoEvent(player, homeName, InfoType.INFO))
         }

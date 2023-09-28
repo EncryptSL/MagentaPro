@@ -1,11 +1,12 @@
 package com.github.encryptsl.magenta.api.events.jail
 
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class JailReleaseEvent(val players: MutableCollection<out Player>) : Event(), Cancellable {
+class JailTeleportEvent(val target: Player, val location: Location) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

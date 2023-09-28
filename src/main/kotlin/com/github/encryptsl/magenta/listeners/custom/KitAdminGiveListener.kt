@@ -28,8 +28,7 @@ class KitAdminGiveListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("kit", kitName)
             )))
         }.onFailure { e ->
-            commandSender.sendMessage(e.message ?: e.localizedMessage)
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist")))
+            commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
     }
 

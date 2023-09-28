@@ -14,7 +14,7 @@ class Locale(private val magenta: Magenta) {
     fun getMessage(key: String): String {
         val prefix = magenta.config.getString("prefix")
         val properties = properties.getProperty(key)
-            ?: properties.getProperty("magenta.missing.translation".replace("<key>", key), "Missing Translation $key")
+            ?: properties.getProperty("magenta.missing.translation", "Missing Translation $key").replace("<key>", key)
 
         return properties.replace("<prefix>", prefix ?: "")
     }

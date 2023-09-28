@@ -1,10 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.Argument
-import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.ProxiedBy
+import cloud.commandframework.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.KitManager
@@ -56,13 +52,13 @@ class KitCmd(private val magenta: Magenta) {
 
     @CommandMethod("createkit <kit>")
     @CommandPermission("magenta.createkit")
-    fun onKitCreate(commandSender: CommandSender, player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
+    fun onKitCreate(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
 
     }
 
     @CommandMethod("deletekit <kit>")
     @CommandPermission("magenta.deletekit")
-    fun onKitDelete(commandSender: CommandSender, player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
+    fun onKitDelete(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
 
     }
 

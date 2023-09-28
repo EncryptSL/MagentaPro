@@ -1,29 +1,51 @@
 package com.github.encryptsl.magenta.common.filter.modules
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.chat.AbstractChatFilter
 import com.github.encryptsl.magenta.api.chat.Chat
 import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.common.Algorithms
 import com.github.encryptsl.magenta.common.filter.ChatPunishManager
+import com.github.encryptsl.magenta.common.utils.CensorAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class AntiSpam(val magenta: Magenta, private val violations: Violations) : Chat {
 
     private val spam: MutableMap<UUID, String> = HashMap()
 
-    private val algorithms = Algorithms()
-    val chatPunishManager = ChatPunishManager(magenta, violations)
+    private val chatPunishManager = ChatPunishManager(magenta, violations)
 
     override fun isDetected(event: AsyncChatEvent) {
-        return
+        val player = event.player
+        val uuid = player.uniqueId
+        val message = PlainTextComponentSerializer.plainText().serialize(event.message())
+
+        if (!magenta.config.getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+
+        if (player.hasPermission("magenta.chat.filter.bypass.antispam"))
+            return
+
+        if (!spam.containsKey(uuid)) {
+            spam[uuid] = message
+            return
+        }
+
+        if (!spam[uuid].equals(message, true)) {
+            spam[uuid] = message
+            return
+        }
+
+        if (CensorAPI.checkSimilarity(message, spam[uuid].toString(), magenta.config.getInt("chat.filters.antispam.similarity"))) {
+            magenta.schedulerMagenta.delayedTask(magenta, {
+                      spam.remove(uuid, spam[uuid].toString())
+            }, 1000L)
+            chatPunishManager.action(player, event, ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.antispam")), null,
+                "[Automaticky] Zablokováno, detekován spam"
+            )
+        }
+
     }
 
 

@@ -11,8 +11,7 @@ class PlayerAsyncLogin(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onAsyncLogin(event: AsyncPlayerPreLoginEvent) {
         val player = event.uniqueId
-        val playerAccount = PlayerAccount(magenta, player)
-        playerAccount.createAccount()
+        PlayerAccount(magenta, player)
     }
 
 }

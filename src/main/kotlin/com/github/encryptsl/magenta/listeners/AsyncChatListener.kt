@@ -11,15 +11,18 @@ import org.bukkit.event.Listener
 
 class AsyncChatListener(private val magenta: Magenta) : Listener {
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     fun chat(event: AsyncChatEvent) {
         val player = event.player
 
-        val jailPlayerEvent = JailPlayerEvent(player, "psát !")
-        magenta.pluginManager.callEvent(jailPlayerEvent)
-        if (jailPlayerEvent.isCancelled) {
-            player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_BASS, 1.25f, 1.25f)
-            event.isCancelled = true
+        magenta.schedulerMagenta.runTask(magenta) {
+            val jailPlayerEvent = JailPlayerEvent(player, "psát !")
+            magenta.pluginManager.callEvent(jailPlayerEvent)
+            if (jailPlayerEvent.isCancelled) {
+                player.sendMessage("Yess is jailed !")
+                player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_BASS, 1.25f, 1.25f)
+                event.isCancelled = true
+            }
         }
     }
 }

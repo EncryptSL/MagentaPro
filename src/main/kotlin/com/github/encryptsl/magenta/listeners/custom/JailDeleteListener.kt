@@ -21,7 +21,7 @@ class JailDeleteListener(private val magenta: Magenta) : Listener {
             it?.set(jailName, null)
             magenta.jailConfig.save()
             magenta.jailConfig.reload()
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("command.magenta.jail.success.deleted"), TagResolver.resolver(
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.deleted"), TagResolver.resolver(
                 Placeholder.parsed("jail", jailName)
             )))
 

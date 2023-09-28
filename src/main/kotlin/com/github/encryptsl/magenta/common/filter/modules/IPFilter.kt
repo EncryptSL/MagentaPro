@@ -16,6 +16,10 @@ class IPFilter(private val magenta: Magenta, private val violations: Violations)
         val chatPunishManager = ChatPunishManager(magenta, violations)
         val message = PlainTextComponentSerializer.plainText().serialize(event.message())
 
+        if (!magenta.config.getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+
+        if (player.hasPermission("magenta.chat.filter.bypass.ipfilter")) return
+
         for (m in message.split(" ") ) {
             if (m.matches(Regex("${magenta.config.getString("chat.filters.${violations.name.lowercase()}.ip_regex")}"))) {
                 chatPunishManager.action(

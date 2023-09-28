@@ -1,37 +1,29 @@
-package com.github.encryptsl.magenta.common
+package com.github.encryptsl.magenta.api
 
-import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
 import java.time.Duration
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
+class PlayerCooldown(val uuid: UUID, val playerAccount: PlayerAccount) {
 
-class PlayerCooldownManager(uuid: UUID, magenta: Magenta, private val type: String) {
-
-    private val playerAccount = PlayerAccount(magenta, uuid)
-
-    fun setCooldown(duration: Duration?) {
+    fun setCooldown(duration: Duration?, type: String) {
         playerAccount.getAccount().set("timestamps.$type", Instant.now().plus(duration).toEpochMilli())
-        playerAccount.save()
-        playerAccount.reload()
+
     }
 
     // Check if cooldown has expired
-    fun hasCooldown(): Boolean {
+    fun hasCooldown(type: String): Boolean {
         val cooldown: Instant = Instant.ofEpochMilli(playerAccount.getAccount().getLong("timestamps.$type"))
         return Instant.now().isBefore(cooldown)
     }
 
     // Remove cooldown
-    fun removeCooldown() {
+    fun removeCooldown(type: String) {
         playerAccount.getAccount().set("timestamps.$type", 0)
-        playerAccount.save()
-        playerAccount.reload()
     }
 
     // Get remaining cooldown time
-    fun getRemainingCooldown(): Duration {
+    fun getRemainingCooldown(type: String): Duration {
         val cooldown: Instant = Instant.ofEpochMilli(playerAccount.getAccount().getLong("timestamps.$type"))
         val now = Instant.now()
         return if (now.isBefore(cooldown)) {
@@ -40,4 +32,5 @@ class PlayerCooldownManager(uuid: UUID, magenta: Magenta, private val type: Stri
             Duration.ZERO
         }
     }
+
 }

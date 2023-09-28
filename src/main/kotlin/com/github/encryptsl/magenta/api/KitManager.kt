@@ -1,10 +1,9 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.exceptions.KitNotFoundException
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TranslatableComponent
-import net.kyori.adventure.translation.Translatable
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -18,7 +17,7 @@ class KitManager(private val magenta: Magenta) {
         val inv: Inventory = player.inventory
 
         if (!magenta.kitConfig.getKit().contains("kits.$kitName"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist")))
+            throw KitNotFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist"))
 
         for (material in Material.entries) {
             if (magenta.kitConfig.getKit().contains("kits.$kitName.items.${material.name.lowercase()}")) {

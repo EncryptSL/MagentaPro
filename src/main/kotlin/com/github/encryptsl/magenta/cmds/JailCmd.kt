@@ -1,14 +1,15 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.Argument
-import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.ProxiedBy
+import cloud.commandframework.annotations.*
+import cloud.commandframework.annotations.specifier.Greedy
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.jail.JailCreateEvent
-import com.github.encryptsl.magenta.api.events.jail.JailDeleteEvent
-import com.github.encryptsl.magenta.api.events.jail.JailEvent
+import com.github.encryptsl.magenta.api.InfoType
+import com.github.encryptsl.magenta.api.events.jail.*
+import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -17,19 +18,37 @@ import org.bukkit.entity.Player
 @CommandDescription("Provived by plugin MagentaPro")
 class JailCmd(private val magenta: Magenta) {
 
-    @CommandMethod("jail help")
-    @CommandPermission("magenta.jail.help")
-    fun onHelp(commandSender: CommandSender) {
+    @CommandMethod("jail info <name>")
+    @CommandPermission("magenta.jail.info")
+    fun onJailInfo(commandSender: CommandSender, @Argument(value = "name", suggestions = "jails") jailName: String) {
 
     }
 
-    @CommandMethod("jail player <jailName> <player> [time]")
+    @CommandMethod("jail player <jailName> <player> [time] [reason]")
     @CommandPermission("magenta.jail")
-    fun onJailPlayer(commandSender: CommandSender, @Argument(value = "jailName", suggestions = "jails") jailName: String, @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer, @Argument(value = "time", defaultValue = "120") time: Long) {
+    fun onJailPlayer(
+        commandSender: CommandSender,
+        @Argument(value = "jailName", suggestions = "jails") jailName: String,
+        @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer,
+        @Argument(value = "time", defaultValue = "120") time: Long,
+        @Argument(value = "reason", defaultValue = "Protože bagr ?!") @Greedy reason: String
+    ) {
         magenta.schedulerMagenta.runTask(magenta) {
-            magenta.pluginManager.callEvent(JailEvent(commandSender, jailName, offlinePlayer, time))
+            magenta.pluginManager.callEvent(JailEvent(commandSender, jailName, offlinePlayer, time, reason))
         }
     }
+
+    @CommandMethod("jail pardon <player>")
+    @CommandPermission("magenta.jail.pardon")
+    fun onJailPardon(
+        commandSender: CommandSender,
+        @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer,
+    ) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(JailPardonEvent(offlinePlayer))
+        }
+    }
+
 
     @CommandMethod("jail create <name>")
     @CommandPermission("magenta.jail.create")
@@ -39,9 +58,80 @@ class JailCmd(private val magenta: Magenta) {
         }
     }
 
+    @CommandMethod("jail tp <name> [player]")
+    @CommandPermission("magenta.jail.tp")
+    fun onJailTp(commandSender: CommandSender, @Argument(value = "name", suggestions = "jails") jailName: String, @Argument(value = "player", suggestions = "players") target: Player?) {
+
+        if (commandSender is Player) {
+            if (target == null) {
+                val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") ?: return
+                commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
+                    Placeholder.parsed("jail", jailName)
+                )))
+
+                magenta.schedulerMagenta.runTask(magenta) {
+                    magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, Location(
+                        Bukkit.getWorld(jailSection.getString("location.world").toString()),
+                        jailSection.getDouble("location.x"),
+                        jailSection.getDouble("location.y"),
+                        jailSection.getDouble("location.z"),
+                        jailSection.getInt("location.yaw").toFloat(),
+                        jailSection.getInt("location.pitch").toFloat()
+                    )))
+                }
+                return
+            }
+
+            val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") ?: return
+            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
+                Placeholder.parsed("jail", jailName)
+            )))
+
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport.to"), TagResolver.resolver(
+                Placeholder.parsed("jail", jailName),
+                Placeholder.parsed("player", target.name)
+            )))
+
+            magenta.schedulerMagenta.runTask(magenta) {
+                magenta.pluginManager.callEvent(JailTeleportEvent(target, Location(
+                    Bukkit.getWorld(jailSection.getString("location.world").toString()),
+                    jailSection.getDouble("location.x"),
+                    jailSection.getDouble("location.y"),
+                    jailSection.getDouble("location.z"),
+                    jailSection.getInt("location.yaw").toFloat(),
+                    jailSection.getInt("location.pitch").toFloat()
+                )))
+            }
+        } else {
+            if (target == null) return
+
+            val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") ?: return
+            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
+                Placeholder.parsed("jail", jailName)
+            )))
+
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport.to"), TagResolver.resolver(
+                Placeholder.parsed("jail", jailName),
+                Placeholder.parsed("player", target.name)
+            )))
+
+            magenta.schedulerMagenta.runTask(magenta) {
+                magenta.pluginManager.callEvent(JailTeleportEvent(target.player!!, Location(
+                    Bukkit.getWorld(jailSection.getString("location.world").toString()),
+                    jailSection.getDouble("location.x"),
+                    jailSection.getDouble("location.y"),
+                    jailSection.getDouble("location.z"),
+                    jailSection.getInt("location.yaw").toFloat(),
+                    jailSection.getInt("location.pitch").toFloat()
+                )))
+            }
+        }
+
+    }
+
     @CommandMethod("jail delete <name>")
     @CommandPermission("magenta.jail.delete")
-    fun onJailDelete(commandSender: CommandSender, @Argument(value = "name") jailName: String) {
+    fun onJailDelete(commandSender: CommandSender, @Argument(value = "name", suggestions = "jails") jailName: String) {
         magenta.schedulerMagenta.runTask(magenta) {
             magenta.pluginManager.callEvent(JailDeleteEvent(commandSender, jailName))
         }
@@ -51,7 +141,9 @@ class JailCmd(private val magenta: Magenta) {
     @CommandMethod("jail list")
     @CommandPermission("magenta.jail.list")
     fun onJails(commandSender: CommandSender) {
-
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(JailInfoEvent(commandSender, null, InfoType.LIST))
+        }
     }
 
 }

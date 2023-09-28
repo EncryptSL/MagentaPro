@@ -3,7 +3,7 @@ package com.github.encryptsl.magenta.listeners.custom
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
-import com.github.encryptsl.magenta.common.PlayerCooldownManager
+import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
@@ -15,11 +15,11 @@ class JailCheckListener(private val magenta: Magenta) : Listener {
     fun onJailWhileJoin(event: JailCheckEvent) {
         val player = event.player
         val playerAccount = PlayerAccount(magenta, player.uniqueId)
-        val cooldown = PlayerCooldownManager(player.uniqueId, magenta, "jail")
 
-        if (cooldown.hasCooldown() && playerAccount.getAccount().contains("jailed")) {
+        if (playerAccount.cooldownManager.hasCooldown("jail") || playerAccount.getAccount().getBoolean("jailed")) {
             val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails") ?: return
             val randomJail = jailSection.getKeys(false).random()
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.jailed")))
 
             magenta.schedulerMagenta.runTask(magenta) {
                 player.teleport(

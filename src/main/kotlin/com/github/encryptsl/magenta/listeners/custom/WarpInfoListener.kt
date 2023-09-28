@@ -30,7 +30,9 @@ class WarpInfoListener(private val magenta: Magenta) : Listener {
             InfoType.INFO -> {
                 val warpName = event.warpName ?: return
                 if (!magenta.warpModel.getWarpExist(warpName))
-                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist")))
+                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist"),
+                        Placeholder.parsed("warp", warpName)
+                    ))
 
                 magenta.config.getStringList("warp-info-format").forEach { s ->
                     commandSender.sendMessage(ModernText.miniModernText(s, TagResolver.resolver(
