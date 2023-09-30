@@ -10,6 +10,7 @@ import com.github.encryptsl.magenta.api.events.ignore.PlayerRemoveIgnoreEvent
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class IgnoreCmd(private val magenta: Magenta) {
 

@@ -38,6 +38,11 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
             ))
         }
 
+        if (playerAccount.getAccount().contains("displayname")) {
+            player.displayName(ModernText.miniModernText(playerAccount.getAccount().getString("displayname").toString()))
+            player.playerListName(ModernText.miniModernText(playerAccount.getAccount().getString("displayname").toString()))
+        }
+
         if (player.hasPlayedBefore()) {
             playerAccount.getAccount().set("timestamps.login", System.currentTimeMillis())
             playerAccount.save()

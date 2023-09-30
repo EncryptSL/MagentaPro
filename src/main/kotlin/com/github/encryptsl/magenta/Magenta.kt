@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta
 
 import com.github.encryptsl.magenta.api.JailConfig
-import com.github.encryptsl.magenta.api.JailManager
 import com.github.encryptsl.magenta.api.KitConfig
 import com.github.encryptsl.magenta.api.KitManager
 import com.github.encryptsl.magenta.api.chat.enums.Violations
@@ -89,6 +88,8 @@ class Magenta : JavaPlugin() {
             PlayerQuitListener(this),
             PlayerTeleportListener(this),
             PlayerIgnoreListener(this),
+            PlayerCommandPreprocessListener(this),
+            PlayerPrivateMessageListener(this),
             HomeCreateListener(this),
             HomeDeleteListener(this),
             HomeInfoListener(this),
@@ -106,6 +107,7 @@ class Magenta : JavaPlugin() {
             KitAdminGiveListener(this),
             KitInfoListener(this),
             KitReceiveListener(this),
+            SocialSpyListener(this),
             TpaListener(this),
             WarpCreateListener(this),
             WarpDeleteListener(this),

@@ -8,7 +8,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.inventory.meta.Damageable
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -20,8 +19,6 @@ class RepairCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.repair.item")
     fun onRepair(player: Player) {
         val inventory = player.inventory
-        val item = inventory.itemInMainHand
-        val itemMeta = item.itemMeta
 
         if (inventory.itemInMainHand.type.isEmpty || inventory.itemInMainHand.type.isAir || inventory.itemInMainHand.isEmpty)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.hand")))
@@ -49,7 +46,6 @@ class RepairCmd(private val magenta: Magenta) {
                 return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
 
             commandHelper.repairItems(target)
-
 
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
             commandSender.sendMessage(

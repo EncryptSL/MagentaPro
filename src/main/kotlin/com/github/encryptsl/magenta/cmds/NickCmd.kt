@@ -5,6 +5,7 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -14,6 +15,8 @@ import org.bukkit.entity.Player
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class NickCmd(private val magenta: Magenta) {
+
+    private val commandHelper = CommandHelper(magenta)
 
     @CommandMethod("nick <nickname>")
     @CommandPermission("magenta.nick")
@@ -29,8 +32,7 @@ class NickCmd(private val magenta: Magenta) {
                 Placeholder.parsed("maxlength", magenta.config.getInt("max-nick-length").toString())
             )))
 
-        player.displayName(ModernText.miniModernText(nickName))
-        player.playerListName(ModernText.miniModernText(nickName))
+        commandHelper.changeDisplayName(player, nickName)
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed"),
             Placeholder.parsed("nickname", nickName)
         ))
@@ -52,8 +54,8 @@ class NickCmd(private val magenta: Magenta) {
             )))
 
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed"), Placeholder.parsed("nickname", nickName)))
-        target.displayName(ModernText.miniModernText(nickName))
-        target.playerListName(ModernText.miniModernText(nickName))
+
+        commandHelper.changeDisplayName(target, nickName)
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed.to"), TagResolver.resolver(
             Placeholder.parsed("nickname", nickName),
             Placeholder.parsed("player", target.name)
@@ -64,16 +66,14 @@ class NickCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.nick.other")
     fun onUnNick(player: Player) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed.back"), Placeholder.parsed("nickname", player.name)))
-        player.displayName(ModernText.miniModernText(player.name))
-        player.playerListName(player.name())
+        commandHelper.changeDisplayName(player, player.name)
     }
 
     @CommandMethod("unnick <player>")
     @CommandPermission("magenta.unnick.other")
     fun onUnNickOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed.back"), Placeholder.parsed("nickname", target.name)))
-        target.displayName(target.name())
-        target.playerListName(target.name())
+        commandHelper.changeDisplayName(target, target.name)
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed.back.to"), TagResolver.resolver(
             Placeholder.parsed("nickname", target.name),
             Placeholder.parsed("player", target.name)

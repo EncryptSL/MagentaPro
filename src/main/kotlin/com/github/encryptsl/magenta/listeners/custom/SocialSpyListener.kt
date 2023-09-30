@@ -20,13 +20,13 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
         val account = PlayerAccount(magenta, player.uniqueId)
         if (account.getAccount().getBoolean("socialspy")) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle"),
-                Placeholder.parsed("value", "")
+                Placeholder.parsed("value", false.toString())
             ))
             commandHelper.toggleSocialSpy(player, false)
         } else {
             commandHelper.toggleSocialSpy(player, true)
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle"),
-                Placeholder.parsed("value", "")
+                Placeholder.parsed("value", true.toString())
             ))
         }
 
@@ -38,18 +38,18 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
         val target = event.target
         val account = PlayerAccount(magenta, target.uniqueId)
         if (account.getAccount().getBoolean("socialspy")) {
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spysuccess.toggle"),
+            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle"),
                 Placeholder.parsed("value", false.toString())
             ))
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.sociaspy.success.toggle.to"),
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle.to"),
                 Placeholder.parsed("value", false.toString())
             ))
             commandHelper.toggleSocialSpy(target, false)
         } else {
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.socialspy.success.toggle"),
+            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle"),
                 Placeholder.parsed("value", true.toString())
             ))
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.socialspy.success.toggle.to"),
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle.to"),
                 Placeholder.parsed("value", true.toString())
             ))
             commandHelper.toggleSocialSpy(target, true)

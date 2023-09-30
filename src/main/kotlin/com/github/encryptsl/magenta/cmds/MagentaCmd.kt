@@ -14,9 +14,12 @@ class MagentaCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.plugin.help")
     @CommandMethod("help")
     fun onHelp(commandSender: CommandSender) {
-        commandSender.sendMessage(ModernText.miniModernText("===================================================================================="))
-        commandSender.sendMessage(ModernText.miniModernText("= Plugin: ${magenta.pluginMeta.displayName}, Version ${magenta.pluginMeta.version} ="))
-        commandSender.sendMessage(ModernText.miniModernText("===================================================================================="))
+        commandSender.sendMessage(ModernText.miniModernText("============="))
+        commandSender.sendMessage(ModernText.miniModernText("= Plugin: ${magenta.pluginMeta.displayName}"))
+        commandSender.sendMessage(ModernText.miniModernText("= Version: ${magenta.pluginMeta.version}"))
+        commandSender.sendMessage(ModernText.miniModernText("= Author: ${magenta.pluginMeta.authors}"))
+        commandSender.sendMessage(ModernText.miniModernText("= Website: ${magenta.pluginMeta.website}"))
+        commandSender.sendMessage(ModernText.miniModernText("============="))
     }
 
     @CommandPermission("magenta.plugin.reload")
@@ -31,5 +34,4 @@ class MagentaCmd(private val magenta: Magenta) {
         magenta.jailConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
-
 }
