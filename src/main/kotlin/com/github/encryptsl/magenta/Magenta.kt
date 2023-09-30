@@ -25,7 +25,7 @@ import kotlin.time.measureTimedValue
 class Magenta : JavaPlugin() {
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
-    val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
+    private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val teamIntegration: TeamIntegration by lazy { TeamIntegration() }
     val localeConfig: Locale by lazy { Locale(this) }
