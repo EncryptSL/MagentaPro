@@ -41,6 +41,8 @@ custom-join-message: "<gray>[<green>+<gray>] <gold><player> <gray>se připojil !
 
 custom-quit-message: "<gray>[<red>-<gray>] <gold><player> <gray>se odpojil !"
 
+online-jail-time: true
+
 jail-info-format:
   - "<gray>Cela <green><jail>"
   - "<gray>Souřadnice <green><x> <y> <z>"
@@ -57,6 +59,18 @@ warp-info-format:
   - "<gray>Majitel warpu <green><owner>"
   - "<gray>Souřadnice <green><x> <y> <z>"
   - "<gray>Svět <green><world>"
+
+
+# These commands will be shown to players with socialSpy enabled.
+# You can add commands from other plugins you may want to track or
+# remove commands that are used for something you dont want to spy on.
+# Set - '*' in order to listen on all possible commands.
+socialspy-commands:
+  - msg
+  - mail
+  - whisper
+  - tell
+  - pm
 
 #########################################################
 #                       HOMES                           #

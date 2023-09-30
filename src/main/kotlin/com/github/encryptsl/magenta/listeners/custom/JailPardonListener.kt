@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.JailManager
 import com.github.encryptsl.magenta.api.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
 import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
@@ -19,6 +20,7 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
     fun onJailRelease(event: JailPardonEvent) {
         val target = event.player
         val playerAccount = PlayerAccount(magenta, target.uniqueId)
+        val jailManager = JailManager(magenta, target.uniqueId)
 
         val player = Bukkit.getPlayer(target.uniqueId)
 
@@ -45,9 +47,9 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
                 )
             ), "magenta.jail.pardon.event"
         )
-        playerAccount.cooldownManager.setCooldown(Duration.ofSeconds(0), "jail")
-        playerAccount.getAccount().set("jailed", false)
-        playerAccount.save()
+
+        jailManager.setJailTimeout(0)
+        jailManager.setOnlineTime(0)
     }
 
 }

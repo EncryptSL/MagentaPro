@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.*
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -13,6 +14,8 @@ import org.bukkit.inventory.meta.Damageable
 @CommandDescription("Provided by plugin MagentaPro")
 class RepairCmd(private val magenta: Magenta) {
 
+    private val commandHelper = CommandHelper(magenta)
+
     @CommandMethod("repair")
     @CommandPermission("magenta.repair.item")
     fun onRepair(player: Player) {
@@ -23,16 +26,7 @@ class RepairCmd(private val magenta: Magenta) {
         if (inventory.itemInMainHand.type.isEmpty || inventory.itemInMainHand.type.isAir || inventory.itemInMainHand.isEmpty)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.hand")))
 
-        if (itemMeta is Damageable) {
-            val dmg = itemMeta
-            if (!dmg.hasDamage()) return
-            dmg.damage = 0
-            item.setItemMeta(dmg)
-            player.updateInventory()
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.item")))
-        }
-
-        //player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.item")))
+        commandHelper.repairItem(player)
     }
 
     @ProxiedBy("fixall")
@@ -42,17 +36,10 @@ class RepairCmd(private val magenta: Magenta) {
         if (commandSender is Player) {
             if (target == null) {
                 val inventory = commandSender.inventory
-                if (commandSender.inventory.isEmpty)
+                if (inventory.isEmpty)
                     return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
 
-                inventory.contents.forEach { item ->
-                    val itemMeta = item?.itemMeta
-                    if (itemMeta is Damageable) {
-                        itemMeta.damage = 0
-                        item.setItemMeta(itemMeta)
-                        commandSender.updateInventory()
-                    }
-                }
+                commandHelper.repairItems(commandSender)
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
                 return
             }
@@ -61,14 +48,8 @@ class RepairCmd(private val magenta: Magenta) {
             if (inventory.isEmpty)
                 return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
 
-            inventory.forEach { item ->
-                val itemMeta = item?.itemMeta
-                if (itemMeta is Damageable) {
-                    itemMeta.damage = 0
-                    item.setItemMeta(itemMeta)
-                    target.updateInventory()
-                }
-            }
+            commandHelper.repairItems(target)
+
 
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
             commandSender.sendMessage(
@@ -85,14 +66,7 @@ class RepairCmd(private val magenta: Magenta) {
                 if (inventory.isEmpty)
                     return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
 
-                inventory.forEach { item ->
-                    val itemMeta = item?.itemMeta
-                    if (itemMeta is Damageable) {
-                        itemMeta.damage = 0
-                        item.setItemMeta(itemMeta)
-                        target.updateInventory()
-                    }
-                }
+                commandHelper.repairItems(target)
 
                 target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
                 commandSender.sendMessage(

@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.JailManager
 import com.github.encryptsl.magenta.api.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailPlayerEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -17,8 +18,9 @@ class JailPlayerListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val action = event.action
         val account = PlayerAccount(magenta, player.uniqueId)
+        val jailManager = JailManager(magenta, player.uniqueId)
 
-        if (account.cooldownManager.hasCooldown("jail") || account.getAccount().getBoolean("jailed")) {
+        if (jailManager.hasPunish(player) && account.getAccount().getBoolean("jailed")) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
                 Placeholder.parsed("action", action)
             )))

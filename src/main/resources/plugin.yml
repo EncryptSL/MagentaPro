@@ -83,6 +83,12 @@ permissions:
       magenta.home.rename: true
       magenta.home.list: true
       magenta.homes.unlimited: true
+  magenta.ignore.*:
+    description: Permissions for all ignore commands
+    default: false
+    children:
+      magenta.ignore: true
+      magenta.unignore: true
   magenta.jail.*:
     description: Permissions for all jail commands
     default: false
