@@ -4,7 +4,8 @@ import cloud.commandframework.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.KitManager
-import com.github.encryptsl.magenta.api.events.kit.KitAdminGiveEvent
+import com.github.encryptsl.magenta.api.events.kit.KitGiveEvent
+import com.github.encryptsl.magenta.api.events.kit.KitCreateEvent
 import com.github.encryptsl.magenta.api.events.kit.KitInfoEvent
 import com.github.encryptsl.magenta.api.events.kit.KitReceiveEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -18,7 +19,7 @@ class KitCmd(private val magenta: Magenta) {
     @CommandMethod("kit <kit>")
     @CommandPermission("magenta.kit")
     fun onKit(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-        if (player.hasPermission("magenta.kit.$kit"))
+        if (!player.hasPermission("magenta.kit.$kit"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
 
         magenta.schedulerMagenta.runTask(magenta) {
@@ -37,7 +38,7 @@ class KitCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.kit.other")
     fun onKitOther(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
         magenta.schedulerMagenta.runTask(magenta) {
-            magenta.pluginManager.callEvent(KitAdminGiveEvent(commandSender, target, kit, KitManager(magenta)))
+            magenta.pluginManager.callEvent(KitGiveEvent(commandSender, target, kit, KitManager(magenta)))
         }
     }
 
@@ -50,10 +51,12 @@ class KitCmd(private val magenta: Magenta) {
         }
     }
 
-    @CommandMethod("createkit <kit>")
+    @CommandMethod("createkit <kit> [delay]")
     @CommandPermission("magenta.createkit")
-    fun onKitCreate(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-
+    fun onKitCreate(player: Player, @Argument(value = "kit") kit: String, @Argument(value = "delay", defaultValue = "150") delay: Int) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(KitCreateEvent(player, kit, delay, KitManager(magenta)))
+        }
     }
 
     @CommandMethod("deletekit <kit>")

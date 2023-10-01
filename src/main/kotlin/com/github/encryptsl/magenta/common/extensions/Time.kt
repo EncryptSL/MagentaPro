@@ -2,8 +2,10 @@ package com.github.encryptsl.magenta.common.extensions
 
 import org.apache.commons.lang3.time.DurationFormatUtils
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
+
 
 fun Long.parseMinecraftTime(): String {
     var hour = this / 1000L + 6L
@@ -33,6 +35,11 @@ fun convertUptime(millis: Long): String = String.format(
 fun expire(minute: Long): String {
     val dateStop: LocalDateTime = LocalDateTime.now().plusMinutes(minute)
     return dateStop.format(DateTimeFormatter.ofPattern("HH:mm"))
+}
+
+fun formatFromSecondsTime(seconds: Long): String {
+    val timeOfDay = LocalTime.ofSecondOfDay(seconds)
+    return timeOfDay.toString()
 }
 
 fun datetime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))

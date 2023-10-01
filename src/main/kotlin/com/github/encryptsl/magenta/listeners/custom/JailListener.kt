@@ -10,10 +10,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Statistic
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import java.time.Duration
 
 class JailListener(private val magenta: Magenta) : Listener {
 
@@ -25,7 +23,6 @@ class JailListener(private val magenta: Magenta) : Listener {
         val jailTime = event.jailTime
         val reason = event.reason
         val account = PlayerAccount(magenta, target.uniqueId)
-        val jailManager = JailManager(magenta, target.uniqueId)
 
         //if (target.player?.hasPermission("") == true)
 
@@ -38,7 +35,7 @@ class JailListener(private val magenta: Magenta) : Listener {
                 )
             )
 
-        if (target.player?.let { jailManager.hasPunish(it) } == true || account.getAccount().getBoolean("jailed"))
+        if (account.jailManager.hasPunish() || account.getAccount().getBoolean("jailed"))
             return commandManager.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.jailed"), TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString())
             )))
@@ -62,9 +59,8 @@ class JailListener(private val magenta: Magenta) : Listener {
             Placeholder.parsed("player", target.name ?: target.uniqueId.toString()),
             Placeholder.parsed("reason", reason.toString()),
         )))
-        jailManager.setJailTimeout(jailTime)
-        val timeDiff = System.currentTimeMillis() + jailTime
-        jailManager.setOnlineTime((target.getStatistic(Statistic.PLAY_ONE_MINUTE)) + (timeDiff / 50))
+        account.jailManager.setJailTimeout(jailTime)
+        account.jailManager.setOnlineTime(jailTime)
     }
 
 }

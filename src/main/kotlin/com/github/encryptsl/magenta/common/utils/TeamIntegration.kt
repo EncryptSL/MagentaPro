@@ -6,9 +6,9 @@ class TeamIntegration {
 
     fun createTeams() {
         Teams.createTeam("OWNER", "<red><bold>OWNER</bold></red> ")
-        Teams.createTeam("MODERATOR", "<blue><bold>MODERATOR</blue></bold> ")
-        Teams.createTeam("VIP", "<yellow><bold>VIP</yellow></bold> ")
-        Teams.createTeam("PLAYER", "<gray>(</gray><green>HRAC</gree><gray>)</gray> ")
+        Teams.createTeam("MODERATOR", "<blue><bold>MODERATOR</bold></blue> ")
+        Teams.createTeam("VIP", "<yellow><bold>VIP</bold></yellow> ")
+        Teams.createTeam("PLAYER", "<gray>(</gray><green>HRAC</green><gray>)</gray> ")
     }
 
     fun setTeam(player: Player) {

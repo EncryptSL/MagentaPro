@@ -11,7 +11,7 @@ import java.util.*
 
 class TpaRequestManager(private val magenta: Magenta) {
 
-    val request: MutableMap<UUID, UUID> = HashMap()
+    private val request: MutableMap<UUID, UUID> = HashMap()
 
     fun createRequest(sender: Player, target: Player) : Boolean {
         if (request.containsKey(sender.uniqueId))

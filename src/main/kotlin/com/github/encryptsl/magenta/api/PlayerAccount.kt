@@ -9,6 +9,7 @@ class PlayerAccount(magenta: Magenta, private val uuid: UUID) {
 
     private val configUtil = ConfigUtil(magenta, "/players/$uuid.yml")
     val cooldownManager: PlayerCooldown by lazy { PlayerCooldown(uuid, this) }
+    val jailManager: JailManager by lazy { JailManager(magenta, this) }
 
     fun save() {
         configUtil.save()

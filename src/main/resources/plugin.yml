@@ -28,12 +28,16 @@ permissions:
       magenta.jail.*: true
       magenta.fly.*: true
       magenta.gamemodes.*: true
+      magenta.social.spy.*: true
+      magenta.social.spy.exempt: true
+      magenta.ignore.*: true
   magenta.moderator:
     description: Permissions for moderator
     children:
       magenta.fly: true
       magenta.player: true
       magenta.warp.default: true
+      magenta.ignore.*: true
       magenta.chat.filter.bypass.*: true
   magenta.player:
     description: Permissions for player
@@ -46,6 +50,7 @@ permissions:
       magenta.tpadeny: true
       magenta.nick: true
       magenta.unnick: true
+      magenta.msg: true
   magenta.plugin.*:
     description: Permissions for admins
     default: false
@@ -89,6 +94,7 @@ permissions:
     children:
       magenta.ignore: true
       magenta.unignore: true
+      magenta.ignore.exempt: true
   magenta.jail.*:
     description: Permissions for all jail commands
     default: false
@@ -124,6 +130,12 @@ permissions:
       magenta.warp.move.here: true
       magenta.warp.rename: true
       magenta.warp.list: true
+  magenta.social.spy.*:
+    description: Permissions for all social spy
+    default: false
+    children:
+      magenta.social.spy: true
+      magenta.social.spy.other: true
   magenta.nick.*:
     description: Permissions for all nick commands
     default: false

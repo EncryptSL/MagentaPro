@@ -7,11 +7,10 @@ import java.io.File
 
 class KitConfig(private val magenta: Magenta) {
 
-    private var yaml: FileConfiguration
+    private var yaml: FileConfiguration = YamlConfiguration()
     private val file = File("${magenta.dataFolder}/", "kits.yml")
 
     init {
-        yaml = YamlConfiguration()
         yaml.load(file)
     }
 

@@ -7,28 +7,16 @@ import java.time.Duration
 import java.util.*
 
 
-class JailManager(private val magenta: Magenta, uuid: UUID) {
-
-    private val account = PlayerAccount(magenta, uuid)
-
+class JailManager(private val magenta: Magenta, private val account: PlayerAccount) {
 
     private fun getOnlineJailedTime(): Long {
         return (account.getAccount().getLong("timestamps.onlinejail"))
     }
 
+    fun hasPunish(): Boolean {
+        val onlineTime = magenta.config.getBoolean("online-jail-time")
 
-    private fun getOnlineJailExpireTime(player: Player): Long {
-        return (account.getAccount().getLong("timestamps.onlinejail") - player.getStatistic(Statistic.PLAY_ONE_MINUTE)) * 50 + System.currentTimeMillis()
-    }
-
-    fun hasPunish(player: Player): Boolean {
-        if (magenta.config.getBoolean("online-jail-time")) {
-            if (getOnlineJailedTime() > 0) {
-                return getOnlineJailedTime() > player.getStatistic(Statistic.PLAY_ONE_MINUTE)
-            }
-        }
-
-        return account.cooldownManager.hasCooldown("jail")
+        return if (onlineTime) getOnlineJailedTime() > 0 else account.cooldownManager.hasCooldown("jail")
     }
 
     fun setJailTimeout(seconds: Long) {
@@ -38,17 +26,14 @@ class JailManager(private val magenta: Magenta, uuid: UUID) {
 
     fun setOnlineTime(millis: Long) {
         val onlineTime = magenta.config.getBoolean("online-jail-time")
-        val time = if (onlineTime) millis / 50 else 0
-        account.getAccount().set("timestamps.onlinejail", time)
+        account.getAccount().set("timestamps.onlinejail", if (onlineTime) millis else 0)
         account.save()
     }
 
-    fun remainingTime(player: Player): Long {
-        if (magenta.config.getBoolean("online-jail-time")) {
-            return getOnlineJailExpireTime(player)
-        }
+    fun remainingTime(): Long {
+        val onlineTime = magenta.config.getBoolean("online-jail-time")
 
-        return account.cooldownManager.getRemainingCooldown("jail").seconds
+        return if (onlineTime) getOnlineJailedTime().minus(1) else account.cooldownManager.getRemainingCooldown("jail").seconds
     }
 
 }

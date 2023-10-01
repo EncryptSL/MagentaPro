@@ -56,12 +56,12 @@ class CommandManager(private val magenta: Magenta) {
             GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { it.name.lowercase() }
         }
         commandManager.parserRegistry().registerSuggestionProvider("players") {_, input ->
-            Bukkit.getOnlinePlayers().toList().filter { p -> p.name.startsWith(input) }.mapNotNull { it.name }
+            Bukkit.getOnlinePlayers().toList().filter { p -> p.name.startsWith(input, ignoreCase = true) }.mapNotNull { it.name }
         }
         commandManager.parserRegistry().registerSuggestionProvider("offlinePlayers") { _, input ->
             Bukkit.getOfflinePlayers().toList()
                 .filter { p ->
-                    p.name?.startsWith(input) ?: false
+                    p.name?.startsWith(input, ignoreCase = true) ?: false
                 }
                 .mapNotNull { it.name }
         }
@@ -99,6 +99,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(IgnoreCmd(magenta))
         annotationParser.parse(MsgCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))
+        annotationParser.parse(SocialSpyCmd(magenta))
         annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))
     }

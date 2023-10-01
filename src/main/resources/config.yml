@@ -22,7 +22,7 @@ newbies:
 #########################################################
 #                 MAGENTA PRO (GLOBAL)                  #
 #########################################################
-prefix: '<gray>(<light_purple><bold>MAGENTAPRO</bold><gray>)'
+prefix: "<gray>(<light_purple><bold>MAGENTAPRO</bold><gray>)"
 
 # The maximum length allowed in nicknames. The nickname prefix is not included in this.
 max-nick-length: 15
@@ -60,6 +60,7 @@ warp-info-format:
   - "<gray>Souřadnice <green><x> <y> <z>"
   - "<gray>Svět <green><world>"
 
+socialspy-format: <color:#009EFF>[SOCIALSPY] <color:#4AAEFC><player> <color:#90D2FA><message>
 
 # These commands will be shown to players with socialSpy enabled.
 # You can add commands from other plugins you may want to track or
@@ -71,6 +72,28 @@ socialspy-commands:
   - whisper
   - tell
   - pm
+
+#########################################################
+#                    MENTIONS                           #
+# permission: magenta.mention.player                    #
+# permission: magenta.mention.everyone                  #
+#########################################################
+mentions:
+  variable: '@'
+  formats:
+    player: <hover:show_text:'<gray>Označen <yellow>[player]<yellow>'><yellow>[player]</yellow></hover>
+    everyone: <hover:show_text:'<gray>Všichni byli označeni'><green>@everyone</green></hover>
+  sound: BLOCK_ANVIL_PLACE
+  volume: 5.5f
+  pitch: 5f
+
+#########################################################
+#                  Private Message                      #
+#########################################################
+msg:
+  sound: 'BLOCK_NOTE_BLOCK_PLING'
+  volume: 3.5F
+  pitch: 10.5F
 
 #########################################################
 #                       HOMES                           #
@@ -101,32 +124,45 @@ warps:
 
 
 #########################################################
-#                   MAGENTA PRO                         #
-#               DEVELOPED BY ENCRYPTSL                  #
+#                    ChatFilter                         #
+#  bypass permissions:                                  #
+#  magenta.chat.filter.bypass.<name>                    #
+#  actions: [notify,kick,replace,cancel,message]        #
 #########################################################
 chat:
   filters:
     antispam:
-      action: [notify, kick]
+      action:
+        - notify
+        - message
+        - cancel
       similarity: 80
       control: true
     ipfilter:
-      action: [message, cancel]
+      action:
+        - replace
       control: true
-      ip_regex: '\d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}'
+      ip_regex: \d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}
     website:
-      action: [notify, kick]
+      action:
+        - notify
+        - replace
       control: true
       web_regex:
-        - '(http\:\/\/|https\:\/\/)?([a-z0-9\-\s\.\W\s\S\_]*\.)+[a-z0-9\s][a-z0-9\-\s\.]*'
-        - '^(.* + \W|\d|_|.*|)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+( .*)?$'
-        - '([a-z\_\S]*[\#\.\$\@\!|,|\_|\€]+(\w{2,4}))'
+        - (http|https)[\w|\_|\W|\_]*(\.)*(com|eu|_|sk|de|info|cz|io|COM|EU|SK|DE|INFO|CZ|IO)
+        - ^(.* + \W|\d|_|.*|)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+(
+          .*)?$
       whitelist:
         - https://youtube.com
     swear:
-      action: [replace]
+      action:
+        - notify
+        - replace
       control: true
     capslock:
-      action: [notify]
+      action:
+        - notify
+        - message
+        - cancel
       sensitive: 15
       control: true

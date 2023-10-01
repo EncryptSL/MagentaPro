@@ -20,7 +20,6 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
     fun onJailRelease(event: JailPardonEvent) {
         val target = event.player
         val playerAccount = PlayerAccount(magenta, target.uniqueId)
-        val jailManager = JailManager(magenta, target.uniqueId)
 
         val player = Bukkit.getPlayer(target.uniqueId)
 
@@ -48,8 +47,8 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
             ), "magenta.jail.pardon.event"
         )
 
-        jailManager.setJailTimeout(0)
-        jailManager.setOnlineTime(0)
+        playerAccount.jailManager.setJailTimeout(0)
+        playerAccount.jailManager.setOnlineTime(0)
     }
 
 }

@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.common.extensions.compactCensoring
 import com.github.encryptsl.magenta.common.filter.ChatPunishManager
 import io.papermc.paper.event.player.AsyncChatEvent
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import java.io.File
@@ -28,13 +29,7 @@ class Swear(private val magenta: Magenta, private val violations: Violations) : 
         while (sc.hasNext()) {
             val s = sc.next()
             if (message.matches(Regex("(.*)$s(.*)"))) {
-                event.message(event.message()
-                    .replaceText(
-                        TextReplacementConfig.builder()
-                        .match(Pattern.compile(s))
-                        .replacement('*'.compactCensoring(5))
-                        .build())
-                )
+                event.message(Component.text(PlainTextComponentSerializer.plainText().serialize(event.message()).replace(Regex(s), "******")))
                 detected = true
             }
         }

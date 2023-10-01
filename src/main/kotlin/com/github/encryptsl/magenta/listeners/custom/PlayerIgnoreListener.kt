@@ -23,7 +23,7 @@ class PlayerIgnoreListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("player", target.uniqueId.toString())
             ))
 
-        if (target.player?.hasPermission("essentials.ignore.exempt") == true)
+        if (target.player?.hasPermission("magenta.ignore.exempt") == true)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exempt"),
                 Placeholder.parsed("player", target.uniqueId.toString())
             ))
@@ -48,7 +48,7 @@ class PlayerIgnoreListener(private val magenta: Magenta) : Listener {
         val account = PlayerAccount(magenta, player.uniqueId)
 
         if (!account.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exist"),
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.not.exist"),
                 Placeholder.parsed("player", target.uniqueId.toString())
             ))
 

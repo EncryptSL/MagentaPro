@@ -1,9 +1,11 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.exceptions.KitFoundException
 import com.github.encryptsl.magenta.api.exceptions.KitNotFoundException
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -63,7 +65,26 @@ class KitManager(private val magenta: Magenta) {
         }
     }
 
-    fun createKit(kitName: String) {
-        magenta.kitConfig.getKit().getConfigurationSection("kits.$kitName")?.set("", "")
+    fun createKit(player: Player, kitName: String, delay: Int) {
+        if (!magenta.kitConfig.getKit().contains("kits.$kitName"))
+            throw KitFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.exist"))
+
+        val kitSection = magenta.kitConfig.getKit().getConfigurationSection("kits.$kitName")
+        kitSection?.set("name", kitName)
+        kitSection?.set("delay", delay)
+        player.inventory.forEach { item ->
+            kitSection?.set("items.${item.type.name}", item.amount)
+            if (item.enchantments.isNotEmpty()) {
+                item.enchantments.forEach { enchant ->
+                    kitSection?.set("items.enchants.${enchant.key}", enchant.value)
+                }
+            }
+            if (item.hasItemMeta()) {
+                kitSection?.set("items.meta.displayName", PlainTextComponentSerializer.plainText().serialize(item.displayName()))
+                item.lore()?.forEach { a ->
+                    kitSection?.set("items.meta.lore", PlainTextComponentSerializer.plainText().serialize(item.displayName()))
+                }
+            }
+        }
     }
 }

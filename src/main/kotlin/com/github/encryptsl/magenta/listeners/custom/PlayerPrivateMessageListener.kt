@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.api.events.pm.PlayerPrivateMessageEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -26,6 +27,10 @@ class PlayerPrivateMessageListener(private val magenta: Magenta) : Listener {
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("message", message),
         )))
+        target.playSound(target, Sound.valueOf(magenta.config.getString("msg.sound").toString()),
+            magenta.config.getString("msg.volume").toString().toFloat(),
+            magenta.config.getString("msg.pitch").toString().toFloat()
+        )
         target.sendMessage(
             ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.success.from"), TagResolver.resolver(
             Placeholder.parsed("player", commandSender.name),

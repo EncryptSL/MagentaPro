@@ -1,17 +1,17 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.kit.KitAdminGiveEvent
+import com.github.encryptsl.magenta.api.events.kit.KitGiveEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class KitAdminGiveListener(private val magenta: Magenta) : Listener {
+class KitGiveListener(private val magenta: Magenta) : Listener {
 
     @EventHandler
-    fun onKitAdminGive(event: KitAdminGiveEvent) {
+    fun onKitAdminGive(event: KitGiveEvent) {
         val commandSender = event.commandSender
         val target = event.target
         val kitName = event.kitName

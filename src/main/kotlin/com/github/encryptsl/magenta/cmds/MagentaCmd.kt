@@ -14,12 +14,12 @@ class MagentaCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.plugin.help")
     @CommandMethod("help")
     fun onHelp(commandSender: CommandSender) {
-        commandSender.sendMessage(ModernText.miniModernText("============="))
-        commandSender.sendMessage(ModernText.miniModernText("= Plugin: ${magenta.pluginMeta.displayName}"))
-        commandSender.sendMessage(ModernText.miniModernText("= Version: ${magenta.pluginMeta.version}"))
-        commandSender.sendMessage(ModernText.miniModernText("= Author: ${magenta.pluginMeta.authors}"))
-        commandSender.sendMessage(ModernText.miniModernText("= Website: ${magenta.pluginMeta.website}"))
-        commandSender.sendMessage(ModernText.miniModernText("============="))
+        commandSender.sendMessage(ModernText.miniModernText("―――――"))
+        commandSender.sendMessage(ModernText.miniModernText("| <color:#4C76FB>Plugin: <yellow>${magenta.pluginMeta.displayName}"))
+        commandSender.sendMessage(ModernText.miniModernText("| <color:#4C76FB>Version: <color:#4C62A5>${magenta.pluginMeta.version}"))
+        commandSender.sendMessage(ModernText.miniModernText("| <color:#4C76FB>Author: <color:#B4C5FB>${magenta.pluginMeta.authors}"))
+        commandSender.sendMessage(ModernText.miniModernText("| <color:#4C76FB>Website: <color:#89A4F7>${magenta.pluginMeta.website}"))
+        commandSender.sendMessage(ModernText.miniModernText("―――――"))
     }
 
     @CommandPermission("magenta.plugin.reload")

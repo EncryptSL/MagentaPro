@@ -26,7 +26,7 @@ class KitReceiveListener(private val magenta: Magenta) : Listener {
             runCatching {
                 kitManager.giveKit(player, kitName)
             }.onSuccess {
-                if (cooldown != 0L) {
+                if (cooldown != 0L && cooldown != -1L) {
                     playerAccount.cooldownManager.setCooldown(Duration.ofSeconds(cooldown), "kits.$kitName")
                     playerAccount.save()
                 }

@@ -104,7 +104,8 @@ class Magenta : JavaPlugin() {
             JailPlayerListener(this),
             JailPardonListener(this),
             JailTeleportListener(this),
-            KitAdminGiveListener(this),
+            KitCreateListener(this),
+            KitGiveListener(this),
             KitInfoListener(this),
             KitReceiveListener(this),
             SocialSpyListener(this),
@@ -127,7 +128,7 @@ class Magenta : JavaPlugin() {
             }
         }
 
-        logger.info("Bukkit listeners registered (${list.size}) in time ${time}s -> $value")
+        logger.info("Bukkit listeners registered (${list.size}) in time $time -> $value")
         list.removeAll(list.toSet())
     }
 }

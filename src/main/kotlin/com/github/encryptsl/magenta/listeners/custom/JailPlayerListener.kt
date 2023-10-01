@@ -18,9 +18,8 @@ class JailPlayerListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val action = event.action
         val account = PlayerAccount(magenta, player.uniqueId)
-        val jailManager = JailManager(magenta, player.uniqueId)
 
-        if (jailManager.hasPunish(player) && account.getAccount().getBoolean("jailed")) {
+        if (account.jailManager.hasPunish() || account.getAccount().getBoolean("jailed")) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
                 Placeholder.parsed("action", action)
             )))

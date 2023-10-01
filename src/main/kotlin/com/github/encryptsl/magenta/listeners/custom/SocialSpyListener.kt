@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.api.events.spy.SpyToggleByPlayerEvent
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -42,7 +43,10 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("value", false.toString())
             ))
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle.to"),
-                Placeholder.parsed("value", false.toString())
+                TagResolver.resolver(
+                    Placeholder.parsed("player", target.name),
+                    Placeholder.parsed("value", true.toString())
+                )
             ))
             commandHelper.toggleSocialSpy(target, false)
         } else {
@@ -50,7 +54,10 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("value", true.toString())
             ))
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle.to"),
-                Placeholder.parsed("value", true.toString())
+                TagResolver.resolver(
+                    Placeholder.parsed("player", target.name),
+                    Placeholder.parsed("value", true.toString())
+                )
             ))
             commandHelper.toggleSocialSpy(target, true)
         }

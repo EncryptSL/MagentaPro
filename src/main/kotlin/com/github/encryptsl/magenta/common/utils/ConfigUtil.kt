@@ -23,8 +23,6 @@ class ConfigUtil {
     fun save() {
         runCatching {
             config.save(file)
-        }.onSuccess {
-            plugin.logger.info("${file.name} is saved now !")
         }.onFailure { e ->
             plugin.logger.severe(e.message ?: e.localizedMessage)
         }
