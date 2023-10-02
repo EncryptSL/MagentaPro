@@ -16,19 +16,19 @@ class KitReceiveListener(private val magenta: Magenta) : Listener {
     fun onKitReceive(event: KitReceiveEvent) {
         val player = event.player
         val kitName = event.kitName
-        val cooldown = event.cooldown
+        val delay = event.delay
         val kitManager = event.kitManager
         val playerAccount = PlayerAccount(magenta, player.uniqueId)
 
-        val timeLeft: Duration = playerAccount.cooldownManager.getRemainingCooldown("kits.$kitName")
+        val timeLeft: Duration = playerAccount.cooldownManager.getRemainingDelay("kits.$kitName")
 
-        if (!playerAccount.cooldownManager.hasCooldown("kits.$kitName")) {
+        if (!playerAccount.cooldownManager.hasDelay("kits.$kitName")) {
             runCatching {
                 kitManager.giveKit(player, kitName)
             }.onSuccess {
-                if (cooldown != 0L && cooldown != -1L) {
+                if (delay != 0L && delay != -1L) {
                     if (!player.hasPermission("magenta.kit.delay.exempt")) {
-                        playerAccount.cooldownManager.setCooldown(Duration.ofSeconds(cooldown), "kits.$kitName")
+                        playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
                         playerAccount.save()
                     }
                 }

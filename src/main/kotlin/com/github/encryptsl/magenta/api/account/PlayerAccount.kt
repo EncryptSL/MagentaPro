@@ -28,6 +28,10 @@ class PlayerAccount(magenta: Magenta, private val uuid: UUID) : IAccount {
         return getAccount().getBoolean("jailed")
     }
 
+    override fun isSocialSpy(): Boolean {
+        return getAccount().getBoolean("socialspy")
+    }
+
     override fun getLastLocation(): Location {
         val world = getAccount().getString("lastlocation.world-name").toString()
         val x = getAccount().getDouble("lastlocation.x")

@@ -19,7 +19,7 @@ class KitCmd(private val magenta: Magenta) {
     @CommandMethod("kit <kit>")
     @CommandPermission("magenta.kit")
     fun onKit(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-        if (!player.hasPermission("magenta.kits.$kit") || !player.hasPermission("magenta.kits.*"))
+        if (!player.hasPermission("magenta.kits.$kit") && !player.hasPermission("magenta.kits.*"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
 
         magenta.schedulerMagenta.runTask(magenta) {

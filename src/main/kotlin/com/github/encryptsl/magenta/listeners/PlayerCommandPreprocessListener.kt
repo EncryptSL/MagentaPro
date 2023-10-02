@@ -21,7 +21,7 @@ class PlayerCommandPreprocessListener(private val magenta: Magenta) : Listener {
         if (list.contains(command) || list.contains("*")) {
             if (!player.hasPermission("magenta.social.spy.exempt")) {
                 Bukkit.getServer().onlinePlayers
-                    .filter { PlayerAccount(magenta, it.uniqueId).getAccount().getBoolean("socialspy") }
+                    .filter { PlayerAccount(magenta, it.uniqueId).isSocialSpy() }
                     .forEach { p ->
                         p.sendMessage(
                             ModernText.miniModernText(

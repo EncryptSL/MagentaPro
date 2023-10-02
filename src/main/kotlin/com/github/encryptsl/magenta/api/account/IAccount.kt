@@ -8,6 +8,7 @@ interface IAccount {
     fun set(path: String, value: Any?)
     fun save()
     fun isJailed(): Boolean
+    fun isSocialSpy(): Boolean
     fun getLastLocation(): Location
     fun getAccount(): FileConfiguration
 }

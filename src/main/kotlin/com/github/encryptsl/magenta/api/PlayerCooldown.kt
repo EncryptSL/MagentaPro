@@ -7,28 +7,28 @@ import java.util.*
 
 class PlayerCooldown(val uuid: UUID, val playerAccount: PlayerAccount) {
 
-    fun setCooldown(duration: Duration?, type: String) {
+    fun setDelay(duration: Duration?, type: String) {
         playerAccount.getAccount().set("timestamps.$type", Instant.now().plus(duration).toEpochMilli())
 
     }
 
     // Check if cooldown has expired
-    fun hasCooldown(type: String): Boolean {
+    fun hasDelay(type: String): Boolean {
         val cooldown: Instant = Instant.ofEpochMilli(playerAccount.getAccount().getLong("timestamps.$type"))
         return Instant.now().isBefore(cooldown)
     }
 
     // Remove cooldown
-    fun removeCooldown(type: String) {
+    fun removeDelay(type: String) {
         playerAccount.set("timestamps.$type", 0)
     }
 
     // Get remaining cooldown time
-    fun getRemainingCooldown(type: String): Duration {
-        val cooldown: Instant = Instant.ofEpochMilli(playerAccount.getAccount().getLong("timestamps.$type"))
+    fun getRemainingDelay(type: String): Duration {
+        val delay: Instant = Instant.ofEpochMilli(playerAccount.getAccount().getLong("timestamps.$type"))
         val now = Instant.now()
-        return if (now.isBefore(cooldown)) {
-            Duration.between(now, cooldown)
+        return if (now.isBefore(delay)) {
+            Duration.between(now, delay)
         } else {
             Duration.ZERO
         }

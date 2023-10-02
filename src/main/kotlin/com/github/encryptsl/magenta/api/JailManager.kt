@@ -16,11 +16,11 @@ class JailManager(private val magenta: Magenta, private val account: PlayerAccou
     fun hasPunish(): Boolean {
         val onlineTime = magenta.config.getBoolean("online-jail-time")
 
-        return if (onlineTime) getOnlineJailedTime() > 0 else account.cooldownManager.hasCooldown("jail")
+        return if (onlineTime) getOnlineJailedTime() > 0 else account.cooldownManager.hasDelay("jail")
     }
 
     fun setJailTimeout(seconds: Long) {
-        account.cooldownManager.setCooldown(Duration.ofSeconds(seconds), "jail")
+        account.cooldownManager.setDelay(Duration.ofSeconds(seconds), "jail")
         account.save()
     }
 
@@ -32,7 +32,7 @@ class JailManager(private val magenta: Magenta, private val account: PlayerAccou
     fun remainingTime(): Long {
         val onlineTime = magenta.config.getBoolean("online-jail-time")
 
-        return if (onlineTime) getOnlineJailedTime().minus(1) else account.cooldownManager.getRemainingCooldown("jail").seconds
+        return if (onlineTime) getOnlineJailedTime().minus(1) else account.cooldownManager.getRemainingDelay("jail").seconds
     }
 
     fun getJailLocation(jailName: String): Location {
