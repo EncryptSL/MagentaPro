@@ -6,15 +6,12 @@ import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandHelper
-import com.github.encryptsl.magenta.common.utils.ModernText
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
-class FlyCmd(private val magenta: Magenta) {
+class FlyCmd(magenta: Magenta) {
 
     private val commandHelper = CommandHelper(magenta)
 

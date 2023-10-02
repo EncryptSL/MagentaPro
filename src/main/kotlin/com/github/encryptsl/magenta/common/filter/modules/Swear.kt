@@ -3,15 +3,12 @@ package com.github.encryptsl.magenta.common.filter.modules
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.Chat
 import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.common.extensions.compactCensoring
 import com.github.encryptsl.magenta.common.filter.ChatPunishManager
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import java.io.File
 import java.util.*
-import java.util.regex.Pattern
 
 
 class Swear(private val magenta: Magenta, private val violations: Violations) : Chat {

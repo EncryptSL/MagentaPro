@@ -1,8 +1,7 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.JailManager
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailEvent
 import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -24,7 +23,7 @@ class JailListener(private val magenta: Magenta) : Listener {
         val reason = event.reason
         val account = PlayerAccount(magenta, target.uniqueId)
 
-        //if (target.player?.hasPermission("") == true)
+        if (target.player?.hasPermission("magenta.jail.exempt") == true)
 
         if (magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") == null)
             return commandManager.sendMessage(

@@ -25,7 +25,7 @@ class TpaRequestManager(private val magenta: Magenta) {
         if (!request.containsKey(player.uniqueId)) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.not.exist")))
         } else {
-            val target = Bukkit.getPlayer(request[player.uniqueId].toString())
+            val target = Bukkit.getPlayer(UUID.fromString(request[player.uniqueId].toString()))
 
             if (target != null) {
                 player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted")))

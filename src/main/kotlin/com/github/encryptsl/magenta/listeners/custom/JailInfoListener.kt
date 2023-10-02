@@ -16,7 +16,6 @@ class JailInfoListener(private val magenta: Magenta) : Listener {
         val commandSender = event.commandSender
         val infoType = event.infoType
 
-
         when (infoType) {
             InfoType.LIST -> {
                 val section = magenta.jailConfig.getJail().getConfigurationSection("jails") ?: return

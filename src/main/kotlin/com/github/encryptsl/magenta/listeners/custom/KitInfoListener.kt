@@ -32,6 +32,9 @@ class KitInfoListener(private val magenta: Magenta) : Listener {
                 val kitName = event.kitName ?: return
                 if (magenta.kitConfig.getKit().getConfigurationSection("kits.$kitName") == null)
                     return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist")))
+                commandSender.sendMessage(ModernText.miniModernText("<yellow>Jméno Kitu $kitName"))
+                commandSender.sendMessage(ModernText.miniModernText("<yellow>Delay ${magenta.kitConfig.getKit().getString("kits.$kitName.delay")}"))
+                magenta.kitManager.listOfItems(commandSender, kitName)
             }
         }
     }

@@ -1,12 +1,10 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -23,26 +21,18 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun teleportOffline(sender: Player, target: OfflinePlayer) {
         val playerAccount = PlayerAccount(magenta, target.uniqueId)
-        val world = playerAccount.getAccount().getString("lastlocation.world-name").toString()
-        val x = playerAccount.getAccount().getDouble("lastlocation.x")
-        val y = playerAccount.getAccount().getDouble("lastlocation.y")
-        val z = playerAccount.getAccount().getDouble("lastlocation.z")
-        val pitch = playerAccount.getAccount().getDouble("lastlocation.pitch")
-        val yaw = playerAccount.getAccount().getDouble("lastlocation.yaw")
 
-        sender.teleport(Location(Bukkit.getWorld(world), x, y, z, pitch.toFloat(), yaw.toFloat()), PlayerTeleportEvent.TeleportCause.COMMAND)
+        sender.teleport(playerAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
     }
 
     fun toggleSocialSpy(player: Player, boolean: Boolean) {
         val account = PlayerAccount(magenta, player.uniqueId)
-        account.getAccount().set("socialspy", boolean)
-        account.save()
+        account.set("socialspy", boolean)
     }
 
     fun changeDisplayName(player: Player, displayName: String) {
         val account = PlayerAccount(magenta, player.uniqueId)
-        account.getAccount().set("displayname", displayName)
-        account.save()
+        account.set("displayname", displayName)
         player.displayName(ModernText.miniModernText(account.getAccount().getString("displayname").toString()))
         player.playerListName(ModernText.miniModernText(account.getAccount().getString("displayname").toString()))
     }

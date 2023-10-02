@@ -89,6 +89,7 @@ class CommandManager(private val magenta: Magenta) {
 
         val annotationParser = createAnnotationParser(commandManager)
         annotationParser.parse(AfkCmd(magenta))
+        annotationParser.parse(BackCmd(magenta))
         annotationParser.parse(FlyCmd(magenta))
         annotationParser.parse(GmCmd(magenta))
         annotationParser.parse(HealCmd(magenta))

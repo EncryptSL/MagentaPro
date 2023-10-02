@@ -1,18 +1,94 @@
-#########################################################
-#                   MAGENTA PRO                         #
-#               DEVELOPED BY ENCRYPTSL                  #
-#########################################################
 kits:
   tools:
     name: <gray>TOOLS
-    delay: 1
+    delay: -1
     items:
       stone_pickaxe:
         amount: 1
-        enchants:
-          knock_back: 1
         meta:
-          displayName: <red>TEST
-          lore:
-            - hello
-            - hello
+          displayName: <yellow>KIT HRÁČ
+      stone_sword:
+        amount: 1
+        meta:
+          displayName: <yellow>KIT HRÁČ
+      stone_shovel:
+        amount: 1
+        meta:
+          displayName: <yellow>KIT HRÁČ
+      stone_axe:
+        amount: 1
+        meta:
+          displayName: <yellow>KIT HRÁČ
+      stone_hoe:
+        amount: 1
+        meta:
+          displayName: <yellow>KIT HRÁČ
+      cooked_beef:
+        amount: 64
+        meta:
+          displayName: <yellow>KIT HRÁČ
+  vip:
+    name: vip
+    delay: 150
+    items:
+      iron_helmet:
+        amount: 1
+        enchants:
+          protection: 3
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_chestplate:
+        amount: 1
+        enchants:
+          protection: 3
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_leggings:
+        amount: 1
+        enchants:
+          protection: 3
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_boots:
+        amount: 1
+        enchants:
+          feather_falling: 2
+          protection: 3
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_pickaxe:
+        amount: 1
+        enchants:
+          efficiency: 2
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_sword:
+        amount: 1
+        enchants:
+          fire_aspect: 1
+          knockback: 1
+          sharpness: 2
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_axe:
+        amount: 1
+        enchants:
+          efficiency: 2
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_shovel:
+        amount: 1
+        enchants:
+          efficiency: 2
+        meta:
+          displayName: <yellow>VIP KIT
+      iron_hoe:
+        amount: 1
+        enchants:
+          efficiency: 2
+        meta:
+          displayName: <yellow>VIP KIT
+      cooked_mutton:
+        amount: 64
+        meta:
+          displayName: <yellow>VIP KIT

@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.api.events.chat
 
-import io.papermc.paper.event.player.AsyncChatEvent
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event

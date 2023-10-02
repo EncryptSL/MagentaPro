@@ -29,7 +29,7 @@ class HomeCreateListener(private val magenta: Magenta) : Listener {
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.exist"),
                 TagResolver.resolver(Placeholder.parsed("home", homeName))))
 
-        if (!magenta.homeModel.canSetHome(player))
+        if (magenta.homeModel.canSetHome(player))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.limit")))
 
         magenta.homeModel.createHome(player, location, homeName)

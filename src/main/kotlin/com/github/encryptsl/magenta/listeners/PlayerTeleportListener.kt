@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerTeleportEvent

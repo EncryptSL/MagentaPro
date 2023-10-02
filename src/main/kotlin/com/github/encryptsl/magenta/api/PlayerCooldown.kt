@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta.api
 
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -19,7 +20,7 @@ class PlayerCooldown(val uuid: UUID, val playerAccount: PlayerAccount) {
 
     // Remove cooldown
     fun removeCooldown(type: String) {
-        playerAccount.getAccount().set("timestamps.$type", 0)
+        playerAccount.set("timestamps.$type", 0)
     }
 
     // Get remaining cooldown time

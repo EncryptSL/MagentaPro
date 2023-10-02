@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByAdminEvent
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByPlayerEvent
 import com.github.encryptsl.magenta.common.CommandHelper

@@ -1,13 +1,13 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.*
+import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.CommandDescription
+import cloud.commandframework.annotations.CommandMethod
+import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.KitManager
-import com.github.encryptsl.magenta.api.events.kit.KitGiveEvent
-import com.github.encryptsl.magenta.api.events.kit.KitCreateEvent
-import com.github.encryptsl.magenta.api.events.kit.KitInfoEvent
-import com.github.encryptsl.magenta.api.events.kit.KitReceiveEvent
+import com.github.encryptsl.magenta.api.events.kit.*
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -19,7 +19,7 @@ class KitCmd(private val magenta: Magenta) {
     @CommandMethod("kit <kit>")
     @CommandPermission("magenta.kit")
     fun onKit(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-        if (!player.hasPermission("magenta.kit.$kit"))
+        if (!player.hasPermission("magenta.kits.$kit") || !player.hasPermission("magenta.kits.*"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
 
         magenta.schedulerMagenta.runTask(magenta) {
@@ -42,12 +42,19 @@ class KitCmd(private val magenta: Magenta) {
         }
     }
 
-    @ProxiedBy("kits")
-    @CommandMethod("kit list")
+    @CommandMethod("kits")
     @CommandPermission("magenta.kit.list")
     fun onKitList(commandSender: CommandSender) {
         magenta.schedulerMagenta.runTask(magenta) {
             magenta.pluginManager.callEvent(KitInfoEvent(commandSender, null, InfoType.LIST))
+        }
+    }
+
+    @CommandMethod("showkit <kit>")
+    @CommandPermission("magenta.showkit")
+    fun onShowKit(commandSender: CommandSender, @Argument(value = "kit", suggestions = "kits") kit: String) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(KitInfoEvent(commandSender, kit, InfoType.INFO))
         }
     }
 
@@ -61,8 +68,10 @@ class KitCmd(private val magenta: Magenta) {
 
     @CommandMethod("deletekit <kit>")
     @CommandPermission("magenta.deletekit")
-    fun onKitDelete(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-
+    fun onKitDelete(commandSender: CommandSender, @Argument(value = "kit", suggestions = "kits") kit: String) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(KitDeleteEvent(commandSender, kit))
+        }
     }
 
 

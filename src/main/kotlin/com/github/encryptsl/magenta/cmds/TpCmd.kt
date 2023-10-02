@@ -5,7 +5,7 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent

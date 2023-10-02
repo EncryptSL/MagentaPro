@@ -4,12 +4,11 @@ import cloud.commandframework.annotations.*
 import cloud.commandframework.annotations.specifier.Greedy
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.*
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -64,25 +63,18 @@ class JailCmd(private val magenta: Magenta) {
 
         if (commandSender is Player) {
             if (target == null) {
-                val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") ?: return
+                val playerAccount = PlayerAccount(magenta, commandSender.uniqueId)
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
                     Placeholder.parsed("jail", jailName)
                 )))
 
                 magenta.schedulerMagenta.runTask(magenta) {
-                    magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, Location(
-                        Bukkit.getWorld(jailSection.getString("location.world").toString()),
-                        jailSection.getDouble("location.x"),
-                        jailSection.getDouble("location.y"),
-                        jailSection.getDouble("location.z"),
-                        jailSection.getInt("location.yaw").toFloat(),
-                        jailSection.getInt("location.pitch").toFloat()
-                    )))
+                    magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, playerAccount.jailManager.getJailLocation(jailName)))
                 }
                 return
             }
+            val targetAccount = PlayerAccount(magenta, target.uniqueId)
 
-            val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") ?: return
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
                 Placeholder.parsed("jail", jailName)
             )))
@@ -93,19 +85,12 @@ class JailCmd(private val magenta: Magenta) {
             )))
 
             magenta.schedulerMagenta.runTask(magenta) {
-                magenta.pluginManager.callEvent(JailTeleportEvent(target, Location(
-                    Bukkit.getWorld(jailSection.getString("location.world").toString()),
-                    jailSection.getDouble("location.x"),
-                    jailSection.getDouble("location.y"),
-                    jailSection.getDouble("location.z"),
-                    jailSection.getInt("location.yaw").toFloat(),
-                    jailSection.getInt("location.pitch").toFloat()
-                )))
+                magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, targetAccount.jailManager.getJailLocation(jailName)))
             }
         } else {
             if (target == null) return
 
-            val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") ?: return
+            val targetAccount = PlayerAccount(magenta, target.uniqueId)
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
                 Placeholder.parsed("jail", jailName)
             )))
@@ -116,14 +101,7 @@ class JailCmd(private val magenta: Magenta) {
             )))
 
             magenta.schedulerMagenta.runTask(magenta) {
-                magenta.pluginManager.callEvent(JailTeleportEvent(target.player!!, Location(
-                    Bukkit.getWorld(jailSection.getString("location.world").toString()),
-                    jailSection.getDouble("location.x"),
-                    jailSection.getDouble("location.y"),
-                    jailSection.getDouble("location.z"),
-                    jailSection.getInt("location.yaw").toFloat(),
-                    jailSection.getInt("location.pitch").toFloat()
-                )))
+                magenta.pluginManager.callEvent(JailTeleportEvent(target, targetAccount.jailManager.getJailLocation(jailName)))
             }
         }
 

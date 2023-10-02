@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.parseMinecraftTime
@@ -38,14 +38,19 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
             ))
         }
 
+        if (player.hasPermission("magenta.fly.safelogin")) {
+            player.fallDistance = 0F
+            player.allowFlight = true
+            player.isFlying = true
+        }
+
         if (playerAccount.getAccount().contains("displayname")) {
             player.displayName(ModernText.miniModernText(playerAccount.getAccount().getString("displayname").toString()))
             player.playerListName(ModernText.miniModernText(playerAccount.getAccount().getString("displayname").toString()))
         }
 
         if (player.hasPlayedBefore()) {
-            playerAccount.getAccount().set("timestamps.login", System.currentTimeMillis())
-            playerAccount.save()
+            playerAccount.set("timestamps.login", System.currentTimeMillis())
 
             FileUtil.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
                 player.sendMessage(ModernText.miniModernText(text, TagResolver.resolver(

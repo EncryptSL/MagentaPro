@@ -27,6 +27,7 @@ class HomeCmd(private val magenta: Magenta) {
         }
     }
 
+    @ProxiedBy("sethome")
     @CommandMethod("create <home>")
     @CommandPermission("magenta.home.create")
     fun onSetHome(player: Player, @Argument(value = "home") home: String) {
@@ -36,9 +37,10 @@ class HomeCmd(private val magenta: Magenta) {
 
     }
 
+    @ProxiedBy("delhome")
     @CommandMethod("delete <home>")
-    @CommandPermission("magenta.home.delhome")
-    fun onDeleteHome(player: Player, @Argument(value = "home") home: String) {
+    @CommandPermission("magenta.home.delete")
+    fun onDeleteHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         magenta.schedulerMagenta.runTask(magenta) {
             magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
         }

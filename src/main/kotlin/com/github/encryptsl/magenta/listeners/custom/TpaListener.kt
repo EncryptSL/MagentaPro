@@ -5,11 +5,13 @@ import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
+import io.papermc.paper.util.Tick
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import java.time.Duration
 
 class TpaListener(private val magenta: Magenta) : Listener {
     @EventHandler
@@ -35,7 +37,7 @@ class TpaListener(private val magenta: Magenta) : Listener {
 
         magenta.schedulerMagenta.delayedTask(magenta, {
             magenta.tpaManager.killRequest(sender)
-        }, magenta.config.getLong("tpa-accept-cancellation"))
+        }, Tick.tick().fromDuration(Duration.ofSeconds(magenta.config.getLong("tpa-accept-cancellation"))).toLong())
         target.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
         target.sendMessage(
             ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.success.request"), TagResolver.resolver(

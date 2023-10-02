@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
-import org.bukkit.Statistic
-import org.bukkit.entity.Player
+import com.github.encryptsl.magenta.api.account.PlayerAccount
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import java.time.Duration
-import java.util.*
 
 
 class JailManager(private val magenta: Magenta, private val account: PlayerAccount) {
@@ -26,14 +26,23 @@ class JailManager(private val magenta: Magenta, private val account: PlayerAccou
 
     fun setOnlineTime(millis: Long) {
         val onlineTime = magenta.config.getBoolean("online-jail-time")
-        account.getAccount().set("timestamps.onlinejail", if (onlineTime) millis else 0)
-        account.save()
+        account.set("timestamps.onlinejail", if (onlineTime) millis else 0)
     }
 
     fun remainingTime(): Long {
         val onlineTime = magenta.config.getBoolean("online-jail-time")
 
         return if (onlineTime) getOnlineJailedTime().minus(1) else account.cooldownManager.getRemainingCooldown("jail").seconds
+    }
+
+    fun getJailLocation(jailName: String): Location {
+        return Location(Bukkit.getWorld(magenta.jailConfig.getJail().getString("jails.${jailName}.location.world").toString()),
+            magenta.jailConfig.getJail().getDouble("jails.${jailName}.location.x"),
+            magenta.jailConfig.getJail().getDouble("jails.${jailName}.location.y"),
+            magenta.jailConfig.getJail().getDouble("jails.${jailName}.location.z"),
+            magenta.jailConfig.getJail().getInt("jails.${jailName}.location.yaw").toFloat(),
+            magenta.jailConfig.getJail().getInt("jails.${jailName}.location.pitch").toFloat()
+        )
     }
 
 }

@@ -13,63 +13,77 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class WarpModel(private val magenta: Magenta) : WarpSQL {
     override fun creteWarp(player: Player, location: Location, warpName: String) {
-        transaction {
-            WarpTable.insert {
-                it[username] = player.name
-                it[uuid] = player.uniqueId.toString()
-                it[WarpTable.warpName] = warpName
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            transaction {
+                WarpTable.insert {
+                    it[username] = player.name
+                    it[uuid] = player.uniqueId.toString()
+                    it[WarpTable.warpName] = warpName
+                    it[world] = location.world.name
+                    it[x] = location.x.toInt()
+                    it[y] = location.y.toInt()
+                    it[z] = location.z.toInt()
+                    it[yaw] = location.yaw
+                    it[pitch] = location.pitch
+                }
+            }
+        }
+    }
+
+    override fun deleteWarp(warpName: String) {
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            transaction { WarpTable.deleteWhere { WarpTable.warpName eq warpName } }
+        }
+    }
+
+    override fun deleteWarp(player: Player, warpName: String) {
+        magenta.schedulerMagenta.runTask(magenta) {
+            transaction { WarpTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) } }
+        }
+    }
+
+    override fun moveWarp(warpName: String, location: Location) {
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            transaction { WarpTable.update( { WarpTable.warpName eq warpName }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
                 it[y] = location.y.toInt()
                 it[z] = location.z.toInt()
                 it[yaw] = location.yaw
                 it[pitch] = location.pitch
-            }
+            } }
         }
     }
 
-    override fun deleteWarp(warpName: String) {
-        transaction { WarpTable.deleteWhere { WarpTable.warpName eq warpName } }
-    }
-
-    override fun deleteWarp(player: Player, warpName: String) {
-        transaction { WarpTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) } }
-    }
-
-    override fun moveWarp(warpName: String, location: Location) {
-        transaction { WarpTable.update( { WarpTable.warpName eq warpName }) {
-            it[world] = location.world.name
-            it[x] = location.x.toInt()
-            it[y] = location.y.toInt()
-            it[z] = location.z.toInt()
-            it[yaw] = location.yaw
-            it[pitch] = location.pitch
-        } }
-    }
-
     override fun moveWarp(player: Player, warpName: String, location: Location) {
-        transaction { WarpTable.update( { (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) }) {
-            it[world] = location.world.name
-            it[x] = location.x.toInt()
-            it[y] = location.y.toInt()
-            it[z] = location.z.toInt()
-            it[yaw] = location.yaw
-            it[pitch] = location.pitch
-        } }
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            transaction { WarpTable.update( { (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) }) {
+                it[world] = location.world.name
+                it[x] = location.x.toInt()
+                it[y] = location.y.toInt()
+                it[z] = location.z.toInt()
+                it[yaw] = location.yaw
+                it[pitch] = location.pitch
+            } }
+        }
     }
 
     override fun renameWarp(oldWarpName: String, newWarpName: String) {
-        transaction {
-            WarpTable.update({ WarpTable.warpName eq oldWarpName }) {
-                it[warpName] = newWarpName
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            transaction {
+                WarpTable.update({ WarpTable.warpName eq oldWarpName }) {
+                    it[warpName] = newWarpName
+                }
             }
         }
     }
 
     override fun renameWarp(player: Player, oldWarpName: String, newWarpName: String) {
-        transaction {
-            WarpTable.update({ (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq oldWarpName) }) {
-                it[warpName] = newWarpName
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            transaction {
+                WarpTable.update({ (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq oldWarpName) }) {
+                    it[warpName] = newWarpName
+                }
             }
         }
     }

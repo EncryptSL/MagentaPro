@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.kit.KitReceiveEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -27,8 +27,10 @@ class KitReceiveListener(private val magenta: Magenta) : Listener {
                 kitManager.giveKit(player, kitName)
             }.onSuccess {
                 if (cooldown != 0L && cooldown != -1L) {
-                    playerAccount.cooldownManager.setCooldown(Duration.ofSeconds(cooldown), "kits.$kitName")
-                    playerAccount.save()
+                    if (!player.hasPermission("magenta.kit.delay.exempt")) {
+                        playerAccount.cooldownManager.setCooldown(Duration.ofSeconds(cooldown), "kits.$kitName")
+                        playerAccount.save()
+                    }
                 }
                 player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(
                     Placeholder.parsed("kit", kitName)

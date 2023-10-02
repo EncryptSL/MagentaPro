@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.tasks
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.PlayerAccount
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
 import com.github.encryptsl.magenta.common.extensions.formatFromSecondsTime
 import com.github.encryptsl.magenta.common.utils.ModernText

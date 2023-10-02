@@ -30,7 +30,13 @@ class MentionManager(private val magenta: Magenta) {
                         magenta.config.getString("mentions.volume").toString().toFloat(),
                         magenta.config.getString("mentions.pitch").toString().toFloat()
                     )
-                    mentioned?.sendMessage(ModernText.miniModernText("<color:#5aa2fa>Jsi zmíněn hráčem ${player.name}"))
+                    mentioned?.sendMessage(
+                        ModernText.miniModernText(
+                            magenta.localeConfig.getMessage("magenta.player.mentioned"), TagResolver.resolver(
+                                Placeholder.parsed("player", player.name)
+                            )
+                        )
+                    )
                     if (mentioned != null) {
                         chatEvent.message(
                             ModernText.miniModernText(message.replace(

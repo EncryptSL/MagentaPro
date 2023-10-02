@@ -31,11 +31,13 @@ permissions:
       magenta.social.spy.*: true
       magenta.social.spy.exempt: true
       magenta.ignore.*: true
+      magenta.kit.*: true
   magenta.moderator:
     description: Permissions for moderator
     children:
       magenta.fly: true
       magenta.player: true
+      magenta.kit.*: true
       magenta.warp.default: true
       magenta.ignore.*: true
       magenta.chat.filter.bypass.*: true
@@ -43,13 +45,15 @@ permissions:
     description: Permissions for player
     default: true
     children:
-      magenta.home.*: true
+      magenta.home.player: true
+      magenta.homes.player: true
       magenta.warp: true
       magenta.tpa: true
       magenta.tpaccept: true
       magenta.tpadeny: true
       magenta.nick: true
       magenta.unnick: true
+      magenta.kit: true
       magenta.msg: true
   magenta.plugin.*:
     description: Permissions for admins
@@ -57,6 +61,14 @@ permissions:
     children:
       magenta.plugin.help: true
       magenta.plugin.reload: true
+  magenta.afk.*:
+    description: Permissions for afk manage
+    default: false
+    children:
+      magenta.afk: true
+      magenta.afk.other: true
+      magenta.afk.auto: true
+      magenta.kick.exempt: true
   magenta.fly.*:
     description: All permissions for fly commands
     default: false
@@ -88,6 +100,16 @@ permissions:
       magenta.home.rename: true
       magenta.home.list: true
       magenta.homes.unlimited: true
+  magenta.home.player:
+    description: Permissions for all home commands
+    default: false
+    children:
+      magenta.home.tp: true
+      magenta.home.info: true
+      magenta.home.create: true
+      magenta.home.delete: true
+      magenta.home.rename: true
+      magenta.home.list: true
   magenta.ignore.*:
     description: Permissions for all ignore commands
     default: false
@@ -104,7 +126,18 @@ permissions:
       magenta.jail.create: true
       magenta.jail.delete: true
       magenta.jail.list: true
-      magenta.jail.except: true
+      magenta.jail.exempt: true
+  magenta.kit.*:
+    description: Permissions for kit manage
+    default: false
+    children:
+      magenta.kit: true
+      magenta.kit.other: true
+      magenta.kit.list: true
+      magenta.kit.exempt: true
+      magenta.createkit: true
+      magenta.deletekit: true
+      magenta.kits.*: true
   magenta.warp.*:
     description: Permissions for all warp commands
     default: false

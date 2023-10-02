@@ -73,7 +73,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 1)
+        schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 20)
         schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
     }
 
@@ -111,6 +111,7 @@ class Magenta : JavaPlugin() {
             JailPardonListener(this),
             JailTeleportListener(this),
             KitCreateListener(this),
+            KitDeleteListener(this),
             KitGiveListener(this),
             KitInfoListener(this),
             KitReceiveListener(this),
