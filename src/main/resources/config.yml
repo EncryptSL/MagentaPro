@@ -73,6 +73,12 @@ socialspy-commands:
   - tell
   - pm
 
+# Auto-AFK
+# After this timeout in seconds, the user will be set as AFK.
+# This feature requires the player to have essentials.afk.auto node.
+# Set to -1 for no timeout.
+auto-afk: 5
+
 #########################################################
 #                    MENTIONS                           #
 # permission: magenta.mention.player                    #

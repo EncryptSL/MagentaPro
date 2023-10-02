@@ -14,6 +14,8 @@ import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.filter.modules.*
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
+import com.github.encryptsl.magenta.common.tasks.PlayerAfkTask
+import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.common.utils.TeamIntegration
 import com.github.encryptsl.magenta.listeners.*
@@ -27,7 +29,7 @@ class Magenta : JavaPlugin() {
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
-    val teamIntegration: TeamIntegration by lazy { TeamIntegration() }
+    val teamIntegration: TeamIntegration by lazy { TeamIntegration(this) }
     val localeConfig: Locale by lazy { Locale(this) }
     val kitConfig: KitConfig by lazy { KitConfig(this) }
     val jailConfig: JailConfig by lazy { JailConfig(this) }
@@ -36,6 +38,7 @@ class Magenta : JavaPlugin() {
     val warpModel: WarpModel by lazy { WarpModel(this) }
     val kitManager: KitManager by lazy { KitManager(this) }
     val tpaManager: TpaRequestManager by lazy { TpaRequestManager(this) }
+    val afk: AfkUtils by lazy { AfkUtils(this) }
     val pluginManager = server.pluginManager
 
     override fun onLoad() {
@@ -70,6 +73,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
+        schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 1)
         schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
     }
 
@@ -90,6 +94,8 @@ class Magenta : JavaPlugin() {
             PlayerIgnoreListener(this),
             PlayerCommandPreprocessListener(this),
             PlayerPrivateMessageListener(this),
+            PlayerInteractionListener(this),
+            PlayerMoveListener(this),
             HomeCreateListener(this),
             HomeDeleteListener(this),
             HomeInfoListener(this),

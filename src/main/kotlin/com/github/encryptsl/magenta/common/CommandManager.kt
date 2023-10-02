@@ -88,6 +88,7 @@ class CommandManager(private val magenta: Magenta) {
         registerSuggestionProviders(commandManager)
 
         val annotationParser = createAnnotationParser(commandManager)
+        annotationParser.parse(AfkCmd(magenta))
         annotationParser.parse(FlyCmd(magenta))
         annotationParser.parse(GmCmd(magenta))
         annotationParser.parse(HealCmd(magenta))

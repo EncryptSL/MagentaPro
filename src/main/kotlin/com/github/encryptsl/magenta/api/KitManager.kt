@@ -66,25 +66,32 @@ class KitManager(private val magenta: Magenta) {
     }
 
     fun createKit(player: Player, kitName: String, delay: Int) {
-        if (!magenta.kitConfig.getKit().contains("kits.$kitName"))
+        if (magenta.kitConfig.getKit().contains("kits.$kitName"))
             throw KitFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.exist"))
 
-        val kitSection = magenta.kitConfig.getKit().getConfigurationSection("kits.$kitName")
-        kitSection?.set("name", kitName)
-        kitSection?.set("delay", delay)
+        val kitSection = magenta.kitConfig.getKit().createSection("kits.$kitName")
+        kitSection.set("name", kitName)
+        kitSection.set("delay", delay)
         player.inventory.forEach { item ->
-            kitSection?.set("items.${item.type.name}", item.amount)
-            if (item.enchantments.isNotEmpty()) {
-                item.enchantments.forEach { enchant ->
-                    kitSection?.set("items.enchants.${enchant.key}", enchant.value)
+            if (item != null) {
+                val itemMeta = item.itemMeta
+                val itemType = item.type
+                kitSection.set("items.${itemType.name.lowercase()}.amount", item.amount)
+                println(itemType.name)
+                if (item.enchantments.isNotEmpty()) {
+                    item.enchantments.forEach { enchant ->
+                        kitSection.set("items.enchants.${enchant.key.toString().lowercase()}", enchant.value)
+                    }
                 }
-            }
-            if (item.hasItemMeta()) {
-                kitSection?.set("items.meta.displayName", PlainTextComponentSerializer.plainText().serialize(item.displayName()))
-                item.lore()?.forEach { a ->
-                    kitSection?.set("items.meta.lore", PlainTextComponentSerializer.plainText().serialize(item.displayName()))
+                if (item.hasItemMeta()) {
+                    kitSection.set("items.meta.displayName",
+                        itemMeta.displayName()?.let { PlainTextComponentSerializer.plainText().serialize(it) })
+                    item.lore()?.forEach { a ->
+                        kitSection.set("items.meta.lore", PlainTextComponentSerializer.plainText().serialize(a))
+                    }
                 }
             }
         }
+        magenta.kitConfig.save()
     }
 }

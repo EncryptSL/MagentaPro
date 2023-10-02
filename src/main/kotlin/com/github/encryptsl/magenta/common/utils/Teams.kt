@@ -49,7 +49,7 @@ object Teams {
         return null
     }
 
-    private fun haveTeam(player: Player, teamName: String): Boolean {
+    fun haveTeam(player: Player, teamName: String): Boolean {
         val team = getTeam(teamName) ?: return false
 
         return team.hasPlayer(player)

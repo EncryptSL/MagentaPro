@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common.tasks
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.JailManager
 import com.github.encryptsl.magenta.api.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
 import com.github.encryptsl.magenta.common.extensions.formatFromSecondsTime
@@ -13,15 +12,15 @@ import org.bukkit.Sound
 class JailCountDownTask(private val magenta: Magenta) : Runnable {
     override fun run() {
         magenta.server.onlinePlayers.forEach { player ->
-            val jailManager = JailManager(magenta, player.uniqueId)
-            val timeLeft = jailManager.remainingTime()
-            if (jailManager.hasPunish()) {
+            val account = PlayerAccount(magenta, player.uniqueId)
+            val timeLeft = account.jailManager.remainingTime()
+            if (account.jailManager.hasPunish()) {
                 if (timeLeft == 0L) {
                     magenta.schedulerMagenta.runTask(magenta) {
                         magenta.pluginManager.callEvent(JailPardonEvent(player))
                     }
                 }
-                jailManager.setOnlineTime(timeLeft)
+                account.jailManager.setOnlineTime(timeLeft)
                 player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1.15f, 1.15f)
                 player.sendActionBar(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.remaining"), TagResolver.resolver(
                     Placeholder.parsed("remaining", formatFromSecondsTime(timeLeft))
