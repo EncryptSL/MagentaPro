@@ -18,17 +18,23 @@ class PlayerIgnoreListener(private val magenta: Magenta) : Listener {
         val target = event.target
         val account = PlayerAccount(magenta, player.uniqueId)
 
+        /*
+        if (player.uniqueId == target.uniqueId)
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.yourself")))*/
+
         if (account.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exist"),
-                Placeholder.parsed("player", target.uniqueId.toString())
+                Placeholder.parsed("player", target.name.toString())
             ))
 
+
+        /*
         if (target.player?.hasPermission("magenta.ignore.exempt") == true)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exempt"),
-                Placeholder.parsed("player", target.uniqueId.toString())
-            ))
+                Placeholder.parsed("player", target.name.toString())
+            ))*/
 
-        account.getAccount().set("ignore", listOf(target.player))
+        account.getAccount().set("ignore", listOf(target.uniqueId.toString()))
         account.save()
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.success"),
             Placeholder.parsed("player", target.name.toString())
@@ -49,12 +55,13 @@ class PlayerIgnoreListener(private val magenta: Magenta) : Listener {
 
         if (!account.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.not.exist"),
-                Placeholder.parsed("player", target.uniqueId.toString())
-            ))
+                Placeholder.parsed("player", target.name.toString()))
+            )
 
-        account.getAccount().set("ignore", account.getAccount().getStringList("ignore").remove(target.uniqueId.toString()))
-        account.save()
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.success"),
+        val list: MutableList<String> = account.getAccount().getStringList("ignore")
+        list.remove(target.uniqueId.toString())
+        account.set("ignore", list)
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.success.removed"),
             Placeholder.parsed("player", target.name.toString())
         ))
 

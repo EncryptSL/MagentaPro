@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class JailPlayerEvent(val player: Player, val action: String) : Event(), Cancellable {
+class JailPlayerEvent(val player: Player, val action: String?) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

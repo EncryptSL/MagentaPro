@@ -8,7 +8,7 @@ import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.CommandManager
-import com.github.encryptsl.magenta.common.TpaRequestManager
+import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
@@ -37,7 +37,7 @@ class Magenta : JavaPlugin() {
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
     val kitManager: KitManager by lazy { KitManager(this) }
-    val tpaManager: TpaRequestManager by lazy { TpaRequestManager(this) }
+    val tpaManager: TpaManager by lazy { TpaManager(this) }
     val afk: AfkUtils by lazy { AfkUtils(this) }
     val pluginManager = server.pluginManager
 

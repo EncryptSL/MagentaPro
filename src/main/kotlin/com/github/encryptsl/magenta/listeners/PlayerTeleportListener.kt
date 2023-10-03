@@ -13,6 +13,8 @@ class PlayerTeleportListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val playerAccount = PlayerAccount(magenta, player.uniqueId)
 
+        if (playerAccount.jailManager.hasPunish() && playerAccount.isJailed()) return
+
         playerAccount.getAccount().set("lastlocation.world-name", player.world.name)
         playerAccount.getAccount().set("lastlocation.x", player.location.x)
         playerAccount.getAccount().set("lastlocation.y", player.location.y)

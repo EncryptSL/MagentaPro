@@ -85,6 +85,7 @@ class TpCmd(private val magenta: Magenta) {
             player.teleport(target.location)
         }
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.to"), TagResolver.resolver(
+            Placeholder.parsed("player", player.name),
             Placeholder.parsed("target", target.name)
         )))
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.self"), TagResolver.resolver(

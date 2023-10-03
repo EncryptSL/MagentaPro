@@ -18,27 +18,38 @@ class PlayerPrivateMessageListener(private val magenta: Magenta) : Listener {
         val target = event.target
         val message = event.message
         val playerIgnoreEvent = PlayerIgnoreEvent(target)
-        magenta.schedulerMagenta.runTask(magenta) {
-            magenta.pluginManager.callEvent(playerIgnoreEvent)
-        }
 
-        commandSender.sendMessage(
-            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.success.to"), TagResolver.resolver(
-            Placeholder.parsed("player", target.name),
-            Placeholder.parsed("message", message),
-        )))
-        target.playSound(target, Sound.valueOf(magenta.config.getString("msg.sound").toString()),
-            magenta.config.getString("msg.volume").toString().toFloat(),
-            magenta.config.getString("msg.pitch").toString().toFloat()
-        )
-        target.sendMessage(
-            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.success.from"), TagResolver.resolver(
-            Placeholder.parsed("player", commandSender.name),
-            Placeholder.parsed("message", message),
-        )))
+        if (commandSender.name == target.name)
+            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error.yourself")))
+
+        playerIgnoreEvent.callEvent()
         if (playerIgnoreEvent.isCancelled) {
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error")))
             event.isCancelled = true
+        }
+
+        if (!event.isCancelled) {
+            commandSender.sendMessage(
+                ModernText.miniModernText(
+                    magenta.localeConfig.getMessage("magenta.command.msg.success.to"), TagResolver.resolver(
+                        Placeholder.parsed("player", target.name),
+                        Placeholder.parsed("message", message),
+                    )
+                )
+            )
+            target.playSound(
+                target, Sound.valueOf(magenta.config.getString("msg.sound").toString()),
+                magenta.config.getString("msg.volume").toString().toFloat(),
+                magenta.config.getString("msg.pitch").toString().toFloat()
+            )
+            target.sendMessage(
+                ModernText.miniModernText(
+                    magenta.localeConfig.getMessage("magenta.command.msg.success.from"), TagResolver.resolver(
+                        Placeholder.parsed("player", commandSender.name),
+                        Placeholder.parsed("message", message),
+                    )
+                )
+            )
         }
     }
 

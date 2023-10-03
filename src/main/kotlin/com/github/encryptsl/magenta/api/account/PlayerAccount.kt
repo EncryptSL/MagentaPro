@@ -9,15 +9,17 @@ import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
 import java.util.*
 
-class PlayerAccount(magenta: Magenta, private val uuid: UUID) : IAccount {
+class PlayerAccount(private val magenta: Magenta, private val uuid: UUID) : IAccount {
 
     private val configUtil = ConfigUtil(magenta, "/players/$uuid.yml")
     val cooldownManager: PlayerCooldown by lazy { PlayerCooldown(uuid, this) }
     val jailManager: JailManager by lazy { JailManager(magenta, this) }
 
     override fun set(path: String, value: Any?) {
-        getAccount().set(path, value)
-        save()
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            getAccount().set(path, value)
+            save()
+        }
     }
 
     override fun save() {

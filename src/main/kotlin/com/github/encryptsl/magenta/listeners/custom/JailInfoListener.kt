@@ -37,7 +37,7 @@ class JailInfoListener(private val magenta: Magenta) : Listener {
 
                 magenta.config.getStringList("jail-info-format").forEach { s ->
                     commandSender.sendMessage(ModernText.miniModernText(s, TagResolver.resolver(
-                        Placeholder.parsed("jail", jailSection.getString(jailName).toString()),
+                        Placeholder.parsed("jail", jailName),
                         Placeholder.parsed("world", jailSection.getString("$jailName.location.world").toString()),
                         Placeholder.parsed("x", jailSection.getString("$jailName.location.x").toString()),
                         Placeholder.parsed("y", jailSection.getString("$jailName.location.y").toString()),

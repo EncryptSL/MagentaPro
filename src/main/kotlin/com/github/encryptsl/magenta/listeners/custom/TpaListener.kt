@@ -31,6 +31,9 @@ class TpaListener(private val magenta: Magenta) : Listener {
         val sender = event.sender
         val target = event.target
 
+        if (sender.uniqueId == target.uniqueId)
+            return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.yourself")))
+
         if (!magenta.tpaManager.createRequest(sender, target))
             return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.exist")))
 

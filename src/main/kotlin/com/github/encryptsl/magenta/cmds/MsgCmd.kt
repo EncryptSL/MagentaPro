@@ -27,7 +27,8 @@ class MsgCmd(private val magenta: Magenta) {
         @Argument(value = "message") @Greedy message: String
     ) {
         magenta.schedulerMagenta.runTask(magenta) {
-            magenta.pluginManager.callEvent(PlayerPrivateMessageEvent(commandSender, target, message))
+            val privateMessageEvent = PlayerPrivateMessageEvent(commandSender, target, message)
+            privateMessageEvent.callEvent()
         }
     }
 }

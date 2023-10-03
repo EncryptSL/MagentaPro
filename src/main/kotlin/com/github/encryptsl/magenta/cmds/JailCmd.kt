@@ -20,7 +20,9 @@ class JailCmd(private val magenta: Magenta) {
     @CommandMethod("jail info <name>")
     @CommandPermission("magenta.jail.info")
     fun onJailInfo(commandSender: CommandSender, @Argument(value = "name", suggestions = "jails") jailName: String) {
-
+        magenta.schedulerMagenta.runTask(magenta) {
+            magenta.pluginManager.callEvent(JailInfoEvent(commandSender, jailName, InfoType.INFO))
+        }
     }
 
     @CommandMethod("jail player <jailName> <player> [time] [reason]")
