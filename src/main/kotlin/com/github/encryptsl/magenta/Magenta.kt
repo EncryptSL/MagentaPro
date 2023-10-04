@@ -13,6 +13,7 @@ import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.filter.modules.*
+import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.tasks.PlayerAfkTask
 import com.github.encryptsl.magenta.common.utils.AfkUtils
@@ -28,6 +29,7 @@ class Magenta : JavaPlugin() {
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
+    private val hookManger: HookManager by lazy { HookManager(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val teamIntegration: TeamIntegration by lazy { TeamIntegration(this) }
     val localeConfig: Locale by lazy { Locale(this) }
@@ -58,18 +60,24 @@ class Magenta : JavaPlugin() {
     }
 
     override fun onEnable() {
-        val start = System.currentTimeMillis()
-        teamIntegration.createTeams()
-        commandManager.registerCommands()
-        registerTasks()
-        handlerListener()
-        logger.info("Plugin enabled in time ${start - System.currentTimeMillis()}")
+        val (i , time) = measureTimedValue {
+            teamIntegration.createTeams()
+            commandManager.registerCommands()
+            registerTasks()
+            handlerListener()
+            hookRegistration()
+        }
+        logger.info("Plugin enabled in time $time")
     }
 
 
 
     override fun onDisable() {
         logger.info("Plugin disabled")
+    }
+
+    private fun hookRegistration() {
+        hookManger.hookNuVotifier()
     }
 
     private fun registerTasks() {

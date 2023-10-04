@@ -18,9 +18,9 @@ class PlayerIgnoreListener(private val magenta: Magenta) : Listener {
         val target = event.target
         val account = PlayerAccount(magenta, player.uniqueId)
 
-        /*
+
         if (player.uniqueId == target.uniqueId)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.yourself")))*/
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.yourself")))
 
         if (account.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exist"),
@@ -28,14 +28,12 @@ class PlayerIgnoreListener(private val magenta: Magenta) : Listener {
             ))
 
 
-        /*
         if (target.player?.hasPermission("magenta.ignore.exempt") == true)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exempt"),
                 Placeholder.parsed("player", target.name.toString())
-            ))*/
+            ))
 
-        account.getAccount().set("ignore", listOf(target.uniqueId.toString()))
-        account.save()
+        account.set("ignore", setOf(target.uniqueId.toString()))
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.success"),
             Placeholder.parsed("player", target.name.toString())
         ))

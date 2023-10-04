@@ -128,6 +128,48 @@ warps:
     - world
     - world_nether
 
+# ########################################################
+#                      VOTIFIER                          #
+#              Configuration for rewards                 #
+# ########################################################
+votifier:
+  sound: 'BLOCK_NOTE_BLOCK_PLING'
+  volume: 3.5F
+  pitch: 10.5F
+  services:
+    default:
+      service: default
+      rewards:
+        - 'give {player}'
+    mclist_cz:
+      service: mclist.cz
+      rewards:
+        - 'give {player} minecraft:diamond_ore 5'
+        - 'eco add {player} 200'
+  voteparty:
+    enabled: false
+    start_party: 100
+    countdown: 60
+    rewards:
+      - 'give {player} minecraft:experience_bottle 32'
+      - 'crazycrates give physical votecrate 1 {player}'
+      - 'eco add {player} 1000'
+  cumulative:
+    '10':
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 10 hlasů a proto dostal 500 $!</color>'
+      rewards:
+        - 'eco add {player} 500'
+        - 'crazycrates give physical votecrate 1 {player}'
+    '30':
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 30 hlasů a proto dostal 1500 $ a 1 votecrate klíč !</color>'
+      rewards:
+        - 'eco add {player} 1500'
+        - 'crazycrates give physical votecrate 1 {player}'
+    '50':
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 50 hlasů a proto dostal 3500 $ a 2 votecrate klíč !</color>'
+      rewards:
+        - 'eco add {player} 3500'
+        - 'crazycrates give physical votecrate 2 {player}'
 
 #########################################################
 #                    ChatFilter                         #

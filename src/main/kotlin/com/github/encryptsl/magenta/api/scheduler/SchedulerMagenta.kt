@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.api.scheduler
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
+import org.bukkit.scheduler.BukkitTask
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
@@ -25,12 +26,30 @@ class SchedulerMagenta : IScheduler {
         Bukkit.getScheduler().runTaskLater(plugin, runnable, delay)
     }
 
-    override fun runTaskTimeSync(plugin: Plugin, runnable: Runnable, initialDelay: Long, period: Long) {
+    override fun runTaskTimerSync(plugin: Plugin, runnable: Runnable, initialDelay: Long, period: Long) {
         Bukkit.getScheduler().runTaskTimer(plugin, runnable, initialDelay, period)
     }
 
     override fun runTaskTimerAsync(plugin: Plugin, runnable: Runnable, initialDelay: Long, period: Long) {
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, initialDelay, period)
+    }
+
+    override fun runTaskTimerAsyncTask(
+        plugin: Plugin,
+        runnable: Runnable,
+        initialDelay: Long,
+        period: Long
+    ): BukkitTask {
+        return Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, initialDelay, period)
+    }
+
+    override fun runTaskTimerSyncTask(
+        plugin: Plugin,
+        runnable: Runnable,
+        initialDelay: Long,
+        period: Long
+    ): BukkitTask {
+        return Bukkit.getScheduler().runTaskTimer(plugin, runnable, initialDelay, period)
     }
 
     override fun runTaskAsync(plugin: Plugin, runnable: Runnable) {

@@ -10,6 +10,7 @@ import com.github.encryptsl.magenta.api.events.spy.SpyToggleByPlayerEvent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provived by plugin MagentaPro")
 class SocialSpyCmd(private val magenta: Magenta) {
 

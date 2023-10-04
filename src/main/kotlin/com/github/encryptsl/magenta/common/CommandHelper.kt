@@ -38,15 +38,13 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun allowFly(commandSender: CommandSender?, player: Player) {
-        if (player.isFlying) {
+        if (player.allowFlight) {
             player.allowFlight = false
-            player.isFlying = false
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated")))
             commandSender?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated.to"), TagResolver.resolver(
                 Placeholder.parsed("player", player.name))))
         } else {
             player.allowFlight = true
-            player.isFlying = true
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated")))
             commandSender?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated.to"), TagResolver.resolver(Placeholder.parsed("player", player.name))))
 
@@ -58,10 +56,9 @@ class CommandHelper(private val magenta: Magenta) {
         val item = inventory.itemInMainHand
         val itemMeta = item.itemMeta
         if (itemMeta is Damageable) {
-            val dmg = itemMeta
-            if (!dmg.hasDamage()) return
-            dmg.damage = 0
-            item.setItemMeta(dmg)
+            if (!itemMeta.hasDamage()) return
+            itemMeta.damage = 0
+            item.setItemMeta(itemMeta)
             player.updateInventory()
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.item")))

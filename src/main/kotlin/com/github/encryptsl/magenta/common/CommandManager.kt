@@ -100,6 +100,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(HomeCmd(magenta))
         annotationParser.parse(JailCmd(magenta))
         annotationParser.parse(KitCmd(magenta))
+        annotationParser.parse(LightningCmd(magenta))
         annotationParser.parse(MagentaCmd(magenta))
         annotationParser.parse(NickCmd(magenta))
         annotationParser.parse(IgnoreCmd(magenta))
@@ -107,6 +108,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(RepairCmd(magenta))
         annotationParser.parse(SocialSpyCmd(magenta))
         annotationParser.parse(TpCmd(magenta))
+        annotationParser.parse(VanishCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))
     }
 

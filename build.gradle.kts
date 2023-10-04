@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -10,15 +10,17 @@ description = providers.gradleProperty("plugin_description").get()
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly(kotlin("stdlib", "1.9.0"))
+    compileOnly(kotlin("stdlib", "1.9.10"))
     compileOnly("org.jetbrains.exposed:exposed-core:0.43.0")
     compileOnly("org.jetbrains.exposed:exposed-jdbc:0.43.0")
     compileOnly("com.zaxxer:HikariCP:5.0.1")
+    compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
     implementation("cloud.commandframework:cloud-annotations:1.8.4")
     testImplementation("com.zaxxer:HikariCP:5.0.1")
