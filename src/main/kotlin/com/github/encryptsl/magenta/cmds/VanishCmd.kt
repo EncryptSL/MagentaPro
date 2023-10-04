@@ -11,6 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class VanishCmd(private val magenta: Magenta) {
 

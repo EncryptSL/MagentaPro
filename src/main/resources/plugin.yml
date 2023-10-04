@@ -48,7 +48,14 @@ permissions:
     children:
       magenta.player: true
       magenta.ignore.*: true
+      magenta.jail: true
+      magenta.jail.list: true
+      magenta.jail.info: true
+      magenta.jail.tp: true
+      magenta.jail.exempt: true
+      magenta.lightning.*: true
       magenta.social.spy: true
+      magenta.chat.filter.bypass.*: true
   magenta.player:
     description: Permissions for player
     default: true
@@ -57,6 +64,7 @@ permissions:
       magenta.ignore: true
       magenta.unignore: true
       magenta.kit: true
+      magenta.kit.list: true
       magenta.warp: true
       magenta.tpa.*: true
       magenta.msg.*: true
@@ -140,6 +148,7 @@ permissions:
     children:
       magenta.jail: true
       magenta.jail.info: true
+      magenta.jail.tp: true
       magenta.jail.create: true
       magenta.jail.delete: true
       magenta.jail.list: true
