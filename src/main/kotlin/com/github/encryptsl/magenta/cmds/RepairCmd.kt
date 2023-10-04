@@ -41,6 +41,9 @@ class RepairCmd(private val magenta: Magenta) {
                 return
             }
 
+            if (!target.hasPermission("magenta.repair.others"))
+                return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
+
             val inventory = target.inventory
             if (inventory.isEmpty)
                 return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
@@ -58,6 +61,9 @@ class RepairCmd(private val magenta: Magenta) {
 
         } else {
             if (target != null) {
+                if (!target.hasPermission("magenta.repair.other"))
+                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
+
                 val inventory = target.inventory
                 if (inventory.isEmpty)
                     return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
