@@ -60,6 +60,9 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
                     Placeholder.parsed("realtime", datetime())
                 )))
             }
+            if (playerAccount.getAccount().contains("votifier.rewards")) {
+                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.success.exist.rewards.to.claim")))
+            }
             return
         }
         if (kit.isNotEmpty()) {

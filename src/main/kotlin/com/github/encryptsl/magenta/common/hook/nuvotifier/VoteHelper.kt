@@ -1,9 +1,12 @@
 package com.github.encryptsl.magenta.common.hook.nuvotifier
 
+import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -11,6 +14,13 @@ import org.bukkit.scheduler.BukkitRunnable
 
 
 object VoteHelper {
+
+    @JvmStatic
+    fun saveOfflineReward(magenta: Magenta, offlinePlayer: OfflinePlayer, rewards: MutableList<String>) {
+        val playerAccount = PlayerAccount(magenta, offlinePlayer.uniqueId)
+        playerAccount.set("votifier.rewards", rewards)
+        magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
+    }
 
     @JvmStatic
     fun startVoteParty(
@@ -46,7 +56,7 @@ object VoteHelper {
     @JvmStatic
     fun broadcast(string: String, username: String, serviceName: String) {
         Bukkit.broadcast(ModernText.miniModernText(string, TagResolver.resolver(
-            Placeholder.parsed("username", username),
+            Placeholder.parsed("player", username),
             Placeholder.parsed("service", serviceName)
         )))
     }

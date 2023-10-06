@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.database
 
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
+import com.github.encryptsl.magenta.common.database.tables.VoteTable
 import com.github.encryptsl.magenta.common.database.tables.WarpTable
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
@@ -22,7 +23,7 @@ class DatabaseConnector : DatabaseConnectorProvider {
 
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create(HomeTable, WarpTable)
+            SchemaUtils.create(HomeTable, WarpTable, VoteTable)
         }
     }
 }

@@ -3,8 +3,8 @@ package com.github.encryptsl.magenta.common.database.tables
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 
-object WarpTable : Table("warps") {
-    val id: Column<Int> = integer("id")
+object WarpTable : Table() {
+    private val id = integer( "id").autoIncrement()
     val uuid: Column<String> = varchar("uuid", 36)
     val username: Column<String> = varchar("username", 36)
     val warpName: Column<String> = varchar("warp", 36)
@@ -16,4 +16,7 @@ object WarpTable : Table("warps") {
     val pitch: Column<Float> = float("pitch")
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
+
+    override val tableName: String
+        get() = "warps"
 }

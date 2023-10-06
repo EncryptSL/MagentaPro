@@ -109,6 +109,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(SocialSpyCmd(magenta))
         annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(VanishCmd(magenta))
+        annotationParser.parse(VoteCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))
     }
 

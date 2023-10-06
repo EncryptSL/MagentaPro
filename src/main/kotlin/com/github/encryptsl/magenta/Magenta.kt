@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
+import com.github.encryptsl.magenta.api.votes.VotePlayerAPI
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
@@ -30,6 +31,7 @@ class Magenta : JavaPlugin() {
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     private val hookManger: HookManager by lazy { HookManager(this) }
+    val vote: VotePlayerAPI by lazy { VotePlayerAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val teamIntegration: TeamIntegration by lazy { TeamIntegration(this) }
     val localeConfig: Locale by lazy { Locale(this) }
@@ -77,6 +79,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun hookRegistration() {
+        hookManger.hookPAPI()
         hookManger.hookNuVotifier()
     }
 

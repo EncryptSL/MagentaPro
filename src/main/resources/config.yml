@@ -140,11 +140,30 @@ votifier:
     default:
       service: default
       rewards:
-        - 'give {player}'
-    mclist_cz:
-      service: mclist.cz
+        - 'give {player} minecraft:experience_bottle 5'
+    czech-craft_eu:
+      service: czech-craft.eu
+      link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/ananaso-manie/vote/?user=<username>'><bold><aqua>|</bold>
+        <yellow>Mclist.cz</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - 'give {player} minecraft:diamond_ore 5'
+        - 'give {player} minecraft:diamond 5'
+        - 'give {player} minecraft:experience_bottle 5'
+        - 'eco add {player} 200'
+    minecraft-list_cz:
+      service: minecraft-list.eu
+      link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
+        <yellow>Mclist.cz</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
+      rewards:
+        - 'give {player} minecraft:emerald 1'
+        - 'give {player} minecraft:experience_bottle 5'
+        - 'eco add {player} 200'
+    Craftlist_org:
+      service: craftlist.org
+      link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
+        <yellow>Mclist.cz</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
+      rewards:
+        - 'give {player} minecraft:experience_bottle 5'
+        - 'crazycrates give physical basiccrate 1 {player}'
         - 'eco add {player} 200'
   voteparty:
     enabled: false

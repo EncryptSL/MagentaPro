@@ -14,7 +14,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     override fun createHome(player: Player, location: Location, home: String) {
         magenta.schedulerMagenta.runTaskAsync(magenta) {
             transaction {
-                HomeTable.insert {
+                HomeTable.insertIgnore {
                     it[username] = player.name
                     it[uuid] = player.uniqueId.toString()
                     it[HomeTable.home] = home

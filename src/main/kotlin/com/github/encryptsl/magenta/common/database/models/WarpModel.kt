@@ -15,7 +15,7 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     override fun creteWarp(player: Player, location: Location, warpName: String) {
         magenta.schedulerMagenta.runTaskAsync(magenta) {
             transaction {
-                WarpTable.insert {
+                WarpTable.insertIgnore {
                     it[username] = player.name
                     it[uuid] = player.uniqueId.toString()
                     it[WarpTable.warpName] = warpName

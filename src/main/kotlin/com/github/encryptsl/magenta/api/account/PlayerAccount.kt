@@ -22,6 +22,15 @@ class PlayerAccount(private val magenta: Magenta, private val uuid: UUID) : IAcc
         }
     }
 
+    override fun set(path: String, list: MutableList<Any>) {
+        magenta.schedulerMagenta.runTaskAsync(magenta) {
+            list.forEach { item ->
+                getAccount().set(path, item)
+            }
+            save()
+        }
+    }
+
     override fun save() {
         configUtil.save()
     }
@@ -32,6 +41,10 @@ class PlayerAccount(private val magenta: Magenta, private val uuid: UUID) : IAcc
 
     override fun isSocialSpy(): Boolean {
         return getAccount().getBoolean("socialspy")
+    }
+
+    override fun getVotifierRewards(): MutableList<String> {
+        return getAccount().getStringList("votifier.rewards")
     }
 
     override fun getLastLocation(): Location {
