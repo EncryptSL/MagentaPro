@@ -9,7 +9,7 @@ database:
 
 newbies:
   # Announcement to player who first join on server.
-  announcement: '<blue>Vítej <displayname> <blue>na serveru !'
+  announcement: '<blue>Vítej <player> <blue>na serveru !'
 
   # We teleport player on first join on spawnpoint.
   # for not spawn on point set spawnpoint: none
@@ -144,27 +144,27 @@ votifier:
     czech-craft_eu:
       service: czech-craft.eu
       link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/ananaso-manie/vote/?user=<username>'><bold><aqua>|</bold>
-        <yellow>Mclist.cz</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
+        <yellow>czech-craft.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - 'give {player} minecraft:diamond 5'
-        - 'give {player} minecraft:experience_bottle 5'
-        - 'eco add {player} 200'
+        - give {player} minecraft:diamond 5
+        - give {player} minecraft:experience_bottle 5
+        - eco add {player} 200
     minecraft-list_cz:
       service: minecraft-list.eu
       link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
-        <yellow>Mclist.cz</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
+        <yellow>minecraft-list.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - 'give {player} minecraft:emerald 1'
-        - 'give {player} minecraft:experience_bottle 5'
-        - 'eco add {player} 200'
+        - give {player} minecraft:emerald 1
+        - give {player} minecraft:experience_bottle 5
+        - eco add {player} 200
     Craftlist_org:
       service: craftlist.org
       link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
-        <yellow>Mclist.cz</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
+        <yellow>craftlist.org</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - 'give {player} minecraft:experience_bottle 5'
-        - 'crazycrates give physical basiccrate 1 {player}'
-        - 'eco add {player} 200'
+        - give {player} minecraft:experience_bottle 5
+        - crazycrates give physical basiccrate 1 {player}
+        - eco add {player} 200
   voteparty:
     enabled: false
     start_party: 100

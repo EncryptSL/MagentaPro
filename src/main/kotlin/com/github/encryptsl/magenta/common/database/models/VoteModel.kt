@@ -54,7 +54,8 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
 
     override fun getPlayerVote(uuid: UUID): Int = transaction {
         val user = VoteTable.select(VoteTable.uuid eq uuid.toString())
-        return@transaction user.sumOf<ResultRow> { row -> row[vote] }
+
+        return@transaction  user.groupBy(vote).sumOf { row -> row[vote] }
     }
 
     override fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity? = transaction {
@@ -88,7 +89,7 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
 
     override fun topVotes(): MutableMap<String, Int> = transaction {
         VoteTable.selectAll().associate {
-            it[uuid] to it[vote]
+            it[uuid] to getPlayerVote(UUID.fromString(it[uuid]))
         }.toMutableMap()
     }
 

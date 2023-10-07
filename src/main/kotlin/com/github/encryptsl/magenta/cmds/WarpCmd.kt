@@ -13,12 +13,9 @@ import org.bukkit.entity.Player
 @Suppress("UNUSED")
 @CommandMethod("warp")
 class WarpCmd(private val magenta: Magenta) {
-    @CommandMethod("help|h")
-    fun onHelp(commandSender: CommandSender) {
-
-    }
 
     @CommandMethod("info|i <warp>")
+    @CommandPermission("magenta.warp.info")
     fun onInfo(commandSender: CommandSender, @Argument(value = "warp", suggestions = "warps") warpName: String) {
         magenta.schedulerMagenta.runTask(magenta) {
             magenta.server.pluginManager.callEvent(WarpInfoEvent(commandSender, warpName, InfoType.INFO))

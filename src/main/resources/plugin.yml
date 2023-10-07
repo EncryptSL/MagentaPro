@@ -24,7 +24,7 @@ permissions:
     default: op
     children:
       magenta.afk.*: true
-      magenta.back*: true
+      magenta.back.*: true
       magenta.fly.*: true
       magenta.gamemode.*: true
       magenta.gamemodes.*: true
@@ -83,6 +83,12 @@ permissions:
       magenta.afk.other: true
       magenta.afk.auto: true
       magenta.kick.exempt: true
+  magenta.back.*:
+    description: Permissions for back
+    default: false
+    children:
+      magenta.back: true
+      magenta.back.other: true
   magenta.fly.*:
     description: All permissions for fly commands
     default: false
@@ -162,6 +168,7 @@ permissions:
       magenta.kit.other: true
       magenta.kit.list: true
       magenta.kit.exempt: true
+      magenta.showkit: true
       magenta.createkit: true
       magenta.deletekit: true
       magenta.kits.*: true
@@ -204,6 +211,16 @@ permissions:
       magenta.tpa: true
       magenta.tpaccept: true
       magenta.tpadeny: true
+  magenta.tp.*:
+    description: Permissions for tp
+    default: false
+    children:
+      magenta.tp: true
+      magenta.tp.other: true
+      magenta.tpo: true
+      magenta.tphere: true
+      magenta.tpall: true
+      magenta.tp.exempt: true
   magenta.vanish.*:
     description: Permisisons for vanish
     default: false
@@ -216,6 +233,7 @@ permissions:
     children:
       magenta.warp: true
       magenta.warp.other: true
+      magenta.warp.info: true
       magenta.warp.create: true
       magenta.warp.delete: true
       magenta.warp.delete.other: true

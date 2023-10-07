@@ -22,7 +22,6 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
         val playerAccount = PlayerAccount(magenta, player.uniqueId)
         val newbies = magenta.config.getConfigurationSection("newbies")!!
         val kit = newbies.getString("kit") ?: "tools"
-        magenta.teamIntegration.setTeam(player)
 
         val jailCheckEvent = JailCheckEvent(player)
         magenta.pluginManager.callEvent(jailCheckEvent)

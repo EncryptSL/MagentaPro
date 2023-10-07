@@ -17,7 +17,6 @@ class AfkUtils(private val magenta: Magenta) {
 
     fun addTime(player: Player, time: Long) {
         if (Teams.haveTeam(player, "AFK")) {
-            magenta.teamIntegration.setTeam(player)
             cachedTime[player.uniqueId] = expire(time)
             Teams.removeTeam(player, "AFK")
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.player.no.longer.afk"),

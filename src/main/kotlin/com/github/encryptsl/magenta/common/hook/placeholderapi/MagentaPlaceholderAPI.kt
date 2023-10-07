@@ -31,8 +31,9 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
         }
 
         return when (identifier) {
+            "afk" -> magenta.afk.isAfk(player.uniqueId).toString()
             "socialspy" -> account.getAccount().getBoolean("socialspy").toString()
-            "vanish" -> account.getAccount().getBoolean("vanished").toString()
+            "vanished" -> account.getAccount().getBoolean("vanished").toString()
             "votes" -> magenta.vote.getPlayerVote(player.uniqueId).toString()
             "total_votes" -> magenta.vote.totalVotes().toString()
             "voteparty_now" -> magenta.vote.getVotesForParty().toString()

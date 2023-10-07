@@ -1,4 +1,4 @@
 <gold>Welcome, <player><gold>!
 <gold>Type <red>/help<gold> for a list of commands.
 <gold>Type <red>/list<gold> to see who else is online.
-<gold>Players online:<red> <online> <gold>- World time:<gold> <worldtime12>
+<gold>Players online:<red> <online> <gold>- World time:<gold> <worldtime>
