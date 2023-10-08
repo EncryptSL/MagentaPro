@@ -266,6 +266,7 @@ permissions:
       magenta.kit.delay.exempt: true
       magenta.repair.delay.exempt: true
       magenta.tpa.delay.exempt: true
+      magenta.social.spy.exempt: true
       magenta.warp.delay.exempt: true
   magenta.chat.filter.bypass.*:
     default: false
