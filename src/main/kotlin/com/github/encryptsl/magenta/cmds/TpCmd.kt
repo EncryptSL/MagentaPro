@@ -28,7 +28,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.tpa")
     fun onTpa(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
         magenta.schedulerMagenta.runTask(magenta) {
-            magenta.pluginManager.callEvent(TpaRequestEvent(player, target))
+            magenta.pluginManager.callEvent(TpaRequestEvent(player, target, magenta.config.getLong("teleport-cooldown")))
         }
     }
 

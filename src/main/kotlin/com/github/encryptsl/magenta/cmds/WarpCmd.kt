@@ -53,6 +53,7 @@ class WarpCmd(private val magenta: Magenta) {
             magenta.server.pluginManager.callEvent(WarpRenameEvent(player, fromWarp, toWarpName))
         }
     }
+    @ProxiedBy("warptp")
     @CommandMethod("tp|t <warp> [target]")
     @CommandPermission("magenta.warp")
     fun onWarpTeleport(commandSender: CommandSender, @Argument("warp", suggestions = "warps") warpName: String, @Argument(value = "target", suggestions = "players") target: Player?) {

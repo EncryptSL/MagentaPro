@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
 @CommandDescription("Provided by plugin MagentaPro")
 class FlyCmd(magenta: Magenta) {
 
-    private val commandHelper = CommandHelper(magenta)
+    private val commandHelper: CommandHelper by lazy { CommandHelper(magenta) }
 
     @CommandMethod("fly")
     @CommandPermission("magenta.fly")

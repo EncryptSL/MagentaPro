@@ -1,7 +1,9 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
+import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -10,13 +12,19 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import java.time.Duration
 
 class HomeTeleportListener(private val magenta: Magenta) : Listener {
+
+    private val commandHelper: CommandHelper by lazy { CommandHelper(magenta) }
+
     @EventHandler
     fun onHomeTeleport(event: HomeTeleportEvent) {
         val homeName = event.homeName
         val player: Player = event.player
+        val delay = event.delay
         val location: Location = player.location
+        val playerAccount = PlayerAccount(magenta, player.uniqueId)
 
         val worlds = magenta.config.getStringList("homes.whitelist").contains(player.location.world.name)
 
@@ -30,12 +38,31 @@ class HomeTeleportListener(private val magenta: Magenta) : Listener {
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.not.exist"),
                     TagResolver.resolver(Placeholder.parsed("home", homeName))))
 
-        magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {
-            player.teleport(Location(Bukkit.getWorld(it.world), it.x.toDouble(), it.y.toDouble(), it.z.toDouble(), it.yaw, it.pitch))
-        }
+        val timeLeft: Duration = playerAccount.cooldownManager.getRemainingDelay("home")
 
-        player.sendMessage(
-            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.success.teleport"),
-                TagResolver.resolver(Placeholder.parsed("home", homeName))))
+        if (!playerAccount.cooldownManager.hasDelay("home")) {
+            if (delay != 0L && delay != -1L || !player.hasPermission("magenta.home.delay.exempt")) {
+                playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "home")
+            }
+
+            magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {
+                player.teleport(Location(
+                    Bukkit.getWorld(it.world),
+                    it.x.toDouble(),
+                    it.y.toDouble(),
+                    it.z.toDouble(),
+                    it.yaw, it.pitch)
+                )
+            }
+
+            player.sendMessage(
+                ModernText.miniModernText(
+                    magenta.localeConfig.getMessage("magenta.command.home.success.teleport"),
+                    TagResolver.resolver(Placeholder.parsed("home", homeName))
+                )
+            )
+        } else {
+            commandHelper.delayMessage(player, "magenta.command.home.error.delay", timeLeft)
+        }
     }
 }

@@ -23,7 +23,7 @@ class HomeCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.home.tp")
     fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         magenta.schedulerMagenta.runTask(magenta) {
-            magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home))
+            magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
         }
     }
 

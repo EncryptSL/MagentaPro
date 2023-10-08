@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class TpaRequestEvent(val sender: Player, val target: Player) : Event(), Cancellable {
+class TpaRequestEvent(val sender: Player, val target: Player, val delay: Long) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

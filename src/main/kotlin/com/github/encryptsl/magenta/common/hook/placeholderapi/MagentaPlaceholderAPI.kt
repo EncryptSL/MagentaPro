@@ -36,8 +36,8 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
             "vanished" -> account.getAccount().getBoolean("vanished").toString()
             "votes" -> magenta.vote.getPlayerVote(player.uniqueId).toString()
             "total_votes" -> magenta.vote.totalVotes().toString()
-            "voteparty_now" -> magenta.vote.getVotesForParty().toString()
-            "voteparty_max" -> magenta.config.getInt("votifier.voteparty.start_party").toString()
+            "voteparty_now" -> magenta.config.getInt("votifier.voteparty.current_votes").toString()
+            "voteparty_max" -> magenta.config.getInt("votifier.voteparty.start_at").toString()
             "top_vote_rank_player" -> topVoteNameByRank(1)
             else -> {
                 rank?.let {

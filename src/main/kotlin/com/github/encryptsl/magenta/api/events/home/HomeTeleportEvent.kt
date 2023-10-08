@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class HomeTeleportEvent(val player: Player, val homeName: String) : Event(), Cancellable {
+class HomeTeleportEvent(val player: Player, val homeName: String, val delay: Long) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

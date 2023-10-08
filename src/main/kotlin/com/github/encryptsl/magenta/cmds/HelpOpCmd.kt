@@ -25,7 +25,6 @@ class HelpOpCmd(private val magenta: Magenta) {
 
         Bukkit.broadcast(component, "magenta.helpop.staff.chat")
         player.sendMessage(component)
-
     }
 
 }

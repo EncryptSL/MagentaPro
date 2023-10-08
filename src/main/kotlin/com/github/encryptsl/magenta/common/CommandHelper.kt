@@ -10,8 +10,16 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.meta.Damageable
+import java.time.Duration
 
 class CommandHelper(private val magenta: Magenta) {
+
+    fun delayMessage(sender: Player, message: String, duration: Duration) {
+        sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage(message),
+            Placeholder.parsed("delay", duration.toSeconds().toString())
+        ))
+    }
+
 
     fun teleportAll(sender: Player, players: MutableCollection<out Player>) {
         players.forEach {

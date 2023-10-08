@@ -33,7 +33,9 @@ nick-blacklist:
 #- Notch
 #- '^Dinnerbone'
 
-teleport-cooldown: 5
+teleport-cooldown: 30
+
+heal-cooldown: 60
 
 tpa-accept-cancellation: 120
 
@@ -97,20 +99,61 @@ mentions:
 #                  Private Message                      #
 #########################################################
 msg:
+# Minecraft sounds list - https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
+# You can set your sound what, can be hearing when player
+# send message to another player.
   sound: 'BLOCK_NOTE_BLOCK_PLING'
+
+# You can set your own volume of sound
+# this value is accept float.
   volume: 3.5F
+
+# You can set your own pitch of sound
+# this value is accept float.
   pitch: 10.5F
+
+#########################################################
+#                   Broadcast news                      #
+#########################################################
+news:
+# You can set custom prefix for your broadcast scheduled
+# messages, prefix supporting minimessage format.
+  prefix: '<gray>[<green>News</gray>]<white> '
+
+# Random is settings for selecting messages from list
+# randomized based on size in list and random number.
+  random: true
+
+# You can set your custom delay between next message.
+# delay is based on seconds.
+  delay: 180
+
+# There you can set your messages, for broadcast
+# Messages supporting base
+  messages:
+    - '<gray>Chceš si koupit vip a nevíš jak napiš <yellow>/vip<gray> a zde uvidíš seznam !'
+    - '<color:05B5FC>Ještě jsi dneska nehlasoval ?, <color:69D0FA>Napiš /vote !'
+    - '<gray>Náš server nabízí i těžební svět <red><bold>/mineworld <gray>který se resetuje každý měsíc !'
+    - ''
+
 
 #########################################################
 #                       HOMES                           #
 # permission: magenta.homes.<group>                     #
 #########################################################
 homes:
+# You can set your own group and this group have your own
+# limit of homes what can be created,
+# with permission magenta.homes.player can have player 3 homes.
   groups:
     player: 3
     vip: 4
     moderator: -1
     admin: -1
+
+# You can whitelist worlds
+# where can be created home or teleport to home
+# with permission magenta.home.whitelist.exempt you can bypass this whitelist.
   whitelist:
     - world
     - world_nether
@@ -120,10 +163,17 @@ homes:
 # permission: magenta.warps.<group>                     #
 #########################################################
 warps:
+# You can set your own group and this group have your own
+# limit of warps what can be created,
+# with permission magenta.warps.vip can have vip player 3 warps.
   groups:
     vip: 4
     moderator: -1
     admin: -1
+
+# You can whitelist worlds
+# where can be created warp or teleport to warp
+# with permission magenta.warp.whitelist.exempt you can bypass this whitelist.
   whitelist:
     - world
     - world_nether
@@ -146,33 +196,42 @@ votifier:
       link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/ananaso-manie/vote/?user=<username>'><bold><aqua>|</bold>
         <yellow>czech-craft.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - give {player} minecraft:diamond 5
-        - give {player} minecraft:experience_bottle 5
-        - eco add {player} 200
+        - 'give {player} minecraft:diamond 5'
+        - 'give {player} minecraft:experience_bottle 5'
+        - 'eco add {player} 200'
     minecraft-list_cz:
       service: minecraft-list.eu
       link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
         <yellow>minecraft-list.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - give {player} minecraft:emerald 1
-        - give {player} minecraft:experience_bottle 5
-        - eco add {player} 200
+        - 'give {player} minecraft:emerald 1'
+        - 'give {player} minecraft:experience_bottle 5'
+        - 'eco add {player} 200'
     Craftlist_org:
       service: craftlist.org
       link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
         <yellow>craftlist.org</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - give {player} minecraft:experience_bottle 5
-        - crazycrates give physical basiccrate 1 {player}
-        - eco add {player} 200
+        - 'give {player} minecraft:experience_bottle 5'
+        - 'crazycrates give physical basiccrate 1 {player}'
+        - 'eco add {player} 200'
+
+# Voteparty is disabled by default, this reward in based on saved votes in party.
+# rewards from voteparty can receive only online players in game.
+# when party hit 100 votes, voteparty starts countdown from 60 sec to 1 and players receive rewards.
   voteparty:
     enabled: false
-    start_party: 100
+    current_votes: 0
+    start_at: 100
     countdown: 60
     rewards:
       - 'give {player} minecraft:experience_bottle 32'
       - 'crazycrates give physical votecrate 1 {player}'
       - 'eco add {player} 1000'
+
+# Cumulative is vote rewarding system based on count of saved
+# player votes in database, if player hit with 10 votes can have reward from this list
+# supported is only command and placeholder {player} and in broadcast <player> with minimessage format.
   cumulative:
     '10':
       broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 10 hlasů a proto dostal 500 $!</color>'

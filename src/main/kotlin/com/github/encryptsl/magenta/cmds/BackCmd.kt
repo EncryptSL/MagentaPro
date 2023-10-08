@@ -24,7 +24,6 @@ class BackCmd(private val magenta: Magenta) {
             player.teleport(playerAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success")))
-
     }
 
     @CommandMethod("back <player>")

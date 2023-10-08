@@ -61,6 +61,8 @@ permissions:
     description: Permissions for player
     default: true
     children:
+      magenta.afk: true
+      magenta.afk.auto: true
       magenta.home.player: true
       magenta.ignore: true
       magenta.unignore: true
@@ -82,7 +84,7 @@ permissions:
       magenta.afk: true
       magenta.afk.other: true
       magenta.afk.auto: true
-      magenta.kick.exempt: true
+      magenta.afk.kick.exempt: true
   magenta.back.*:
     description: Permissions for back
     default: false
@@ -167,7 +169,7 @@ permissions:
       magenta.kit: true
       magenta.kit.other: true
       magenta.kit.list: true
-      magenta.kit.exempt: true
+      magenta.kit.delay.exempt: true
       magenta.showkit: true
       magenta.createkit: true
       magenta.deletekit: true
@@ -198,6 +200,7 @@ permissions:
       magenta.repair.item: true
       magenta.repair.all: true
       magenta.repair.other: true
+      magenta.repair.delay.exempt: true
   magenta.social.spy.*:
     description: Permissions for all social spy
     default: false
@@ -253,7 +256,19 @@ permissions:
       magenta.warp.move.here: true
       magenta.warp.rename: true
       magenta.warp.list: true
+  magenta.exempts.*:
+    default: false
+    children:
+      magenta.afk.kick.exempt: true
+      magenta.home.delay.exempt: true
+      magenta.ignore.exempt: true
+      magenta.jail.exempt: true
+      magenta.kit.delay.exempt: true
+      magenta.repair.delay.exempt: true
+      magenta.tpa.delay.exempt: true
+      magenta.warp.delay.exempt: true
   magenta.chat.filter.bypass.*:
+    default: false
     children:
       magenta.chat.filter.bypass.websites: true
       magenta.chat.filter.bypass.ipfilter: true

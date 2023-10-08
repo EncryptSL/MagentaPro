@@ -5,22 +5,40 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import java.time.Duration
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class HealCmd(private val magenta: Magenta) {
 
+    private val commandHelper: CommandHelper by lazy { CommandHelper(magenta) }
+
     @CommandMethod("heal")
     @CommandPermission("magenta.heal")
     fun onHeal(player: Player) {
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
-        player.health = 20.0
-        player.foodLevel = 20
+        val playerAccount = PlayerAccount(magenta, player.uniqueId)
+        val delay = magenta.config.getLong("heal-cooldown")
+
+        val timeLeft = playerAccount.cooldownManager.getRemainingDelay("heal")
+
+        if (!playerAccount.cooldownManager.hasDelay("heal")) {
+            if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {
+                playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "heal")
+            }
+
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
+            player.health = 20.0
+            player.foodLevel = 20
+        } else {
+            commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
+        }
     }
 
     @CommandMethod("heal <player>")

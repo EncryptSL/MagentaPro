@@ -15,6 +15,7 @@ import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.filter.modules.*
 import com.github.encryptsl.magenta.common.hook.HookManager
+import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.tasks.PlayerAfkTask
 import com.github.encryptsl.magenta.common.utils.AfkUtils
@@ -22,6 +23,7 @@ import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.common.utils.TeamIntegration
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
+import net.kyori.adventure.util.Ticks
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import kotlin.time.measureTimedValue
@@ -62,7 +64,7 @@ class Magenta : JavaPlugin() {
     }
 
     override fun onEnable() {
-        val (i , time) = measureTimedValue {
+        val (_, time) = measureTimedValue {
             teamIntegration.createTeams()
             commandManager.registerCommands()
             registerTasks()
@@ -84,6 +86,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
+        schedulerMagenta.runTaskTimerAsyncTask(this, BroadcastNewsTask(this), Ticks.duration(config.getLong("news.delay")).toSeconds(), Ticks.duration(config.getLong("news.delay")).toSeconds())
         schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 20)
         schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
     }
