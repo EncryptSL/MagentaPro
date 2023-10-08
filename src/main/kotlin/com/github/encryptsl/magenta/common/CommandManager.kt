@@ -110,6 +110,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(VanishCmd(magenta))
         annotationParser.parse(VoteCmd(magenta))
+        annotationParser.parse(VotePartyCmd(magenta))
         annotationParser.parse(WarpCmd(magenta))
     }
 

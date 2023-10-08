@@ -23,9 +23,10 @@ import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.common.utils.TeamIntegration
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
-import net.kyori.adventure.util.Ticks
+import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import java.time.Duration
 import kotlin.time.measureTimedValue
 
 class Magenta : JavaPlugin() {
@@ -86,7 +87,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        schedulerMagenta.runTaskTimerAsyncTask(this, BroadcastNewsTask(this), Ticks.duration(config.getLong("news.delay")).toSeconds(), Ticks.duration(config.getLong("news.delay")).toSeconds())
+        schedulerMagenta.runTaskTimerAsyncTask(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
         schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 20)
         schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
     }

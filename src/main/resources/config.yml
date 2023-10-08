@@ -125,16 +125,15 @@ news:
   random: true
 
 # You can set your custom delay between next message.
-# delay is based on seconds.
-  delay: 180
+# delay is based on minutes.
+  delay: 5
 
 # There you can set your messages, for broadcast
 # Messages supporting base
   messages:
     - '<gray>Chceš si koupit vip a nevíš jak napiš <yellow>/vip<gray> a zde uvidíš seznam !'
-    - '<color:05B5FC>Ještě jsi dneska nehlasoval ?, <color:69D0FA>Napiš /vote !'
+    - '<color:05B5FC>Ještě jsi dneska nehlasoval ?</color>, <color:69D0FA>Napiš /vote !</color>'
     - '<gray>Náš server nabízí i těžební svět <red><bold>/mineworld <gray>který se resetuje každý měsíc !'
-    - ''
 
 
 #########################################################
@@ -183,9 +182,30 @@ warps:
 #              Configuration for rewards                 #
 # ########################################################
 votifier:
+# Minecraft sounds list - https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
+# You can set your sound what, can be hearing when player
+# send message to another player.
   sound: 'BLOCK_NOTE_BLOCK_PLING'
+
+# You can set your own volume of sound
+# this value is accept float.
   volume: 3.5F
+
+
+# You can set your own pitch of sound
+# this value is accept float.
   pitch: 10.5F
+
+# In services you can set page where you have your server connected with votifier plugin.
+# services are represented by key services.$your_service, is name of responded from page.
+# names are replaced by example craftlist.org to craftlist_org
+# services:
+#    default:
+#      service: default, is name of the service this is only for broadcast.
+#    rewards: are in list only working with commands placeholder is {player} replaced to real player name.
+#      - 'give {player} minecraft:experience_bottle 5'
+#    link: "<hover:show_text><click:open_url:'voting_url'>Vote awesome url click and vote</click></hover>"
+#    in link you can set <username> and this is a placeholder replaced to real player name.
   services:
     default:
       service: default
@@ -228,6 +248,9 @@ votifier:
       - 'give {player} minecraft:experience_bottle 32'
       - 'crazycrates give physical votecrate 1 {player}'
       - 'eco add {player} 1000'
+    format:
+      - '<color:#32C4FF>Ve voteparty je aktuálně <color:#0581B3><current_votes>'
+      - '<color:#32C4FF>zbývá tedy <color:#0581B3><remaining_votes> hlasů ze <color:#0581B3><start_at> <color:#32C4FF>hlasů'
 
 # Cumulative is vote rewarding system based on count of saved
 # player votes in database, if player hit with 10 votes can have reward from this list

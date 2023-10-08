@@ -9,18 +9,9 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
        if (!magenta.config.contains("news")) return
        if (!magenta.config.contains("news.delay")) return
        if (magenta.config.contains("news.random")) {
-            if (magenta.config.getBoolean("true")) {
+            if (magenta.config.getBoolean("news.random")) {
                 val randomMessage = magenta.config.getStringList("news.messages").random()
                 Bukkit.broadcast(ModernText.miniModernText(randomMessage))
-                return
-            } else {
-                val messages = magenta.config.getStringList("news.messages").size
-                var current = messages
-                if (current == 0) {
-                    current = messages
-                }
-                current--
-                Bukkit.broadcast(ModernText.miniModernText(magenta.config.getStringList("news.messagess").elementAt(current)))
             }
        }
     }

@@ -71,6 +71,7 @@ permissions:
       magenta.warp: true
       magenta.tpa.*: true
       magenta.msg.*: true
+      magenta.vote.*: true
   magenta.plugin.*:
     description: Permissions for admins
     default: false
@@ -117,6 +118,7 @@ permissions:
     children:
       magenta.heal: true
       magenta.heal.other: true
+      magenta.heal.delay.exempt: true
   magenta.helpop.*:
     description: Permissions for helpop
     default: false
@@ -134,6 +136,7 @@ permissions:
       magenta.home.rename: true
       magenta.home.list: true
       magenta.homes.unlimited: true
+      magenta.home.delay.exempt: true
   magenta.home.player:
     description: Permissions for all home commands
     default: false
@@ -207,6 +210,7 @@ permissions:
     children:
       magenta.social.spy: true
       magenta.social.spy.other: true
+      magenta.social.spy.exempt: true
   magenta.tpa.*:
     description: Permissions for tpa
     default: false
@@ -230,6 +234,13 @@ permissions:
     children:
       magenta.vanish: true
       magenta.vanish.other: true
+  magenta.vote.*:
+    description: Permissions for vote and voteparty
+    default: false
+    children:
+      magenta.vote: true
+      magenta.vote.claim.rewards: true
+      magenta.voteparty: true
   magenta.warp.*:
     description: Permissions for all warp commands
     default: false
@@ -245,6 +256,7 @@ permissions:
       magenta.warp.rename: true
       magenta.warp.rename.other: true
       magenta.warp.list: true
+      magenta.warp.delay.exempt: true
       magenta.warps.unlimited: true
   magenta.warp.default:
     description: Permissions for all warp commands

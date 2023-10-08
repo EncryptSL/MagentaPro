@@ -30,7 +30,7 @@ class VoteCmd(val magenta: Magenta) {
     }
 
     @CommandMethod("vote claim rewards")
-    @CommandPermission("magenta.vote.claim.reward")
+    @CommandPermission("magenta.vote.claim.rewards")
     fun onVoteClaimRewards(player: Player) {
         val playerAccount = PlayerAccount(magenta, player.uniqueId)
         if (playerAccount.getAccount().contains("votifier.rewards")) {
