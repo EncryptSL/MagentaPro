@@ -9,7 +9,6 @@ import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.Sound
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
 
@@ -22,9 +21,13 @@ object VoteHelper {
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
     }
 
+    fun setVotePartyVote(magenta: Magenta, vote: Int) {
+        magenta.config.set("votifier.voteparty.current_votes", vote)
+        magenta.saveConfig()
+    }
     @JvmStatic
     fun startVoteParty(
-        plugin: Plugin,
+        magenta: Magenta,
         broadcastMessage: String,
         endPartyMessage: String,
         commands: MutableList<String>,
@@ -40,10 +43,11 @@ object VoteHelper {
                         giveRewards(commands, player.name)
                     }
                     broadcast(endPartyMessage)
+                    setVotePartyVote(magenta, 0)
                     cancel()
                 }
             }
-        }.runTaskTimerAsynchronously(plugin, 20, 20)
+        }.runTaskTimerAsynchronously(magenta, 20, 20)
     }
 
     @JvmStatic

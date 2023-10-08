@@ -1,11 +1,9 @@
 package com.github.encryptsl.magenta.common.hook.nuvotifier
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.extensions.datetime
-import com.github.encryptsl.magenta.common.utils.ModernText
 import com.vexsoftware.votifier.model.Vote
 import com.vexsoftware.votifier.model.VotifierEvent
 import kotlinx.datetime.Instant
@@ -84,8 +82,11 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         if (magenta.config.contains("votifier.voteparty")) {
             if (!magenta.config.getBoolean("votifier.voteparty.enabled")) return
             if (!magenta.config.contains("votifier.voteparty.countdown")) return
+
+            VoteHelper.setVotePartyVote(magenta, magenta.config.getInt("votifier.voteparty.current_votes") + 1)
+
             if (magenta.config.contains("votifier.voteparty.rewards")) {
-                if (magenta.vote.getVotesForParty() == magenta.config.getInt("votifier.voteparty.start_party")) {
+                if (magenta.vote.getVotesForParty() == magenta.config.getInt("votifier.voteparty.start_at")) {
                     val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
                     magenta.pluginManager.callEvent(VotePartyEvent(Bukkit.getOnlinePlayers().size, datetime()))
                     VoteHelper.startVoteParty(
