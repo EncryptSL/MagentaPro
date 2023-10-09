@@ -65,12 +65,12 @@ class CommandManager(private val magenta: Magenta) {
                 }
                 .mapNotNull { it.name }
         }
-        commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, input ->
+        commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
             magenta.kitConfig.getKit().getConfigurationSection("kits")?.getKeys(false)
                 ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
                 ?.mapNotNull { a -> a.toString() } ?: emptyList()
         }
-        commandManager.parserRegistry().registerSuggestionProvider("jails") { _, input ->
+        commandManager.parserRegistry().registerSuggestionProvider("jails") { _, _ ->
             magenta.jailConfig.getJail().getConfigurationSection("jails")
                 ?.getKeys(false)
                 ?.mapNotNull { it.toString() } ?: emptyList()
