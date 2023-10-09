@@ -23,9 +23,10 @@ class CommandItemConfig(private val magenta: Magenta) {
         }
     }
 
-    fun createSection(value: String) {
+    fun createItem(value: String, sid: Int) {
         magenta.schedulerMagenta.runTaskAsync(magenta) {
-            getConfig().createSection(value)
+            val section = getConfig().createSection("citems.$value")
+            section.set("citems.$value.sid", sid)
             save()
         }
     }
