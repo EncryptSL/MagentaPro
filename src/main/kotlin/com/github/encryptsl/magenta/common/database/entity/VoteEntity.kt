@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.database.entity
 
 import kotlinx.datetime.Instant
-import java.util.UUID
+import java.util.*
 
 data class VoteEntity(
     val username: String,

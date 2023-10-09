@@ -20,6 +20,14 @@ class ConfigUtil {
         this.config = YamlConfiguration.loadConfiguration(file)
     }
 
+    fun reload() {
+        runCatching {
+            config.load(file)
+        }.onFailure { e ->
+            plugin.logger.severe(e.message ?: e.localizedMessage)
+        }
+    }
+
     fun save() {
         runCatching {
             config.save(file)

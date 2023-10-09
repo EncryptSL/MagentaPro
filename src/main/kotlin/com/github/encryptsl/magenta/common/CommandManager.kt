@@ -11,6 +11,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.function.Function
@@ -65,6 +66,10 @@ class CommandManager(private val magenta: Magenta) {
                 }
                 .mapNotNull { it.name }
         }
+        commandManager.parserRegistry().registerSuggestionProvider("citems") {_, _ ->
+            magenta.cItems.getConfig().getConfigurationSection("citems")
+                ?.getKeys(false)?.mapNotNull { a -> a.toString() } ?: emptyList()
+        }
         commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
             magenta.kitConfig.getKit().getConfigurationSection("kits")?.getKeys(false)
                 ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
@@ -82,6 +87,13 @@ class CommandManager(private val magenta: Magenta) {
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
             magenta.warpModel.getWarps().map { s -> s.warpName }
         }
+        commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
+            privateMaterials()
+        }
+    }
+
+    fun privateMaterials(): MutableList<String> {
+        return Material.entries.map { it -> it.name }.toMutableList()
     }
 
     fun registerCommands() {
@@ -94,6 +106,7 @@ class CommandManager(private val magenta: Magenta) {
         val annotationParser = createAnnotationParser(commandManager)
         annotationParser.parse(AfkCmd(magenta))
         annotationParser.parse(BackCmd(magenta))
+        annotationParser.parse(CommandItemsCmd(magenta))
         annotationParser.parse(FlyCmd(magenta))
         annotationParser.parse(GmCmd(magenta))
         annotationParser.parse(HealCmd(magenta))

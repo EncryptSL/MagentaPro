@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.votes
 
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
-import java.util.UUID
+import java.util.*
 
 interface VoteAPI {
     fun addVote(voteImpl: VoteEntity)

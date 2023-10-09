@@ -25,6 +25,7 @@ permissions:
     children:
       magenta.afk.*: true
       magenta.back.*: true
+      magenta.citem.*: true
       magenta.fly.*: true
       magenta.gamemode.*: true
       magenta.gamemodes.*: true
@@ -92,6 +93,16 @@ permissions:
     children:
       magenta.back: true
       magenta.back.other: true
+  magenta.citem.*:
+    description: Permissions for managin activation items with commands.
+    default: false
+    children:
+      magenta.citem.create: true
+      magenta.citem.set.name: true
+      magenta.citem.set.material: true
+      magenta.citem.set.lore: true
+      magenta.citem.set.command: true
+      magenta.citem.give: true
   magenta.fly.*:
     description: All permissions for fly commands
     default: false

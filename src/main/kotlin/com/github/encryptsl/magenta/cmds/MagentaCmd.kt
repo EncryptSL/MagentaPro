@@ -27,6 +27,8 @@ class MagentaCmd(private val magenta: Magenta) {
     fun onReload(commandSender: CommandSender) {
         magenta.reloadConfig()
         magenta.saveConfig()
+        magenta.cItems.reload()
+        magenta.cItems.save()
         magenta.localeConfig.loadLocale("locale/cs_cz.properties")
         magenta.kitConfig.reload()
         magenta.kitConfig.save()

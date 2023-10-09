@@ -1,0 +1,11 @@
+citems:
+  timedfly:
+    material: FEATHER
+    sid: 9718
+    name: "<dark_green>Fly na <green>3 Dny <white>#<sid>"
+    glowing: true
+    command: "say test tohle je byl test !"
+    lore:
+      - '<green>Tento item, je aktivační'
+      - '<green>obsahuje fly na 3 dny'
+      - '<green>Aktivace pravým tlačítkem myši.'

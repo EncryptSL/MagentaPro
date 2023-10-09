@@ -132,7 +132,7 @@ news:
 # Messages supporting base
   messages:
     - '<gray>Chceš si koupit vip a nevíš jak napiš <yellow>/vip<gray> a zde uvidíš seznam !'
-    - '<color:05B5FC>Ještě jsi dneska nehlasoval ?</color>, <color:69D0FA>Napiš /vote !</color>'
+    - '<color:#05B5FC>Ještě jsi dneska nehlasoval ?</color>, <color:#69D0FA>Napiš /vote !</color>'
     - '<gray>Náš server nabízí i těžební svět <red><bold>/mineworld <gray>který se resetuje každý měsíc !'
 
 

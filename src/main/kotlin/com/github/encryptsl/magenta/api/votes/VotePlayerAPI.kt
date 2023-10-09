@@ -3,7 +3,7 @@ package com.github.encryptsl.magenta.api.votes
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.models.VoteModel
-import java.util.UUID
+import java.util.*
 
 class VotePlayerAPI(private val magenta: Magenta) : VoteAPI {
 

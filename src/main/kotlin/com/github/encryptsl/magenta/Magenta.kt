@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta
 
+import com.github.encryptsl.magenta.api.CommandItemConfig
 import com.github.encryptsl.magenta.api.JailConfig
 import com.github.encryptsl.magenta.api.KitConfig
 import com.github.encryptsl.magenta.api.KitManager
@@ -40,6 +41,7 @@ class Magenta : JavaPlugin() {
     val localeConfig: Locale by lazy { Locale(this) }
     val kitConfig: KitConfig by lazy { KitConfig(this) }
     val jailConfig: JailConfig by lazy { JailConfig(this) }
+    val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
@@ -55,6 +57,7 @@ class Magenta : JavaPlugin() {
             .createFromResources("config.yml", this)
             .createFromResources("swear_list.txt", this)
             .createFromResources("motd.txt", this)
+            .createFromResources("citems.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         DatabaseConnector().initConnect(
