@@ -24,7 +24,7 @@ class PlayerInteractionListener(private val magenta: Magenta) : Listener {
                         val item = magenta.cItems.getConfig().getString("citems.$it.name").toString().replace("<sid>", sid)
                         if (itemMeta.displayName() == ModernText.miniModernText(item)) {
                             val command = magenta.cItems.getConfig().getString("citems.$it.command").toString()
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.name))
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(command, player))
                             player.inventory.remove(itemInHand)
                         }
                     }

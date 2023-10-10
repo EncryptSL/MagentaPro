@@ -1,11 +1,55 @@
+#
+# citems:
+#  timedfly: <- this is a custom activation item created
+#  with command example /commanditem|ci create timedfly
+#    material: FEATHER - list of materials https://jd.papermc.io/paper/1.20/org/bukkit/Material.html
+#    name: <dark_green>Fly na <green>3 Dny <white>#<sid> - <sid> is automatic added by plugin, when is name set.
+#    glowing: true - Glowing apply hidenItemFlag enchant
+#    command: "say example %player% acivated item" - Command is sended by consoleSender and have placeholders {player} and %player%
+#    lore:
+#      - '<green>My awesome item' - lore is description under item and can be added by /ci setlore <item> <green>my awesome item,<green>item,<green>item
 citems:
-  timedfly:
+  tempfly3:
     material: FEATHER
-    sid: 9718
-    name: "<dark_green>Fly na <green>3 Dny <white>#<sid>"
+    sid: 9802
+    name: <dark_green>Létání na<green>3Dny <white>#<sid>
     glowing: true
-    command: "say test tohle je byl test !"
+    command: lp user %player% permission settemp magenta.fly true 3d
     lore:
-      - '<green>Tento item, je aktivační'
-      - '<green>obsahuje fly na 3 dny'
-      - '<green>Aktivace pravým tlačítkem myši.'
+      - <dark_green>Aktivační item
+      - <green>Dostaneš fly na <green>3dny
+      - ''
+      - <white>Pravým tlačítkem aktivuješ.
+  tempfly14:
+    material: FEATHER
+    sid: 3572
+    name: <dark_green>Létání na <green>14 dní <white>#<sid>
+    glowing: true
+    command: lp user %player% permission settemp magenta.fly true 14d
+    lore:
+      - <dark_green>Aktivační item
+      - <dark_green>Dostaneš fly na <green>14dní
+      - ''
+      - <white>Pravým tlačítkem aktivuješ.
+  tempvip5:
+    material: GOLD_BLOCK
+    sid: 4058
+    name: <yellow>VIP na <gold>5dní <white>#<sid>
+    glowing: true
+    command: lp user %player% parent addtemp vip 5d
+    lore:
+      - <yellow>Aktivační item
+      - <yellow>Dostaneš VIP na <gold>5 dní
+      - ''
+      - <white>Pravým tlačítkem aktivuješ.
+  letax:
+    material: REDSTONE
+    sid: 7365
+    name: <color:#9E7045>Teleportační Prášek <white>#<sid>
+    glowing: true
+    command: rtp %player%
+    lore:
+      - <color:#9E7045>Aktivační item
+      - <color:#9E7045>Prášek tě teleportuje na náhodnou pozici
+      - ''
+      - <white>Pravým tlačítkem aktivuješ.

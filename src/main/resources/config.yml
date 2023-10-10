@@ -177,6 +177,23 @@ warps:
     - world
     - world_nether
 
+
+
+
+# ########################################################
+#                     SILKY SPAWNER                      #
+#             Configuration for Silky Spawner            #
+# ########################################################
+silky:
+  enabled: true
+  enchant: SILK_TOUCH
+  tools:
+    - GOLD_PICKAXE
+    - IRON_PICKAXE
+    - DIAMOND_PICKAXE
+    - NETHERITE_PICKAXE
+
+
 # ########################################################
 #                      VOTIFIER                          #
 #              Configuration for rewards                 #

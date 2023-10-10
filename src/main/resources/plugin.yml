@@ -41,6 +41,7 @@ permissions:
       magenta.nick.*: true
       magenta.repair.*: true
       magenta.social.spy.*: true
+      magenta.rtp.*: true
       magenta.tpa.*: true
       magenta.vanish.*: true
       magenta.warp.*: true
@@ -56,6 +57,7 @@ permissions:
       magenta.jail.tp: true
       magenta.jail.exempt: true
       magenta.lightning.*: true
+      magenta.rtp: true
       magenta.social.spy: true
       magenta.chat.filter.bypass.*: true
   magenta.player:
@@ -70,6 +72,7 @@ permissions:
       magenta.kit: true
       magenta.kit.list: true
       magenta.warp: true
+      magenta.rtp: true
       magenta.tpa.*: true
       magenta.msg.*: true
       magenta.vote.*: true
@@ -215,6 +218,13 @@ permissions:
       magenta.repair.all: true
       magenta.repair.other: true
       magenta.repair.delay.exempt: true
+  magenta.rtp.*:
+    description: Permissions for rtp
+    default: false
+    children:
+      magenta.rtp: true
+      magenta.rtp.other: true
+      magenta.rtp.delay.exempt: true
   magenta.social.spy.*:
     description: Permissions for all social spy
     default: false
@@ -222,6 +232,12 @@ permissions:
       magenta.social.spy: true
       magenta.social.spy.other: true
       magenta.social.spy.exempt: true
+  magenta.spawner.*:
+    description: Permissions for manage spawners
+    default: false
+    children:
+      magenta.spawner.set: true
+      magenta.spawner.give: true
   magenta.tpa.*:
     description: Permissions for tpa
     default: false
@@ -284,12 +300,14 @@ permissions:
     children:
       magenta.afk.kick.exempt: true
       magenta.home.delay.exempt: true
+      magenta.heal.delay.exempt: true
       magenta.ignore.exempt: true
       magenta.jail.exempt: true
       magenta.kit.delay.exempt: true
       magenta.repair.delay.exempt: true
-      magenta.tpa.delay.exempt: true
+      magenta.rtp.delay.exempt: true
       magenta.social.spy.exempt: true
+      magenta.tpa.delay.exempt: true
       magenta.warp.delay.exempt: true
   magenta.chat.filter.bypass.*:
     default: false
@@ -299,3 +317,5 @@ permissions:
       magenta.chat.filter.bypass.swear: true
       magenta.chat.filter.bypass.antispam: true
       magenta.chat.filter.bypass.capslock: true
+  magenta.silky.spawner:
+    default: false

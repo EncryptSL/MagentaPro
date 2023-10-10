@@ -13,6 +13,7 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import java.util.function.Function
 
@@ -88,12 +89,19 @@ class CommandManager(private val magenta: Magenta) {
             magenta.warpModel.getWarps().map { s -> s.warpName }
         }
         commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
-            privateMaterials()
+            materials()
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
+            entities()
         }
     }
 
-    fun privateMaterials(): MutableList<String> {
+    private fun materials(): MutableList<String> {
         return Material.entries.map { it -> it.name }.toMutableList()
+    }
+
+    private fun entities(): MutableList<String> {
+        return EntityType.entries.map { it -> it.name }.toMutableList()
     }
 
     fun registerCommands() {
@@ -119,7 +127,9 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(IgnoreCmd(magenta))
         annotationParser.parse(MsgCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))
+        annotationParser.parse(RtpCmd(magenta))
         annotationParser.parse(SocialSpyCmd(magenta))
+        annotationParser.parse(SpawnerCmd(magenta))
         annotationParser.parse(TpCmd(magenta))
         annotationParser.parse(VanishCmd(magenta))
         annotationParser.parse(VoteCmd(magenta))

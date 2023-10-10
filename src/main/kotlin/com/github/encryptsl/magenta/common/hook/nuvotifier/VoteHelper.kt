@@ -80,7 +80,7 @@ object VoteHelper {
     @JvmStatic
     fun giveRewards(commands: MutableList<String>, username: String) {
         commands.forEach { command ->
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", username))
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", username).replace("%player%", username))
         }
     }
 

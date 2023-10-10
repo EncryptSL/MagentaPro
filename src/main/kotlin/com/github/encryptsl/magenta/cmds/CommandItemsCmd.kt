@@ -5,6 +5,7 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import cloud.commandframework.annotations.specifier.Greedy
+import cloud.commandframework.annotations.specifier.Range
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandItemManager
 import org.bukkit.Material
@@ -30,7 +31,7 @@ class CommandItemsCmd(magenta: Magenta) {
     @CommandPermission("magenta.citem.set.name")
     fun onCommandItemSetName(
         commandSender: CommandSender,
-        @Argument(value = "item") itemName: String,
+        @Argument(value = "item", suggestions = "citems") itemName: String,
         @Argument(value = "name") @Greedy name: String
     ) {
         itemCommandItemManager.setName(commandSender, itemName, name)
@@ -50,7 +51,7 @@ class CommandItemsCmd(magenta: Magenta) {
     @CommandPermission("magenta.citem.set.lore")
     fun onCommandItemSetLore(
         commandSender: CommandSender,
-        @Argument(value = "item") itemName: String,
+        @Argument(value = "item", suggestions = "citems") itemName: String,
         @Argument(value = "lore") @Greedy lore: String
     ) {
         val loreSplit = lore.split(",")
@@ -61,7 +62,7 @@ class CommandItemsCmd(magenta: Magenta) {
     @CommandPermission("magenta.citem.set.command")
     fun onCommandItemSetCommand(
         commandSender: CommandSender,
-        @Argument(value = "item") itemName: String,
+        @Argument(value = "item", suggestions = "citems") itemName: String,
         @Argument(value = "command") @Greedy command: String
     ) {
         itemCommandItemManager.setCommand(commandSender, itemName, command)
@@ -71,8 +72,8 @@ class CommandItemsCmd(magenta: Magenta) {
     @CommandPermission("magenta.citem.give")
     fun onCommandItemGive(
         commandSender: CommandSender,
-        @Argument(value = "item") itemName: String,
-        @Argument(value = "amount") amount: Int,
+        @Argument(value = "item", suggestions = "citems") itemName: String,
+        @Argument(value = "amount") @Range(min = "1", max = "100") amount: Int,
         @Argument(value = "player", suggestions = "players") target: Player
     ) {
         itemCommandItemManager.giveCommandItem(commandSender, itemName, amount, target)
