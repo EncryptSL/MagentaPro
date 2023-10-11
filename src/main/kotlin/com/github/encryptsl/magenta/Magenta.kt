@@ -1,9 +1,6 @@
 package com.github.encryptsl.magenta
 
-import com.github.encryptsl.magenta.api.CommandItemConfig
-import com.github.encryptsl.magenta.api.JailConfig
-import com.github.encryptsl.magenta.api.KitConfig
-import com.github.encryptsl.magenta.api.KitManager
+import com.github.encryptsl.magenta.api.*
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
@@ -28,27 +25,31 @@ import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
+import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
 
 class Magenta : JavaPlugin() {
 
-    private val commandManager: CommandManager by lazy { CommandManager(this) }
-    private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
-    private val hookManger: HookManager by lazy { HookManager(this) }
+    val pluginManager = server.pluginManager
     val vote: VotePlayerAPI by lazy { VotePlayerAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val teamIntegration: TeamIntegration by lazy { TeamIntegration(this) }
-    val localeConfig: Locale by lazy { Locale(this) }
-    val kitConfig: KitConfig by lazy { KitConfig(this) }
-    val jailConfig: JailConfig by lazy { JailConfig(this) }
-    val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
     val kitManager: KitManager by lazy { KitManager(this) }
     val tpaManager: TpaManager by lazy { TpaManager(this) }
     val afk: AfkUtils by lazy { AfkUtils(this) }
-    val pluginManager = server.pluginManager
+
+    val localeConfig: Locale by lazy { Locale(this) }
+    val kitConfig: KitConfig by lazy { KitConfig(this) }
+    val jailConfig: JailConfig by lazy { JailConfig(this) }
+    val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
+    val tags: TagsConfig by lazy { TagsConfig(this) }
+
+    private val commandManager: CommandManager by lazy { CommandManager(this) }
+    private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
+    private val hookManger: HookManager by lazy { HookManager(this) }
 
     override fun onLoad() {
         configLoader
@@ -58,6 +59,7 @@ class Magenta : JavaPlugin() {
             .createFromResources("swear_list.txt", this)
             .createFromResources("motd.txt", this)
             .createFromResources("citems.yml", this)
+            .createFromResources("tags.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         DatabaseConnector().initConnect(
@@ -68,14 +70,14 @@ class Magenta : JavaPlugin() {
     }
 
     override fun onEnable() {
-        val (_, time) = measureTimedValue {
+        val time = measureTime {
             teamIntegration.createTeams()
             commandManager.registerCommands()
             registerTasks()
             handlerListener()
             hookRegistration()
         }
-        logger.info("Plugin enabled in time $time")
+        logger.info("Plugin enabled in time ${time.inWholeSeconds}")
     }
 
 

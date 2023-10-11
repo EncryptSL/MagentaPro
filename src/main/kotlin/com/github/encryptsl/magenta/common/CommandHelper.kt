@@ -84,4 +84,8 @@ class CommandHelper(private val magenta: Magenta) {
         }
     }
 
+    fun isVanished(boolean: Boolean): String {
+       return if (boolean) "viditelný" else "skryt"
+    }
+
 }

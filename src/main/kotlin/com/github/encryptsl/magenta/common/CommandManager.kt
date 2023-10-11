@@ -88,6 +88,11 @@ class CommandManager(private val magenta: Magenta) {
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
             magenta.warpModel.getWarps().map { s -> s.warpName }
         }
+        commandManager.parserRegistry().registerSuggestionProvider("tagCategories") {_, _ ->
+            magenta.tags.getConfig().getConfigurationSection("categories")
+                ?.getKeys(false)
+                ?.mapNotNull { it.toString() } ?: emptyList()
+        }
         commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
             materials()
         }
@@ -113,8 +118,11 @@ class CommandManager(private val magenta: Magenta) {
 
         val annotationParser = createAnnotationParser(commandManager)
         annotationParser.parse(AfkCmd(magenta))
+        annotationParser.parse(AnvilCmd(magenta))
         annotationParser.parse(BackCmd(magenta))
         annotationParser.parse(CommandItemsCmd(magenta))
+        annotationParser.parse(CraftingCmd(magenta))
+        annotationParser.parse(EnderChestCmd(magenta))
         annotationParser.parse(FlyCmd(magenta))
         annotationParser.parse(GmCmd(magenta))
         annotationParser.parse(HealCmd(magenta))
@@ -124,6 +132,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(LightningCmd(magenta))
         annotationParser.parse(MagentaCmd(magenta))
         annotationParser.parse(NickCmd(magenta))
+        annotationParser.parse(RandomCmd(magenta))
         annotationParser.parse(IgnoreCmd(magenta))
         annotationParser.parse(MsgCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))

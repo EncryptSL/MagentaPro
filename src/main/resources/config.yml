@@ -117,8 +117,8 @@ msg:
 #########################################################
 news:
 # You can set custom prefix for your broadcast scheduled
-# messages, prefix supporting minimessage format.
-  prefix: '<gray>[<green>News</gray>]<white> '
+# messages, format supporting minimessage.
+  format: '<gray>[<green>News]</gray> <message>'
 
 # Random is settings for selecting messages from list
 # randomized based on size in list and random number.

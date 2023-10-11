@@ -5,6 +5,7 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -14,12 +15,20 @@ class AfkCmd(private val magenta: Magenta) {
     @CommandMethod("afk")
     @CommandPermission("magenta.afk")
     fun onAfk(player: Player) {
-        magenta.afk.forceTime(player.uniqueId, 0)
+        if (magenta.afk.isAfk(player.uniqueId)) {
+            magenta.afk.forceTime(player.uniqueId, magenta.config.getLong("auto-afk"))
+        } else {
+            magenta.afk.forceTime(player.uniqueId, 0)
+        }
     }
     @CommandMethod("afk <player>")
     @CommandPermission("magenta.afk.other")
     fun onAfkOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        magenta.afk.forceTime(target.uniqueId, 0)
+        if (magenta.afk.isAfk(target.uniqueId)) {
+            magenta.afk.forceTime(target.uniqueId, magenta.config.getLong("auto-afk"))
+        } else {
+            magenta.afk.forceTime(target.uniqueId, 0)
+        }
     }
 
 }
