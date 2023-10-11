@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 
+@Suppress("UnstableApiUsage")
 @CommandMethod("magenta|mg")
 @CommandDescription("Provided by plugin MagentaPro")
 class MagentaCmd(private val magenta: Magenta) {
@@ -27,6 +28,8 @@ class MagentaCmd(private val magenta: Magenta) {
     fun onReload(commandSender: CommandSender) {
         magenta.reloadConfig()
         magenta.saveConfig()
+        magenta.tags.reload()
+        magenta.tags.save()
         magenta.cItems.reload()
         magenta.cItems.save()
         magenta.localeConfig.loadLocale("locale/cs_cz.properties")

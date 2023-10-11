@@ -26,8 +26,6 @@ class SpawnerCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.spawner.set")
     fun onSpawnerSet(player: Player, @Argument(value = "type", suggestions = "mobs") entity: EntityType) {
         val block = player.getTargetBlock(null, 10)
-        if (block == null)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.error.not.block")))
 
         if (block.type != Material.SPAWNER)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.error.not.spawner")))

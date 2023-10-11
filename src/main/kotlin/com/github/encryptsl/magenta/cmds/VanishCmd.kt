@@ -6,8 +6,10 @@ import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -15,18 +17,29 @@ import org.bukkit.entity.Player
 @CommandDescription("Provided by plugin MagentaPro")
 class VanishCmd(private val magenta: Magenta) {
 
+    private val commandHelper by lazy { CommandHelper(magenta) }
+
     @CommandMethod("vanish")
     @CommandPermission("magenta.vanish")
     fun onVanish(player: Player) {
         val account = PlayerAccount(magenta, player.uniqueId)
-        if (account.getAccount().getBoolean("vanished")) {
+        val isVanished = account.getAccount().getBoolean("vanished")
+
+        magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
+            if (isVanished)
+                players.showPlayer(magenta, player)
+            else
+                players.hidePlayer(magenta, player)
+        }
+
+        val mode = commandHelper.isVanished(isVanished)
+
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
+
+        if (isVanished) {
             account.set("vanished", false)
-            player.showPlayer(magenta, player)
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.unvanished")))
         } else {
             account.set("vanished", true)
-            player.hidePlayer(magenta, player)
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanished")))
         }
     }
 
@@ -34,20 +47,28 @@ class VanishCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.vanish.other")
     fun onVanishOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val account = PlayerAccount(magenta, target.uniqueId)
-        if (account.getAccount().getBoolean("vanished")) {
+        val isVanished = account.getAccount().getBoolean("vanished")
+
+        magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
+            if (isVanished)
+                players.showPlayer(magenta, target)
+            else
+                players.hidePlayer(magenta, target)
+        }
+
+        val mode = commandHelper.isVanished(isVanished)
+
+        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
+
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish.to"), TagResolver.resolver(
+            Placeholder.parsed("player", target.name),
+            Placeholder.parsed("mode", mode)
+        )))
+
+        if (isVanished) {
             account.set("vanished", false)
-            target.showPlayer(magenta, target)
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.unvanished")))
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.unvanished.to"),
-                Placeholder.parsed("player", target.name)
-            ))
         } else {
             account.set("vanished", true)
-            target.hidePlayer(magenta, target)
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanished")))
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanished.to"),
-                Placeholder.parsed("player", target.name)
-            ))
         }
     }
 
