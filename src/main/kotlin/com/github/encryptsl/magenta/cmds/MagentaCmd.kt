@@ -7,7 +7,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 
-@Suppress("UnstableApiUsage")
+@Suppress("UnstableApiUsage", "UNUSED")
 @CommandMethod("magenta|mg")
 @CommandDescription("Provided by plugin MagentaPro")
 class MagentaCmd(private val magenta: Magenta) {
