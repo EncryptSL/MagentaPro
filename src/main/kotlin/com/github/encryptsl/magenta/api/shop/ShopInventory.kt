@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.shop
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.hook.vault.VaultException
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -21,21 +22,25 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
 
-        val response = vault.withdraw(player, fullPrice.toDouble())
-        if (response.transactionSuccess()) {
-            player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.shop.success.buy"),
-                    TagResolver.resolver(
-                        Placeholder.component("item", item.displayName()),
-                        Placeholder.parsed("quantity", item.amount.toString()),
-                        Placeholder.parsed("price", fullPrice.toString()),
+        try {
+            val response = vault.withdraw(player, fullPrice.toDouble())
+            if (response.transactionSuccess()) {
+                player.sendMessage(
+                    ModernText.miniModernText(
+                        magenta.localeConfig.getMessage("magenta.shop.success.buy"),
+                        TagResolver.resolver(
+                            Placeholder.component("item", item.displayName()),
+                            Placeholder.parsed("quantity", item.amount.toString()),
+                            Placeholder.parsed("price", fullPrice.toString()),
+                        )
                     )
                 )
-            )
-            player.inventory.addItem(item)
+                player.inventory.addItem(item)
+                player.updateInventory()
+            }
+        } catch (e : VaultException) {
+            player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
-        player.updateInventory()
     }
 
     fun sellItem(item: ItemStack, isSellAllowed: Boolean, price: Int, inventory: InventoryClickEvent) {
@@ -48,21 +53,25 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
 
-        val response = vault.deposite(player, fullPrice.toDouble())
-        if (response.transactionSuccess()) {
-            player.inventory.removeItem(item)
-            player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.shop.success.sell"),
-                    TagResolver.resolver(
-                        Placeholder.component("item", item.displayName()),
-                        Placeholder.parsed("quantity", item.amount.toString()),
-                        Placeholder.parsed("price", fullPrice.toString()),
+        try {
+            val response = vault.deposite(player, fullPrice.toDouble())
+            if (response.transactionSuccess()) {
+                player.inventory.removeItem(item)
+                player.sendMessage(
+                    ModernText.miniModernText(
+                        magenta.localeConfig.getMessage("magenta.shop.success.sell"),
+                        TagResolver.resolver(
+                            Placeholder.component("item", item.displayName()),
+                            Placeholder.parsed("quantity", item.amount.toString()),
+                            Placeholder.parsed("price", fullPrice.toString()),
+                        )
                     )
                 )
-            )
+                player.updateInventory()
+            }
+        } catch (e : VaultException) {
+            player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
-        player.updateInventory()
     }
 
 }

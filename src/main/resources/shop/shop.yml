@@ -1,13 +1,60 @@
 shop:
   gui:
-    name: '<gray>SHOP'
-    categoryName: '<gray> SHOP - <yellow><category>'
+    name: <dark_gray>SHOP
+    categoryName: <dark_gray> SHOP - <yellow><category>
+    fill:
+      border: 'BLUE_STAINED_GLASS_PAIN'
     item_lore:
-      - '<gray>Cena za odkup <green><price>'
-      - '<gray>Cena za výkup <green><sell>'
+      - <gray>Cena za odkup <green><price>
+      - <gray>Cena za výkup <green><sell>
   categories:
     blocks:
       icon: GRASS_BLOCK
-      slot: 15
-      name: '<gray><bold>Bloky'
+      slot: 12
+      name: <gray><bold>Bloky
       open: blocks
+    wood:
+      icon: OAK_WOOD
+      slot: 13
+      name: <gray><bold>Dřevo
+      open: wood
+    stone:
+      icon: STONE
+      slot: 14
+      name: '<gray><bold>Kameny'
+      open: stone
+    ores:
+      icon: IRON_INGOT
+      slot: 20
+      name: '<red><bold>Rudy'
+      open: ores
+    redstones:
+      icon: REDSTONE
+      slot: 21
+      name: '<dark_red><bold>Redstone'
+      open: test
+    decoration:
+      icon: DEAD_BUSH
+      slot: 22
+      name: '<light_purple><bold>Dekorace'
+      open: test
+    farms:
+      icon: BAMBOO
+      slot: 23
+      name: '<green><bold>Farma'
+      open: test
+    materials:
+      icon: CLAY_BALL
+      slot: 24
+      name: '<gold><bold>Materiály'
+      open: test
+    food:
+      icon: APPLE
+      slot: 30
+      name: '<red>Jídlo'
+      open: test
+    special_items:
+      icon: name_tag
+      slot: 32
+      name: '<yellow>Speciální Itemy'
+      open: test

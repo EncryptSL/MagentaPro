@@ -8,12 +8,12 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
+import dev.triumphteam.gui.guis.GuiItem
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 class ShopManager(private val magenta: Magenta) {
 
@@ -31,6 +31,21 @@ class ShopManager(private val magenta: Magenta) {
             .disableItemDrop()
             .disableItemSwap()
             .create()
+
+        if (magenta.shopConfig.getConfig().contains("shop.gui.fill")) {
+            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.border")) {
+                gui.filler.fillBorder(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.border.icon").toString())))
+            }
+            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.top")) {
+                gui.filler.fillTop(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.top.icon").toString())))
+            }
+            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.bottom")) {
+                gui.filler.fillBottom(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.bottom.icon").toString())))
+            }
+            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.all")) {
+                gui.filler.fill(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.all.icon").toString())))
+            }
+        }
 
         for (material in Material.entries) {
             for (category in magenta.shopConfig.getConfig().getConfigurationSection("shop.categories")?.getKeys(false)!!) {
@@ -88,6 +103,22 @@ class ShopManager(private val magenta: Magenta) {
             .disableItemSwap()
             .disableItemTake()
             .create()
+
+        if (shopCategory.getConfig().contains("shop.gui.fill")) {
+            if (shopCategory.getConfig().contains("shop.gui.fill.border")) {
+                gui.filler.fillBorder(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.border.icon").toString())))
+            }
+            if (shopCategory.getConfig().contains("shop.gui.fill.top")) {
+                gui.filler.fillTop(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.top.icon").toString())))
+            }
+            if (shopCategory.getConfig().contains("shop.gui.fill.bottom")) {
+                gui.filler.fillBottom(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.bottom.icon").toString())))
+            }
+            if (shopCategory.getConfig().contains("shop.gui.fill.all")) {
+                gui.filler.fill(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.all.icon").toString())))
+            }
+        }
+
         for (material in Material.entries) {
             if (shopCategory.getConfig().contains("shop.items.${material.name}")) {
                 val buyPrice = shopCategory.getConfig().getInt("shop.items.${material.name}.buy.price")
@@ -118,8 +149,6 @@ class ShopManager(private val magenta: Magenta) {
 
 
                     if (action.isShiftClick && action.isRightClick) {
-                        val human = action.whoClicked as Player
-
                         for (i in 0..35) {
                             if (player.inventory.getItem(i)?.type == material) {
                                 shopInventory.sellItem(player.inventory.getItem(i)!!, isSellAllowed, sellPrice, action)
