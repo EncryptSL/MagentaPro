@@ -4,7 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
 
-class ShopConfig(private val magenta: Magenta, type: String) {
+class ShopConfig(magenta: Magenta, type: String) {
 
     private val configUtil = ConfigUtil(magenta, type)
 

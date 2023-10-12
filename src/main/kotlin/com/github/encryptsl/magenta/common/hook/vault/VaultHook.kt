@@ -1,11 +1,9 @@
 package com.github.encryptsl.magenta.common.hook.vault
 
 import com.github.encryptsl.magenta.Magenta
-import net.milkbowl.vault.economy.AbstractEconomy
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.economy.EconomyResponse
 import org.bukkit.entity.Player
-import org.bukkit.plugin.RegisteredServiceProvider
 import org.bukkit.plugin.ServicesManager
 
 class VaultHook(private val magenta: Magenta) {

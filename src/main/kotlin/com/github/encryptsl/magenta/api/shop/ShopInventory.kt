@@ -1,13 +1,10 @@
 package com.github.encryptsl.magenta.api.shop
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.ItemFactory
-import com.github.encryptsl.magenta.api.ShopConfig
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
@@ -22,7 +19,9 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
         if (ShopHelper.isPlayerInventoryFull(player))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
 
-        val response = vault.withdraw(player, (item.amount * price).toDouble())
+        val fullPrice = ShopHelper.calcPrice(item.amount, price)
+
+        val response = vault.withdraw(player, fullPrice.toDouble())
         if (response.transactionSuccess()) {
             player.sendMessage(
                 ModernText.miniModernText(
@@ -30,7 +29,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
                     TagResolver.resolver(
                         Placeholder.component("item", item.displayName()),
                         Placeholder.parsed("quantity", item.amount.toString()),
-                        Placeholder.parsed("price", (item.amount * price).toString()),
+                        Placeholder.parsed("price", fullPrice.toString()),
                     )
                 )
             )
@@ -47,7 +46,9 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
         if (!player.inventory.contains(item.type))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.empty.no.item")))
 
-        val response = vault.deposite(player, (price.toDouble() * item.amount))
+        val fullPrice = ShopHelper.calcPrice(item.amount, price)
+
+        val response = vault.deposite(player, fullPrice.toDouble())
         if (response.transactionSuccess()) {
             player.inventory.removeItem(item)
             player.sendMessage(
@@ -56,7 +57,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
                     TagResolver.resolver(
                         Placeholder.component("item", item.displayName()),
                         Placeholder.parsed("quantity", item.amount.toString()),
-                        Placeholder.parsed("price", (price.toDouble() * item.amount).toString()),
+                        Placeholder.parsed("price", fullPrice.toString()),
                     )
                 )
             )

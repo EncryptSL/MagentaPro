@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.api.shop
 
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 
 object ShopHelper {
     @JvmStatic
@@ -10,14 +9,7 @@ object ShopHelper {
         return player.inventory.firstEmpty() == -1
     }
 
-    fun buyPrice(price: Int, amount: Int): Int
-    {
-        return price - amount
-    }
-
-    @JvmStatic
-    fun sellPrice(price: Int, amount: Int): Int
-    {
-        return price * amount
+    fun calcPrice(amount: Int, price: Int): Int {
+        return (amount.times(price))
     }
 }
