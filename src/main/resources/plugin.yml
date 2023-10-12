@@ -8,7 +8,7 @@ author: EncryptSL
 website: https://encryptsl.github.io/
 
 load: POSTWORLD
-softdepend: [Votifier, PlaceholderAPI]
+softdepend: [Votifier, PlaceholderAPI, Vault]
 libraries:
   - com.zaxxer:HikariCP:5.0.1
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10
@@ -32,6 +32,7 @@ permissions:
       magenta.fly.*: true
       magenta.gamemode.*: true
       magenta.gamemodes.*: true
+      magenta.hat.*: true
       magenta.heal.*: true
       magenta.helpop.*: true
       magenta.home.*: true
@@ -44,8 +45,9 @@ permissions:
       magenta.nick.*: true
       magenta.random.*: true
       magenta.repair.*: true
-      magenta.social.spy.*: true
       magenta.rtp.*: true
+      magenta.shop.*: true
+      magenta.social.spy.*: true
       magenta.tpa.*: true
       magenta.vanish.*: true
       magenta.warp.*: true
@@ -54,6 +56,7 @@ permissions:
     description: Permissions for moderator
     children:
       magenta.player: true
+      magenta.hat.*: true
       magenta.ignore.*: true
       magenta.jail: true
       magenta.jail.list: true
@@ -62,6 +65,7 @@ permissions:
       magenta.jail.exempt: true
       magenta.lightning.*: true
       magenta.rtp: true
+      magenta.shop.*: true
       magenta.social.spy: true
       magenta.chat.filter.bypass.*: true
   magenta.player:
@@ -149,6 +153,11 @@ permissions:
       magenta.gamemodes.survival: true
       magenta.gamemodes.spectator: true
       magenta.gamemodes.adventure: true
+  magenta.hat.*:
+    description: Permission for hat command
+    default: false
+    children:
+      magenta.hat: true
   magenta.heal.*:
     description: Permissions for healing
     default: false
@@ -253,6 +262,12 @@ permissions:
       magenta.rtp: true
       magenta.rtp.other: true
       magenta.rtp.delay.exempt: true
+  magenta.shop.*:
+    description: Permissions for shop
+    default: false
+    children:
+      magenta.shop: true
+      magenta.shop.category.*: true
   magenta.social.spy.*:
     description: Permissions for all social spy
     default: false

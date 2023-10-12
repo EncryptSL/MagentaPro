@@ -6,7 +6,7 @@ import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
-import com.github.encryptsl.magenta.api.KitManager
+import com.github.encryptsl.magenta.api.manager.KitManager
 import com.github.encryptsl.magenta.api.events.kit.*
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender

@@ -99,6 +99,11 @@ class CommandManager(private val magenta: Magenta) {
         commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
             entities()
         }
+        commandManager.parserRegistry().registerSuggestionProvider("shops") {_, _ ->
+            magenta.shopConfig.getConfig().getConfigurationSection("shop.categories")
+                ?.getKeys(false)
+                ?.mapNotNull { it.toString() } ?: emptyList()
+        }
     }
 
     private fun materials(): MutableList<String> {
@@ -125,6 +130,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(EnderChestCmd(magenta))
         annotationParser.parse(FlyCmd(magenta))
         annotationParser.parse(GmCmd(magenta))
+        annotationParser.parse(HatCmd(magenta))
         annotationParser.parse(HealCmd(magenta))
         annotationParser.parse(HomeCmd(magenta))
         annotationParser.parse(JailCmd(magenta))
@@ -137,6 +143,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(MsgCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))
         annotationParser.parse(RtpCmd(magenta))
+        annotationParser.parse(ShopCmd(magenta))
         annotationParser.parse(SocialSpyCmd(magenta))
         annotationParser.parse(SpawnerCmd(magenta))
         annotationParser.parse(TpCmd(magenta))

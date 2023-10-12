@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.api.*
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
+import com.github.encryptsl.magenta.api.manager.KitManager
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.VotePlayerAPI
 import com.github.encryptsl.magenta.common.CommandManager
@@ -46,6 +47,7 @@ class Magenta : JavaPlugin() {
     val jailConfig: JailConfig by lazy { JailConfig(this) }
     val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
     val tags: TagsConfig by lazy { TagsConfig(this) }
+    val shopConfig: ShopConfig by lazy { ShopConfig(this, "shop/shop.yml") }
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
@@ -60,6 +62,8 @@ class Magenta : JavaPlugin() {
             .createFromResources("motd.txt", this)
             .createFromResources("citems.yml", this)
             .createFromResources("tags.yml", this)
+            .createFromResources("shop/shop.yml", this)
+            .createFromResources("shop/categories/blocks.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         DatabaseConnector().initConnect(

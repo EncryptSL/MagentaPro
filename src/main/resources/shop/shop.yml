@@ -1,0 +1,13 @@
+shop:
+  gui:
+    name: '<gray>SHOP'
+    categoryName: '<gray> SHOP - <yellow><category>'
+    item_lore:
+      - '<gray>Cena za odkup <green><price>'
+      - '<gray>Cena za výkup <green><sell>'
+  categories:
+    blocks:
+      icon: GRASS_BLOCK
+      slot: 15
+      name: '<gray><bold>Bloky'
+      open: blocks

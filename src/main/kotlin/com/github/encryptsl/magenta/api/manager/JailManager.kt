@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api
+package com.github.encryptsl.magenta.api.manager
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.PlayerAccount

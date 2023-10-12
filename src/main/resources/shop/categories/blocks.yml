@@ -1,0 +1,28 @@
+shop:
+  gui:
+    button:
+      previous:
+        item: 'GREEN_CONCRETE'
+        name: '§7Zpět'
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: 'RED_CONCRETE'
+        action: back
+        name: '§aZpět do měnu'
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: 'ORANGE_CONCRETE'
+        name: '§7Další'
+        positions:
+          row: 6
+          col: 6
+  items:
+    stone:
+      buy:
+        price: 15
+      sell:
+        price: 1.0

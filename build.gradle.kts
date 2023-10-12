@@ -23,6 +23,8 @@ dependencies {
     compileOnly("com.zaxxer:HikariCP:5.0.1")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
     compileOnly("me.clip:placeholderapi:2.11.4")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
+    implementation("dev.triumphteam:triumph-gui:3.1.2")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
     implementation("cloud.commandframework:cloud-annotations:1.8.4")
     testImplementation("com.zaxxer:HikariCP:5.0.1")
@@ -47,6 +49,7 @@ tasks {
     shadowJar {
         minimize {
             relocate("cloud.commandframework", "com.github.encryptsl.magenta.libs.cloud")
+            relocate("dev.triumphteam.gui", "com.github.encryptsl.magenta.gui")
         }
         destinationDirectory = File("C:\\Users\\Rydlo\\Documents\\PaperServers\\1.20.1\\plugins")
     }

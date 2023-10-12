@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.utils
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
@@ -10,12 +11,12 @@ object ModernText {
 
     @JvmStatic
     fun miniModernText(message: String): Component {
-        return miniMessage.deserialize(convertVariables(message))
+        return miniMessage.deserialize(convertVariables(message)).decoration(TextDecoration.ITALIC, false)
     }
 
     @JvmStatic
     fun miniModernText(message: String, resolver: TagResolver): Component {
-        return miniMessage.deserialize(convertVariables(message), resolver)
+        return miniMessage.deserialize(convertVariables(message), resolver).decoration(TextDecoration.ITALIC, false)
     }
 
     private fun initMiniMessage(): MiniMessage {

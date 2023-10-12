@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.account
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.JailManager
+import com.github.encryptsl.magenta.api.manager.JailManager
 import com.github.encryptsl.magenta.api.PlayerCooldown
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.Bukkit

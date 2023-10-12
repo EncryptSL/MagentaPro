@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.api
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
@@ -60,6 +61,39 @@ class ItemFactory {
             }
             itemMeta.lore(newList)
         }
+        itemStack.setItemMeta(itemMeta)
+
+        return itemStack
+    }
+
+    fun shopItem(material: Material, buyPrice:Int, sellPrice:Int, lore: List<String>): ItemStack {
+        val itemStack = ItemStack(material, 1)
+        val itemMeta = itemStack.itemMeta
+        if (lore.isNotEmpty()) {
+            val newList: MutableList<Component> = ArrayList()
+            for (loreItem in lore) {
+                newList.add(ModernText.miniModernText(loreItem, TagResolver.resolver(
+                    Placeholder.parsed("price", buyPrice.toString()),
+                    Placeholder.parsed("sell", sellPrice.toString()),
+                )))
+            }
+            itemMeta.lore(newList)
+        }
+        itemStack.setItemMeta(itemMeta)
+
+        return itemStack
+    }
+
+    fun shopItem(material: Material, amount: Int): ItemStack {
+        val itemStack = ItemStack(material, amount)
+
+        return itemStack
+    }
+
+    fun shopItem(material: Material, name: String): ItemStack {
+        val itemStack = ItemStack(material, 1)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.displayName(ModernText.miniModernText(name))
         itemStack.setItemMeta(itemMeta)
 
         return itemStack
