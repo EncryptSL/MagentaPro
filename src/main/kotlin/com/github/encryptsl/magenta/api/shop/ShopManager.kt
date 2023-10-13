@@ -34,16 +34,16 @@ class ShopManager(private val magenta: Magenta) {
 
         if (magenta.shopConfig.getConfig().contains("shop.gui.fill")) {
             if (magenta.shopConfig.getConfig().contains("shop.gui.fill.border")) {
-                gui.filler.fillBorder(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.border.icon").toString())))
+                gui.filler.fillBorder(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.border").toString())))
             }
             if (magenta.shopConfig.getConfig().contains("shop.gui.fill.top")) {
-                gui.filler.fillTop(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.top.icon").toString())))
+                gui.filler.fillTop(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.top").toString())))
             }
             if (magenta.shopConfig.getConfig().contains("shop.gui.fill.bottom")) {
-                gui.filler.fillBottom(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.bottom.icon").toString())))
+                gui.filler.fillBottom(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.bottom").toString())))
             }
             if (magenta.shopConfig.getConfig().contains("shop.gui.fill.all")) {
-                gui.filler.fill(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.all.icon").toString())))
+                gui.filler.fill(GuiItem(Material.valueOf(magenta.shopConfig.getConfig().getString("shop.gui.fill.all").toString())))
             }
         }
 
@@ -106,23 +106,23 @@ class ShopManager(private val magenta: Magenta) {
 
         if (shopCategory.getConfig().contains("shop.gui.fill")) {
             if (shopCategory.getConfig().contains("shop.gui.fill.border")) {
-                gui.filler.fillBorder(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.border.icon").toString())))
+                gui.filler.fillBorder(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.border").toString())))
             }
             if (shopCategory.getConfig().contains("shop.gui.fill.top")) {
-                gui.filler.fillTop(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.top.icon").toString())))
+                gui.filler.fillTop(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.top").toString())))
             }
             if (shopCategory.getConfig().contains("shop.gui.fill.bottom")) {
-                gui.filler.fillBottom(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.bottom.icon").toString())))
+                gui.filler.fillBottom(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.bottom").toString())))
             }
             if (shopCategory.getConfig().contains("shop.gui.fill.all")) {
-                gui.filler.fill(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.all.icon").toString())))
+                gui.filler.fill(GuiItem(Material.valueOf(shopCategory.getConfig().getString("shop.gui.fill.all").toString())))
             }
         }
 
         for (material in Material.entries) {
             if (shopCategory.getConfig().contains("shop.items.${material.name}")) {
-                val buyPrice = shopCategory.getConfig().getInt("shop.items.${material.name}.buy.price")
-                val sellPrice = shopCategory.getConfig().getInt("shop.items.${material.name}.sell.price")
+                val buyPrice = shopCategory.getConfig().getDouble("shop.items.${material.name}.buy.price")
+                val sellPrice = shopCategory.getConfig().getDouble("shop.items.${material.name}.sell.price")
 
                 val isBuyAllowed = shopCategory.getConfig().contains("shop.items.${material.name}.buy.price")
                 val isSellAllowed = shopCategory.getConfig().contains("shop.items.${material.name}.sell.price")
@@ -143,7 +143,7 @@ class ShopManager(private val magenta: Magenta) {
                     }
 
                     if (action.isLeftClick) {
-                        ShopInventory(magenta, vault).buyItem(itemFactory.shopItem(material, 1), isBuyAllowed, buyPrice, action)
+                        shopInventory.buyItem(itemFactory.shopItem(material, 1), isBuyAllowed, buyPrice, action)
                         return@setAction
                     }
 

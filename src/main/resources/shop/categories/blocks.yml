@@ -1,5 +1,7 @@
 shop:
   gui:
+    fill:
+      border: 'BLUE_STAINED_GLASS_PAIN'
     button:
       previous:
         item: 'GREEN_CONCRETE'

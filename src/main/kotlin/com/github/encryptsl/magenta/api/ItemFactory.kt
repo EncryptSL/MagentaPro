@@ -66,7 +66,7 @@ class ItemFactory {
         return itemStack
     }
 
-    fun shopItem(material: Material, buyPrice:Int, sellPrice:Int, lore: List<String>): ItemStack {
+    fun shopItem(material: Material, buyPrice:Double, sellPrice:Double, lore: List<String>): ItemStack {
         val itemStack = ItemStack(material, 1)
         val itemMeta = itemStack.itemMeta
         if (lore.isNotEmpty()) {

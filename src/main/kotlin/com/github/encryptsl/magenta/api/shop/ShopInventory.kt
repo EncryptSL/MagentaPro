@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 
 class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) {
 
-    fun buyItem(item: ItemStack, isBuyAllowed: Boolean, price: Int, inventory: InventoryClickEvent) {
+    fun buyItem(item: ItemStack, isBuyAllowed: Boolean, price: Double, inventory: InventoryClickEvent) {
         val player = inventory.whoClicked as Player
         if (!isBuyAllowed)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.buy.disabled")))
@@ -23,7 +23,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
 
         try {
-            val response = vault.withdraw(player, fullPrice.toDouble())
+            val response = vault.withdraw(player, fullPrice)
             if (response.transactionSuccess()) {
                 player.sendMessage(
                     ModernText.miniModernText(
@@ -43,7 +43,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
         }
     }
 
-    fun sellItem(item: ItemStack, isSellAllowed: Boolean, price: Int, inventory: InventoryClickEvent) {
+    fun sellItem(item: ItemStack, isSellAllowed: Boolean, price: Double, inventory: InventoryClickEvent) {
         val player = inventory.whoClicked as Player
         if (!isSellAllowed)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.buy.disabled")))
@@ -54,7 +54,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
 
         try {
-            val response = vault.deposite(player, fullPrice.toDouble())
+            val response = vault.deposite(player, fullPrice)
             if (response.transactionSuccess()) {
                 player.inventory.removeItem(item)
                 player.sendMessage(

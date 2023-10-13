@@ -81,6 +81,33 @@ socialspy-commands:
 # Set to -1 for no timeout.
 auto-afk: 5
 
+
+# RTP-Settings
+# There is support for worldborder and negative coordinations
+# included is support for unsafe blocks.
+rtp:
+  limits:
+    xLimit: 500
+    zLimit: 500
+    negative: true
+    worldBorder: true
+  unsafeBlocks:
+    - ACACIA_LEAVES
+    - AZALEA_LEAVES
+    - BIRCH_LEAVES
+    - CACTUS
+    - DARK_OAK_LEAVES
+    - FLOWERING_AZALEA_LEAVES
+    - FIRE
+    - JUNGLE_LEAVES
+    - LAVA
+    - LAVA_CAULDRON
+    - MAGMA_BLOCK
+    - OAK_LEAVES
+    - SPRUCE_LEAVES
+    - WATER
+
+
 #########################################################
 #                    MENTIONS                           #
 # permission: magenta.mention.player                    #

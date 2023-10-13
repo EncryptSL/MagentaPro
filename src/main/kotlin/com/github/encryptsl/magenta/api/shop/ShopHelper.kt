@@ -9,7 +9,7 @@ object ShopHelper {
         return player.inventory.firstEmpty() == -1
     }
 
-    fun calcPrice(amount: Int, price: Int): Int {
+    fun calcPrice(amount: Int, price: Double): Double {
         return (amount.times(price))
     }
 }

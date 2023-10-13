@@ -12,13 +12,16 @@ class VaultHook(private val magenta: Magenta) {
     private val exception = magenta.localeConfig.getMessage("magenta.missing.vault.economy")
 
      fun setupEconomy(): Boolean {
-         val sm: ServicesManager = magenta.server.servicesManager
-         val rsp = sm.getRegistration(Economy::class.java)
-         if (rsp != null) {
-             eco = rsp.provider
-             return true
+         if (magenta.pluginManager.getPlugin("Vault") != null) {
+             val sm: ServicesManager = magenta.server.servicesManager
+             val rsp = sm.getRegistration(Economy::class.java)
+             if (rsp != null) {
+                 eco = rsp.provider
+                 return true
+             }
+             return eco == null
          }
-         return eco == null
+         return false
     }
 
     fun getBalance(player: Player): Double
