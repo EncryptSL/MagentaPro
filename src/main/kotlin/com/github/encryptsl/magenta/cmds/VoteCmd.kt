@@ -19,13 +19,14 @@ class VoteCmd(val magenta: Magenta) {
     fun onVote(player: Player) {
         val services: List<String> = magenta.config.getConfigurationSection("votifier.services")?.getKeys(false)?.filter { service -> !service.contains("default") } ?: return
         services.forEach { service ->
+            val replace = VoteHelper.replaceService(service, "_", ".")
             magenta.schedulerMagenta.delayedTask(magenta, {
                 player.sendMessage(ModernText.miniModernText(magenta.config.getString("votifier.services.$service.link").toString(), TagResolver.resolver(
                     Placeholder.parsed("hover", magenta.localeConfig.getMessage("magenta.command.vote.hover")),
-                    Placeholder.parsed("vote", (magenta.vote.getPlayerVote(player.uniqueId, service.replace("_", "."))?.vote ?: "0").toString()),
+                    Placeholder.parsed("vote", (magenta.vote.getPlayerVote(player.uniqueId, replace)?.vote ?: "0").toString()),
                     Placeholder.parsed("username", player.name)
                 )))
-            }, 20)
+            }, 10)
         }
     }
 

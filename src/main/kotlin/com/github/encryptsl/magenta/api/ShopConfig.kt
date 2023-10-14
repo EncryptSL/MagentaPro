@@ -8,6 +8,11 @@ class ShopConfig(magenta: Magenta, type: String) {
 
     private val configUtil = ConfigUtil(magenta, type)
 
+    fun fileExist(): Boolean
+    {
+        return configUtil.file.isFile
+    }
+
     fun reload() {
         configUtil.reload()
     }

@@ -41,6 +41,7 @@ class Magenta : JavaPlugin() {
     val kitManager: KitManager by lazy { KitManager(this) }
     val tpaManager: TpaManager by lazy { TpaManager(this) }
     val afk: AfkUtils by lazy { AfkUtils(this) }
+    val itemFactory: ItemFactory by lazy { ItemFactory() }
 
     val localeConfig: Locale by lazy { Locale(this) }
     val kitConfig: KitConfig by lazy { KitConfig(this) }

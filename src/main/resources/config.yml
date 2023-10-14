@@ -242,7 +242,6 @@ votifier:
 
 # In services you can set page where you have your server connected with votifier plugin.
 # services are represented by key services.$your_service, is name of responded from page.
-# names are replaced by example craftlist.org to craftlist_org
 # services:
 #    default:
 #      service: default, is name of the service this is only for broadcast.
@@ -255,24 +254,14 @@ votifier:
       service: default
       rewards:
         - 'give {player} minecraft:experience_bottle 5'
-    czech-craft_eu:
-      service: czech-craft.eu
+    Czech-Craft.eu:
       link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/ananaso-manie/vote/?user=<username>'><bold><aqua>|</bold>
         <yellow>czech-craft.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
         - 'give {player} minecraft:diamond 5'
         - 'give {player} minecraft:experience_bottle 5'
         - 'eco add {player} 200'
-    minecraft-list_cz:
-      service: minecraft-list.eu
-      link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
-        <yellow>minecraft-list.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
-      rewards:
-        - 'give {player} minecraft:emerald 1'
-        - 'give {player} minecraft:experience_bottle 5'
-        - 'eco add {player} 200'
-    Craftlist_org:
-      service: craftlist.org
+    Craftlist.org:
       link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
         <yellow>craftlist.org</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
@@ -306,12 +295,12 @@ votifier:
         - 'eco add {player} 500'
         - 'crazycrates give physical votecrate 1 {player}'
     '30':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 30 hlasů a proto dostal 1500 $ a 1 votecrate klíč !</color>'
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 30 hlasů a proto dostal 1500 $ a 1x votebox klíč !</color>'
       rewards:
         - 'eco add {player} 1500'
         - 'crazycrates give physical votecrate 1 {player}'
     '50':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 50 hlasů a proto dostal 3500 $ a 2 votecrate klíč !</color>'
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 50 hlasů a proto dostal 3500 $ a 2x votebox klíč !</color>'
       rewards:
         - 'eco add {player} 3500'
         - 'crazycrates give physical votecrate 2 {player}'

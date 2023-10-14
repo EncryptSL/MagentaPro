@@ -61,7 +61,7 @@ object VoteHelper {
     fun broadcast(string: String, username: String, serviceName: String) {
         Bukkit.broadcast(ModernText.miniModernText(string, TagResolver.resolver(
             Placeholder.parsed("player", username),
-            Placeholder.parsed("service", serviceName)
+            Placeholder.parsed("service", replaceService(serviceName, "_", "."))
         )))
     }
 
@@ -82,6 +82,11 @@ object VoteHelper {
         commands.forEach { command ->
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", username).replace("%player%", username))
         }
+    }
+
+    @JvmStatic
+    fun replaceService(serviceName: String, oldValue: String, newValue: String): String {
+        return serviceName.replace(oldValue, newValue)
     }
 
 }

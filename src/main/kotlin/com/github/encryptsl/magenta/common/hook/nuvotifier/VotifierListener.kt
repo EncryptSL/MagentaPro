@@ -19,10 +19,10 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         val vote: Vote = event.vote
         val username = vote.username
         val timestamp = vote.timeStamp
-        val serviceName = vote.serviceName.replace(".", "_")
+        val serviceName = VoteHelper.replaceService(vote.serviceName, ".", "_")
         val player = Bukkit.getOfflinePlayer(username)
 
-        val voteEntity = VoteEntity(player.name.toString(), player.uniqueId, 1, serviceName.replace("_", "."), Instant.fromEpochMilliseconds(timestamp.toLong()))
+        val voteEntity = VoteEntity(player.name.toString(), player.uniqueId, 1, VoteHelper.replaceService(serviceName, "_", "."), Instant.fromEpochMilliseconds(timestamp.toLong()))
         magenta.vote.addVote(voteEntity)
 
         if (magenta.config.contains("votifier.sound")) {
@@ -36,8 +36,11 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         if (!magenta.config.contains("votifier.services.$serviceName")) {
             if (magenta.config.contains("votifier.services.default")) {
                 if (magenta.config.contains("votifier.services.default.rewards")) {
-                    VoteHelper.broadcast(magenta.localeConfig.getMessage("magenta.votifier.broadcast"), username, serviceName)
-
+                    VoteHelper.broadcast(
+                        magenta.localeConfig.getMessage("magenta.votifier.broadcast"),
+                        username,
+                        serviceName
+                    )
                     val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.default.rewards")
                     if (!player.isOnline) {
                         VoteHelper.saveOfflineReward(magenta, player, rewards)
@@ -52,7 +55,11 @@ class VotifierListener(private val magenta: Magenta) : Listener {
 
         if (magenta.config.contains("votifier.services.$serviceName.service")) {
             if (magenta.config.contains("votifier.services.$serviceName.rewards")) {
-                VoteHelper.broadcast(magenta.localeConfig.getMessage("magenta.votifier.broadcast"), username, serviceName)
+                VoteHelper.broadcast(
+                    magenta.localeConfig.getMessage("magenta.votifier.broadcast"),
+                    username,
+                    serviceName
+                )
                 val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.$serviceName.rewards")
                 if (!player.isOnline) {
                     VoteHelper.saveOfflineReward(magenta, player, rewards)

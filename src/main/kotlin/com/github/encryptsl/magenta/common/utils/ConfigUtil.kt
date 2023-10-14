@@ -7,7 +7,7 @@ import java.io.File
 
 class ConfigUtil {
 
-    private var file: File
+    var file: File
     private var config: FileConfiguration
     private lateinit var plugin: Plugin
 

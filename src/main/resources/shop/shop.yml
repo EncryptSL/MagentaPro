@@ -7,6 +7,7 @@ shop:
     item_lore:
       - <gray>Cena za odkup <green><price>
       - <gray>Cena za výkup <green><sell>
+
   categories:
     blocks:
       icon: GRASS_BLOCK

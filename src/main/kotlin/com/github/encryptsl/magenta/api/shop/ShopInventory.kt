@@ -38,7 +38,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
                 player.inventory.addItem(item)
                 player.updateInventory()
             }
-        } catch (e : VaultException) {
+        } catch (e: VaultException) {
             player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
     }
@@ -46,7 +46,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
     fun sellItem(item: ItemStack, isSellAllowed: Boolean, price: Double, inventory: InventoryClickEvent) {
         val player = inventory.whoClicked as Player
         if (!isSellAllowed)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.buy.disabled")))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.sell.disabled")))
 
         if (!player.inventory.contains(item.type))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.empty.no.item")))
@@ -69,7 +69,7 @@ class ShopInventory(private val magenta: Magenta, private val vault: VaultHook) 
                 )
                 player.updateInventory()
             }
-        } catch (e : VaultException) {
+        } catch (e: VaultException) {
             player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
     }

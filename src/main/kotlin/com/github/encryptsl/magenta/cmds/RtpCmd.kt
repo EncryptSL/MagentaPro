@@ -36,7 +36,7 @@ class RtpCmd(private val magenta: Magenta) {
                 playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "rtp")
             }
             magenta.schedulerMagenta.runTask(magenta) {
-                player.teleportAsync(generatedLocation, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept { response ->
+                player.teleportAsync(generatedLocation, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept {
                     player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.rtp.success"), TagResolver.resolver(
                                     Placeholder.parsed("x", generatedLocation.x.toString()),
                                     Placeholder.parsed("y", generatedLocation.y.toString()),
