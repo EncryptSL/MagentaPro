@@ -1,0 +1,100 @@
+shop:
+  gui:
+    fill:
+      bottom: BLUE_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    COOKED_STEAK:
+      buy:
+        price: 3.5
+      sell:
+        price: 2.5
+    COOKED_MUTTON:
+      buy:
+        price: 3.5
+      sell:
+        price: 2.5
+    COOKED_CHICKEN:
+      buy:
+        price: 3.5
+      sell:
+        price: 2.5
+    COOKED_RABBIT:
+      buy:
+        price: 3.5
+      sell:
+        price: 2.5
+    COOKED_COD:
+      buy:
+        price: 3.5
+      sell:
+        price: 2.5
+    COOKED_SALMON:
+      buy:
+        price: 3.5
+      sell:
+        price: 2.5
+    CARROT:
+      buy:
+        price: 2.5
+      sell:
+        price: 1.5
+    POTATOE:
+      buy:
+        price: 2.5
+      sell:
+        price: 1.5
+    MELONE:
+      buy:
+        price: 2.5
+      sell:
+        price: 1.5
+    BEETROOT:
+      buy:
+        price: 2.5
+      sell:
+        price: 1.5
+    COOKIE:
+      buy:
+        price: 4.5
+      sell:
+        price: 1.5
+    PUMPKIN_PIE:
+      buy:
+        price: 4.5
+      sell:
+        price: 3.5
+    CAKE:
+      buy:
+        price: 4.5
+      sell:
+        price: 3.5
+    SWEET_BERRIES:
+      buy:
+        price: 2.5
+      sell:
+        price: 1.5
+    ROOTEN_FLESH:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.6

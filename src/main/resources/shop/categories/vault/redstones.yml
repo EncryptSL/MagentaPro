@@ -1,0 +1,85 @@
+shop:
+  gui:
+    fill:
+      bottom: BLUE_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    REDSTONE:
+      buy:
+        price: 140
+      sell:
+        price: 35
+    REDSTONE_TORCH:
+      buy:
+        price: 140
+    REPEATER:
+      buy:
+        price: 451.5
+    COMPARATOR:
+      buy:
+        price: 466.5
+    TARGET:
+      buy:
+        price: 560
+    PISTON:
+      buy:
+        price: 608.45
+    STICKY_PISTON:
+      buy:
+        price: 609.45
+    RAIL:
+      buy:
+        price: 780
+    POWERED_RAIL:
+      buy:
+        price: 1040
+    DETECTOR_RAIL:
+      buy:
+        price: 980
+    ACTIVATOR_RAIL:
+      buy:
+        price: 980
+    REDSTONE_LAMP:
+      buy:
+        price: 560
+    MINECART:
+      buy:
+        price: 700
+    HOPPER_MINECART:
+      buy:
+        price: 1420
+    HOEPPER:
+      buy:
+        price: 720
+    OBSERVER:
+      buy:
+        price: 325
+    DISPENSER:
+      buy:
+        price: 157.5
+    DROPPER:
+      buy:
+        price: 157.5
+    DAYLIGHT_DETECTOR:
+      buy:
+        price: 65.7
+

@@ -1,7 +1,8 @@
-package com.github.encryptsl.magenta.api.shop
+package com.github.encryptsl.magenta.api.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.ShopConfig
+import com.github.encryptsl.magenta.api.shop.helpers.ShopButtons
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -14,10 +15,10 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class ShopManager(private val magenta: Magenta) {
+class VaultShop(private val magenta: Magenta) {
 
     private val vault: VaultHook by lazy { VaultHook(magenta) }
-    private val shopInventory: ShopInventory by lazy { ShopInventory(magenta, vault) }
+    private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta, vault) }
 
     fun openShop(player: Player) {
         val gui: Gui = Gui.gui()
@@ -111,7 +112,7 @@ class ShopManager(private val magenta: Magenta) {
     }
 
     fun openCategory(player: Player, type: String) {
-        val shopCategory = ShopConfig(magenta, "shop/categories/$type.yml")
+        val shopCategory = ShopConfig(magenta, "shop/categories/vault/$type.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
                 ModernText.miniModernText(
@@ -206,12 +207,12 @@ class ShopManager(private val magenta: Magenta) {
 
                     guiItem.setAction { action ->
                         if (action.isShiftClick && action.isLeftClick) {
-                            shopInventory.buyItem(magenta.itemFactory.shopItem(material, 64), isBuyAllowed, buyPrice, action)
+                            vaultShopInventory.buyItem(magenta.itemFactory.shopItem(material, 64), isBuyAllowed, buyPrice, action)
                             return@setAction
                         }
 
                         if (action.isLeftClick) {
-                            shopInventory.buyItem(magenta.itemFactory.shopItem(material, 1), isBuyAllowed, buyPrice, action)
+                            vaultShopInventory.buyItem(magenta.itemFactory.shopItem(material, 1), isBuyAllowed, buyPrice, action)
                             return@setAction
                         }
 
@@ -219,7 +220,7 @@ class ShopManager(private val magenta: Magenta) {
                         if (action.isShiftClick && action.isRightClick) {
                             for (i in 0..35) {
                                 if (player.inventory.getItem(i)?.type == material) {
-                                    shopInventory.sellItem(
+                                    vaultShopInventory.sellItem(
                                         player.inventory.getItem(i)!!,
                                         isSellAllowed,
                                         sellPrice,
@@ -232,7 +233,7 @@ class ShopManager(private val magenta: Magenta) {
                         }
 
                         if (action.isRightClick) {
-                            shopInventory.sellItem(magenta.itemFactory.shopItem(material, 1), isSellAllowed, sellPrice, action)
+                            vaultShopInventory.sellItem(magenta.itemFactory.shopItem(material, 1), isSellAllowed, sellPrice, action)
                             return@setAction
                         }
                         action.isCancelled = true

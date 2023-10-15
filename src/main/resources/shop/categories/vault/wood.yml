@@ -1,0 +1,190 @@
+shop:
+  gui:
+    fill:
+      bottom: BLUE_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    OAK_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.9
+    SPRUCE_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.4
+    BIRCH_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.9
+    JUNGLE_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.9
+    ACACIA_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.9
+    DARK_OAK_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.9
+    MANGROVE_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.9
+    CHERRY_LOG:
+      buy:
+        price: 8.6
+      sell:
+        price: 0.9
+    OAK_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    SPRUCE_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    BIRCH_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    JUNGLE_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    DARK_OAK_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    ACACIA_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    MANGROVE_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    CHERRY_PLANKS:
+      buy:
+        price: 2.15
+      sell:
+        price: 0.4
+    OAK_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    SPRUCE_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    BIRCH_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    JUNGLE_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    ACACIA_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    DARK_OAK_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    MANGROVE_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    CHERRY_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    AZALEA_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    FLOWERING_AZALEA_LEAVES:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.2
+    OAK_SAPLING:
+      buy:
+        price: 6.5
+      sell:
+        price: 0.3
+    SPRUCE_SAPLING:
+      buy:
+        price: 6.5
+      sell:
+        price: 0.3
+    BIRCH_SAPLING:
+      buy:
+        price: 6.5
+      sell:
+        price: 0.3
+    JUNGLE_SAPLING:
+      buy:
+        price: 6.5
+      sell:
+        price: 0.3
+    ACACIA_SAPLING:
+      buy:
+        price: 6.5
+      sell:
+        price: 0.3
+    DARK_OAK_SAPLING:
+      buy:
+        price: 6.5
+      sell:
+        price: 0.3
+    CHERRY_SAPLING:
+      buy:
+        price: 6.5
+      sell:
+        price: 0.3

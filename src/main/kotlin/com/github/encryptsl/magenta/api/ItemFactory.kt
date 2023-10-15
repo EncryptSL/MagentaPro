@@ -84,6 +84,24 @@ class ItemFactory {
         return itemStack
     }
 
+    fun creditShopItem(material: Material, quantity: Int, buyPrice:Double, credits: Double,lore: List<String>): ItemStack {
+        val itemStack = ItemStack(material, quantity)
+        val itemMeta = itemStack.itemMeta
+        if (lore.isNotEmpty()) {
+            val newList: MutableList<Component> = ArrayList()
+            for (loreItem in lore) {
+                newList.add(ModernText.miniModernText(loreItem, TagResolver.resolver(
+                    Placeholder.parsed("price", buyPrice.toString()),
+                    Placeholder.parsed("credits", credits.toString()),
+                )))
+            }
+            itemMeta.lore(newList)
+        }
+        itemStack.setItemMeta(itemMeta)
+
+        return itemStack
+    }
+
     fun shopItem(material: Material, amount: Int): ItemStack {
         val itemStack = ItemStack(material, amount)
 

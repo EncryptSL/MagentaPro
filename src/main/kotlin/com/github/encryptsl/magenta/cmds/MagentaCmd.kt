@@ -4,7 +4,7 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.shop.ShopHelper
+import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 
@@ -31,6 +31,8 @@ class MagentaCmd(private val magenta: Magenta) {
         magenta.saveConfig()
         magenta.shopConfig.reload()
         magenta.shopConfig.save()
+        magenta.zeusShopConfig.reload()
+        magenta.zeusShopConfig.save()
         ShopHelper.reloadShopConfigs(magenta)
         magenta.tags.reload()
         magenta.tags.save()

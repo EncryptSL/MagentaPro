@@ -1,0 +1,100 @@
+shop:
+  gui:
+    fill:
+      bottom: BLUE_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    GRASS_BLOCK:
+      buy:
+        price: 3.5
+      sell:
+        price: 0.9
+    DIRT:
+      buy:
+        price: 2.5
+      sell:
+        price: 0.4
+    PODZOL:
+      buy:
+        price: 5.2
+      sell:
+        price: 0.6
+    WARPED_NYLIUM:
+      buy:
+        price: 5.5
+      sell:
+        price: 0.6
+    GRAVEL:
+      buy:
+        price: 2.3
+      sell:
+        price: 0.3
+    SAND:
+      buy:
+        price: 2.3
+      sell:
+        price: 0.3
+    RED_SAND:
+      buy:
+        price: 2.3
+      sell:
+        price: 0.3
+    GLASS:
+      buy:
+        price: 2.3
+      sell:
+        price: 1.5
+    GLOWSTONE:
+      buy:
+        price: 30.9
+      sell:
+        price: 2.5
+    SHROOMLIGHT:
+      buy:
+        price: 30.9
+      sell:
+        price: 2.5
+    SEA_LANTERN:
+      buy:
+        price: 50.9
+      sell:
+        price: 5.5
+    SPONGE:
+      buy:
+        price: 350.5
+      sell:
+        price: 40.5
+    SNOW_BLOCK:
+      buy:
+        price: 5.9
+      sell:
+        price: 2.5
+    ICE:
+      buy:
+        price: 6.9
+      sell:
+        price: 1.5
+    PACKED_ICE:
+      buy:
+        price: 8.9
+      sell:
+        price: 1.6

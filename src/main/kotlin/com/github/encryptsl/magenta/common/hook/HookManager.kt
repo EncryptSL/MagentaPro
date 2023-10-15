@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.hook
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
@@ -19,12 +20,26 @@ class HookManager(private val magenta: Magenta) {
     fun hookVault() {
         if (isPluginInstalled("VaultAPI")) {
             magenta.logger.info("###################################")
-            magenta.logger.info("# Vault registered like a provider#")
+            magenta.logger.info("# Vault registered like a service #")
             magenta.logger.info("###################################")
             VaultHook(magenta).setupEconomy()
         } else {
             magenta.logger.info("###################################")
             magenta.logger.info("#         Vault not Found         #")
+            magenta.logger.info("#     please download vault api   #")
+            magenta.logger.info("###################################")
+        }
+    }
+
+    fun hookCreditLite() {
+        if (isPluginInstalled("CreditLite")) {
+            magenta.logger.info("###################################")
+            magenta.logger.info("# CreditLite registered like a service#")
+            magenta.logger.info("###################################")
+            CreditLiteHook(magenta).setupCreditLite()
+        } else {
+            magenta.logger.info("###################################")
+            magenta.logger.info("#       CreditLite not Found      #")
             magenta.logger.info("#     please download vault api   #")
             magenta.logger.info("###################################")
         }

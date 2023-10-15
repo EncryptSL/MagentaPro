@@ -49,6 +49,7 @@ class Magenta : JavaPlugin() {
     val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
     val tags: TagsConfig by lazy { TagsConfig(this) }
     val shopConfig: ShopConfig by lazy { ShopConfig(this, "shop/shop.yml") }
+    val zeusShopConfig: ShopConfig by lazy { ShopConfig(this, "shop/zeus_shop.yml") }
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
@@ -64,7 +65,17 @@ class Magenta : JavaPlugin() {
             .createFromResources("citems.yml", this)
             .createFromResources("tags.yml", this)
             .createFromResources("shop/shop.yml", this)
-            .createFromResources("shop/categories/blocks.yml", this)
+            .createFromResources("shop/zeus_shop.yml", this)
+            .createFromResources("shop/categories/vault/blocks.yml", this)
+            .createFromResources("shop/categories/vault/decoration.yml", this)
+            .createFromResources("shop/categories/vault/farms.yml", this)
+            .createFromResources("shop/categories/vault/food.yml", this)
+            .createFromResources("shop/categories/vault/materials.yml", this)
+            .createFromResources("shop/categories/vault/ores.yml", this)
+            .createFromResources("shop/categories/vault/redstones.yml", this)
+            .createFromResources("shop/categories/vault/special_items.yml", this)
+            .createFromResources("shop/categories/vault/stone.yml", this)
+            .createFromResources("shop/categories/vault/wood.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         DatabaseConnector().initConnect(
@@ -92,6 +103,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun hookRegistration() {
+        hookManger.hookVault()
         hookManger.hookPAPI()
         hookManger.hookNuVotifier()
     }

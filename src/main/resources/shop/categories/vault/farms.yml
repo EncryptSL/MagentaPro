@@ -1,0 +1,86 @@
+shop:
+  gui:
+    fill:
+      bottom: BLUE_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    WHEAT_SEEDS:
+      buy:
+        price: 4.5
+      sell:
+        price: 2.5
+    PUMPKIN_SEEDS:
+      buy:
+        price: 4.5
+      sell:
+        price: 2.5
+    MELON_SEEDS:
+      buy:
+        price: 4.5
+      sell:
+        price: 2.5
+    BEETROOT_SEEDS:
+      buy:
+        price: 4.5
+      sell:
+        price: 2.5
+    WHEAT:
+      buy:
+        price: 4.5
+      sell:
+        price: 3.5
+    SUGAR_CANE:
+      buy:
+        price: 4.5
+      sell:
+        price: 3.5
+    BAMBOO:
+      buy:
+        price: 4.5
+      sell:
+        price: 2.5
+    CACTUS:
+      buy:
+        price: 4.5
+      sell:
+        price: 3.5
+    WHITE_WOOL:
+      buy:
+        price: 16
+      sell:
+        price: 6
+    GLOW_BERRIES:
+      buy:
+        price: 16
+      sell:
+        price: 10
+    HONEY_BOTTLE:
+      buy:
+        price: 20
+      sell:
+        price: 15
+    CHORUS_FRUIT:
+      buy:
+        price: 50
+      sell:
+        price: 25
+
