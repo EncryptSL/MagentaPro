@@ -22,26 +22,33 @@ class CreditLiteHook(private val magenta: Magenta) {
         return false
     }
 
+    fun hasCredits(player: Player, amount: Double): Boolean {
+        if (!setupCreditLite())
+            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
+
+        return eco!!.has(player, amount)
+    }
+
     fun getCredits(player: Player): Double {
         if (!setupCreditLite())
-            throw CreditException("")
+            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        return eco?.getBalance(player) ?: 0.0
+        return eco!!.getBalance(player)
     }
 
     fun depositeCredits(player: Player, amount: Double)
     {
         if (!setupCreditLite())
-            throw CreditException("")
+            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        eco?.depositMoney(player, amount)
+        eco!!.depositMoney(player, amount)
     }
 
     fun withdrawCredits(player: Player, amount: Double) {
         if (!setupCreditLite())
-            throw CreditException("")
+            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        eco?.withDrawMoney(player, amount)
+        eco!!.withDrawMoney(player, amount)
     }
 
 }

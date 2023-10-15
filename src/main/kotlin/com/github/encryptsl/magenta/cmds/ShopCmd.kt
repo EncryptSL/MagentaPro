@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
 class ShopCmd(private val magenta: Magenta) {
 
     private val vaultShop = VaultShop(magenta)
-    private val zeusShop = CreditShop(magenta)
+    private val creditShop = CreditShop(magenta)
 
     @CommandMethod("shop")
     @CommandPermission("magenta.shop")
@@ -25,26 +25,26 @@ class ShopCmd(private val magenta: Magenta) {
     }
 
     @CommandMethod("shop open <type>")
-    @CommandPermission("magenta.shop.category")
+    @CommandPermission("magenta.shop.open")
     fun onShopOpen(player: Player, @Argument(value = "type", suggestions = "shops") type: String) {
         magenta.schedulerMagenta.runTask(magenta){
             vaultShop.openCategory(player, type)
         }
     }
 
-    @CommandMethod("shop zeus")
-    @CommandPermission("magenta.shop.zeus")
+    @CommandMethod("creditshop")
+    @CommandPermission("magenta.credit.shop")
     fun onShopZeus(player: Player) {
         magenta.schedulerMagenta.runTask(magenta) {
-            zeusShop.openShop(player)
+            creditShop.openShop(player)
         }
     }
 
-    @CommandMethod("shop zeus open <type>")
-    @CommandPermission("magenta.shop.zeus.category")
-    fun onShopOpenZeus(player: Player, @Argument(value = "type", suggestions = "zeusShops") type: String) {
+    @CommandMethod("creditshop open <type>")
+    @CommandPermission("magenta.credit.shop.open")
+    fun onShopOpenZeus(player: Player, @Argument(value = "type", suggestions = "creditshops") type: String) {
         magenta.schedulerMagenta.runTask(magenta){
-            zeusShop.openCategory(player, type)
+            creditShop.openCategory(player, type)
         }
     }
 

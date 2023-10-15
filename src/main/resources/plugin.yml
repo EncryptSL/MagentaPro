@@ -8,7 +8,7 @@ author: EncryptSL
 website: https://encryptsl.github.io/
 
 load: POSTWORLD
-softdepend: [Votifier, PlaceholderAPI, Vault]
+softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite]
 libraries:
   - com.zaxxer:HikariCP:5.0.1
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10
@@ -47,6 +47,7 @@ permissions:
       magenta.repair.*: true
       magenta.rtp.*: true
       magenta.shop.*: true
+      magenta.credit.shop.*: true
       magenta.social.spy.*: true
       magenta.tpa.*: true
       magenta.vanish.*: true
@@ -267,7 +268,15 @@ permissions:
     default: false
     children:
       magenta.shop: true
+      magenta.shop.open: true
       magenta.shop.category.*: true
+  magenta.credit.shop.*:
+    description: Permissions for credtishop
+    default: false
+    children:
+      magenta.credit.shop: true
+      magenta.credit.shop.open: true
+      magenta.credit.shop.category.*: true
   magenta.social.spy.*:
     description: Permissions for all social spy
     default: false

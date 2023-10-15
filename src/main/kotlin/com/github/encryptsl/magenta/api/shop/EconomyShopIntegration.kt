@@ -40,6 +40,8 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                     TransactionType.BUY -> player.inventory.addItem(item)
                 }
                 player.updateInventory()
+            } else {
+                player.sendMessage(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.money"))
             }
         } catch (e: VaultException) {
             player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
@@ -48,18 +50,20 @@ class EconomyShopIntegration(private val magenta: Magenta) {
 
     fun doCreditTransaction(player: Player, creditLiteHook: CreditLiteHook, message: String, product: Component, price: Double, quantity: Int, commands: MutableList<String>) {
         try {
-            if (price <= creditLiteHook.getCredits(player)) {
+            if (creditLiteHook.hasCredits(player, price)) {
                 creditLiteHook.withdrawCredits(player, price)
                 player.sendMessage(
                     ModernText.miniModernText(
                         magenta.localeConfig.getMessage(message), TagResolver.resolver(
-                            Placeholder.component("product", product),
+                            Placeholder.component("item", product),
                             Placeholder.parsed("quantity", quantity.toString()),
                             Placeholder.parsed("price", price.toString())
                         )
                     )
                 )
-                ShopHelper.giveRewards(commands, player.name)
+                ShopHelper.giveRewards(commands, player.name, quantity)
+            } else {
+                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.credit")))
             }
         } catch (e : CreditException) {
             player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))

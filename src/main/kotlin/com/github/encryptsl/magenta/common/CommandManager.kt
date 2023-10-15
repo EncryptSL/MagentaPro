@@ -104,6 +104,11 @@ class CommandManager(private val magenta: Magenta) {
                 ?.getKeys(false)
                 ?.mapNotNull { it.toString() } ?: emptyList()
         }
+        commandManager.parserRegistry().registerSuggestionProvider("creditshops") {_, _ ->
+            magenta.creditShopConfig.getConfig().getConfigurationSection("shop.categories")
+                ?.getKeys(false)
+                ?.mapNotNull { it.toString() } ?: emptyList()
+        }
     }
 
     private fun materials(): MutableList<String> {

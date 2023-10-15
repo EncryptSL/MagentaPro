@@ -1,10 +1,13 @@
 package com.github.encryptsl.magenta.common.utils
 
+import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 object ModernText {
     private val miniMessage: MiniMessage by lazy { initMiniMessage() }
@@ -17,6 +20,12 @@ object ModernText {
     @JvmStatic
     fun miniModernText(message: String, resolver: TagResolver): Component {
         return miniMessage.deserialize(convertVariables(message), resolver).decoration(TextDecoration.ITALIC, false)
+    }
+
+    @JvmStatic
+    fun papi(player: Player, message: String): String
+    {
+        return if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) PlaceholderAPI.setPlaceholders(player, message) else message
     }
 
     private fun initMiniMessage(): MiniMessage {

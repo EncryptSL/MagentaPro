@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.ShopConfig
+import com.github.encryptsl.magenta.api.shop.ShopBuilder
 import com.github.encryptsl.magenta.api.shop.helpers.ShopButtons
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -11,7 +12,6 @@ import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.GuiItem
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -21,15 +21,7 @@ class VaultShop(private val magenta: Magenta) {
     private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta, vault) }
 
     fun openShop(player: Player) {
-        val gui: Gui = Gui.gui()
-            .title(ModernText.miniModernText(magenta.shopConfig.getConfig().getString("shop.gui.name").toString()))
-            .type(GuiType.CHEST)
-            .rows(6)
-            .disableItemPlace()
-            .disableItemTake()
-            .disableItemDrop()
-            .disableItemSwap()
-            .create()
+        val gui: Gui = ShopBuilder.gui(magenta.shopConfig.getConfig().getString("shop.gui.name").toString(), 6, GuiType.CHEST)
 
         if (magenta.shopConfig.getConfig().contains("shop.gui.fill")) {
             if (magenta.shopConfig.getConfig().contains("shop.gui.fill.border")) {
@@ -92,11 +84,9 @@ class VaultShop(private val magenta: Magenta) {
                 if (magenta.shopConfig.getConfig().getString("shop.categories.$category.icon")
                         .equals(material.name, ignoreCase = true)
                 ) {
+                    val name = magenta.shopConfig.getConfig().getString("shop.categories.$category.name").toString()
                     val item = ItemBuilder.from(
-                        magenta.itemFactory.shopItem(
-                            material,
-                            magenta.shopConfig.getConfig().getString("shop.categories.$category.name").toString()
-                        )
+                        magenta.itemFactory.shopItem(material, name)
                     ).asGuiItem { action ->
                         if (action.isRightClick || action.isLeftClick) {
                             openCategory(player, category)
@@ -105,14 +95,14 @@ class VaultShop(private val magenta: Magenta) {
                     }
 
                     gui.setItem(magenta.shopConfig.getConfig().getInt("shop.categories.$category.slot"), item)
-                    gui.open(player)
                 }
             }
         }
+        gui.open(player)
     }
 
     fun openCategory(player: Player, type: String) {
-        val shopCategory = ShopConfig(magenta, "shop/categories/vault/$type.yml")
+        val shopCategory = ShopConfig(magenta, "shop/categories/$type.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
                 ModernText.miniModernText(
@@ -134,18 +124,12 @@ class VaultShop(private val magenta: Magenta) {
                 Placeholder.parsed("category", type)
             ))
 
-        val gui: PaginatedGui = Gui.paginated()
-            .title(ModernText.miniModernText(
-                    magenta.shopConfig.getConfig().getString("shop.gui.categoryName").toString(), TagResolver.resolver(
-                        Placeholder.parsed("category", magenta.shopConfig.getConfig().getString("shop.categories.$type.name").toString()),
-                    )
-            )
-            ).rows(6)
-            .disableItemPlace()
-            .disableItemDrop()
-            .disableItemSwap()
-            .disableItemTake()
-            .create()
+        val name = magenta.shopConfig.getConfig().getString("shop.gui.categoryName").toString()
+        val categoryName = magenta.shopConfig.getConfig().getString("shop.categories.$type.name").toString()
+
+        val gui: PaginatedGui = ShopBuilder.guiPaginated(ModernText.miniModernText(name,
+            Placeholder.parsed("category", categoryName)
+        ), 6)
 
         if (shopCategory.getConfig().contains("shop.gui.fill")) {
             if (shopCategory.getConfig().contains("shop.gui.fill.border")) {

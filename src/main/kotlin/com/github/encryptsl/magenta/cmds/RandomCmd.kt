@@ -7,6 +7,7 @@ import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -39,6 +40,10 @@ class RandomCmd(private val magenta: Magenta) {
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.tag.success.player"),
             Placeholder.parsed("category", type)
         ))
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.tag.success.to"), TagResolver.resolver(
+            Placeholder.parsed("category", type),
+            Placeholder.parsed("tag", randomTag)
+        )))
     }
 
 }

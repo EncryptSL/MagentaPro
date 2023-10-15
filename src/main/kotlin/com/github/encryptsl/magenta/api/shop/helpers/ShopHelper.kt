@@ -15,9 +15,14 @@ object ShopHelper {
         return (amount.times(price))
     }
 
-    fun giveRewards(commands: MutableList<String>, username: String) {
+    fun giveRewards(commands: MutableList<String>, username: String, quantity: Int) {
         commands.forEach { command ->
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", username).replace("%player%", username))
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
+                .replace("{player}", username)
+                .replace("%player%", username)
+                .replace("%quantity%", quantity.toString())
+                .replace("{quantity}", quantity.toString())
+            )
         }
     }
 
@@ -25,7 +30,7 @@ object ShopHelper {
     fun reloadShopConfigs(magenta: Magenta) {
         val shopConfig = magenta.shopConfig.getConfig()
         shopConfig.getConfigurationSection("shop.categories")?.getKeys(false)?.forEach { category ->
-            val categoryConfig = ShopConfig(magenta, "shop/categories/vault/$category.yml")
+            val categoryConfig = ShopConfig(magenta, "shop/categories/$category.yml")
             if (categoryConfig.fileExist()) {
                 categoryConfig.reload()
                 categoryConfig.save()
@@ -34,9 +39,9 @@ object ShopHelper {
                 magenta.logger.config("Shop config $category.yml not exist !")
             }
         }
-        val zeusConfig = magenta.zeusShopConfig.getConfig()
+        val zeusConfig = magenta.creditShopConfig.getConfig()
         zeusConfig.getConfigurationSection("shop.categories")?.getKeys(false)?.forEach { category ->
-            val categoryConfig = ShopConfig(magenta, "shop/categories/zeus/$category.yml")
+            val categoryConfig = ShopConfig(magenta, "creditshop/categories/$category.yml")
             if (categoryConfig.fileExist()) {
                 categoryConfig.reload()
                 categoryConfig.save()

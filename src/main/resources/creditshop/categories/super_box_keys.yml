@@ -1,0 +1,103 @@
+shop:
+  gui:
+    size: 6
+    fill:
+      bottom: BLUE_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    galaxy_1:
+      icon: TRIPWIRE_HOOK
+      name: <blue>Galaxy Klíč
+      glowing: true
+      buy:
+        price: 25
+        quantity: 1
+      position:
+        slot: 11
+      commands:
+        - cc give physical galaxybox %quantity% %player%
+    galaxy_3:
+      icon: TRIPWIRE_HOOK
+      name: <blue>Galaxy Klíč
+      glowing: true
+      buy:
+        price: 75
+        quantity: 5
+      position:
+        slot: 12
+      commands:
+        - cc give physical galaxybox %quantity% %player%
+    galaxy_6:
+      icon: TRIPWIRE_HOOK
+      name: <blue>Galaxy Klíč
+      glowing: true
+      buy:
+        price: 150
+        quantity: 6
+      position:
+        slot: 13
+      commands:
+        - cc give physical galaxybox %quantity% %player%
+    galaxy_9:
+      icon: TRIPWIRE_HOOK
+      name: <blue>Galaxy Klíč
+      glowing: true
+      buy:
+        price: 225
+        quantity: 9
+      position:
+        slot: 14
+      commands:
+        - cc give physical galaxybox %quantity% %player%
+    galaxy_12:
+      icon: TRIPWIRE_HOOK
+      name: <blue>Galaxy Klíč
+      glowing: true
+      buy:
+        price: 300
+        quantity: 12
+      position:
+        slot: 15
+      commands:
+        - cc give physical galaxybox %quantity% %player%
+    galaxy_15:
+      icon: TRIPWIRE_HOOK
+      name: <blue>Galaxy Klíč
+      glowing: true
+      buy:
+        price: 375
+        quantity: 12
+      position:
+        slot: 21
+      commands:
+        - cc give physical galaxybox %quantity% %player%
+    galaxy_18:
+      icon: TRIPWIRE_HOOK
+      name: <blue>Galaxy Klíč
+      glowing: true
+      buy:
+        price: 450
+        quantity: 18
+      position:
+        slot: 23
+      commands:
+        - cc give physical galaxybox %quantity% %player%
