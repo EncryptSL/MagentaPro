@@ -26,6 +26,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.4")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("com.github.encryptsl.credit:CreditLite:1.0.1-SNAPSHOT")
+    implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.2")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
     implementation("cloud.commandframework:cloud-annotations:1.8.4")

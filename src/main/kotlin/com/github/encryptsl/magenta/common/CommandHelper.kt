@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.level.LevelFormula
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -88,4 +89,21 @@ class CommandHelper(private val magenta: Magenta) {
        return if (boolean) "viditelný" else "skryt"
     }
 
+    fun showLevelProgress(commandSender: CommandSender, level: Int, currentExp: Int) {
+        val needToLevelUp = LevelFormula.experienceFormula(level)
+        val percentageProgress = LevelFormula.levelProgress(level, currentExp)
+        val progressBar = LevelFormula.getProgressBar(currentExp, needToLevelUp, 20, magenta.config.getString("level.barSymbol").toString(), "<green>", "<gray>")
+
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.success.your.level"),
+            Placeholder.parsed("level", level.toString())
+        ))
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.success.score"), TagResolver.resolver(
+            Placeholder.parsed("current_exp", currentExp.toString()),
+            Placeholder.parsed("exp_to_up", needToLevelUp.toString()),
+            Placeholder.parsed("percentage_progress", percentageProgress.toString()),
+        )))
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.success.progressbar"),
+            Placeholder.parsed("progress_bar", progressBar)
+        ))
+    }
 }

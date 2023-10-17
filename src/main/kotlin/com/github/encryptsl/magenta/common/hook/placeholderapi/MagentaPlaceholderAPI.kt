@@ -2,10 +2,12 @@ package com.github.encryptsl.magenta.common.hook.placeholderapi
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.level.LevelFormula
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: String) : PlaceholderExpansion() {
     override fun getIdentifier(): String = "magenta"
@@ -21,8 +23,9 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
     override fun onRequest(player: OfflinePlayer, identifier: String): String? {
         val args = identifier.split("_")
         val string = args.getOrNull(1)?.toString()
-        val rank = args.getOrNull(2)?.toIntOrNull()
+        val rank = args.getOrNull(3)?.toIntOrNull()
         val account = PlayerAccount(magenta, player.uniqueId)
+        val levelEntity = magenta.virtualLevel.getLevel(player.uniqueId)
 
 
         if (identifier.startsWith("votes_")) {
@@ -31,6 +34,8 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
 
         return when (identifier) {
             "afk" -> magenta.afk.isAfk(player.uniqueId).toString()
+            "level" -> levelEntity.level.toString()
+            "level_progress" -> LevelFormula.levelProgress(levelEntity.level, levelEntity.experience).toString()
             "socialspy" -> account.getAccount().getBoolean("socialspy").toString()
             "vanished" -> account.getAccount().getBoolean("vanished").toString()
             "votes" -> magenta.vote.getPlayerVote(player.uniqueId).toString()
@@ -41,12 +46,34 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
             else -> {
                 rank?.let {
                     when {
-                        identifier.startsWith("top_vote_") -> topVoteNameByRank(rank)
-                        identifier.startsWith("top_votes_") -> voteByRank(rank).toString()
+                        identifier.startsWith("top_vote_name_") -> topVoteNameByRank(rank)
+                        identifier.startsWith("top_vote_votes_") -> voteByRank(rank).toString()
+                        identifier.startsWith("top_level_name_") -> topLevelNameByRank(rank)
+                        identifier.startsWith("top_level_levels_") -> levelByRank(rank).toString()
                         else -> null
                     }
                 }
             }
+        }
+    }
+
+    private fun topLevelNameByRank(rank: Int): String {
+        val topLevel = topLevels()
+        return if (rank in 1 .. topLevel.size) {
+            val uuid = topLevel.keys.elementAt(rank - 1)
+            Bukkit.getOfflinePlayer(UUID.fromString(uuid)).name ?: "UNKNOWN"
+        } else {
+            "EMPTY"
+        }
+    }
+
+
+    private fun levelByRank(rank: Int): Int {
+        val topLevel = topLevels()
+        return if (rank in 1..topLevel.size) {
+            topLevel.values.elementAt(rank - 1).toInt()
+        } else {
+            0
         }
     }
 
@@ -69,9 +96,19 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
         }
     }
 
+    private fun topLevels(): LinkedHashMap<String, Int>
+    {
+        return magenta.virtualLevel.getLevels()
+            .filterKeys { Bukkit.getOfflinePlayer(UUID.fromString(it)).hasPlayedBefore() }
+            .toList()
+            .sortedByDescending { (_, level) -> level }
+            .toMap()
+            .let { LinkedHashMap(it) }
+    }
+
     private fun topVotes(): LinkedHashMap<String, Int> {
         return magenta.vote.topVotes()
-            .filterKeys { it -> Bukkit.getOfflinePlayer(UUID.fromString(it)).hasPlayedBefore() }
+            .filterKeys { Bukkit.getOfflinePlayer(UUID.fromString(it)).hasPlayedBefore() }
             .toList()
             .sortedByDescending { (_, vote) -> vote }
             .toMap()

@@ -25,9 +25,6 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
 
         val jailCheckEvent = JailCheckEvent(player)
         magenta.pluginManager.callEvent(jailCheckEvent)
-        if(!jailCheckEvent.isCancelled) {
-            magenta.logger.info("Hráč ${player.name} nemá trest ve vězení !")
-        }
 
         if (magenta.config.getString("custom-join-message") != "none") {
             event.joinMessage(ModernText.miniModernText(
@@ -39,7 +36,6 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
 
         if (player.hasPermission("magenta.fly.safelogin")) {
             player.fallDistance = 0F
-            player.allowFlight = true
             player.isFlying = true
         }
 

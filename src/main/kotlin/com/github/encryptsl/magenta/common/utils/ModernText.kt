@@ -8,6 +8,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import solar.squares.pixelwidth.utils.CenterAPI
 
 object ModernText {
     private val miniMessage: MiniMessage by lazy { initMiniMessage() }
@@ -20,6 +21,14 @@ object ModernText {
     @JvmStatic
     fun miniModernText(message: String, resolver: TagResolver): Component {
         return miniMessage.deserialize(convertVariables(message), resolver).decoration(TextDecoration.ITALIC, false)
+    }
+
+    fun miniModernTextCenter(message: String): Component {
+        return CenterAPI.center(miniMessage.deserialize(message))
+    }
+
+    fun miniModernTextCenter(message: String, resolver: TagResolver): Component {
+        return CenterAPI.center(miniMessage.deserialize(convertVariables(message), resolver))
     }
 
     @JvmStatic

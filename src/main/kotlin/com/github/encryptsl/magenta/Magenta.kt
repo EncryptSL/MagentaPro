@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.api.*
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
+import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
 import com.github.encryptsl.magenta.api.manager.KitManager
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.VotePlayerAPI
@@ -11,11 +12,13 @@ import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
+import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.filter.modules.*
 import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
+import com.github.encryptsl.magenta.common.tasks.LevelUpTask
 import com.github.encryptsl.magenta.common.tasks.PlayerAfkTask
 import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
@@ -33,11 +36,13 @@ class Magenta : JavaPlugin() {
 
     val pluginManager = server.pluginManager
     val vote: VotePlayerAPI by lazy { VotePlayerAPI(this) }
+    val virtualLevel: VirtualLevelAPI by lazy { VirtualLevelAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val teamIntegration: TeamIntegration by lazy { TeamIntegration(this) }
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
+    val levelModel: LevelModel by lazy { LevelModel(this) }
     val kitManager: KitManager by lazy { KitManager(this) }
     val tpaManager: TpaManager by lazy { TpaManager(this) }
     val afk: AfkUtils by lazy { AfkUtils(this) }
@@ -114,6 +119,7 @@ class Magenta : JavaPlugin() {
         schedulerMagenta.runTaskTimerAsyncTask(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
         schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 20)
         schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
+        schedulerMagenta.runTaskTimerSync(this, LevelUpTask(this), 0, 1)
     }
 
     private fun handlerListener() {
@@ -156,6 +162,7 @@ class Magenta : JavaPlugin() {
             KitReceiveListener(this),
             SocialSpyListener(this),
             TpaListener(this),
+            VirtualPlayerLevelListener(this),
             WarpCreateListener(this),
             WarpDeleteListener(this),
             WarpInfoListener(this),

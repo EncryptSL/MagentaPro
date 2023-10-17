@@ -21,6 +21,7 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         val timestamp = vote.timeStamp
         val serviceName = VoteHelper.replaceService(vote.serviceName, ".", "_")
         val player = Bukkit.getOfflinePlayer(username)
+        if (!player.hasPlayedBefore()) return
 
         val voteEntity = VoteEntity(player.name.toString(), player.uniqueId, 1, VoteHelper.replaceService(serviceName, "_", "."), Instant.fromEpochMilliseconds(timestamp.toLong()))
         magenta.vote.addVote(voteEntity)

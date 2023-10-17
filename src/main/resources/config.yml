@@ -82,6 +82,19 @@ socialspy-commands:
 auto-afk: 5
 
 
+level:
+  effect:
+    sound: "UI_TOAST_CHALLENGE_COMPLETE"
+    volume: 5.5f
+    pitch: 1.2f
+  barSymbol: ⛆
+  format:
+    - ""
+    - "<gold><bold>LevelUp"
+    - "Dosahl jsi levelu <yellow><bold><level>"
+    - "Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>"
+    - ""
+
 # RTP-Settings
 # There is support for worldborder and negative coordinations
 # included is support for unsafe blocks.
@@ -145,7 +158,7 @@ msg:
 news:
 # You can set custom prefix for your broadcast scheduled
 # messages, format supporting minimessage.
-  format: '<gray>[<green>News]</gray> <message>'
+  format: '<gray>[</gray><green>News<gray>]</gray> <message>'
 
 # Random is settings for selecting messages from list
 # randomized based on size in list and random number.
@@ -158,9 +171,13 @@ news:
 # There you can set your messages, for broadcast
 # Messages supporting base
   messages:
-    - '<gray>Chceš si koupit vip a nevíš jak napiš <yellow>/vip<gray> a zde uvidíš seznam !'
-    - '<color:#05B5FC>Ještě jsi dneska nehlasoval ?</color>, <color:#69D0FA>Napiš /vote !</color>'
-    - '<gray>Náš server nabízí i těžební svět <red><bold>/mineworld <gray>který se resetuje každý měsíc !'
+    - <gray>Chceš si koupit vip a nevíš jak napiš <yellow>/vip<gray> a zde uvidíš seznam
+      !
+    - <color:#05B5FC>Ještě jsi dneska nehlasoval ?</color>, <color:#69D0FA>Napiš /vote
+      !</color>
+    - <gray>Náš server nabízí i těžební svět <red><bold>/mineworld</bold> <gray>který
+      se resetuje každý měsíc !
+    - <gray>Magické truhly nalezneš na <yellow>/warp crates !
 
 
 #########################################################
@@ -254,20 +271,6 @@ votifier:
       service: default
       rewards:
         - 'give {player} minecraft:experience_bottle 5'
-    Czech-Craft.eu:
-      link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/ananaso-manie/vote/?user=<username>'><bold><aqua>|</bold>
-        <yellow>czech-craft.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
-      rewards:
-        - 'give {player} minecraft:diamond 5'
-        - 'give {player} minecraft:experience_bottle 5'
-        - 'eco add {player} 200'
-    Craftlist.org:
-      link: <hover:show_text:'<hover>'><click:open_url:'https://McList.cz/vote/?player=<username>'><bold><aqua>|</bold>
-        <yellow>craftlist.org</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
-      rewards:
-        - 'give {player} minecraft:experience_bottle 5'
-        - 'crazycrates give physical basiccrate 1 {player}'
-        - 'eco add {player} 200'
 
 # Voteparty is disabled by default, this reward in based on saved votes in party.
 # rewards from voteparty can receive only online players in game.

@@ -57,7 +57,7 @@ class RtpCmd(private val magenta: Magenta) {
         val generatedLocation: Location = generateLocation(magenta, target.world)
 
         magenta.schedulerMagenta.runTask(magenta) {
-            target.teleportAsync(generatedLocation, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept { response ->
+            target.teleportAsync(generatedLocation, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept {
                 target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.rtp.success"), TagResolver.resolver(
                     Placeholder.parsed("x", generatedLocation.x.toString()),
                     Placeholder.parsed("y", generatedLocation.y.toString()),

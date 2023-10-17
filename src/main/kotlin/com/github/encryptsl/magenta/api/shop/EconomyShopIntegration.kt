@@ -41,7 +41,7 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                 }
                 player.updateInventory()
             } else {
-                player.sendMessage(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.money"))
+                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.money")))
             }
         } catch (e: VaultException) {
             player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))

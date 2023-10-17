@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.database
 
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
+import com.github.encryptsl.magenta.common.database.tables.LevelTable
 import com.github.encryptsl.magenta.common.database.tables.VoteTable
 import com.github.encryptsl.magenta.common.database.tables.WarpTable
 import com.zaxxer.hikari.HikariDataSource
@@ -23,7 +24,7 @@ class DatabaseConnector : DatabaseConnectorProvider {
 
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create(HomeTable, WarpTable, VoteTable)
+            SchemaUtils.create(HomeTable, WarpTable, VoteTable, LevelTable)
         }
     }
 }
