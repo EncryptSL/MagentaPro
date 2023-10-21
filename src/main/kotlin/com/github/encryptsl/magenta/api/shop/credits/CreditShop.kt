@@ -261,9 +261,7 @@ class CreditShop(private val magenta: Magenta) {
                             )
                             return@setAction
                         }
-                        action.isCancelled = true
                     }
-
                     gui.setItem(slot, guiItem)
                 }
             }

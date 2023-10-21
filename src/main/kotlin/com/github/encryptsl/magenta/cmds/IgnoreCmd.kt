@@ -17,7 +17,7 @@ class IgnoreCmd(private val magenta: Magenta) {
     @CommandMethod("ignore <player>")
     @CommandPermission("magenta.ignore")
     fun onIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(PlayerInsertIgnoreEvent(player, target))
         }
     }
@@ -25,7 +25,7 @@ class IgnoreCmd(private val magenta: Magenta) {
     @CommandMethod("unignore <player>")
     @CommandPermission("magenta.unignore")
     fun onUnIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(PlayerRemoveIgnoreEvent(player, target))
         }
     }

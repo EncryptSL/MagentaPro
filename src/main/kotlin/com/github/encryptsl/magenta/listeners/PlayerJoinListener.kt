@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.parseMinecraftTime
@@ -19,12 +18,11 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
-        val playerAccount = PlayerAccount(magenta, player.uniqueId)
+        val user = magenta.user.getUser(player.uniqueId)
         val newbies = magenta.config.getConfigurationSection("newbies")!!
         val kit = newbies.getString("kit") ?: "tools"
 
-        val jailCheckEvent = JailCheckEvent(player)
-        magenta.pluginManager.callEvent(jailCheckEvent)
+        magenta.pluginManager.callEvent(JailCheckEvent(player))
 
         if (magenta.config.getString("custom-join-message") != "none") {
             event.joinMessage(ModernText.miniModernText(
@@ -36,26 +34,27 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
 
         if (player.hasPermission("magenta.fly.safelogin")) {
             player.fallDistance = 0F
+            player.allowFlight = true
             player.isFlying = true
         }
 
-        if (playerAccount.getAccount().contains("displayname")) {
-            player.displayName(ModernText.miniModernText(playerAccount.getAccount().getString("displayname").toString()))
-            player.playerListName(ModernText.miniModernText(playerAccount.getAccount().getString("displayname").toString()))
+        if (user.getAccount().contains("displayname")) {
+            player.displayName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
+            player.playerListName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
         }
 
         if (player.hasPlayedBefore()) {
-            playerAccount.set("timestamps.login", System.currentTimeMillis())
+            user.set("timestamps.login", System.currentTimeMillis())
 
             FileUtil.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
-                player.sendMessage(ModernText.miniModernText(text, TagResolver.resolver(
+                player.sendMessage(ModernText.miniModernTextCenter(text, TagResolver.resolver(
                     Placeholder.component("player", player.displayName()),
                     Placeholder.parsed("online", Bukkit.getOnlinePlayers().size.toString()),
                     Placeholder.parsed("worldtime", player.world.time.parseMinecraftTime()),
                     Placeholder.parsed("realtime", datetime())
                 )))
             }
-            if (playerAccount.getAccount().contains("votifier.rewards")) {
+            if (user.getAccount().contains("votifier.rewards")) {
                 player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.success.exist.rewards.to.claim")))
             }
             return
@@ -66,24 +65,7 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
         Bukkit.broadcast(ModernText.miniModernText(magenta.config.getString("newbies.announcement").toString(), TagResolver.resolver(
             Placeholder.parsed("player", player.name)
         )))
-        playerAccount.getAccount().set("teleportenabled", true)
-        playerAccount.getAccount().set("godmode", false)
-        playerAccount.getAccount().set("jailed", false)
-        playerAccount.getAccount().set("ip-address", player.address.address.hostAddress)
-        playerAccount.getAccount().set("socialspy", false)
-        playerAccount.getAccount().set("timestamps.lastteleport", 0)
-        playerAccount.getAccount().set("timestamps.lastheal", 0)
-        playerAccount.getAccount().set("timestamps.jail", 0)
-        playerAccount.getAccount().set("timestamps.onlinejail", 0)
-        playerAccount.getAccount().set("timestamps.logout", 0)
-        playerAccount.getAccount().set("timestamps.login", System.currentTimeMillis())
-        playerAccount.getAccount().set("lastlocation.world-name", player.world.name)
-        playerAccount.getAccount().set("lastlocation.x", player.location.x)
-        playerAccount.getAccount().set("lastlocation.y", player.location.y)
-        playerAccount.getAccount().set("lastlocation.z", player.location.z)
-        playerAccount.getAccount().set("lastlocation.yaw", player.location.yaw)
-        playerAccount.getAccount().set("lastlocation.pitch", player.location.pitch)
-        playerAccount.save()
+        user.createDefaultData(player)
     }
 
 }

@@ -32,7 +32,7 @@ class RandomCmd(private val magenta: Magenta) {
             return
         }
         magenta.logger.info("Hráč ${target.name} již $randomTag oprávnění vlastní proto mu byl nabídnut jiný tag !")
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 magenta.stringUtils.magentaPlaceholders("lp user %player% permission set ${tags.random()}", target)
             )

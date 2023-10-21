@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.kit.KitReceiveEvent
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -21,18 +20,18 @@ class KitReceiveListener(private val magenta: Magenta) : Listener {
         val kitName = event.kitName
         val delay = event.delay
         val kitManager = event.kitManager
-        val playerAccount = PlayerAccount(magenta, player.uniqueId)
+        val user = magenta.user.getUser(player.uniqueId)
 
-        val timeLeft: Duration = playerAccount.cooldownManager.getRemainingDelay("kits.$kitName")
+        val timeLeft: Duration = user.cooldownManager.getRemainingDelay("kits.$kitName")
 
-        if (!playerAccount.cooldownManager.hasDelay("kits.$kitName")) {
+        if (!user.cooldownManager.hasDelay("kits.$kitName")) {
             runCatching {
                 kitManager.giveKit(player, kitName)
             }.onSuccess {
                 if (delay != 0L && delay != -1L) {
                     if (!player.hasPermission("magenta.kit.delay.exempt")) {
-                        playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
-                        playerAccount.save()
+                        user.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
+                        user.save()
                     }
                 }
                 player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(

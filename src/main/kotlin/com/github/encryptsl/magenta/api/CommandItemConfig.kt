@@ -8,14 +8,14 @@ class CommandItemConfig(private val magenta: Magenta) {
 
     private val configUtil = ConfigUtil(magenta, "citems.yml")
     fun set(path: String, value: Any?) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             getConfig().set(path, value)
             save()
         }
     }
 
     fun set(path: String, list: MutableList<Any>) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             list.forEach { item ->
                 getConfig().set(path, item)
             }
@@ -24,7 +24,7 @@ class CommandItemConfig(private val magenta: Magenta) {
     }
 
     fun createItem(value: String, sid: Int) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             set("citems.$value.sid", sid)
         }
     }

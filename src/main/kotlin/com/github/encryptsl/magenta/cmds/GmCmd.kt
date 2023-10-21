@@ -25,7 +25,7 @@ class GmCmd(private val magenta: Magenta) {
             )))
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             player.gameMode = gameMode
         }
     }
@@ -33,7 +33,7 @@ class GmCmd(private val magenta: Magenta) {
     @CommandMethod("gamemode|gm <mode> <target>")
     @CommandPermission("magenta.gamemode.other")
     fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             target.gameMode = gameMode
         }
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))

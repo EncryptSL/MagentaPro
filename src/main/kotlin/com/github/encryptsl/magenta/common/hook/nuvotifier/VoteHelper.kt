@@ -34,18 +34,18 @@ object VoteHelper {
         countdown: Int
     ) {
         object : BukkitRunnable() {
-            val timer = countdown
+            var timer = countdown
             override fun run() {
-                timer.minus(1)
-                broadcast(broadcastMessage, countdown)
+                broadcast(broadcastMessage, timer)
                 if (timer == 0) {
-                    Bukkit.getOnlinePlayers().forEach { player: Player ->
-                        giveRewards(commands, player.name)
+                    magenta.schedulerMagenta.doSync(magenta) {
+                        giveRewards(Bukkit.getOnlinePlayers(), commands)
                     }
                     broadcast(endPartyMessage)
                     setVotePartyVote(magenta, 0)
                     cancel()
                 }
+                timer--
             }
         }.runTaskTimerAsynchronously(magenta, 20, 20)
     }
@@ -77,6 +77,12 @@ object VoteHelper {
         Bukkit.broadcast(ModernText.miniModernText(string))
     }
 
+    @JvmStatic
+    fun giveRewards(players: Collection<Player>, commands: MutableList<String>) {
+        players.forEach {
+            giveRewards(commands, it.name)
+        }
+    }
     @JvmStatic
     fun giveRewards(commands: MutableList<String>, username: String) {
         commands.forEach { command ->

@@ -17,7 +17,7 @@ class SocialSpyCmd(private val magenta: Magenta) {
     @CommandMethod("socialspy|spy")
     @CommandPermission("magenta.social.spy")
     fun onToggleSocialSpy(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(SpyToggleByPlayerEvent(player))
         }
     }
@@ -25,7 +25,7 @@ class SocialSpyCmd(private val magenta: Magenta) {
     @CommandMethod("socialspy|spy <player>")
     @CommandPermission("magenta.social.spy.other")
     fun onToggleSocialSpyOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(SpyToggleByAdminEvent(commandSender, target))
         }
     }

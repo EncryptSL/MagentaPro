@@ -38,7 +38,7 @@ class TpaManager(private val magenta: Magenta) {
                     )
                 )
                 target.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
-                magenta.schedulerMagenta.runTask(magenta) {
+                magenta.schedulerMagenta.doSync(magenta) {
                     target.teleport(player)
                 }
                 request.remove(player.uniqueId)

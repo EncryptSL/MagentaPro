@@ -8,5 +8,4 @@ class NickTest {
         val nickname = "<red>Alex<yellow>".replace(Regex("<*[a-zA-Z]*>"), "")
         asserter.assertSame("NickMiniMessageTagsFailed", nickname, nickname)
     }
-
 }

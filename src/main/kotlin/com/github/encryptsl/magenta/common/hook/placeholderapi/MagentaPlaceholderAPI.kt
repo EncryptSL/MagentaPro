@@ -7,7 +7,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import java.util.*
-import kotlin.collections.LinkedHashMap
 
 class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: String) : PlaceholderExpansion() {
     override fun getIdentifier(): String = "magenta"

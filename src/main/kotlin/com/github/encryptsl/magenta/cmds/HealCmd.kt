@@ -5,7 +5,6 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -23,14 +22,14 @@ class HealCmd(private val magenta: Magenta) {
     @CommandMethod("heal")
     @CommandPermission("magenta.heal")
     fun onHeal(player: Player) {
-        val playerAccount = PlayerAccount(magenta, player.uniqueId)
         val delay = magenta.config.getLong("heal-cooldown")
+        val user = magenta.user.getUser(player.uniqueId)
 
-        val timeLeft = playerAccount.cooldownManager.getRemainingDelay("heal")
+        val timeLeft = user.cooldownManager.getRemainingDelay("heal")
 
-        if (!playerAccount.cooldownManager.hasDelay("heal")) {
+        if (!user.cooldownManager.hasDelay("heal")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {
-                playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "heal")
+                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "heal")
             }
 
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))

@@ -12,7 +12,7 @@ class JailTeleportListener(private val magenta: Magenta) : Listener {
         val player = event.target
         val location = event.location
 
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             player.teleport(location)
         }
     }

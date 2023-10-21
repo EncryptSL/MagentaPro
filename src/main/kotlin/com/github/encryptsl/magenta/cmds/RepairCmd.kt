@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.*
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -22,15 +21,15 @@ class RepairCmd(private val magenta: Magenta) {
     fun onRepair(player: Player) {
         val inventory = player.inventory
         val delay = magenta.config.getLong("repair-cooldown")
-        val playerAccount = PlayerAccount(magenta, player.uniqueId)
+        val user = magenta.user.getUser(player.uniqueId)
 
         if (inventory.itemInMainHand.type.isEmpty || inventory.itemInMainHand.type.isAir || inventory.itemInMainHand.isEmpty)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.hand")))
 
-        val timeLeft = playerAccount.cooldownManager.getRemainingDelay("repair")
-        if (!playerAccount.cooldownManager.hasDelay("repair")) {
+        val timeLeft = user.cooldownManager.getRemainingDelay("repair")
+        if (!user.cooldownManager.hasDelay("repair")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.repair.delay.exempt")) {
-                playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "repair")
+                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "repair")
             }
 
             commandHelper.repairItem(player)

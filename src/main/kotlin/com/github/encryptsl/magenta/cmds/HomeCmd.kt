@@ -14,7 +14,7 @@ class HomeCmd(private val magenta: Magenta) {
     @CommandMethod("info <home>")
     @CommandPermission("magenta.home.info")
     fun onRenameHome(player: Player, @Argument(value = "home", suggestions = "homes") homeName: String) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeInfoEvent(player, homeName, InfoType.INFO))
         }
     }
@@ -22,7 +22,7 @@ class HomeCmd(private val magenta: Magenta) {
     @CommandMethod("tp <home>")
     @CommandPermission("magenta.home.tp")
     fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
         }
     }
@@ -31,7 +31,7 @@ class HomeCmd(private val magenta: Magenta) {
     @CommandMethod("create <home>")
     @CommandPermission("magenta.home.create")
     fun onSetHome(player: Player, @Argument(value = "home") home: String) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
         }
 
@@ -41,7 +41,7 @@ class HomeCmd(private val magenta: Magenta) {
     @CommandMethod("delete <home>")
     @CommandPermission("magenta.home.delete")
     fun onDeleteHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
         }
 
@@ -50,7 +50,7 @@ class HomeCmd(private val magenta: Magenta) {
     @CommandMethod("rename <oldName> <newName>")
     @CommandPermission("magenta.home.rename")
     fun onRenameHome(player: Player, @Argument(value = "oldName") oldName: String, @Argument(value = "newName") newName: String) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeRenameEvent(player, oldName, newName))
         }
     }
@@ -60,7 +60,7 @@ class HomeCmd(private val magenta: Magenta) {
     @CommandMethod("homes")
     @CommandPermission("magenta.home.list")
     fun onHomeList(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(HomeInfoEvent(player, null, InfoType.LIST))
         }
     }

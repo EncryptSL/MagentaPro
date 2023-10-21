@@ -1,43 +1,29 @@
 package com.github.encryptsl.magenta.common.utils
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.extensions.datetime
-import com.github.encryptsl.magenta.common.extensions.expire
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import org.bukkit.entity.Player
+import java.time.Duration
 import java.util.*
+
 
 class AfkUtils(private val magenta: Magenta) {
 
-    private val cachedTime: MutableMap<UUID, String> = HashMap()
+    private val lastActivity: MutableMap<UUID, Long> = HashMap()
 
-    fun forceTime(uuid: UUID, time: Long) {
-        cachedTime[uuid] = expire(time)
+    fun setTime(uuid: UUID) {
+        lastActivity[uuid] = System.currentTimeMillis()
     }
 
-    fun addTime(player: Player, time: Long) {
-        if (Teams.haveTeam(player, "AFK")) {
-            cachedTime[player.uniqueId] = expire(time)
-            Teams.removeTeam(player, "AFK")
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.player.no.longer.afk"),
-                Placeholder.parsed("player", player.name)
-            ))
-        }
+    fun forceAfk(uuid: UUID, boolean: Boolean) {
+        val user = magenta.user.getUser(uuid)
+        user.set("afk", boolean)
     }
 
-    private fun getTime(uuid: UUID): String
-            = cachedTime[uuid].toString()
+    fun isAfk(uuid: UUID): Boolean {
+        val millis = Duration.ofMinutes(magenta.config.getLong("auto-afk")).toMillis()
 
-    fun clearCache(player: Player) {
-        magenta.logger.info("AFK Cache for player ${player.name} was cleared !!!")
+        val lastActivity: Long? = lastActivity[uuid]
+
+        return lastActivity != null && System.currentTimeMillis() - lastActivity > millis || magenta.user.getUser(uuid).isAfk()
     }
-
-    fun clearCache()
-    {
-        cachedTime.clear()
-    }
-
-    fun isAfk(uuid: UUID): Boolean
-            = getTime(uuid) == datetime()
 
 }

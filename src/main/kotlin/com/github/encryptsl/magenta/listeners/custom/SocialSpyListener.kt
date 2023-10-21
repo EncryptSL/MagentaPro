@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByAdminEvent
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByPlayerEvent
 import com.github.encryptsl.magenta.common.CommandHelper
@@ -18,8 +17,8 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onSocialSpyByPlayer(event: SpyToggleByPlayerEvent) {
         val player = event.player
-        val account = PlayerAccount(magenta, player.uniqueId)
-        if (account.isSocialSpy()) {
+        val user = magenta.user.getUser(player.uniqueId)
+        if (user.isSocialSpy()) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle"),
                 Placeholder.parsed("value", false.toString())
             ))
@@ -37,8 +36,8 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
     fun onSocialSpyByAdmin(event: SpyToggleByAdminEvent) {
         val commandSender = event.commandSender
         val target = event.target
-        val account = PlayerAccount(magenta, target.uniqueId)
-        if (account.getAccount().getBoolean("socialspy")) {
+        val user = magenta.user.getUser(target.uniqueId)
+        if (user.getAccount().getBoolean("socialspy")) {
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle"),
                 Placeholder.parsed("value", false.toString())
             ))

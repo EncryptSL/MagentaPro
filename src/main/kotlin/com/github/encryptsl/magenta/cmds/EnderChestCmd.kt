@@ -7,13 +7,14 @@ import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import org.bukkit.entity.Player
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class EnderChestCmd(private val magenta: Magenta) {
 
     @CommandMethod("echest|enderchest")
     @CommandPermission("magenta.echest")
     fun onEnderChest(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             player.openInventory(player.enderChest)
         }
     }
@@ -24,7 +25,7 @@ class EnderChestCmd(private val magenta: Magenta) {
         player: Player,
         @Argument(value = "player", suggestions = "players") target: Player
     ) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             player.openInventory(target.enderChest)
         }
     }

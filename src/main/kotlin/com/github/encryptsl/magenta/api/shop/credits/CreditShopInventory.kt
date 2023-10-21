@@ -22,9 +22,7 @@ class CreditShopInventory(private val magenta: Magenta, private val creditLiteHo
         if (ShopHelper.isPlayerInventoryFull(player))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
 
-        val fullPrice = price
-
-        economyShopIntegration.doCreditTransaction(player, creditLiteHook, message, product, fullPrice, quantity, commands)
+        economyShopIntegration.doCreditTransaction(player, creditLiteHook, message, product, price, quantity, commands)
 
     }
 

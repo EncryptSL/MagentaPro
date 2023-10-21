@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailEvent
 import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -21,7 +20,7 @@ class JailListener(private val magenta: Magenta) : Listener {
         val target = event.target
         val jailTime = event.jailTime
         val reason = event.reason
-        val account = PlayerAccount(magenta, target.uniqueId)
+        val user = magenta.user.getUser(target.uniqueId)
 
         if (target.player?.hasPermission("magenta.jail.exempt") == true)
 
@@ -34,7 +33,7 @@ class JailListener(private val magenta: Magenta) : Listener {
                 )
             )
 
-        if (account.jailManager.hasPunish() || account.getAccount().getBoolean("jailed"))
+        if (user.jailManager.hasPunish() || user.getAccount().getBoolean("jailed"))
             return commandManager.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.jailed"), TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString())
             )))
@@ -58,8 +57,8 @@ class JailListener(private val magenta: Magenta) : Listener {
             Placeholder.parsed("player", target.name ?: target.uniqueId.toString()),
             Placeholder.parsed("reason", reason.toString()),
         )))
-        account.jailManager.setJailTimeout(jailTime)
-        account.jailManager.setOnlineTime(jailTime)
+        user.jailManager.setJailTimeout(jailTime)
+        user.jailManager.setOnlineTime(jailTime)
     }
 
 }

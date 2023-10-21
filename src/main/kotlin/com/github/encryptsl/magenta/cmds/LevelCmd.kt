@@ -1,10 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.Argument
-import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.ProxiedBy
+import cloud.commandframework.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
@@ -14,7 +10,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import java.lang.IllegalArgumentException
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin EncryptSL")
@@ -62,7 +57,7 @@ class LevelCmd(private val magenta: Magenta) {
     }
 
     @ProxiedBy("toplevels")
-    @CommandMethod("levelstop")
+    @CommandMethod("leveltop")
     fun onLevelTop(commandSender: CommandSender) {
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.top.header")))
         magenta.virtualLevel.getLevels(10).toList().positionIndexed { k, v ->

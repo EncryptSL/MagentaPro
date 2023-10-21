@@ -13,11 +13,15 @@ import org.bukkit.entity.Player
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class LightningCmd(private val magenta: Magenta) {
-    @CommandMethod("lightning|thor <player>")
+    @CommandMethod("lightning|thor <player> [damage]")
     @CommandPermission("magenta.lightning")
-    fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
-            target.world.strikeLightning(target.location)
+    fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Argument(value = "damage", defaultValue = "false") damage: Boolean?) {
+        magenta.schedulerMagenta.doSync(magenta) {
+            if (damage == true) {
+                target.world.strikeLightning(target.location)
+            } else {
+                target.world.strikeLightningEffect(target.location)
+            }
         }
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.lightning.success.to"),
             Placeholder.parsed("player", target.name)

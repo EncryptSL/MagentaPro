@@ -12,7 +12,7 @@ class PlayerInteractionListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onPlayerInteraction(event: PlayerInteractEvent) {
         val player = event.player
-        magenta.afk.addTime(player, magenta.config.getLong("auto-afk"))
+        magenta.afk.setTime(player.uniqueId)
 
         if (player.inventory.itemInMainHand.hasItemMeta()) {
             if (event.action.isRightClick) {

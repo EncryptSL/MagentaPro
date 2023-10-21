@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -24,7 +23,7 @@ class HomeTeleportListener(private val magenta: Magenta) : Listener {
         val player: Player = event.player
         val delay = event.delay
         val location: Location = player.location
-        val playerAccount = PlayerAccount(magenta, player.uniqueId)
+        val user = magenta.user.getUser(player.uniqueId)
 
         val worlds = magenta.config.getStringList("homes.whitelist").contains(player.location.world.name)
 
@@ -38,11 +37,11 @@ class HomeTeleportListener(private val magenta: Magenta) : Listener {
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.not.exist"),
                     TagResolver.resolver(Placeholder.parsed("home", homeName))))
 
-        val timeLeft: Duration = playerAccount.cooldownManager.getRemainingDelay("home")
+        val timeLeft: Duration = user.cooldownManager.getRemainingDelay("home")
 
-        if (!playerAccount.cooldownManager.hasDelay("home")) {
+        if (!user.cooldownManager.hasDelay("home")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.home.delay.exempt")) {
-                playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "home")
+                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "home")
             }
 
             magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {

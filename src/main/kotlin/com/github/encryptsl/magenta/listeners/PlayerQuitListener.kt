@@ -24,14 +24,8 @@ class PlayerQuitListener(private val magenta: Magenta) : Listener {
             ))
         }
 
-        playerAccount.getAccount().set("timestamps.logout", System.currentTimeMillis())
-        playerAccount.getAccount().set("logoutlocation.world-name", player.world.name)
-        playerAccount.getAccount().set("logoutlocation.x", player.location.x)
-        playerAccount.getAccount().set("logoutlocation.y", player.location.y)
-        playerAccount.getAccount().set("logoutlocation.z", player.location.z)
-        playerAccount.getAccount().set("logoutlocation.yaw", player.location.yaw)
-        playerAccount.getAccount().set("logoutlocation.pitch", player.location.pitch)
-        playerAccount.save()
+        playerAccount.saveQuitData(player)
+        playerAccount.saveLastLocation(player)
     }
 
 }

@@ -8,7 +8,7 @@ class PlayerAfkTask(private val magenta: Magenta) : Runnable {
 
         magenta.server.onlinePlayers.filter { player: Player -> magenta.afk.isAfk(player.uniqueId) }.forEach { player ->
             if (!player.hasPermission("magenta.afk.auto")) return
-            magenta.teamIntegration.setAfk(player)
+            magenta.afk.forceAfk(player.uniqueId, true)
         }
 
     }

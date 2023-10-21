@@ -10,7 +10,7 @@ class PlayerMoveListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
         val player = event.player
-        magenta.afk.addTime(player, magenta.config.getLong("auto-afk"))
+        magenta.afk.setTime(player.uniqueId)
     }
 
 }

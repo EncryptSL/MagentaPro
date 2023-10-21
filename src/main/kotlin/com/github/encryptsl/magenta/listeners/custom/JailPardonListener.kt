@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
 import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -16,13 +15,13 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onJailRelease(event: JailPardonEvent) {
         val target = event.player
-        val playerAccount = PlayerAccount(magenta, target.uniqueId)
+        val user = magenta.user.getUser(target.uniqueId)
 
         val player = Bukkit.getPlayer(target.uniqueId)
 
         if (player != null) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.unjailed")))
-            magenta.pluginManager.callEvent(JailTeleportEvent(player, playerAccount.getLastLocation()))
+            magenta.pluginManager.callEvent(JailTeleportEvent(player, user.getLastLocation()))
         }
         Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.unjailed.to"), TagResolver.resolver(
                     Placeholder.parsed("player", target.name.toString())
@@ -30,8 +29,8 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
             ), "magenta.jail.pardon.event"
         )
 
-        playerAccount.cooldownManager.removeDelay("jail")
-        playerAccount.cooldownManager.removeDelay("onlinejail")
+        user.cooldownManager.removeDelay("jail")
+        user.cooldownManager.removeDelay("onlinejail")
     }
 
 }

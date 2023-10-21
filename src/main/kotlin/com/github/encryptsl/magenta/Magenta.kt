@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta
 
 import com.github.encryptsl.magenta.api.*
+import com.github.encryptsl.magenta.api.account.User
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
@@ -22,7 +23,6 @@ import com.github.encryptsl.magenta.common.tasks.LevelUpTask
 import com.github.encryptsl.magenta.common.tasks.PlayerAfkTask
 import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
-import com.github.encryptsl.magenta.common.utils.TeamIntegration
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
 import io.papermc.paper.util.Tick
@@ -35,10 +35,10 @@ import kotlin.time.measureTimedValue
 class Magenta : JavaPlugin() {
 
     val pluginManager = server.pluginManager
+    val user: User by lazy { User(this) }
     val vote: VotePlayerAPI by lazy { VotePlayerAPI(this) }
     val virtualLevel: VirtualLevelAPI by lazy { VirtualLevelAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
-    val teamIntegration: TeamIntegration by lazy { TeamIntegration(this) }
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
@@ -93,7 +93,6 @@ class Magenta : JavaPlugin() {
 
     override fun onEnable() {
         val time = measureTime {
-            teamIntegration.createTeams()
             commandManager.registerCommands()
             registerTasks()
             handlerListener()
@@ -175,10 +174,7 @@ class Magenta : JavaPlugin() {
             if (list.isEmpty()) {
                 logger.info("Registering list of listeners is empty !")
             }
-
-            list.forEach {pluginManager.registerEvents(it, this)
-                logger.info("Listener ${it.javaClass.simpleName} registered () -> ok")
-            }
+            list.forEach { pluginManager.registerEvents(it, this) }
         }
 
         logger.info("Bukkit listeners registered (${list.size}) in time $time -> $value")

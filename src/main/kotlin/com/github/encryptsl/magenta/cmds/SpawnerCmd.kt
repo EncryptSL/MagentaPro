@@ -30,7 +30,7 @@ class SpawnerCmd(private val magenta: Magenta) {
         if (block.type != Material.SPAWNER)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.error.not.spawner")))
 
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             val creatureSpawner: CreatureSpawner = block.state as CreatureSpawner
             creatureSpawner.spawnedType = entity
         }
@@ -45,7 +45,7 @@ class SpawnerCmd(private val magenta: Magenta) {
         @Argument(value = "amount") @Range(min = "1", max = "100") amount: Int,
         @Argument(value = "player", suggestions = "players") target: Player
     ) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             val spawner = ItemStack(Material.SPAWNER, amount)
             val spawnerMeta = spawner.itemMeta
             val bsm: BlockStateMeta = spawner.itemMeta as BlockStateMeta

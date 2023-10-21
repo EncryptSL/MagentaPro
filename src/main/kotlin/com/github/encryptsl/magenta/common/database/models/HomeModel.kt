@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class HomeModel(private val magenta: Magenta) : HomeSQL {
     override fun createHome(player: Player, location: Location, home: String) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction {
                 HomeTable.insertIgnore {
                     it[username] = player.name
@@ -30,13 +30,13 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun deleteHome(player: Player, home: String) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction { HomeTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) } }
         }
     }
 
     override fun moveHome(player: Player, home: String, location: Location) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction { HomeTable.update( {  (HomeTable.uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -49,7 +49,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun renameHome(player: Player, oldHomeName: String, newHomeName: String) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction {
                 HomeTable.update({ HomeTable.uuid eq player.uniqueId.toString() and (HomeTable.home eq oldHomeName) }) {
                     it[home] = newHomeName

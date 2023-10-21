@@ -19,7 +19,7 @@ class ShopCmd(private val magenta: Magenta) {
     @CommandMethod("shop")
     @CommandPermission("magenta.shop")
     fun onShop(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             vaultShop.openShop(player)
         }
     }
@@ -27,7 +27,7 @@ class ShopCmd(private val magenta: Magenta) {
     @CommandMethod("shop open <type>")
     @CommandPermission("magenta.shop.open")
     fun onShopOpen(player: Player, @Argument(value = "type", suggestions = "shops") type: String) {
-        magenta.schedulerMagenta.runTask(magenta){
+        magenta.schedulerMagenta.doSync(magenta){
             vaultShop.openCategory(player, type)
         }
     }
@@ -35,7 +35,7 @@ class ShopCmd(private val magenta: Magenta) {
     @CommandMethod("creditshop")
     @CommandPermission("magenta.credit.shop")
     fun onShopZeus(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             creditShop.openShop(player)
         }
     }
@@ -43,7 +43,7 @@ class ShopCmd(private val magenta: Magenta) {
     @CommandMethod("creditshop open <type>")
     @CommandPermission("magenta.credit.shop.open")
     fun onShopOpenZeus(player: Player, @Argument(value = "type", suggestions = "creditshops") type: String) {
-        magenta.schedulerMagenta.runTask(magenta){
+        magenta.schedulerMagenta.doSync(magenta){
             creditShop.openCategory(player, type)
         }
     }

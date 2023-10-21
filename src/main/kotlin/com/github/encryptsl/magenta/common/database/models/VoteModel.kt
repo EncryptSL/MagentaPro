@@ -12,6 +12,8 @@ import kotlinx.datetime.toKotlinInstant
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.between
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.minus
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import java.time.LocalDate
@@ -23,7 +25,7 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
     private val todayStart: Instant = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
     private val todayEnd: Instant = LocalDate.now().atTime(LocalTime.MAX).toInstant(ZoneOffset.UTC)
     override fun createAccount(voteImpl: VoteEntity) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction {
                 VoteTable.insertIgnore {
                     it[username] = voteImpl.username
@@ -42,11 +44,31 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
 
 
     override fun addVote(voteImpl: VoteEntity) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction {
                 VoteTable.update({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
-                    it[vote] = getPlayerVote(voteImpl.uuid, voteImpl.serviceName)?.vote?.plus(voteImpl.vote) ?: voteImpl.vote
+                    it[vote] = vote.plus(voteImpl.vote)
                     it[timestamp] = voteImpl.timestamp
+                }
+            }
+        }
+    }
+
+    override fun setVote(voteImpl: VoteEntity) {
+        magenta.schedulerMagenta.doAsync(magenta) {
+            transaction {
+                VoteTable.update ({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
+                    it[vote] = voteImpl.vote
+                }
+            }
+        }
+    }
+
+    override fun removeVote(voteImpl: VoteEntity) {
+        magenta.schedulerMagenta.doAsync(magenta) {
+            transaction {
+                VoteTable.update ({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
+                    it[vote] = vote.minus(voteImpl.vote)
                 }
             }
         }
@@ -69,7 +91,7 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
     }
 
     override fun removeAccount(uuid: UUID) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction {
                 VoteTable.deleteWhere { (VoteTable.uuid eq uuid.toString()) }
             }
@@ -79,7 +101,7 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
     override fun cleanVotes() {}
 
     override fun cleanAll() {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction { VoteTable.deleteAll() }
         }
     }

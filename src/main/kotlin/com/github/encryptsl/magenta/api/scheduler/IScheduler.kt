@@ -20,7 +20,7 @@ interface IScheduler {
 
     fun runTaskTimerSyncTask(plugin: Plugin, runnable: Runnable, initialDelay: Long, period: Long): BukkitTask
 
-    fun runTaskAsync(plugin: Plugin, runnable: Runnable)
-    fun runTask(plugin: Plugin, runnable: Runnable)
+    fun doAsync(plugin: Plugin, runnable: Runnable)
+    fun doSync(plugin: Plugin, runnable: Runnable)
 
 }

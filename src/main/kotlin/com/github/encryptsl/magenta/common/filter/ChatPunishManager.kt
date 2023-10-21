@@ -18,7 +18,7 @@ class ChatPunishManager(private val magenta: Magenta, private val violations: Vi
         if (actionList.contains("none")) return
 
         if (actionList.contains("kick")) {
-            magenta.schedulerMagenta.runTask(magenta) {
+            magenta.schedulerMagenta.doSync(magenta) {
                 player.kick(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.action.kick"), TagResolver.resolver(
                     Placeholder.parsed("reason", violations.name))
                 ))

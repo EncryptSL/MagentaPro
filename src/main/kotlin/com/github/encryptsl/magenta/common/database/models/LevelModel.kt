@@ -15,7 +15,7 @@ import java.util.*
 
 class LevelModel(private val magenta: Magenta) : LevelSQL {
     override fun createAccount(levelEntity: LevelEntity) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             transaction { LevelTable.insertIgnore {
                 it[username] = levelEntity.username
                 it[uuid] = levelEntity.uuid

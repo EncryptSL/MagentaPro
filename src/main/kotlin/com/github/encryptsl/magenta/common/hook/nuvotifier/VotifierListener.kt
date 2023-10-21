@@ -23,9 +23,6 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         val player = Bukkit.getOfflinePlayer(username)
         if (!player.hasPlayedBefore()) return
 
-        val voteEntity = VoteEntity(player.name.toString(), player.uniqueId, 1, VoteHelper.replaceService(serviceName, "_", "."), Instant.fromEpochMilliseconds(timestamp.toLong()))
-        magenta.vote.addVote(voteEntity)
-
         if (magenta.config.contains("votifier.sound")) {
             VoteHelper.playSoundForAll(
                 Sound.valueOf(magenta.config.getString("votifier.sound").toString()),
@@ -37,6 +34,8 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         if (!magenta.config.contains("votifier.services.$serviceName")) {
             if (magenta.config.contains("votifier.services.default")) {
                 if (magenta.config.contains("votifier.services.default.rewards")) {
+                    val voteEntity = VoteEntity(player.name.toString(), player.uniqueId, 1, VoteHelper.replaceService(serviceName, "_", "."), Instant.fromEpochMilliseconds(timestamp.toLong()))
+                    magenta.vote.addVote(voteEntity)
                     VoteHelper.broadcast(
                         magenta.localeConfig.getMessage("magenta.votifier.broadcast"),
                         username,
@@ -54,8 +53,10 @@ class VotifierListener(private val magenta: Magenta) : Listener {
             magenta.logger.severe("Service for vote $serviceName not set in config.yml")
         }
 
-        if (magenta.config.contains("votifier.services.$serviceName.service")) {
+        if (magenta.config.contains("votifier.services.$serviceName")) {
             if (magenta.config.contains("votifier.services.$serviceName.rewards")) {
+                val voteEntity = VoteEntity(player.name.toString(), player.uniqueId, 1, VoteHelper.replaceService(serviceName, "_", "."), Instant.fromEpochMilliseconds(timestamp.toLong()))
+                magenta.vote.addVote(voteEntity)
                 VoteHelper.broadcast(
                     magenta.localeConfig.getMessage("magenta.votifier.broadcast"),
                     username,

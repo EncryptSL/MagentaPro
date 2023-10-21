@@ -16,7 +16,7 @@ class JailCountDownTask(private val magenta: Magenta) : Runnable {
             val timeLeft = account.jailManager.remainingTime()
             if (account.jailManager.hasPunish()) {
                 if (timeLeft == 0L) {
-                    magenta.schedulerMagenta.runTask(magenta) {
+                    magenta.schedulerMagenta.doSync(magenta) {
                         magenta.pluginManager.callEvent(JailPardonEvent(player))
                     }
                 }

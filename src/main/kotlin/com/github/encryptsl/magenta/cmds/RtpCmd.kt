@@ -5,7 +5,6 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.common.utils.LocationUtils.generateLocation
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -24,18 +23,18 @@ class RtpCmd(private val magenta: Magenta) {
     @CommandMethod("rtp")
     @CommandPermission("magenta.rtp")
     fun onRtp(player: Player) {
-        val playerAccount = PlayerAccount(magenta, player.uniqueId)
+        val user = magenta.user.getUser(player.uniqueId)
         val delay = magenta.config.getLong("rtp-teleport-cooldown")
 
         val generatedLocation: Location = generateLocation(magenta, player.world)
 
 
-        val timeLeft = playerAccount.cooldownManager.getRemainingDelay("rtp")
-        if (!playerAccount.cooldownManager.hasDelay("rpt")) {
+        val timeLeft = user.cooldownManager.getRemainingDelay("rtp")
+        if (!user.cooldownManager.hasDelay("rpt")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.rtp.delay.exempt")) {
-                playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "rtp")
+                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "rtp")
             }
-            magenta.schedulerMagenta.runTask(magenta) {
+            magenta.schedulerMagenta.doSync(magenta) {
                 player.teleportAsync(generatedLocation, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept {
                     player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.rtp.success"), TagResolver.resolver(
                                     Placeholder.parsed("x", generatedLocation.x.toString()),
@@ -56,7 +55,7 @@ class RtpCmd(private val magenta: Magenta) {
     fun onRtpOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val generatedLocation: Location = generateLocation(magenta, target.world)
 
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             target.teleportAsync(generatedLocation, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept {
                 target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.rtp.success"), TagResolver.resolver(
                     Placeholder.parsed("x", generatedLocation.x.toString()),

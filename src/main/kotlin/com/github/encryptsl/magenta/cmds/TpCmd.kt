@@ -27,7 +27,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tpa <target>")
     @CommandPermission("magenta.tpa")
     fun onTpa(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaRequestEvent(player, target, magenta.config.getLong("teleport-cooldown")))
         }
     }
@@ -35,7 +35,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tpaccept")
     @CommandPermission("magenta.tpaccept")
     fun onTpaAccept(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaAcceptEvent(player))
         }
     }
@@ -43,7 +43,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tpadeny")
     @CommandPermission("magenta.tpadeny")
     fun onTpaDeny(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaDenyEvent(player))
         }
     }
@@ -58,7 +58,7 @@ class TpCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", player.name)
             )))
 
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             player.teleport(target)
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.self"), TagResolver.resolver(
@@ -75,7 +75,7 @@ class TpCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", player.name)
             )))
 
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             player.teleport(target.location)
         }
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.to"), TagResolver.resolver(
@@ -90,7 +90,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tpo <target>")
     @CommandPermission("magenta.tpo")
     fun onTeleportOfflineLocation(player: Player, @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             commandHelper.teleportOffline(player, offlinePlayer)
         }
 
@@ -104,14 +104,14 @@ class TpCmd(private val magenta: Magenta) {
     fun onTeleportHere(player: Player, @Argument(value = "target") target: Player?) {
 
         if (target == null) {
-            magenta.schedulerMagenta.runTask(magenta) {
+            magenta.schedulerMagenta.doSync(magenta) {
                 commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
             }
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.success")))
             return
         }
 
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             target.teleport(player)
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tphere.success"),
@@ -122,7 +122,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tpall")
     @CommandPermission("magenta.tpall")
     fun onTeleportAllHere(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.success")))

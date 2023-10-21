@@ -8,12 +8,13 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class AnvilCmd(private val magenta: Magenta) {
     @CommandMethod("anvil")
     @CommandPermission("magenta.anvil")
     fun onAnvil(player: Player) {
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             player.openInventory(Bukkit.createInventory(null, InventoryType.ANVIL))
         }
     }

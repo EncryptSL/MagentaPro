@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.manager.MentionManager
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -20,7 +19,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     fun chat(event: AsyncChatEvent) {
         val player = event.player
-        val account = PlayerAccount(magenta, player.uniqueId)
+        val user = magenta.user.getUser(player.uniqueId)
         val message = PlainTextComponentSerializer.plainText().serialize(event.message())
         mentionManager.mentionProcess(event)
 
@@ -38,7 +37,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
             }
         }
 
-        if (account.jailManager.hasPunish()) {
+        if (user.jailManager.hasPunish()) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
                 Placeholder.parsed("action", "psát")
             )))

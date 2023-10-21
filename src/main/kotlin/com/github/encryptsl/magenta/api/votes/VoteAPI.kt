@@ -5,6 +5,8 @@ import java.util.*
 
 interface VoteAPI {
     fun addVote(voteImpl: VoteEntity)
+    fun setVote(voteImpl: VoteEntity)
+    fun removeVote(voteImpl: VoteEntity)
     fun hasAccount(uuid: UUID, serviceName: String): Boolean
     fun getPlayerVote(uuid: UUID): Int
 

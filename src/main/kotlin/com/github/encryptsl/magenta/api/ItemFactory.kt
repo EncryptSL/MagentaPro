@@ -84,7 +84,6 @@ class ItemFactory {
 
         return itemStack
     }
-
     fun creditShopItem(player: Player, material: Material, productName: String, quantity: Int, buyPrice:Double, glowing: Boolean, lore: List<String>): ItemStack {
         val itemStack = ItemStack(material, quantity)
         val itemMeta = itemStack.itemMeta

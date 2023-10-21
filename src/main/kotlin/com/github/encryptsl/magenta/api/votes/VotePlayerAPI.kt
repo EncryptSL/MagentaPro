@@ -17,6 +17,14 @@ class VotePlayerAPI(private val magenta: Magenta) : VoteAPI {
         }
     }
 
+    override fun setVote(voteImpl: VoteEntity) {
+        voteModel.setVote(voteImpl)
+    }
+
+    override fun removeVote(voteImpl: VoteEntity) {
+        voteModel.removeVote(voteImpl)
+    }
+
     override fun hasAccount(uuid: UUID, serviceName: String): Boolean {
         return voteModel.hasAccount(uuid, serviceName)
     }
@@ -29,7 +37,7 @@ class VotePlayerAPI(private val magenta: Magenta) : VoteAPI {
     }
 
     override fun getVotesForParty(): Int {
-        return voteModel.getVotesForParty()
+        return magenta.config.getInt("votifier.voteparty.current_votes")
     }
 
     override fun removeAccount(uuid: UUID) {

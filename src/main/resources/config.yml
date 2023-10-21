@@ -77,7 +77,7 @@ socialspy-commands:
 
 # Auto-AFK
 # After this timeout in seconds, the user will be set as AFK.
-# This feature requires the player to have essentials.afk.auto node.
+# This feature requires the player to have magenta.afk.auto node.
 # Set to -1 for no timeout.
 auto-afk: 5
 
@@ -279,7 +279,7 @@ votifier:
     enabled: false
     current_votes: 0
     start_at: 100
-    countdown: 60
+    countdown: 15
     rewards:
       - 'give {player} minecraft:experience_bottle 32'
       - 'crazycrates give physical votecrate 1 {player}'

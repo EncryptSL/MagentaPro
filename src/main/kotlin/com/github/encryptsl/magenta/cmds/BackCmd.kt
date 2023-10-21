@@ -20,7 +20,7 @@ class BackCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.back")
     fun onBack(player: Player) {
         val playerAccount = PlayerAccount(magenta, player.uniqueId)
-        magenta.schedulerMagenta.runTask(magenta){
+        magenta.schedulerMagenta.doSync(magenta){
             player.teleport(playerAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success")))
@@ -31,7 +31,7 @@ class BackCmd(private val magenta: Magenta) {
     fun onBack(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val playerAccount = PlayerAccount(magenta, target.uniqueId)
 
-        magenta.schedulerMagenta.runTask(magenta) {
+        magenta.schedulerMagenta.doSync(magenta) {
             target.teleport(playerAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
         }
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success")))

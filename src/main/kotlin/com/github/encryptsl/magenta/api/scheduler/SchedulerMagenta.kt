@@ -52,10 +52,10 @@ class SchedulerMagenta : IScheduler {
         return Bukkit.getScheduler().runTaskTimer(plugin, runnable, initialDelay, period)
     }
 
-    override fun runTaskAsync(plugin: Plugin, runnable: Runnable) {
+    override fun doAsync(plugin: Plugin, runnable: Runnable) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable)
     }
-    override fun runTask(plugin: Plugin, runnable: Runnable) {
+    override fun doSync(plugin: Plugin, runnable: Runnable) {
         Bukkit.getScheduler().runTask(plugin, runnable)
     }
 }

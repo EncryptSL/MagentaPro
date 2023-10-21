@@ -7,6 +7,9 @@ interface VoteSQL {
     fun createAccount(voteImpl: VoteEntity)
     fun hasAccount(uuid: UUID, serviceName: String): Boolean
     fun addVote(voteImpl: VoteEntity)
+
+    fun setVote(voteImpl: VoteEntity)
+    fun removeVote(voteImpl: VoteEntity)
     fun getPlayerVote(uuid: UUID): Int
     fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity?
 

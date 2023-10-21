@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.level.LevelFormula
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -29,21 +28,21 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun teleportOffline(sender: Player, target: OfflinePlayer) {
-        val playerAccount = PlayerAccount(magenta, target.uniqueId)
+        val user = magenta.user.getUser(target.uniqueId)
 
-        sender.teleport(playerAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
+        sender.teleport(user.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
     }
 
     fun toggleSocialSpy(player: Player, boolean: Boolean) {
-        val account = PlayerAccount(magenta, player.uniqueId)
-        account.set("socialspy", boolean)
+        val user = magenta.user.getUser(player.uniqueId)
+        user.set("socialspy", boolean)
     }
 
     fun changeDisplayName(player: Player, displayName: String) {
-        val account = PlayerAccount(magenta, player.uniqueId)
-        account.set("displayname", displayName)
-        player.displayName(ModernText.miniModernText(account.getAccount().getString("displayname").toString()))
-        player.playerListName(ModernText.miniModernText(account.getAccount().getString("displayname").toString()))
+        val user = magenta.user.getUser(player.uniqueId)
+        user.set("displayname", displayName)
+        player.displayName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
+        player.playerListName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
     }
 
     fun allowFly(commandSender: CommandSender?, player: Player) {

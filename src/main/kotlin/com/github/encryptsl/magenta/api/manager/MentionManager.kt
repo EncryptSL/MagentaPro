@@ -19,7 +19,7 @@ class MentionManager(private val magenta: Magenta) {
             val split = message.split(" ")
             for (m in split) {
                 if (m.contains(magenta.config.getString("mentions.variable").toString())) {
-                    magenta.schedulerMagenta.runTask(magenta) {
+                    magenta.schedulerMagenta.doAsync(magenta) {
                         Bukkit.getPlayer(m.replace("@", ""))?.let {
                             magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
                         }

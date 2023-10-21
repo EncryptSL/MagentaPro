@@ -5,7 +5,6 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -22,8 +21,8 @@ class VanishCmd(private val magenta: Magenta) {
     @CommandMethod("vanish")
     @CommandPermission("magenta.vanish")
     fun onVanish(player: Player) {
-        val account = PlayerAccount(magenta, player.uniqueId)
-        val isVanished = account.getAccount().getBoolean("vanished")
+        val user = magenta.user.getUser(player.uniqueId)
+        val isVanished = user.getAccount().getBoolean("vanished")
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
             if (isVanished)
@@ -37,17 +36,17 @@ class VanishCmd(private val magenta: Magenta) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
 
         if (isVanished) {
-            account.set("vanished", false)
+            user.set("vanished", false)
         } else {
-            account.set("vanished", true)
+            user.set("vanished", true)
         }
     }
 
     @CommandMethod("vanish <player>")
     @CommandPermission("magenta.vanish.other")
     fun onVanishOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        val account = PlayerAccount(magenta, target.uniqueId)
-        val isVanished = account.getAccount().getBoolean("vanished")
+        val user = magenta.user.getUser(target.uniqueId)
+        val isVanished = user.getAccount().getBoolean("vanished")
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
             if (isVanished)
@@ -66,9 +65,9 @@ class VanishCmd(private val magenta: Magenta) {
         )))
 
         if (isVanished) {
-            account.set("vanished", false)
+            user.set("vanished", false)
         } else {
-            account.set("vanished", true)
+            user.set("vanished", true)
         }
     }
 

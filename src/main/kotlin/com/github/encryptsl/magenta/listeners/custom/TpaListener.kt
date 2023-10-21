@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
@@ -37,17 +36,17 @@ class TpaListener(private val magenta: Magenta) : Listener {
         val target = event.target
         val delay = event.delay
 
-        val playerAccount = PlayerAccount(magenta, sender.uniqueId)
-        val timeLeft: Duration = playerAccount.cooldownManager.getRemainingDelay("tpa")
+        val user = magenta.user.getUser(sender.uniqueId)
+        val timeLeft: Duration = user.cooldownManager.getRemainingDelay("tpa")
 
         if (sender.uniqueId == target.uniqueId)
             return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.yourself")))
 
-        if (!playerAccount.cooldownManager.hasDelay("tpa")) {
+        if (!user.cooldownManager.hasDelay("tpa")) {
             if (delay != 0L && delay != -1L) {
                 if (!sender.hasPermission("magenta.tpa.delay.exempt")) {
-                    playerAccount.cooldownManager.setDelay(Duration.ofSeconds(delay), "tpa")
-                    playerAccount.save()
+                    user.cooldownManager.setDelay(Duration.ofSeconds(delay), "tpa")
+                    user.save()
                 }
             }
 

@@ -9,6 +9,7 @@ import cloud.commandframework.meta.CommandMeta
 import cloud.commandframework.paper.PaperCommandManager
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
+import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -108,6 +109,11 @@ class CommandManager(private val magenta: Magenta) {
             magenta.creditShopConfig.getConfig().getConfigurationSection("shop.categories")
                 ?.getKeys(false)
                 ?.mapNotNull { it.toString() } ?: emptyList()
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("services") {_, _ ->
+            magenta.config.getConfigurationSection("votifier.services")
+                ?.getKeys(false)
+                ?.mapNotNull { VoteHelper.replaceService(it.toString(), "_", ".") } ?: emptyList()
         }
     }
 

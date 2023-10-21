@@ -8,7 +8,7 @@ class TagsConfig(private val magenta: Magenta) {
     private val configUtil = ConfigUtil(magenta, "tags.yml")
 
     fun set(path: String, value: Any?) {
-        magenta.schedulerMagenta.runTaskAsync(magenta) {
+        magenta.schedulerMagenta.doAsync(magenta) {
             getConfig().set(path, value)
             save()
         }
