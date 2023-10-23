@@ -14,20 +14,12 @@ class AfkCmd(private val magenta: Magenta) {
     @CommandMethod("afk")
     @CommandPermission("magenta.afk")
     fun onAfk(player: Player) {
-        if (magenta.afk.isAfk(player.uniqueId)) {
-            magenta.afk.forceAfk(player.uniqueId, false)
-        } else {
-            magenta.afk.forceAfk(player.uniqueId, true)
-        }
+        magenta.afk.toggleAfk(player.uniqueId)
     }
     @CommandMethod("afk <player>")
     @CommandPermission("magenta.afk.other")
     fun onAfkOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        if (magenta.afk.isAfk(target.uniqueId)) {
-            magenta.afk.forceAfk(target.uniqueId, false)
-        } else {
-            magenta.afk.forceAfk(target.uniqueId, true)
-        }
+        magenta.afk.toggleAfk(target.uniqueId)
     }
 
 }

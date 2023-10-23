@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.database
 
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
-import java.util.UUID
+import java.util.*
 
 interface LevelSQL {
 

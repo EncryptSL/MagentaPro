@@ -105,6 +105,7 @@ class Magenta : JavaPlugin() {
 
     override fun onDisable() {
         logger.info("Plugin disabled")
+        afk.clear()
     }
 
     private fun hookRegistration() {
