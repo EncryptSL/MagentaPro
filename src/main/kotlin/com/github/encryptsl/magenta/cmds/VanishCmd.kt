@@ -25,10 +25,9 @@ class VanishCmd(private val magenta: Magenta) {
         val isVanished = user.getAccount().getBoolean("vanished")
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
-            if (isVanished)
-                players.showPlayer(magenta, player)
-            else
-                players.hidePlayer(magenta, player)
+            magenta.schedulerMagenta.doSync(magenta) {
+                commandHelper.doVanish(players, player, isVanished)
+            }
         }
 
         val mode = commandHelper.isVanished(isVanished)

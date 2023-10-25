@@ -20,6 +20,13 @@ class CommandHelper(private val magenta: Magenta) {
         ))
     }
 
+    fun doVanish(players: Player, player: Player, isVanished: Boolean) {
+        if (isVanished)
+            players.showPlayer(magenta, player)
+        else
+            players.hidePlayer(magenta, player)
+    }
+
 
     fun teleportAll(sender: Player, players: MutableCollection<out Player>) {
         players.forEach {

@@ -42,6 +42,7 @@ class HomeTeleportListener(private val magenta: Magenta) : Listener {
         if (!user.cooldownManager.hasDelay("home")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.home.delay.exempt")) {
                 user.cooldownManager.setDelay(Duration.ofSeconds(delay), "home")
+                user.save()
             }
 
             magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {

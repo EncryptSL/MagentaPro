@@ -9,9 +9,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 
-
-
-
+@Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class HatCmd(private val magenta: Magenta) {
 

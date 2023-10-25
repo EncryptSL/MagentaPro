@@ -30,9 +30,10 @@ class RtpCmd(private val magenta: Magenta) {
 
 
         val timeLeft = user.cooldownManager.getRemainingDelay("rtp")
-        if (!user.cooldownManager.hasDelay("rpt")) {
+        if (!user.cooldownManager.hasDelay("rtp")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.rtp.delay.exempt")) {
                 user.cooldownManager.setDelay(Duration.ofSeconds(delay), "rtp")
+                user.save()
             }
             magenta.schedulerMagenta.doSync(magenta) {
                 player.teleportAsync(generatedLocation, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept {

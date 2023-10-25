@@ -30,6 +30,7 @@ class HealCmd(private val magenta: Magenta) {
         if (!user.cooldownManager.hasDelay("heal")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {
                 user.cooldownManager.setDelay(Duration.ofSeconds(delay), "heal")
+                user.save()
             }
 
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))

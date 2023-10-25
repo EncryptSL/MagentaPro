@@ -63,7 +63,8 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
             magenta.kitManager.giveKit(player, kit)
         }
         Bukkit.broadcast(ModernText.miniModernText(magenta.config.getString("newbies.announcement").toString(), TagResolver.resolver(
-            Placeholder.parsed("player", player.name)
+            Placeholder.parsed("player", player.name),
+            Placeholder.parsed("joined", Bukkit.getOfflinePlayers().size.toString())
         )))
         user.createDefaultData(player)
     }

@@ -30,6 +30,7 @@ class RepairCmd(private val magenta: Magenta) {
         if (!user.cooldownManager.hasDelay("repair")) {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.repair.delay.exempt")) {
                 user.cooldownManager.setDelay(Duration.ofSeconds(delay), "repair")
+                user.save()
             }
 
             commandHelper.repairItem(player)
