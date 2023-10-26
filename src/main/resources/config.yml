@@ -280,9 +280,11 @@ votifier:
     current_votes: 0
     start_at: 100
     countdown: 15
+    random:
+      - 'crazycrates give p partybox 1 {player}'
     rewards:
       - 'give {player} minecraft:experience_bottle 32'
-      - 'crazycrates give physical votecrate 1 {player}'
+      - 'crazycrates give physical votebox 3 {player}'
       - 'eco add {player} 1000'
     format:
       - '<color:#32C4FF>Ve voteparty je aktuálně <color:#0581B3><current_votes>'

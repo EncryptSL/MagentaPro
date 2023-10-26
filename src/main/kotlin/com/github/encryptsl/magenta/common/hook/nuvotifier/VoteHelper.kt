@@ -40,6 +40,9 @@ object VoteHelper {
                 if (timer == 0) {
                     magenta.schedulerMagenta.doSync(magenta) {
                         giveRewards(Bukkit.getOnlinePlayers(), commands)
+                        if (magenta.config.contains("votifier.voteparty.random")) {
+                            giveRewards(magenta.config.getStringList("votifier.voteparty.random"), Bukkit.getOnlinePlayers().random().name)
+                        }
                     }
                     broadcast(endPartyMessage)
                     setVotePartyVote(magenta, 0)
@@ -68,7 +71,7 @@ object VoteHelper {
     @JvmStatic
     fun broadcast(string: String, countdown: Int) {
         Bukkit.broadcast(ModernText.miniModernText(string, TagResolver.resolver(
-            Placeholder.parsed("seconds", countdown.toString()),
+            Placeholder.parsed("delay", countdown.toString()),
         )))
     }
 

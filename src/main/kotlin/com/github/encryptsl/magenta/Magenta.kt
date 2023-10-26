@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.api.account.User
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
+import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
 import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
 import com.github.encryptsl.magenta.api.manager.KitManager
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
@@ -33,6 +34,8 @@ import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
 
 class Magenta : JavaPlugin() {
+
+    lateinit var paperContainerProvider: PaperContainerProvider
 
     val pluginManager = server.pluginManager
     val user: User by lazy { User(this) }
@@ -93,6 +96,7 @@ class Magenta : JavaPlugin() {
 
     override fun onEnable() {
         val time = measureTime {
+            isPaperServer()
             commandManager.registerCommands()
             registerTasks()
             handlerListener()
@@ -106,6 +110,16 @@ class Magenta : JavaPlugin() {
     override fun onDisable() {
         logger.info("Plugin disabled")
         afk.clear()
+    }
+
+    private fun isPaperServer() {
+        try {
+            Class.forName("io.papermc.paper.event.player.AsyncChatEvent")
+            paperContainerProvider = PaperContainerProvider()
+            logger.info("PaperContainerProvider can work on PaperMC !")
+        } catch (e : ClassNotFoundException) {
+            logger.severe(e.message ?: e.localizedMessage)
+        }
     }
 
     private fun hookRegistration() {

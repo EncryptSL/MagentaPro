@@ -1,3 +1,4 @@
+# noinspection YAMLSchemaValidation
 name: ${name}
 main: com.github.encryptsl.magenta.Magenta
 version: ${version}
@@ -24,10 +25,9 @@ permissions:
     default: op
     children:
       magenta.afk.*: true
-      magenta.anvil.*: true
       magenta.back.*: true
       magenta.citem.*: true
-      magenta.crafting.*: true
+      magenta.containers.*: true
       magenta.echest.*: true
       magenta.fly.*: true
       magenta.gamemode.*: true
@@ -75,8 +75,6 @@ permissions:
     children:
       magenta.afk: true
       magenta.afk.auto: true
-      magenta.anvil.*: true
-      magenta.crafting.*: true
       magenta.echest: true
       magenta.home.player: true
       magenta.ignore: true
@@ -102,11 +100,6 @@ permissions:
       magenta.afk.other: true
       magenta.afk.auto: true
       magenta.afk.kick.exempt: true
-  magenta.anvil.*:
-    description: Permissions for virtual anvil
-    default: false
-    children:
-      magenta.anvil: true
   magenta.back.*:
     description: Permissions for back
     default: false
@@ -123,11 +116,16 @@ permissions:
       magenta.citem.set.lore: true
       magenta.citem.set.command: true
       magenta.citem.give: true
-  magenta.crafting.*:
+  magenta.containers.*:
     description: Permissions for virtual crafting
     default: false
     children:
-      magenta.crafting: true
+      magenta.anvil: true
+      magenta.grindstone: true
+      magenta.stonecutter: true
+      magenta.smithingtable: true
+      magenta.loom: true
+      magenta.workbench: true
   magenta.echest.*:
     description: Permissions for virtual ender chest
     default: false
