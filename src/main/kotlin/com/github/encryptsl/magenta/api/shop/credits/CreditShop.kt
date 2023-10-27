@@ -135,14 +135,6 @@ class CreditShop(private val magenta: Magenta) {
                 )
             )
 
-        if (!shopCategory.getConfig().contains("shop.items"))
-            return player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.shop.error.not.defined.items"),
-                    Placeholder.parsed("category", type)
-                )
-            )
-
         val name = magenta.creditShopConfig.getConfig().getString("shop.gui.categoryName").toString()
         val categoryName = magenta.creditShopConfig.getConfig().getString("shop.categories.$type.name").toString()
 
@@ -190,83 +182,115 @@ class CreditShop(private val magenta: Magenta) {
             }
         }
 
-        for (item in shopCategory.getConfig().getConfigurationSection("shop.items")?.getKeys(false)!!) {
-            val material = Material.getMaterial(shopCategory.getConfig().getString("shop.items.$item.icon").toString())
-            if (material != null) {
-                if (shopCategory.getConfig().contains("shop.items.$item")) {
-
-                    if (!shopCategory.getConfig().contains("shop.items.$item.name"))
+        if (shopCategory.getConfig().contains("shop.custom-items")) {
+            for (item in shopCategory.getConfig().getConfigurationSection("shop.custom-items")?.getKeys(false)!!) {
+                val material = Material.getMaterial(shopCategory.getConfig().getString("shop.custom-items.$item.icon").toString())
+                if (material != null) {
+                    if (!shopCategory.getConfig().contains("shop.custom-items.$item.name"))
                         return player.sendMessage(
                             ModernText.miniModernText(
                                 magenta.localeConfig.getMessage("magenta.shop.error.not.defined.name"),
                                 Placeholder.parsed("category", type)
                             )
                         )
-
-                    if (!shopCategory.getConfig().contains("shop.items.$item.commands"))
-                        return player.sendMessage(
-                            ModernText.miniModernText(
-                                magenta.localeConfig.getMessage("magenta.shop.error.not.defined.commands"),
-                                Placeholder.parsed("category", type)
-                            )
-                        )
-
-                    if (!shopCategory.getConfig().contains("shop.items.$item.buy.quantity"))
-                        return player.sendMessage(
-                            ModernText.miniModernText(
-                                magenta.localeConfig.getMessage("magenta.shop.error.not.defined.quantity"),
-                                Placeholder.parsed("category", type)
-                            )
-                        )
-
-                    if (!shopCategory.getConfig().contains("shop.items.$item.position.slot"))
+                    if (!shopCategory.getConfig().contains("shop.custom-items.$item.position.slot"))
                         return player.sendMessage(
                             ModernText.miniModernText(
                                 magenta.localeConfig.getMessage("magenta.shop.error.not.defined.slot"),
                                 Placeholder.parsed("category", type)
                             )
                         )
-
-                    val itemName = shopCategory.getConfig().getString("shop.items.$item.name").toString()
-                    val slot = shopCategory.getConfig().getInt("shop.items.$item.position.slot")
-                    val glowing = shopCategory.getConfig().getBoolean("shop.items.$item.glowing")
-                    val buyPrice = shopCategory.getConfig().getDouble("shop.items.$item.buy.price")
-                    val quantity = shopCategory.getConfig().getInt("shop.items.$item.buy.quantity")
-                    val commands = shopCategory.getConfig().getStringList("shop.items.$item.commands")
-
-                    val isBuyAllowed = shopCategory.getConfig().contains("shop.items.$item.buy.price")
-
-                    val guiItem = ItemBuilder.from(
-                        magenta.itemFactory.creditShopItem(
-                            player,
-                            material,
-                            itemName,
-                            quantity,
-                            buyPrice,
-                            glowing,
-                            magenta.creditShopConfig.getConfig().getStringList("shop.gui.item_lore")
-                        )
-                    ).asGuiItem()
-
-                    guiItem.setAction { action ->
-                        if (action.isLeftClick) {
-                            creditShopInventory.buyItem(
-                                action,
-                                guiItem.itemStack.displayName(),
-                                buyPrice,
-                                quantity,
-                                commands,
-                                "magenta.shop.success.buy",
-                                isBuyAllowed
-                            )
-                            return@setAction
-                        }
+                    val itemName = shopCategory.getConfig().getString("shop.custom-items.$item.name").toString()
+                    val slot = shopCategory.getConfig().getInt("shop.custom-items.$item.position.slot")
+                    val glowing = shopCategory.getConfig().getBoolean("shop.custom-items.$item.glowing")
+                    val lore = shopCategory.getConfig().getStringList("shop.custom-items.$item.lore")
+                    val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem {
+                        return@asGuiItem
                     }
                     gui.setItem(slot, guiItem)
                 }
             }
         }
 
+        if (shopCategory.getConfig().contains("shop.items")) {
+            for (item in shopCategory.getConfig().getConfigurationSection("shop.items")?.getKeys(false)!!) {
+                val material =
+                    Material.getMaterial(shopCategory.getConfig().getString("shop.items.$item.icon").toString())
+                if (material != null) {
+                    if (shopCategory.getConfig().contains("shop.items.$item")) {
+
+                        if (!shopCategory.getConfig().contains("shop.items.$item.name"))
+                            return player.sendMessage(
+                                ModernText.miniModernText(
+                                    magenta.localeConfig.getMessage("magenta.shop.error.not.defined.name"),
+                                    Placeholder.parsed("category", type)
+                                )
+                            )
+
+                        if (!shopCategory.getConfig().contains("shop.items.$item.position.slot"))
+                            return player.sendMessage(
+                                ModernText.miniModernText(
+                                    magenta.localeConfig.getMessage("magenta.shop.error.not.defined.slot"),
+                                    Placeholder.parsed("category", type)
+                                )
+                            )
+
+                        if (!shopCategory.getConfig().contains("shop.items.$item.commands"))
+                            return player.sendMessage(
+                                ModernText.miniModernText(
+                                    magenta.localeConfig.getMessage("magenta.shop.error.not.defined.commands"),
+                                    Placeholder.parsed("category", type)
+                                )
+                            )
+
+                        if (!shopCategory.getConfig().contains("shop.items.$item.buy.quantity"))
+                            return player.sendMessage(
+                                ModernText.miniModernText(
+                                    magenta.localeConfig.getMessage("magenta.shop.error.not.defined.quantity"),
+                                    Placeholder.parsed("category", type)
+                                )
+                            )
+
+                        val itemName = shopCategory.getConfig().getString("shop.items.$item.name").toString()
+                        val slot = shopCategory.getConfig().getInt("shop.items.$item.position.slot")
+                        val glowing = shopCategory.getConfig().getBoolean("shop.items.$item.glowing")
+                        val buyPrice = shopCategory.getConfig().getDouble("shop.items.$item.buy.price")
+                        val quantity = shopCategory.getConfig().getInt("shop.items.$item.buy.quantity")
+                        val commands = shopCategory.getConfig().getStringList("shop.items.$item.commands")
+
+                        val isBuyAllowed = shopCategory.getConfig().contains("shop.items.$item.buy.price")
+
+                        val guiItem = ItemBuilder.from(
+                            magenta.itemFactory.creditShopItem(
+                                player,
+                                material,
+                                itemName,
+                                quantity,
+                                buyPrice,
+                                glowing,
+                                magenta.creditShopConfig.getConfig().getStringList("shop.gui.item_lore")
+                            )
+                        ).asGuiItem()
+
+                        guiItem.setAction { action ->
+                            if (action.isLeftClick) {
+                                creditShopInventory.buyItem(
+                                    action,
+                                    guiItem.itemStack.displayName(),
+                                    buyPrice,
+                                    quantity,
+                                    commands,
+                                    "magenta.shop.success.buy",
+                                    isBuyAllowed
+                                )
+                                return@setAction
+                            }
+                        }
+                        gui.setItem(slot, guiItem)
+                    }
+                }
+            }
+        }
         for (material in Material.entries) {
             ShopButtons.paginationButton(player, material, gui, shopCategory, "previous", magenta)
             ShopButtons.closeButton(

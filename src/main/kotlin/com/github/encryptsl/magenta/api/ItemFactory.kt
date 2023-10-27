@@ -67,6 +67,28 @@ class ItemFactory {
         return itemStack
     }
 
+    fun item(material: Material, itemName: String, lores: List<String>, glowing: Boolean): ItemStack {
+        val itemStack = ItemStack(material, 1)
+        val itemMeta = itemStack.itemMeta
+        itemMeta.displayName(ModernText.miniModernText(itemName))
+
+        if (glowing) {
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+            itemMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true)
+        }
+
+        if (lores.isNotEmpty()) {
+            val newList: MutableList<Component> = ArrayList()
+            for (loreItem in lores) {
+                newList.add(ModernText.miniModernText(loreItem))
+            }
+            itemMeta.lore(newList)
+        }
+        itemStack.setItemMeta(itemMeta)
+
+        return itemStack
+    }
+
     fun shopItem(material: Material, buyPrice:Double, sellPrice:Double, lore: List<String>): ItemStack {
         val itemStack = ItemStack(material, 1)
         val itemMeta = itemStack.itemMeta
