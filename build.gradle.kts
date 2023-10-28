@@ -11,6 +11,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://jitpack.io")
+    maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
@@ -26,6 +27,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.4")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("com.github.encryptsl.credit:CreditLite:1.0.1-SNAPSHOT")
+    compileOnly("io.lumine:Mythic-Dist:5.3.5")
     implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.6")
     implementation("cloud.commandframework:cloud-paper:1.8.4")

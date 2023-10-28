@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common.hook
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
+import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobDeathListener
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
@@ -15,6 +16,20 @@ class HookManager(private val magenta: Magenta) {
      */
     private fun isPluginInstalled(pluginName: String): Boolean {
         return magenta.pluginManager.getPlugin(pluginName) != null
+    }
+
+    fun hookMythicMobs() {
+        if (isPluginInstalled("MythicMobs")) {
+            magenta.logger.info("###################################")
+            magenta.logger.info("#  MythicMobs Found Hook Success  #")
+            magenta.logger.info("###################################")
+            magenta.pluginManager.registerEvents(MythicMobDeathListener(magenta), magenta)
+        } else {
+            magenta.logger.info("###################################")
+            magenta.logger.info("#         Vault not Found         #")
+            magenta.logger.info("#     please download vault api   #")
+            magenta.logger.info("###################################")
+        }
     }
 
     fun hookVault() {

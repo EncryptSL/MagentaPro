@@ -29,6 +29,8 @@ class MagentaCmd(private val magenta: Magenta) {
     fun onReload(commandSender: CommandSender) {
         magenta.reloadConfig()
         magenta.saveConfig()
+        magenta.mmConfig.reload()
+        magenta.mmConfig.save()
         magenta.shopConfig.reload()
         magenta.shopConfig.save()
         magenta.creditShopConfig.reload()

@@ -54,6 +54,7 @@ class Magenta : JavaPlugin() {
     val localeConfig: Locale by lazy { Locale(this) }
     val kitConfig: KitConfig by lazy { KitConfig(this) }
     val jailConfig: JailConfig by lazy { JailConfig(this) }
+    val mmConfig: MMConfig by lazy { MMConfig(this) }
     val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
     val tags: TagsConfig by lazy { TagsConfig(this) }
     val shopConfig: ShopConfig by lazy { ShopConfig(this, "shop/shop.yml") }
@@ -72,6 +73,7 @@ class Magenta : JavaPlugin() {
             .createFromResources("motd.txt", this)
             .createFromResources("citems.yml", this)
             .createFromResources("tags.yml", this)
+            .createFromResources("mythicmobs/rewards.yml", this)
             .createFromResources("shop/shop.yml", this)
             .createFromResources("creditshop/shop.yml", this)
             .createFromResources("creditshop/categories/super_box_keys.yml", this)
@@ -123,6 +125,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun hookRegistration() {
+        hookManger.hookMythicMobs()
         hookManger.hookVault()
         hookManger.hookCreditLite()
         hookManger.hookPAPI()

@@ -9,7 +9,7 @@ author: EncryptSL
 website: https://encryptsl.github.io/
 
 load: POSTWORLD
-softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite]
+softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs]
 libraries:
   - com.zaxxer:HikariCP:5.0.1
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10
