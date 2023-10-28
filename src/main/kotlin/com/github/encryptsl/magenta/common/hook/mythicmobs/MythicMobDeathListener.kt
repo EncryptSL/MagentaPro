@@ -71,11 +71,11 @@ class MythicMobDeathListener(private val magenta: Magenta) : Listener {
         }
     }
 
-    private fun roundingPersonalDamage(damage: Double) {
-        damage.toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
+    private fun roundingPersonalDamage(damage: Double): Double {
+        return damage.toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
     }
-    private fun roundingDamage(position: Int) {
-        damageByRank(position).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
+    private fun roundingDamage(position: Int): Double {
+        return damageByRank(position).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
     }
 
     private fun damageByRank(position: Int): Double {
