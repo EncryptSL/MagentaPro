@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.math.RoundingMode
-import java.util.UUID
+import java.util.*
 
 class MythicMobDeathListener(private val magenta: Magenta) : Listener {
 
@@ -22,13 +22,11 @@ class MythicMobDeathListener(private val magenta: Magenta) : Listener {
     fun onPlayerKillMythicMob(event: EntityDamageByEntityEvent) {
         if (MythicBukkit.inst().apiHelper.isMythicMob(event.entity)) {
             if (event.damager is Player) {
-                damageMap[event.damager.uniqueId] =
-                    damageMap.getOrDefault(event.damager.uniqueId, 0.0).plus(event.damage)
+                damageMap[event.damager.uniqueId] = damageMap.getOrDefault(event.damager.uniqueId, 0.0).plus(event.damage)
             } else if (event.damager is Projectile) {
                 val projectile: Projectile = event.damager as Projectile
                 if (projectile.shooter is Player) {
-                    damageMap[event.damager.uniqueId] =
-                        damageMap.getOrDefault(event.damager.uniqueId, 0.0).plus(event.damage)
+                    damageMap[event.damager.uniqueId] = damageMap.getOrDefault(event.damager.uniqueId, 0.0).plus(event.damage)
                 }
             }
         }
