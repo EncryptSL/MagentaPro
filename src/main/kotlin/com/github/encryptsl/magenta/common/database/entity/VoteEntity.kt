@@ -8,5 +8,5 @@ data class VoteEntity(
     val uuid: UUID,
     val vote: Int,
     val serviceName: String,
-    val timestamp: Instant
+    val lastVote: Instant
 )

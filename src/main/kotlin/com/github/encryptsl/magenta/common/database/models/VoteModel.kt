@@ -4,8 +4,8 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.VoteSQL
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.tables.VoteTable
+import com.github.encryptsl.magenta.common.database.tables.VoteTable.last_vote
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.serviceName
-import com.github.encryptsl.magenta.common.database.tables.VoteTable.timestamp
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.uuid
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.vote
 import kotlinx.datetime.toKotlinInstant
@@ -32,7 +32,7 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
                     it[uuid] = voteImpl.uuid.toString()
                     it[vote] = voteImpl.vote
                     it[serviceName] = voteImpl.serviceName
-                    it[timestamp] = voteImpl.timestamp
+                    it[last_vote] = voteImpl.lastVote
                 }
             }
         }
@@ -48,7 +48,7 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
             transaction {
                 VoteTable.update({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
                     it[vote] = vote.plus(voteImpl.vote)
-                    it[timestamp] = voteImpl.timestamp
+                    it[last_vote] = voteImpl.lastVote
                 }
             }
         }
@@ -83,11 +83,11 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
     override fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity? = transaction {
         val user = VoteTable.select((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName)).firstOrNull()
 
-        return@transaction user?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[timestamp]) }
+        return@transaction user?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[last_vote]) }
     }
 
     override fun getVotesForParty(): Int = transaction {
-        VoteTable.select((timestamp.between(todayStart.toKotlinInstant(), todayEnd.toKotlinInstant()))).count().toInt()
+        VoteTable.select((last_vote.between(todayStart.toKotlinInstant(), todayEnd.toKotlinInstant()))).count().toInt()
     }
 
     override fun removeAccount(uuid: UUID) {

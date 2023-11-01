@@ -11,7 +11,7 @@ object VoteTable : Table() {
     val uuid: Column<String> = varchar("uuid", 36)
     val vote: Column<Int> = integer("vote")
     val serviceName: Column<String> = varchar("serviceName", 36)
-    val timestamp: Column<Instant> = timestamp("timestamp")
+    val last_vote: Column<Instant> = timestamp("last_vote")
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
 

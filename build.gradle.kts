@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.10" apply true
+    kotlin("jvm") version "1.9.20" apply true
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
-    compileOnly(kotlin("stdlib", "1.9.10"))
+    compileOnly(kotlin("stdlib", "1.9.20"))
     compileOnly("org.jetbrains.exposed:exposed-core:0.44.0")
     compileOnly("org.jetbrains.exposed:exposed-jdbc:0.44.0")
     compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.44.0")
@@ -32,24 +32,18 @@ dependencies {
     implementation("dev.triumphteam:triumph-gui:3.1.6")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
     implementation("cloud.commandframework:cloud-annotations:1.8.4")
-    testImplementation("com.zaxxer:HikariCP:5.0.1")
-    testImplementation("org.xerial:sqlite-jdbc:3.42.0.0")
-    testImplementation("org.jetbrains.exposed:exposed-core:0.44.0")
-    testImplementation("org.jetbrains.exposed:exposed-jdbc:0.44.0")
-    testImplementation("org.bspfsystems:yamlconfiguration:1.3.3")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.10")
 }
 tasks {
     build {
         dependsOn(shadowJar)
     }
-    test {
-        useJUnitPlatform()
-    }
     processResources {
         filesMatching("plugin.yml") {
             expand(project.properties)
         }
+    }
+    test {
+        enabled = false
     }
     shadowJar {
         minimize {

@@ -9,9 +9,7 @@ interface VoteAPI {
     fun removeVote(voteImpl: VoteEntity)
     fun hasAccount(uuid: UUID, serviceName: String): Boolean
     fun getPlayerVote(uuid: UUID): Int
-
     fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity?
-
     fun getVotesForParty(): Int
     fun removeAccount(uuid: UUID)
     fun cleanVotes()
