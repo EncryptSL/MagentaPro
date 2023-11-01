@@ -24,7 +24,7 @@ dependencies {
     compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.44.0")
     compileOnly("com.zaxxer:HikariCP:5.0.1")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
-    compileOnly("me.clip:placeholderapi:2.11.4")
+    compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("com.github.encryptsl.credit:CreditLite:1.0.1-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
