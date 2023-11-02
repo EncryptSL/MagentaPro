@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.shop.credits
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.events.shop.CreditShopBuyEvent
 import com.github.encryptsl.magenta.api.shop.EconomyShopIntegration
 import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
@@ -21,6 +22,10 @@ class CreditShopInventory(private val magenta: Magenta, private val creditLiteHo
 
         if (ShopHelper.isPlayerInventoryFull(player))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
+
+        magenta.schedulerMagenta.doSync(magenta) {
+            magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
+        }
 
         economyShopIntegration.doCreditTransaction(player, creditLiteHook, message, product, price, quantity, commands)
 

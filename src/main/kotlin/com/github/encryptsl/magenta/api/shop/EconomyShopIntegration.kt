@@ -14,8 +14,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class EconomyShopIntegration(private val magenta: Magenta) {
-
-
     fun doVaultTransaction(
         player: Player,
         transactionType: TransactionType,

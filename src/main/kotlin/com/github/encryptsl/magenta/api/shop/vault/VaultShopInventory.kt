@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.api.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.events.shop.ShopBuyEvent
+import com.github.encryptsl.magenta.api.events.shop.ShopSellEvent
 import com.github.encryptsl.magenta.api.shop.EconomyShopIntegration
 import com.github.encryptsl.magenta.api.shop.TransactionType
 import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
@@ -25,6 +27,10 @@ class VaultShopInventory(private val magenta: Magenta, private val vault: VaultH
 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
 
+        magenta.schedulerMagenta.doSync(magenta) {
+            magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, fullPrice.toInt(), item.amount))
+        }
+
         economyShopIntegration.doVaultTransaction(player,
             TransactionType.BUY, vault.withdraw(player, fullPrice), "magenta.shop.success.buy", fullPrice, item)
     }
@@ -38,6 +44,10 @@ class VaultShopInventory(private val magenta: Magenta, private val vault: VaultH
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.empty.no.item")))
 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
+
+        magenta.schedulerMagenta.doSync(magenta) {
+            magenta.pluginManager.callEvent(ShopSellEvent(player, item.type.name, fullPrice.toInt(), item.amount))
+        }
 
         economyShopIntegration.doVaultTransaction(player,
             TransactionType.SELL, vault.deposite(player, fullPrice), "magenta.shop.success.sell", fullPrice, item)
