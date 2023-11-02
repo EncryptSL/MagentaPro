@@ -5,7 +5,7 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-class PlayerCooldown(val uuid: UUID, val playerAccount: PlayerAccount) {
+class PlayerCooldown(val uuid: UUID, private val playerAccount: PlayerAccount) {
 
     fun setDelay(duration: Duration?, type: String) {
         playerAccount.getAccount().set("timestamps.$type", Instant.now().plus(duration).toEpochMilli())

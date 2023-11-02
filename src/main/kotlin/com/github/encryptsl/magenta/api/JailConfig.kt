@@ -1,28 +1,22 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.configuration.file.YamlConfiguration
-import java.io.File
 
 class JailConfig(private val magenta: Magenta) {
 
-    private var yaml: FileConfiguration = YamlConfiguration()
-    private val file = File("${magenta.dataFolder}/", "jails.yml")
-
-    init {
-        yaml.load(file)
-    }
+    private val configUtil = ConfigUtil(magenta, "jails.yml")
 
     fun getJail(): FileConfiguration {
-        return yaml
+        return configUtil.getConfig()
     }
 
     fun reload() {
         runCatching {
-            yaml.load(file)
+            configUtil.reload()
         }.onSuccess {
-            magenta.logger.info("${file.name} is reloaded !")
+            magenta.logger.info("${configUtil.file.name} is reloaded !")
         }.onFailure { e ->
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }
@@ -30,9 +24,9 @@ class JailConfig(private val magenta: Magenta) {
 
     fun save() {
         runCatching {
-            yaml.save(file)
+            configUtil.save()
         }.onSuccess {
-            magenta.logger.info("${file.name} is saved now !")
+            magenta.logger.info("${configUtil.file.name} is saved now !")
         }.onFailure { e ->
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }
