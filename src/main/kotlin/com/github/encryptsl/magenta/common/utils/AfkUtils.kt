@@ -13,7 +13,7 @@ class AfkUtils(private val magenta: Magenta) {
         lastActivity[uuid] = System.currentTimeMillis()
     }
 
-    fun setTime(uuid: UUID, time: Long) {
+    private fun setTime(uuid: UUID, time: Long) {
         lastActivity[uuid] = time
     }
 
