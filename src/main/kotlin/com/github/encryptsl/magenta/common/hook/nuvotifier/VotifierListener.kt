@@ -97,7 +97,7 @@ class VotifierListener(private val magenta: Magenta) : Listener {
             if (magenta.config.contains("votifier.voteparty.rewards")) {
                 if (magenta.vote.getVotesForParty() == magenta.config.getInt("votifier.voteparty.start_at")) {
                     val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
-                    magenta.pluginManager.callEvent(VotePartyEvent(Bukkit.getOnlinePlayers().size, datetime()))
+                    magenta.pluginManager.callEvent(VotePartyEvent(username, Bukkit.getOnlinePlayers().size, datetime()))
                     VoteHelper.startVoteParty(
                         magenta,
                         magenta.localeConfig.getMessage("magenta.votifier.voteparty.broadcast"),

@@ -1,6 +1,9 @@
 package com.github.encryptsl.magenta.api.shop
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.events.shop.CreditShopBuyEvent
+import com.github.encryptsl.magenta.api.events.shop.ShopBuyEvent
+import com.github.encryptsl.magenta.api.events.shop.ShopSellEvent
 import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditException
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
@@ -34,8 +37,18 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                     )
                 )
                 when (transactionType) {
-                    TransactionType.SELL -> player.inventory.removeItem(item)
-                    TransactionType.BUY -> player.inventory.addItem(item)
+                    TransactionType.SELL -> {
+                        magenta.schedulerMagenta.doSync(magenta) {
+                            magenta.pluginManager.callEvent(ShopSellEvent(player, item.type.name, price.toInt(), item.amount))
+                        }
+                        player.inventory.removeItem(item)
+                    }
+                    TransactionType.BUY -> {
+                        magenta.schedulerMagenta.doSync(magenta) {
+                            magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, price.toInt(), item.amount))
+                        }
+                        player.inventory.addItem(item)
+                    }
                 }
                 player.updateInventory()
             } else {
@@ -49,6 +62,11 @@ class EconomyShopIntegration(private val magenta: Magenta) {
     fun doCreditTransaction(player: Player, creditLiteHook: CreditLiteHook, message: String, product: Component, price: Double, quantity: Int, commands: MutableList<String>) {
         try {
             if (creditLiteHook.hasCredits(player, price)) {
+
+                magenta.schedulerMagenta.doSync(magenta) {
+                    magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
+                }
+
                 creditLiteHook.withdrawCredits(player, price)
                 player.sendMessage(
                     ModernText.miniModernText(

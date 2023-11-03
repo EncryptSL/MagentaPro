@@ -4,7 +4,7 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class VotePartyEvent(val players: Int, val time: String) : Event(), Cancellable {
+class VotePartyEvent(val username: String, val players: Int, val time: String) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList
