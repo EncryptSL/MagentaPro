@@ -141,7 +141,7 @@ class CreditShop(private val magenta: Magenta) {
         val gui: PaginatedGui = ShopBuilder.guiPaginated(ModernText.miniModernText(
             name,
             Placeholder.parsed("category", categoryName)
-        ), 6)
+        ), shopCategory.getConfig().getInt("shop.gui.size", 6))
 
         if (shopCategory.getConfig().contains("shop.gui.fill")) {
             if (shopCategory.getConfig().contains("shop.gui.fill.border")) {

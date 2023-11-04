@@ -29,7 +29,7 @@ dependencies {
     compileOnly("com.github.encryptsl.credit:CreditLite:1.0.1-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     implementation("solar.squares:pixel-width-utils:1.1.0")
-    implementation("dev.triumphteam:triumph-gui:3.1.6")
+    implementation("dev.triumphteam:triumph-gui:3.1.7")
     implementation("cloud.commandframework:cloud-paper:1.8.4")
     implementation("cloud.commandframework:cloud-annotations:1.8.4")
 }

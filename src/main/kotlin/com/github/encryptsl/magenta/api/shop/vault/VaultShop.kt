@@ -21,7 +21,8 @@ class VaultShop(private val magenta: Magenta) {
     private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta, vault) }
 
     fun openShop(player: Player) {
-        val gui: Gui = ShopBuilder.gui(magenta.shopConfig.getConfig().getString("shop.gui.name").toString(), 6, GuiType.CHEST)
+        val gui: Gui = ShopBuilder.gui(magenta.shopConfig.getConfig().getString("shop.gui.name").toString(),
+            magenta.shopConfig.getConfig().getInt("shop.gui.size", 6), GuiType.CHEST)
 
         if (magenta.shopConfig.getConfig().contains("shop.gui.fill")) {
             if (magenta.shopConfig.getConfig().contains("shop.gui.fill.border")) {
@@ -129,7 +130,7 @@ class VaultShop(private val magenta: Magenta) {
 
         val gui: PaginatedGui = ShopBuilder.guiPaginated(ModernText.miniModernText(name,
             Placeholder.parsed("category", categoryName)
-        ), 6)
+        ), shopCategory.getConfig().getInt("shop.gui.size", 6))
 
         if (shopCategory.getConfig().contains("shop.gui.fill")) {
             if (shopCategory.getConfig().contains("shop.gui.fill.border")) {
