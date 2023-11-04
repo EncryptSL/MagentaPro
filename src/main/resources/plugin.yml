@@ -26,6 +26,7 @@ permissions:
     children:
       magenta.afk.*: true
       magenta.back.*: true
+      magenta.broadcast.*: true
       magenta.citem.*: true
       magenta.containers.*: true
       magenta.echest.*: true
@@ -57,6 +58,7 @@ permissions:
     description: Permissions for moderator
     children:
       magenta.player: true
+      magenta.broadcast: true
       magenta.hat.*: true
       magenta.ignore.*: true
       magenta.jail: true
@@ -106,6 +108,11 @@ permissions:
     children:
       magenta.back: true
       magenta.back.other: true
+  magenta.broadcast.*:
+    description: Permissions for broadcast
+    default: false
+    children:
+      magenta.broadcast: true
   magenta.citem.*:
     description: Permissions for managing activation items with commands.
     default: false
