@@ -62,6 +62,14 @@ warp-info-format:
   - "<gray>Souřadnice <green><x> <y> <z>"
   - "<gray>Svět <green><world>"
 
+level-up-format:
+  - ''
+  - <gold><bold>LevelUp
+  - ''
+  - Dosahl jsi levelu <yellow><bold><level>
+  - Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>
+  - ''
+
 socialspy-format: <color:#009EFF>[SOCIALSPY] <color:#4AAEFC><player> <color:#90D2FA><message>
 
 # These commands will be shown to players with socialSpy enabled.
