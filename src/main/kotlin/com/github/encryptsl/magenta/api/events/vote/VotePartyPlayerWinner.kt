@@ -1,11 +1,10 @@
 package com.github.encryptsl.magenta.api.events.vote
 
-import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class VotePartyEvent(val player: Player, val players: Int, val time: String) : Event(), Cancellable {
+class VotePartyPlayerWinner(val username: String) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

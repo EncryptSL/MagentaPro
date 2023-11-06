@@ -2,6 +2,9 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
+import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
+import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -41,7 +44,9 @@ object VoteHelper {
                     magenta.schedulerMagenta.doSync(magenta) {
                         giveRewards(Bukkit.getOnlinePlayers(), commands)
                         if (magenta.config.contains("votifier.voteparty.random")) {
-                            giveRewards(magenta.config.getStringList("votifier.voteparty.random"), Bukkit.getOnlinePlayers().random().name)
+                            val player = Bukkit.getOnlinePlayers().random().name
+                            giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player)
+                            magenta.pluginManager.callEvent(VotePartyPlayerWinner(player))
                         }
                     }
                     broadcast(endPartyMessage)
@@ -84,6 +89,7 @@ object VoteHelper {
     fun giveRewards(players: Collection<Player>, commands: MutableList<String>) {
         players.forEach {
             giveRewards(commands, it.name)
+            Bukkit.getPluginManager().callEvent(VotePartyEvent(it, Bukkit.getOnlinePlayers().size, datetime()))
         }
     }
     @JvmStatic
