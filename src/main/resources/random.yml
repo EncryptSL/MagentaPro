@@ -1,4 +1,11 @@
-categories:
+crates:
+  keys:
+    - 'cc give physical BasicBox %amount% %player%'
+    - 'cc give physical VoteBox %amount% %player%'
+    - 'cc give physical PartyBox %amount% %player%'
+    - 'cc give physical GalaxyBox %amount% %player%'
+
+tags:
   ultimate:
     - 'deluxetags.tag.imperator'
     - 'deluxetags.tag.18cm85kg196cm'

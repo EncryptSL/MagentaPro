@@ -1,17 +1,11 @@
-package com.github.encryptsl.magenta.api
+package com.github.encryptsl.magenta.api.config
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
 
-class ShopConfig(magenta: Magenta, type: String) {
-
-    private val configUtil = ConfigUtil(magenta, type)
-
-    fun fileExist(): Boolean
-    {
-        return configUtil.file.isFile
-    }
+class MMConfig(magenta: Magenta) {
+    private val configUtil = ConfigUtil(magenta, "mythicmobs/rewards.yml")
 
     fun reload() {
         configUtil.reload()
@@ -24,5 +18,4 @@ class ShopConfig(magenta: Magenta, type: String) {
     fun getConfig(): FileConfiguration {
         return configUtil.getConfig()
     }
-
 }

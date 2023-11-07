@@ -7,6 +7,11 @@ database:
   username: root
   password: root
 
+discord:
+  webhooks:
+    server_feedback: ""
+    notifications: ""
+
 newbies:
   # Announcement to player who first join on server.
   announcement: '<blue>Vítej <player> <blue>na serveru !'
@@ -32,6 +37,8 @@ max-nick-length: 15
 nick-blacklist:
 #- Notch
 #- '^Dinnerbone'
+
+report-blacklist: ["EncryptSL", "a_patress_o", "WZarek775"]
 
 teleport-cooldown: 30
 
@@ -61,14 +68,6 @@ warp-info-format:
   - "<gray>Majitel warpu <green><owner>"
   - "<gray>Souřadnice <green><x> <y> <z>"
   - "<gray>Svět <green><world>"
-
-level-up-format:
-  - ''
-  - <gold><bold>LevelUp
-  - ''
-  - Dosahl jsi levelu <yellow><bold><level>
-  - Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>
-  - ''
 
 socialspy-format: <color:#009EFF>[SOCIALSPY] <color:#4AAEFC><player> <color:#90D2FA><message>
 
@@ -102,32 +101,6 @@ level:
     - "Dosahl jsi levelu <yellow><bold><level>"
     - "Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>"
     - ""
-
-# RTP-Settings
-# There is support for worldborder and negative coordinations
-# included is support for unsafe blocks.
-rtp:
-  limits:
-    xLimit: 500
-    zLimit: 500
-    negative: true
-    worldBorder: true
-  unsafeBlocks:
-    - ACACIA_LEAVES
-    - AZALEA_LEAVES
-    - BIRCH_LEAVES
-    - CACTUS
-    - DARK_OAK_LEAVES
-    - FLOWERING_AZALEA_LEAVES
-    - FIRE
-    - JUNGLE_LEAVES
-    - LAVA
-    - LAVA_CAULDRON
-    - MAGMA_BLOCK
-    - OAK_LEAVES
-    - SPRUCE_LEAVES
-    - WATER
-
 
 #########################################################
 #                    MENTIONS                           #
@@ -335,6 +308,7 @@ chat:
       control: true
     ipfilter:
       action:
+        - notify
         - replace
       control: true
       ip_regex: \d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}

@@ -1,14 +1,14 @@
-package com.github.encryptsl.magenta.api
+package com.github.encryptsl.magenta.api.config
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
 
-class JailConfig(private val magenta: Magenta) {
+class KitConfig(private val magenta: Magenta) {
 
-    private val configUtil = ConfigUtil(magenta, "jails.yml")
+    private val configUtil = ConfigUtil(magenta, "kits.yml")
 
-    fun getJail(): FileConfiguration {
+    fun getKit(): FileConfiguration {
         return configUtil.getConfig()
     }
 

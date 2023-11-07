@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.shop.helpers
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.ShopConfig
+import com.github.encryptsl.magenta.api.config.ShopConfig
 import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
 

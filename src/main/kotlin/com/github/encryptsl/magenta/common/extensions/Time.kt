@@ -4,6 +4,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.concurrent.TimeUnit
 
 
@@ -43,3 +44,5 @@ fun formatFromSecondsTime(seconds: Long): String {
 }
 
 fun datetime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+
+fun now(): String = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))

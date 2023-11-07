@@ -8,6 +8,7 @@ import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator
 import cloud.commandframework.meta.CommandMeta
 import cloud.commandframework.paper.PaperCommandManager
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.cmds.*
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import org.bukkit.Bukkit
@@ -89,8 +90,8 @@ class CommandManager(private val magenta: Magenta) {
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
             magenta.warpModel.getWarps().map { s -> s.warpName }
         }
-        commandManager.parserRegistry().registerSuggestionProvider("tagCategories") {_, _ ->
-            magenta.tags.getConfig().getConfigurationSection("categories")
+        commandManager.parserRegistry().registerSuggestionProvider("tags") {_, _ ->
+            magenta.randomConfig.getConfig().getConfigurationSection("tags")
                 ?.getKeys(false)
                 ?.mapNotNull { it.toString() } ?: emptyList()
         }
@@ -115,14 +116,17 @@ class CommandManager(private val magenta: Magenta) {
                 ?.getKeys(false)
                 ?.mapNotNull { VoteHelper.replaceService(it.toString(), "_", ".") } ?: emptyList()
         }
+        commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
+            ReportCategories.entries.map { it -> it.name }
+        }
     }
 
-    private fun materials(): MutableList<String> {
-        return Material.entries.map { it -> it.name }.toMutableList()
+    private fun materials(): List<String> {
+        return Material.entries.map { it.name }
     }
 
-    private fun entities(): MutableList<String> {
-        return EntityType.entries.map { it -> it.name }.toMutableList()
+    private fun entities(): List<String> {
+        return EntityType.entries.map { it.name }
     }
 
     fun registerCommands() {
@@ -139,6 +143,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(CommandItemsCmd(magenta))
         annotationParser.parse(ContainersCmd(magenta))
         annotationParser.parse(EnderChestCmd(magenta))
+        annotationParser.parse(FeedbackCmd(magenta))
         annotationParser.parse(FlyCmd(magenta))
         annotationParser.parse(GmCmd(magenta))
         annotationParser.parse(HatCmd(magenta))
@@ -154,7 +159,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(IgnoreCmd(magenta))
         annotationParser.parse(MsgCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))
-        annotationParser.parse(RtpCmd(magenta))
+        annotationParser.parse(ReportCmd(magenta))
         annotationParser.parse(ShopCmd(magenta))
         annotationParser.parse(SocialSpyCmd(magenta))
         annotationParser.parse(SpawnerCmd(magenta))

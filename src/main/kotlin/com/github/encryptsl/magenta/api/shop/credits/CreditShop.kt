@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.shop.credits
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.ShopConfig
+import com.github.encryptsl.magenta.api.config.ShopConfig
 import com.github.encryptsl.magenta.api.shop.ShopBuilder
 import com.github.encryptsl.magenta.api.shop.helpers.ShopButtons
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook

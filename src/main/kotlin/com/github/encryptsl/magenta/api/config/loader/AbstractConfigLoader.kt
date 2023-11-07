@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.config
+package com.github.encryptsl.magenta.api.config.loader
 
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin

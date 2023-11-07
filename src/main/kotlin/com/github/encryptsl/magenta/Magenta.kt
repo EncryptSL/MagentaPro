@@ -3,13 +3,15 @@ package com.github.encryptsl.magenta
 import com.github.encryptsl.magenta.api.*
 import com.github.encryptsl.magenta.api.account.User
 import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.api.config.ConfigLoader
+import com.github.encryptsl.magenta.api.config.*
+import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
 import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
 import com.github.encryptsl.magenta.api.manager.KitManager
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.VotePlayerAPI
+import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
@@ -30,6 +32,7 @@ import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
 
@@ -37,6 +40,7 @@ class Magenta : JavaPlugin() {
 
     lateinit var paperContainerProvider: PaperContainerProvider
 
+    var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
     val user: User by lazy { User(this) }
     val vote: VotePlayerAPI by lazy { VotePlayerAPI(this) }
@@ -56,9 +60,11 @@ class Magenta : JavaPlugin() {
     val jailConfig: JailConfig by lazy { JailConfig(this) }
     val mmConfig: MMConfig by lazy { MMConfig(this) }
     val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
-    val tags: TagsConfig by lazy { TagsConfig(this) }
+    val randomConfig: RandomConfig by lazy { RandomConfig(this) }
     val shopConfig: ShopConfig by lazy { ShopConfig(this, "shop/shop.yml") }
     val creditShopConfig: ShopConfig by lazy { ShopConfig(this, "creditshop/shop.yml") }
+    val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
+    val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
@@ -72,7 +78,7 @@ class Magenta : JavaPlugin() {
             .createFromResources("swear_list.txt", this)
             .createFromResources("motd.txt", this)
             .createFromResources("citems.yml", this)
-            .createFromResources("tags.yml", this)
+            .createFromResources("random.yml", this)
             .createFromResources("mythicmobs/rewards.yml", this)
             .createFromResources("shop/shop.yml", this)
             .createFromResources("creditshop/shop.yml", this)

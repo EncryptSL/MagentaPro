@@ -6,7 +6,10 @@ import org.bukkit.entity.Player
 class StringUtils(private val magenta: Magenta) {
 
     fun isNickBlacklisted(nickname: String) : Boolean
-        = magenta.config.getStringList("nick-blacklist").contains(replaceNickName(nickname))
+        = inInList("nick-blacklist", replaceNickName(nickname))
+
+    fun inInList(key: String, value: String): Boolean
+        = magenta.config.getStringList(key).contains(value)
 
     fun isNickInAllowedLength(nickname: String): Boolean
         = replaceNickName(nickname).length <= magenta.config.getInt("max-nick-length")

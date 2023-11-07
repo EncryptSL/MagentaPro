@@ -16,6 +16,7 @@ libraries:
   - org.jetbrains.exposed:exposed-core:0.44.0
   - org.jetbrains.exposed:exposed-jdbc:0.44.0
   - org.jetbrains.exposed:exposed-kotlin-datetime:0.44.0
+  - club.minnced:discord-webhooks:0.8.4
 
 description: ${description}
 
@@ -30,6 +31,7 @@ permissions:
       magenta.citem.*: true
       magenta.containers.*: true
       magenta.echest.*: true
+      magenta.feedback.*: true
       magenta.fly.*: true
       magenta.gamemode.*: true
       magenta.gamemodes.*: true
@@ -46,7 +48,7 @@ permissions:
       magenta.nick.*: true
       magenta.random.*: true
       magenta.repair.*: true
-      magenta.rtp.*: true
+      magenta.report.*: true
       magenta.shop.*: true
       magenta.credit.shop.*: true
       magenta.social.spy.*: true
@@ -67,7 +69,6 @@ permissions:
       magenta.jail.tp: true
       magenta.jail.exempt: true
       magenta.lightning.*: true
-      magenta.rtp: true
       magenta.shop.*: true
       magenta.social.spy: true
       magenta.chat.filter.bypass.*: true
@@ -78,13 +79,14 @@ permissions:
       magenta.afk: true
       magenta.afk.auto: true
       magenta.echest: true
+      magenta.feedback.*: true
+      magenta.report.*: true
       magenta.home.player: true
       magenta.ignore: true
       magenta.unignore: true
       magenta.kit: true
       magenta.kit.list: true
       magenta.warp: true
-      magenta.rtp: true
       magenta.tpa.*: true
       magenta.msg.*: true
       magenta.vote.*: true
@@ -139,6 +141,11 @@ permissions:
     children:
       magenta.echest: true
       magenta.echest.other: true
+  magenta.feedback.*:
+    description: Permissions for feedback
+    default: false
+    children:
+      magenta.feedback: true
   magenta.fly.*:
     description: All permissions for fly commands
     default: false
@@ -252,6 +259,7 @@ permissions:
     description: Permissions for random items
     default: false
     children:
+      magenta.random.crates.key: true
       magenta.random.tag: true
   magenta.repair.*:
     description: Permissions for repair
@@ -261,13 +269,11 @@ permissions:
       magenta.repair.all: true
       magenta.repair.other: true
       magenta.repair.delay.exempt: true
-  magenta.rtp.*:
-    description: Permissions for rtp
+  magenta.report.*:
+    description: Permissions for report
     default: false
     children:
-      magenta.rtp: true
-      magenta.rtp.other: true
-      magenta.rtp.delay.exempt: true
+      magenta.report: true
   magenta.shop.*:
     description: Permissions for shop
     default: false
@@ -362,7 +368,6 @@ permissions:
       magenta.jail.exempt: true
       magenta.kit.delay.exempt: true
       magenta.repair.delay.exempt: true
-      magenta.rtp.delay.exempt: true
       magenta.social.spy.exempt: true
       magenta.tpa.delay.exempt: true
       magenta.warp.delay.exempt: true

@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api
+package com.github.encryptsl.magenta.api.config
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil

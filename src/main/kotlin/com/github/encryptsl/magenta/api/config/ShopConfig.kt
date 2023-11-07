@@ -1,17 +1,16 @@
-package com.github.encryptsl.magenta.api
+package com.github.encryptsl.magenta.api.config
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
 
-class TagsConfig(private val magenta: Magenta) {
-    private val configUtil = ConfigUtil(magenta, "tags.yml")
+class ShopConfig(magenta: Magenta, type: String) {
 
-    fun set(path: String, value: Any?) {
-        magenta.schedulerMagenta.doAsync(magenta) {
-            getConfig().set(path, value)
-            save()
-        }
+    private val configUtil = ConfigUtil(magenta, type)
+
+    fun fileExist(): Boolean
+    {
+        return configUtil.file.isFile
     }
 
     fun reload() {

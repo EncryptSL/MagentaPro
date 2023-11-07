@@ -1,10 +1,13 @@
 package com.github.encryptsl.magenta.common.hook.nuvotifier
 
+import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.PlayerAccount
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
+import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.datetime
+import com.github.encryptsl.magenta.common.extensions.trimUUID
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -44,9 +47,15 @@ object VoteHelper {
                     magenta.schedulerMagenta.doSync(magenta) {
                         giveRewards(Bukkit.getOnlinePlayers(), commands)
                         if (magenta.config.contains("votifier.voteparty.random")) {
-                            val player = Bukkit.getOnlinePlayers().random().name
-                            giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player)
-                            magenta.pluginManager.callEvent(VotePartyPlayerWinner(player))
+                            val player = Bukkit.getOnlinePlayers().random()
+                            giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
+                            magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
+                            magenta.notification.client.send(magenta.notification.addEmbed {
+                                setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
+                                setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
+                                setColor(0xa730c2)
+                                addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
+                            })
                         }
                     }
                     broadcast(endPartyMessage)

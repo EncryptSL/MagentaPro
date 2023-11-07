@@ -24,7 +24,7 @@ class VirtualPlayerLevelListener(private val magenta: Magenta) : Listener {
                     magenta.config.getString("level.effect.volume").toString().toFloat(),
                     magenta.config.getString("level.effect.pitch").toString().toFloat()
                 )
-                magenta.config.getStringList("level-up-format").forEach { line ->
+                magenta.config.getStringList("level.format").forEach { line ->
                     it.sendMessage(
                         ModernText.miniModernTextCenter(
                             line, TagResolver.resolver(
