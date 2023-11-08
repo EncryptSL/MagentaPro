@@ -84,9 +84,9 @@ object VoteHelper {
 
     @JvmStatic
     fun broadcast(string: String, countdown: Int) {
-        Bukkit.broadcast(ModernText.miniModernText(string, TagResolver.resolver(
-            Placeholder.parsed("delay", countdown.toString()),
-        )))
+        Bukkit.getOnlinePlayers().forEach { player: Player ->
+            player.sendActionBar(ModernText.miniModernText(string, Placeholder.parsed("delay", countdown.toString())))
+        }
     }
 
     @JvmStatic

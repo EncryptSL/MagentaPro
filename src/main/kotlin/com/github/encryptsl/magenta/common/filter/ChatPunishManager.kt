@@ -45,7 +45,7 @@ class ChatPunishManager(private val magenta: Magenta, private val violations: Vi
 
         if (actionList.contains("message")) {
             if (translation != null) {
-                player.sendMessage(translation)
+                Bukkit.broadcast(translation)
             }
         }
         if (actionList.contains("replace")) {

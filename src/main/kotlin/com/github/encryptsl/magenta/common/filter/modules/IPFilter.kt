@@ -28,7 +28,7 @@ class IPFilter(private val magenta: Magenta, private val violations: Violations)
                     TextReplacementConfig
                         .builder()
                         .match(Pattern.compile(magenta.config.getString("chat.filters.${violations.name.lowercase()}.ip_regex").toString()))
-                        .replacement("*******")
+                        .replacement(ModernText.miniModernText("<red>[IP-Adressa]"))
                         .build(),
                     message
                 )

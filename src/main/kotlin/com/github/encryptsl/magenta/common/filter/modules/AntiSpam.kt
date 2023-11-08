@@ -45,7 +45,6 @@ class AntiSpam(val magenta: Magenta, private val violations: Violations) : Chat 
                 "[Automaticky] Zablokováno, detekován spam"
             )
         }
-
     }
 
 
