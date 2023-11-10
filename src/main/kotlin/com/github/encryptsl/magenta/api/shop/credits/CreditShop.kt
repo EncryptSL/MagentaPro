@@ -2,14 +2,12 @@ package com.github.encryptsl.magenta.api.shop.credits
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.ShopConfig
-import com.github.encryptsl.magenta.api.shop.ShopBuilder
-import com.github.encryptsl.magenta.api.shop.helpers.ShopButtons
+import com.github.encryptsl.magenta.api.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
-import dev.triumphteam.gui.guis.GuiItem
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
@@ -19,51 +17,20 @@ class CreditShop(private val magenta: Magenta) {
 
     private val creditLiteHook: CreditLiteHook by lazy { CreditLiteHook(magenta) }
     private val creditShopInventory: CreditShopInventory by lazy { CreditShopInventory(magenta, creditLiteHook) }
+    private val shopUI: ShopUI by lazy {ShopUI(magenta)}
 
     fun openShop(player: Player) {
-        val gui: Gui = ShopBuilder.gui(
+        val gui: Gui = shopUI.simpleGui(
             magenta.creditShopConfig.getConfig().getString("shop.gui.name").toString(),
             magenta.creditShopConfig.getConfig().getInt("shop.gui.size", 6),
             GuiType.CHEST
         )
 
         if (magenta.creditShopConfig.getConfig().contains("shop.gui.fill")) {
-            if (magenta.creditShopConfig.getConfig().contains("shop.gui.fill.border")) {
-                gui.filler.fillBorder(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.creditShopConfig.getConfig().getString("shop.gui.fill.border").toString()
-                        )
-                    )
-                )
-            }
-            if (magenta.creditShopConfig.getConfig().contains("shop.gui.fill.top")) {
-                gui.filler.fillTop(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.creditShopConfig.getConfig().getString("shop.gui.fill.top").toString()
-                        )
-                    )
-                )
-            }
-            if (magenta.creditShopConfig.getConfig().contains("shop.gui.fill.bottom")) {
-                gui.filler.fillBottom(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.creditShopConfig.getConfig().getString("shop.gui.fill.bottom").toString()
-                        )
-                    )
-                )
-            }
-            if (magenta.creditShopConfig.getConfig().contains("shop.gui.fill.all")) {
-                gui.filler.fill(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.creditShopConfig.getConfig().getString("shop.gui.fill.all").toString()
-                        )
-                    )
-                )
-            }
+            shopUI.fillBorder(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillTop(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillBottom(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillAll(gui.filler, magenta.creditShopConfig.getConfig())
         }
 
 
@@ -138,48 +105,16 @@ class CreditShop(private val magenta: Magenta) {
         val name = magenta.creditShopConfig.getConfig().getString("shop.gui.categoryName").toString()
         val categoryName = magenta.creditShopConfig.getConfig().getString("shop.categories.$type.name").toString()
 
-        val gui: PaginatedGui = ShopBuilder.guiPaginated(ModernText.miniModernText(
-            name,
-            Placeholder.parsed("category", categoryName)
-        ), shopCategory.getConfig().getInt("shop.gui.size", 6))
+        val gui: PaginatedGui = shopUI.paginatedGui(
+            ModernText.miniModernText(name, Placeholder.parsed("category", categoryName)),
+            shopCategory.getConfig().getInt("shop.gui.size", 6)
+        )
 
         if (shopCategory.getConfig().contains("shop.gui.fill")) {
-            if (shopCategory.getConfig().contains("shop.gui.fill.border")) {
-                gui.filler.fillBorder(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.border").toString()
-                        )
-                    )
-                )
-            }
-            if (shopCategory.getConfig().contains("shop.gui.fill.top")) {
-                gui.filler.fillTop(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.top").toString()
-                        )
-                    )
-                )
-            }
-            if (shopCategory.getConfig().contains("shop.gui.fill.bottom")) {
-                gui.filler.fillBottom(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.bottom").toString()
-                        )
-                    )
-                )
-            }
-            if (shopCategory.getConfig().contains("shop.gui.fill.all")) {
-                gui.filler.fill(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.all").toString()
-                        )
-                    )
-                )
-            }
+            shopUI.fillBorder(gui.filler, shopCategory.getConfig())
+            shopUI.fillTop(gui.filler, shopCategory.getConfig())
+            shopUI.fillBottom(gui.filler, shopCategory.getConfig())
+            shopUI.fillAll(gui.filler, shopCategory.getConfig())
         }
 
         if (shopCategory.getConfig().contains("shop.custom-items")) {
@@ -292,16 +227,15 @@ class CreditShop(private val magenta: Magenta) {
             }
         }
         for (material in Material.entries) {
-            ShopButtons.paginationButton(player, material, gui, shopCategory, "previous", magenta)
-            ShopButtons.closeButton(
+            shopUI.nextPage(player, material, shopCategory, "previous", gui)
+            shopUI.closeButton(
                 player,
                 material,
                 gui,
                 shopCategory,
-                magenta,
                 this
             )
-            ShopButtons.paginationButton(player, material, gui, shopCategory, "next", magenta)
+            shopUI.nextPage(player, material, shopCategory, "next", gui)
         }
         gui.open(player)
     }

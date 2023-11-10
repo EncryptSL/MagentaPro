@@ -61,7 +61,8 @@ class EconomyShopIntegration(private val magenta: Magenta) {
 
     fun doCreditTransaction(player: Player, creditLiteHook: CreditLiteHook, message: String, product: Component, price: Double, quantity: Int, commands: MutableList<String>) {
         try {
-            if (creditLiteHook.hasCredits(player, price)) {
+            if (!creditLiteHook.hasCredits(player, price))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.credit")))
 
                 magenta.schedulerMagenta.doSync(magenta) {
                     magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
@@ -78,9 +79,6 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                     )
                 )
                 ShopHelper.giveRewards(commands, player.name, quantity)
-            } else {
-                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.credit")))
-            }
         } catch (e : CreditException) {
             player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }

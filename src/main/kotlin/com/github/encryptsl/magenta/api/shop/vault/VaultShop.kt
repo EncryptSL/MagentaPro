@@ -2,14 +2,12 @@ package com.github.encryptsl.magenta.api.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.ShopConfig
-import com.github.encryptsl.magenta.api.shop.ShopBuilder
-import com.github.encryptsl.magenta.api.shop.helpers.ShopButtons
+import com.github.encryptsl.magenta.api.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
-import dev.triumphteam.gui.guis.GuiItem
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
@@ -19,48 +17,17 @@ class VaultShop(private val magenta: Magenta) {
 
     private val vault: VaultHook by lazy { VaultHook(magenta) }
     private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta, vault) }
+    private val shopUI: ShopUI by lazy { ShopUI(magenta) }
 
     fun openShop(player: Player) {
-        val gui: Gui = ShopBuilder.gui(magenta.shopConfig.getConfig().getString("shop.gui.name").toString(),
+        val gui: Gui = shopUI.simpleGui(magenta.shopConfig.getConfig().getString("shop.gui.name").toString(),
             magenta.shopConfig.getConfig().getInt("shop.gui.size", 6), GuiType.CHEST)
 
         if (magenta.shopConfig.getConfig().contains("shop.gui.fill")) {
-            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.border")) {
-                gui.filler.fillBorder(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.shopConfig.getConfig().getString("shop.gui.fill.border").toString()
-                        )
-                    )
-                )
-            }
-            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.top")) {
-                gui.filler.fillTop(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.shopConfig.getConfig().getString("shop.gui.fill.top").toString()
-                        )
-                    )
-                )
-            }
-            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.bottom")) {
-                gui.filler.fillBottom(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.shopConfig.getConfig().getString("shop.gui.fill.bottom").toString()
-                        )
-                    )
-                )
-            }
-            if (magenta.shopConfig.getConfig().contains("shop.gui.fill.all")) {
-                gui.filler.fill(
-                    GuiItem(
-                        Material.valueOf(
-                            magenta.shopConfig.getConfig().getString("shop.gui.fill.all").toString()
-                        )
-                    )
-                )
-            }
+            shopUI.fillBorder(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillTop(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillBottom(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillAll(gui.filler, magenta.creditShopConfig.getConfig())
         }
 
         for (material in Material.entries) {
@@ -128,47 +95,15 @@ class VaultShop(private val magenta: Magenta) {
         val name = magenta.shopConfig.getConfig().getString("shop.gui.categoryName").toString()
         val categoryName = magenta.shopConfig.getConfig().getString("shop.categories.$type.name").toString()
 
-        val gui: PaginatedGui = ShopBuilder.guiPaginated(ModernText.miniModernText(name,
+        val gui: PaginatedGui = shopUI.paginatedGui(ModernText.miniModernText(name,
             Placeholder.parsed("category", categoryName)
         ), shopCategory.getConfig().getInt("shop.gui.size", 6))
 
         if (shopCategory.getConfig().contains("shop.gui.fill")) {
-            if (shopCategory.getConfig().contains("shop.gui.fill.border")) {
-                gui.filler.fillBorder(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.border").toString()
-                        )
-                    )
-                )
-            }
-            if (shopCategory.getConfig().contains("shop.gui.fill.top")) {
-                gui.filler.fillTop(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.top").toString()
-                        )
-                    )
-                )
-            }
-            if (shopCategory.getConfig().contains("shop.gui.fill.bottom")) {
-                gui.filler.fillBottom(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.bottom").toString()
-                        )
-                    )
-                )
-            }
-            if (shopCategory.getConfig().contains("shop.gui.fill.all")) {
-                gui.filler.fill(
-                    GuiItem(
-                        Material.valueOf(
-                            shopCategory.getConfig().getString("shop.gui.fill.all").toString()
-                        )
-                    )
-                )
-            }
+            shopUI.fillBorder(gui.filler, shopCategory.getConfig())
+            shopUI.fillTop(gui.filler, shopCategory.getConfig())
+            shopUI.fillBottom(gui.filler, shopCategory.getConfig())
+            shopUI.fillAll(gui.filler, shopCategory.getConfig())
         }
 
         for (item in shopCategory.getConfig().getConfigurationSection("shop.items")?.getKeys(false)!!) {
@@ -230,16 +165,15 @@ class VaultShop(private val magenta: Magenta) {
         }
 
         for (material in Material.entries) {
-            ShopButtons.paginationButton(player, material, gui, shopCategory, "previous", magenta)
-            ShopButtons.closeButton(
+            shopUI.previousPage(player, material, shopCategory, "previous", gui)
+            shopUI.closeButton(
                 player,
                 material,
                 gui,
                 shopCategory,
-                magenta,
                 this
             )
-            ShopButtons.paginationButton(player, material, gui, shopCategory, "next", magenta)
+            shopUI.previousPage(player, material, shopCategory, "next", gui)
         }
         gui.open(player)
     }
