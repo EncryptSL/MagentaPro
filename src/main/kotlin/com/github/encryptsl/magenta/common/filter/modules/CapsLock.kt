@@ -4,9 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.Chat
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.common.filter.ChatPunishManager
-import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 
 
@@ -25,7 +23,12 @@ class CapsLock(private val magenta: Magenta, private val violations: Violations)
         val count = chatMessage.toCharArray().count { Character.isUpperCase(it) }
 
         if (count > magenta.config.getInt("chat.filters.${violations.name.lowercase()}.sensitive", 15)) {
-            chatPunishManager.action(player, event, ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.caps"), Placeholder.parsed("player", player.name)), null, chatMessage)
+            chatPunishManager.action(
+                player,
+                event,
+                magenta.localeConfig.getMessage("magenta.filter.caps"),
+                "Psát CapsLockem"
+            )
         }
     }
 }

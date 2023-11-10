@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.api.chat.Chat
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.common.filter.ChatPunishManager
 import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import java.io.File
 import java.util.*
@@ -23,15 +22,20 @@ class Swear(private val magenta: Magenta, private val violations: Violations) : 
         if (player.hasPermission("magenta.chat.filter.bypass.swear")) return
 
         val sc = Scanner(File(magenta.dataFolder, "swear_list.txt"))
+
         while (sc.hasNext()) {
             val s = sc.next()
             if (message.matches(Regex("(.*)$s(.*)"))) {
-                event.message(Component.text(PlainTextComponentSerializer.plainText().serialize(event.message()).replace(Regex(s), "******")))
                 detected = true
             }
         }
         if (detected) {
-            chatPunishManager.action(player, event, null, null, message)
+            chatPunishManager.action(
+                player,
+                event,
+                magenta.localeConfig.getMessage("magenta.filter.swear"),
+                message
+            )
         }
     }
 

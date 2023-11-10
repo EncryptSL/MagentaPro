@@ -295,13 +295,12 @@ votifier:
 #                    ChatFilter                         #
 #  bypass permissions:                                  #
 #  magenta.chat.filter.bypass.<name>                    #
-#  actions: [notify,kick,replace,cancel,message]        #
+#  actions: [notify,kick,cancel,message]                #
 #########################################################
 chat:
   filters:
     antispam:
       action:
-        - notify
         - message
         - cancel
       similarity: 80
@@ -309,13 +308,15 @@ chat:
     ipfilter:
       action:
         - notify
-        - replace
+        - message
+        - cancel
       control: true
       ip_regex: \d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}
     website:
       action:
         - notify
-        - replace
+        - message
+        - cancel
       control: true
       web_regex:
         - (http|https)[\w|\_|\W|\_]*(\.)*(com|eu|_|sk|de|info|cz|io|COM|EU|SK|DE|INFO|CZ|IO)
@@ -325,12 +326,11 @@ chat:
         - https://youtube.com
     swear:
       action:
-        - notify
-        - replace
+        - message
+        - cancel
       control: true
     capslock:
       action:
-        - notify
         - message
         - cancel
       sensitive: 15

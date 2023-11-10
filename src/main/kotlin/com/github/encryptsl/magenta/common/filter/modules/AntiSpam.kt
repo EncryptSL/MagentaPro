@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.api.chat.Chat
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.common.filter.ChatPunishManager
 import com.github.encryptsl.magenta.common.utils.CensorAPI
-import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import java.util.*
@@ -41,8 +40,8 @@ class AntiSpam(val magenta: Magenta, private val violations: Violations) : Chat 
             magenta.schedulerMagenta.delayedTask(magenta, {
                       spam.remove(uuid, spam[uuid].toString())
             }, 1000L)
-            chatPunishManager.action(player, event, ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.antispam")), null,
-                "[Automaticky] Zablokováno, detekován spam"
+            chatPunishManager.action(player, event, magenta.localeConfig.getMessage("magenta.filter.antispam"),
+                "Spamovat"
             )
         }
     }
