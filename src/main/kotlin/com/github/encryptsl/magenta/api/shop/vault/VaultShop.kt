@@ -173,7 +173,7 @@ class VaultShop(private val magenta: Magenta) {
                 shopCategory,
                 this
             )
-            shopUI.previousPage(player, material, shopCategory, "next", gui)
+            shopUI.nextPage(player, material, shopCategory, "next", gui)
         }
         gui.open(player)
     }

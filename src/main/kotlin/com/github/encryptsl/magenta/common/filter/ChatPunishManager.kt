@@ -16,16 +16,16 @@ import java.util.*
 
 class ChatPunishManager(private val magenta: Magenta, private val violations: Violations) {
 
-    val flagging = HashMap<UUID, Int>()
+    private val flagging = HashMap<UUID, Int>()
 
     fun action(player: Player, event: AsyncChatEvent, translation: String?, messageFromChat: String) {
         val actionList = magenta.config.getStringList("chat.filters.${violations.name.lowercase()}.action")
         if (actionList.contains("none")) return
 
         if (actionList.contains("kick")) {
-            flagging.putIfAbsent(player.uniqueId, 1)
-            val score = flagging.computeIfPresent(player.uniqueId) { _, i -> i + 1 } ?: 1
-
+            flagging.putIfAbsent(player.uniqueId, 0)
+            flagging.computeIfPresent(player.uniqueId) { _, i -> i + 1 } ?: 1
+            val score = flagging[player.uniqueId] ?: 0
             if (score >= 2) {
                 magenta.schedulerMagenta.doSync(magenta) {
                     player.kick(
@@ -35,6 +35,7 @@ class ChatPunishManager(private val magenta: Magenta, private val violations: Vi
                             )
                         )
                     )
+                    flagging.remove(player.uniqueId)
                 }
             }
         }

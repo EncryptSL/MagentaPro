@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.api.manager
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.exceptions.KitFoundException
 import com.github.encryptsl.magenta.api.exceptions.KitNotFoundException
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
@@ -70,7 +69,7 @@ class KitManager(private val magenta: Magenta) {
 
     fun createKit(player: Player, kitName: String, delay: Int) {
         if (magenta.kitConfig.getKit().contains("kits.$kitName"))
-            throw KitFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.exist"))
+            throw KitNotFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.exist"))
 
         val kitSection = magenta.kitConfig.getKit().createSection("kits.$kitName")
         kitSection.set("name", kitName)
