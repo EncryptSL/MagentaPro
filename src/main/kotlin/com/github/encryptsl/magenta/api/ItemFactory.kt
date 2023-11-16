@@ -4,11 +4,14 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.Color
 import org.bukkit.Material
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.PotionMeta
 
 class ItemFactory {
 
@@ -89,9 +92,11 @@ class ItemFactory {
         return itemStack
     }
 
-    fun shopItem(material: Material, buyPrice:Double, sellPrice:Double, lore: List<String>): ItemStack {
-        val itemStack = ItemStack(material, 1)
-        val itemMeta = itemStack.itemMeta
+    fun shopItem(material: Material, buyPrice:Double, sellPrice:Double, fileConfiguration: FileConfiguration): ItemStack {
+        val itemStack = shopItem(material, 1)
+        var itemMeta = itemStack.itemMeta
+        val lore = fileConfiguration.getStringList("shop.gui.item_lore")
+
         if (lore.isNotEmpty()) {
             val newList: MutableList<Component> = ArrayList()
             for (loreItem in lore) {
@@ -102,20 +107,35 @@ class ItemFactory {
             }
             itemMeta.lore(newList)
         }
+        if (fileConfiguration.contains("shop.items.${material.name}.options")) {
+            if (fileConfiguration.contains("shop.items.${material.name}.options.color")) {
+                itemMeta = itemMeta as PotionMeta
+                itemMeta.color = Color.fromRGB(fileConfiguration.getInt("shop.items.${material.name}.options.color"))
+            }
+        }
+
         itemStack.setItemMeta(itemMeta)
 
         return itemStack
     }
-    fun creditShopItem(player: Player, material: Material, productName: String, quantity: Int, buyPrice:Double, glowing: Boolean, lore: List<String>): ItemStack {
-        val itemStack = ItemStack(material, quantity)
-        val itemMeta = itemStack.itemMeta
+    fun creditShopItem(
+        player: Player,
+        material: Material,
+        productName: String,
+        quantity: Int,
+        buyPrice:Double,
+        glowing: Boolean,
+        hasOptions: Boolean,
+        isPotion: Boolean,
+        hasColor: Boolean,
+        color: Int,
+        lore: List<String>
+    ): ItemStack {
+        val itemStack = shopItem(material, quantity)
+        var itemMeta = itemStack.itemMeta
         itemMeta.displayName(ModernText.miniModernText(productName, TagResolver.resolver(
             Placeholder.parsed("quantity", quantity.toString())
         )))
-        if (glowing) {
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-            itemMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, false)
-        }
         if (lore.isNotEmpty()) {
             val newList: MutableList<Component> = ArrayList()
             for (loreItem in lore) {
@@ -125,19 +145,31 @@ class ItemFactory {
             }
             itemMeta.lore(newList)
         }
+
+        if (hasOptions) {
+            if (glowing) {
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                itemMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, false)
+            }
+            if (isPotion) {
+                if (hasColor) {
+                    itemMeta = itemMeta as PotionMeta
+                    itemMeta.color = Color.fromRGB(color)
+                }
+            }
+        }
+
         itemStack.setItemMeta(itemMeta)
 
         return itemStack
     }
 
     fun shopItem(material: Material, amount: Int): ItemStack {
-        val itemStack = ItemStack(material, amount)
-
-        return itemStack
+        return ItemStack(material, amount)
     }
 
     fun shopItem(material: Material, name: String): ItemStack {
-        val itemStack = ItemStack(material, 1)
+        val itemStack = shopItem(material, 1)
         val itemMeta = itemStack.itemMeta
         itemMeta.displayName(ModernText.miniModernText(name))
         itemStack.setItemMeta(itemMeta)
@@ -146,7 +178,7 @@ class ItemFactory {
     }
 
     fun shopItem(material: Material, name: String, glowing: Boolean): ItemStack {
-        val itemStack = ItemStack(material, 1)
+        val itemStack = shopItem(material, 1)
         val itemMeta = itemStack.itemMeta
         itemMeta.displayName(ModernText.miniModernText(name))
         if (glowing) {

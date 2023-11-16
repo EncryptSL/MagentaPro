@@ -21,7 +21,10 @@ interface ShopItems {
     fun fillBorder(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
     fun fillTop(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
     fun fillBottom(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
-    fun fillAll(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
+
+    fun fillFull(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
+
+    fun fillSide(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
 
     fun previousPage(
         player: Player,

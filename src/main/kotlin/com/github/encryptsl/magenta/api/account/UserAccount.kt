@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import java.util.*
 
-class PlayerAccount(private val magenta: Magenta, private val uuid: UUID) : IAccount {
+class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Account {
 
     private val configUtil = ConfigUtil(magenta, "/players/$uuid.yml")
     val cooldownManager: PlayerCooldown by lazy { PlayerCooldown(uuid, this) }

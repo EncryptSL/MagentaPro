@@ -4,7 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import java.util.*
 
 class User(private val magenta: Magenta) {
-    fun getUser(uuid: UUID): PlayerAccount {
-        return PlayerAccount(magenta, uuid)
+    fun getUser(uuid: UUID): UserAccount {
+        return UserAccount(magenta, uuid)
     }
 }

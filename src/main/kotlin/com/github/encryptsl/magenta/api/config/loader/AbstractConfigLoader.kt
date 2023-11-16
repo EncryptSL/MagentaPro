@@ -7,11 +7,15 @@ import java.io.File
 abstract class AbstractConfigLoader : Config {
 
     override fun createFromResources(configName: String, plugin: Plugin): AbstractConfigLoader {
-        val file = File(plugin.dataFolder, configName)
-        if (!file.exists()) {
-            plugin.saveResource(configName, false)
-        } else {
-            plugin.logger.info("Configuration $configName exist !")
+        try {
+            val file = File(plugin.dataFolder, configName)
+            if (!file.exists()) {
+                plugin.saveResource(configName, false)
+            } else {
+                plugin.logger.info("Configuration $configName exist !")
+            }
+        } catch (e : IllegalArgumentException) {
+            plugin.logger.info(e.message ?: e.localizedMessage)
         }
         return this
     }

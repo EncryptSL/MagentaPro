@@ -4,7 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
 
-class JailConfig(private val magenta: Magenta) {
+class JailConfig(magenta: Magenta) {
 
     private val configUtil = ConfigUtil(magenta, "jails.yml")
 
@@ -13,22 +13,10 @@ class JailConfig(private val magenta: Magenta) {
     }
 
     fun reload() {
-        runCatching {
-            configUtil.reload()
-        }.onSuccess {
-            magenta.logger.info("${configUtil.file.name} is reloaded !")
-        }.onFailure { e ->
-            magenta.logger.severe(e.message ?: e.localizedMessage)
-        }
+        configUtil.reload()
     }
 
     fun save() {
-        runCatching {
-            configUtil.save()
-        }.onSuccess {
-            magenta.logger.info("${configUtil.file.name} is saved now !")
-        }.onFailure { e ->
-            magenta.logger.severe(e.message ?: e.localizedMessage)
-        }
+        configUtil.save()
     }
 }

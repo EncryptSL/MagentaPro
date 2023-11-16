@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
 import com.github.encryptsl.magenta.common.extensions.avatar
@@ -22,8 +22,8 @@ object VoteHelper {
 
     @JvmStatic
     fun saveOfflineReward(magenta: Magenta, offlinePlayer: OfflinePlayer, rewards: MutableList<String>) {
-        val playerAccount = PlayerAccount(magenta, offlinePlayer.uniqueId)
-        playerAccount.set("votifier.rewards", rewards)
+        val userAccount = UserAccount(magenta, offlinePlayer.uniqueId)
+        userAccount.set("votifier.rewards", rewards)
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
     }
 
@@ -42,7 +42,7 @@ object VoteHelper {
         object : BukkitRunnable() {
             var timer = countdown
             override fun run() {
-                broadcast(broadcastMessage, timer)
+                broadcastActionBar(broadcastMessage, timer)
                 if (timer == 0) {
                     magenta.schedulerMagenta.doSync(magenta) {
                         giveRewards(Bukkit.getOnlinePlayers(), commands)
@@ -83,7 +83,7 @@ object VoteHelper {
     }
 
     @JvmStatic
-    fun broadcast(string: String, countdown: Int) {
+    fun broadcastActionBar(string: String, countdown: Int) {
         Bukkit.getOnlinePlayers().forEach { player: Player ->
             player.sendActionBar(ModernText.miniModernText(string, Placeholder.parsed("delay", countdown.toString())))
         }

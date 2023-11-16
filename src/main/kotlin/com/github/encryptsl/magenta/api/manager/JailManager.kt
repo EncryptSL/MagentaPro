@@ -1,13 +1,13 @@
 package com.github.encryptsl.magenta.api.manager
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.account.UserAccount
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import java.time.Duration
 
 
-class JailManager(private val magenta: Magenta, private val account: PlayerAccount) {
+class JailManager(private val magenta: Magenta, private val account: UserAccount) {
 
     private fun getOnlineJailedTime(): Long {
         return (account.getAccount().getLong("timestamps.onlinejail"))

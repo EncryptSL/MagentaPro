@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.jail.JailPlayerEvent
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -16,7 +16,7 @@ class EntityAttackListener(private val magenta: Magenta) : Listener {
     fun onEntityAttack(event: EntityDamageByEntityEvent) {
         val entity = event.entity
         if (entity is Player) {
-            val account = PlayerAccount(magenta, entity.uniqueId)
+            val account = UserAccount(magenta, entity.uniqueId)
             if (event.cause  == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
                 val playerJailPlayerEvent = JailPlayerEvent(entity, null)
                 playerJailPlayerEvent.callEvent()

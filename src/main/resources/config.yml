@@ -89,6 +89,13 @@ socialspy-commands:
 auto-afk: 5
 
 
+# Settings for Level UP notifications
+# You can set sound effect when player have level up
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+#   effect:
+#    sound: "UI_TOAST_CHALLENGE_COMPLETE"
+#    volume: 5.5f
+#    pitch: 1.2f
 level:
   effect:
     sound: "UI_TOAST_CHALLENGE_COMPLETE"
@@ -292,12 +299,31 @@ votifier:
         - 'crazycrates give physical votecrate 2 {player}'
 
 #########################################################
+#                     Chat Section                      #
+#########################################################
+chat:
+  suggestCommand: "/msg {name} "
+  hoverText: |-
+    &7
+    &8| &fMoney: &6%lite_eco_balance% ⛁
+    &8| &fPlayTime: &a%statistic_time_played%
+    &7
+    &8▪ &fTotal Jumps: &e%statistic_jump%
+    &8▪ &fTotal Deaths: &4%statistic_deaths%
+    &8▪ &fTotal Kills: &c%statistic_player_kills%
+
+  default-format: "<prefix> <name> <gray>» <white><message>"
+
+
+  group-formats:
+    # default: "<gray><name> » <white><message>"
+
+#########################################################
 #                    ChatFilter                         #
 #  bypass permissions:                                  #
 #  magenta.chat.filter.bypass.<name>                    #
 #  actions: [notify,kick,cancel,message]                #
 #########################################################
-chat:
   filters:
     antispam:
       action:

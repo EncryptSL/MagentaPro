@@ -62,7 +62,7 @@ class ShopUI(private val magenta: Magenta) : ShopItems {
         fileConfiguration: FileConfiguration
     ) {
         if (fileConfiguration.contains("shop.gui.fill.top")) {
-            guiFiller.fillBorder(
+            guiFiller.fillTop(
                 GuiItem(
                     Material.valueOf(
                         fileConfiguration.getString("shop.gui.fill.top").toString()
@@ -78,7 +78,7 @@ class ShopUI(private val magenta: Magenta) : ShopItems {
         fileConfiguration: FileConfiguration
     ) {
         if (fileConfiguration.contains("shop.gui.fill.bottom")) {
-            guiFiller.fillBorder(
+            guiFiller.fillBottom(
                 GuiItem(
                     Material.valueOf(
                         fileConfiguration.getString("shop.gui.fill.bottom").toString()
@@ -89,17 +89,37 @@ class ShopUI(private val magenta: Magenta) : ShopItems {
         }
     }
 
-    override fun fillAll(
+    override fun fillFull(
         guiFiller: GuiFiller,
         fileConfiguration: FileConfiguration
     ) {
-        if (fileConfiguration.contains("shop.gui.fill.all")) {
-            guiFiller.fillBorder(
+        if (fileConfiguration.contains("shop.gui.fill.full")) {
+            guiFiller.fill(
                 GuiItem(
                     Material.valueOf(
-                        fileConfiguration.getString("shop.gui.fill.all").toString()
+                        fileConfiguration.getString("shop.gui.fill.full").toString()
                     )
                 )
+            )
+            return
+        }
+    }
+
+    override fun fillSide(
+        guiFiller: GuiFiller,
+        fileConfiguration: FileConfiguration
+    ) {
+        if (fileConfiguration.contains("shop.gui.fill.side")) {
+            val side = fileConfiguration.get("shop.gui.fill.mode") ?: GuiFiller.Side.BOTH
+
+            val type = GuiFiller.Side.valueOf(side.toString())
+
+            guiFiller.fillSide(type, listOf(
+                GuiItem(
+                    Material.valueOf(
+                        fileConfiguration.getString("shop.gui.fill.side").toString()
+                    )
+                ))
             )
             return
         }

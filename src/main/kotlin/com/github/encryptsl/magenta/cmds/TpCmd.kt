@@ -5,7 +5,7 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
@@ -52,7 +52,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tp <player>")
     @CommandPermission("magenta.tp")
     fun onTeleport(player: Player, @Argument(value = "player", suggestions = "players") target: Player) {
-        val account = PlayerAccount(magenta, target.uniqueId)
+        val account = UserAccount(magenta, target.uniqueId)
         if (!account.getAccount().getBoolean("teleportenabled") && !player.hasPermission("magenta.tp.exempt"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.exempt"), TagResolver.resolver(
                 Placeholder.parsed("player", player.name)
@@ -69,7 +69,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandMethod("tp <player> <target>")
     @CommandPermission("magenta.tp.other")
     fun onTeleportConsole(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
-        val targetAccount = PlayerAccount(magenta, target.uniqueId)
+        val targetAccount = UserAccount(magenta, target.uniqueId)
         if (!targetAccount.getAccount().getBoolean("teleportenabled") && !commandSender.hasPermission("magenta.tp.exempt"))
             return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.exempt"), TagResolver.resolver(
                 Placeholder.parsed("player", player.name)

@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common.hook
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
+import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobDeathListener
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
@@ -32,8 +33,22 @@ class HookManager(private val magenta: Magenta) {
         }
     }
 
+    fun hookLuckPerms() {
+        if (isPluginInstalled("LuckPerms")) {
+            magenta.logger.info("###################################")
+            magenta.logger.info("#        LuckPerms registered     #")
+            magenta.logger.info("###################################")
+            LuckPermsAPI(magenta).setupLuckPerms()
+        } else {
+            magenta.logger.info("###################################")
+            magenta.logger.info("#        LuckPerms not Found      #")
+            magenta.logger.info("#     please download vault api   #")
+            magenta.logger.info("###################################")
+        }
+    }
+
     fun hookVault() {
-        if (isPluginInstalled("VaultAPI")) {
+        if (isPluginInstalled("Vault")) {
             magenta.logger.info("###################################")
             magenta.logger.info("# Vault registered like a service #")
             magenta.logger.info("###################################")

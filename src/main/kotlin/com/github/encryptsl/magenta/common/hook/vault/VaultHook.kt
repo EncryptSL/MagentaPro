@@ -39,7 +39,7 @@ class VaultHook(private val magenta: Magenta) {
         return eco!!.withdrawPlayer(player, amount)
     }
 
-    fun deposite(player: Player, amount: Double): EconomyResponse {
+    fun deposit(player: Player, amount: Double): EconomyResponse {
         if(!setupEconomy())
             throw VaultException(exception)
 

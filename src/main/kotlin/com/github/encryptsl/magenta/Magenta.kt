@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta
 
-import com.github.encryptsl.magenta.api.*
+import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.*
@@ -39,7 +39,6 @@ import kotlin.time.measureTimedValue
 class Magenta : JavaPlugin() {
 
     lateinit var paperContainerProvider: PaperContainerProvider
-
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
     val user: User by lazy { User(this) }
@@ -82,7 +81,7 @@ class Magenta : JavaPlugin() {
             .createFromResources("mythicmobs/rewards.yml", this)
             .createFromResources("shop/shop.yml", this)
             .createFromResources("creditshop/shop.yml", this)
-            .createFromResources("creditshop/categories/super_box_keys.yml", this)
+            .createFromResources("creditshop/categories/galaxy_box_keys.yml", this)
             .createFromResources("shop/categories/blocks.yml", this)
             .createFromResources("shop/categories/decoration.yml", this)
             .createFromResources("shop/categories/farms.yml", this)
@@ -95,7 +94,7 @@ class Magenta : JavaPlugin() {
             .createFromResources("shop/categories/wood.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
-        DatabaseConnector().initConnect(
+        DatabaseConnector(this).initConnect(
             config.getString("database.host") ?: "jdbc:sqlite:plugins/MagentaPro/database.db",
             config.getString("database.username") ?: "root",
             config.getString("database.password") ?: "admin"
@@ -131,6 +130,7 @@ class Magenta : JavaPlugin() {
     }
 
     private fun hookRegistration() {
+        hookManger.hookLuckPerms()
         hookManger.hookMythicMobs()
         hookManger.hookVault()
         hookManger.hookCreditLite()
@@ -142,7 +142,7 @@ class Magenta : JavaPlugin() {
         schedulerMagenta.runTaskTimerAsyncTask(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
         schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 20)
         schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
-        schedulerMagenta.runTaskTimerSync(this, LevelUpTask(this), 0, 1)
+        schedulerMagenta.runTaskTimerSync(this, LevelUpTask(this), 20, 1)
     }
 
     private fun handlerListener() {

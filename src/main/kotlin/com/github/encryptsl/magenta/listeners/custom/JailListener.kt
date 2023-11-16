@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.listeners.custom
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailEvent
 import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
+import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -13,6 +14,8 @@ import org.bukkit.event.Listener
 
 class JailListener(private val magenta: Magenta) : Listener {
 
+    private val luckPerms: LuckPermsAPI by lazy { LuckPermsAPI(magenta) }
+
     @EventHandler
     fun onJail(event: JailEvent) {
         val commandManager = event.commandSender
@@ -22,7 +25,7 @@ class JailListener(private val magenta: Magenta) : Listener {
         val reason = event.reason
         val user = magenta.user.getUser(target.uniqueId)
 
-        if (target.player?.hasPermission("magenta.jail.exempt") == true)
+        if (luckPerms.hasPermission(target,"magenta.jail.exempt")) return
 
         if (magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") == null)
             return commandManager.sendMessage(

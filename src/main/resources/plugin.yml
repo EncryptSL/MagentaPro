@@ -9,13 +9,14 @@ author: EncryptSL
 website: https://encryptsl.github.io/
 
 load: POSTWORLD
+depend: [LuckPerms]
 softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs]
 libraries:
-  - com.zaxxer:HikariCP:5.0.1
+  - com.zaxxer:HikariCP:5.1.0
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20
-  - org.jetbrains.exposed:exposed-core:0.44.0
-  - org.jetbrains.exposed:exposed-jdbc:0.44.0
-  - org.jetbrains.exposed:exposed-kotlin-datetime:0.44.0
+  - org.jetbrains.exposed:exposed-core:0.44.1
+  - org.jetbrains.exposed:exposed-jdbc:0.44.1
+  - org.jetbrains.exposed:exposed-kotlin-datetime:0.44.1
   - club.minnced:discord-webhooks:0.8.4
 
 description: ${description}

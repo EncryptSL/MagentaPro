@@ -27,7 +27,8 @@ class VaultShop(private val magenta: Magenta) {
             shopUI.fillBorder(gui.filler, magenta.creditShopConfig.getConfig())
             shopUI.fillTop(gui.filler, magenta.creditShopConfig.getConfig())
             shopUI.fillBottom(gui.filler, magenta.creditShopConfig.getConfig())
-            shopUI.fillAll(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillSide(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillFull(gui.filler, magenta.creditShopConfig.getConfig())
         }
 
         for (material in Material.entries) {
@@ -103,7 +104,8 @@ class VaultShop(private val magenta: Magenta) {
             shopUI.fillBorder(gui.filler, shopCategory.getConfig())
             shopUI.fillTop(gui.filler, shopCategory.getConfig())
             shopUI.fillBottom(gui.filler, shopCategory.getConfig())
-            shopUI.fillAll(gui.filler, shopCategory.getConfig())
+            shopUI.fillSide(gui.filler, shopCategory.getConfig())
+            shopUI.fillFull(gui.filler, shopCategory.getConfig())
         }
 
         for (item in shopCategory.getConfig().getConfigurationSection("shop.items")?.getKeys(false)!!) {
@@ -121,7 +123,7 @@ class VaultShop(private val magenta: Magenta) {
                             material,
                             buyPrice,
                             sellPrice,
-                            magenta.shopConfig.getConfig().getStringList("shop.gui.item_lore")
+                            magenta.shopConfig.getConfig()
                         )
                     ).asGuiItem()
 

@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.hook.placeholderapi
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.PlayerAccount
+import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.level.LevelFormula
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.Bukkit
@@ -23,7 +23,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
         val args = identifier.split("_")
         val string = args.getOrNull(1)?.toString()
         val rank = args.getOrNull(3)?.toIntOrNull()
-        val account = PlayerAccount(magenta, player.uniqueId)
+        val account = UserAccount(magenta, player.uniqueId)
         val levelEntity = magenta.virtualLevel.getLevel(player.uniqueId)
 
 

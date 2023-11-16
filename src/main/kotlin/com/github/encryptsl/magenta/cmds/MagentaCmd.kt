@@ -6,7 +6,9 @@ import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
+import org.bukkit.configuration.InvalidConfigurationException
 
 @Suppress("UnstableApiUsage", "UNUSED")
 @CommandMethod("magenta|mg")
@@ -25,26 +27,77 @@ class MagentaCmd(private val magenta: Magenta) {
     }
 
     @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload")
-    fun onReload(commandSender: CommandSender) {
-        magenta.reloadConfig()
-        magenta.saveConfig()
-        magenta.mmConfig.reload()
-        magenta.mmConfig.save()
+    @CommandMethod("reload config")
+    fun onReloadConfig(commandSender: CommandSender) {
+        try {
+            magenta.config.options().parseComments(true)
+            magenta.reloadConfig()
+            magenta.saveConfig()
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+        } catch (e : InvalidConfigurationException) {
+            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"), Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
+    }
+
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload shop")
+    fun onReloadShopConfig(commandSender: CommandSender) {
         magenta.shopConfig.reload()
         magenta.shopConfig.save()
         magenta.creditShopConfig.reload()
         magenta.creditShopConfig.save()
         ShopHelper.reloadShopConfigs(magenta)
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload mmrewards")
+    fun onReloadMythicRewards(commandSender: CommandSender) {
+        magenta.mmConfig.reload()
+        magenta.mmConfig.save()
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload randomconfig")
+    fun onReloadRandomConfig(commandSender: CommandSender) {
         magenta.randomConfig.reload()
         magenta.randomConfig.save()
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload citems")
+    fun onReloadActivationItems(commandSender: CommandSender) {
         magenta.cItems.reload()
         magenta.cItems.save()
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload locale")
+    fun onReloadLocale(commandSender: CommandSender) {
         magenta.localeConfig.loadLocale("locale/cs_cz.properties")
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload kits")
+    fun onReloadKits(commandSender: CommandSender) {
         magenta.kitConfig.reload()
         magenta.kitConfig.save()
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload jails")
+    fun onReloadJails(commandSender: CommandSender) {
         magenta.jailConfig.reload()
         magenta.jailConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
+
+
+
+
 }

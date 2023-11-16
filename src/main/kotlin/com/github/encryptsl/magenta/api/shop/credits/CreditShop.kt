@@ -11,6 +11,7 @@ import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
 class CreditShop(private val magenta: Magenta) {
@@ -30,7 +31,8 @@ class CreditShop(private val magenta: Magenta) {
             shopUI.fillBorder(gui.filler, magenta.creditShopConfig.getConfig())
             shopUI.fillTop(gui.filler, magenta.creditShopConfig.getConfig())
             shopUI.fillBottom(gui.filler, magenta.creditShopConfig.getConfig())
-            shopUI.fillAll(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillSide(gui.filler, magenta.creditShopConfig.getConfig())
+            shopUI.fillFull(gui.filler, magenta.creditShopConfig.getConfig())
         }
 
 
@@ -114,37 +116,12 @@ class CreditShop(private val magenta: Magenta) {
             shopUI.fillBorder(gui.filler, shopCategory.getConfig())
             shopUI.fillTop(gui.filler, shopCategory.getConfig())
             shopUI.fillBottom(gui.filler, shopCategory.getConfig())
-            shopUI.fillAll(gui.filler, shopCategory.getConfig())
+            shopUI.fillSide(gui.filler, shopCategory.getConfig())
+            shopUI.fillFull(gui.filler, shopCategory.getConfig())
         }
 
         if (shopCategory.getConfig().contains("shop.custom-items")) {
-            for (item in shopCategory.getConfig().getConfigurationSection("shop.custom-items")?.getKeys(false)!!) {
-                val material = Material.getMaterial(shopCategory.getConfig().getString("shop.custom-items.$item.icon").toString())
-                if (material != null) {
-                    if (!shopCategory.getConfig().contains("shop.custom-items.$item.name"))
-                        return player.sendMessage(
-                            ModernText.miniModernText(
-                                magenta.localeConfig.getMessage("magenta.shop.error.not.defined.name"),
-                                Placeholder.parsed("category", type)
-                            )
-                        )
-                    if (!shopCategory.getConfig().contains("shop.custom-items.$item.position.slot"))
-                        return player.sendMessage(
-                            ModernText.miniModernText(
-                                magenta.localeConfig.getMessage("magenta.shop.error.not.defined.slot"),
-                                Placeholder.parsed("category", type)
-                            )
-                        )
-                    val itemName = shopCategory.getConfig().getString("shop.custom-items.$item.name").toString()
-                    val slot = shopCategory.getConfig().getInt("shop.custom-items.$item.position.slot")
-                    val glowing = shopCategory.getConfig().getBoolean("shop.custom-items.$item.glowing")
-                    val lore = shopCategory.getConfig().getStringList("shop.custom-items.$item.lore")
-                    val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem {
-                        return@asGuiItem
-                    }
-                    gui.setItem(slot, guiItem)
-                }
-            }
+            customItems(player, categoryName, shopCategory.getConfig(), gui)
         }
 
         if (shopCategory.getConfig().contains("shop.items")) {
@@ -188,7 +165,11 @@ class CreditShop(private val magenta: Magenta) {
 
                         val itemName = shopCategory.getConfig().getString("shop.items.$item.name").toString()
                         val slot = shopCategory.getConfig().getInt("shop.items.$item.position.slot")
-                        val glowing = shopCategory.getConfig().getBoolean("shop.items.$item.glowing")
+                        val hasOptions = shopCategory.getConfig().contains("shop.items.$item.options")
+                        val glowing = shopCategory.getConfig().getBoolean("shop.items.$item.options.glowing")
+                        val isPotion = shopCategory.getConfig().getBoolean("shop.items.$item.options.potion")
+                        val hasColor = shopCategory.getConfig().contains("shop.items.$item.options.color")
+                        val color = shopCategory.getConfig().getInt("shop.items.$item.options.color")
                         val buyPrice = shopCategory.getConfig().getDouble("shop.items.$item.buy.price")
                         val quantity = shopCategory.getConfig().getInt("shop.items.$item.buy.quantity")
                         val commands = shopCategory.getConfig().getStringList("shop.items.$item.commands")
@@ -203,6 +184,10 @@ class CreditShop(private val magenta: Magenta) {
                                 quantity,
                                 buyPrice,
                                 glowing,
+                                hasOptions,
+                                isPotion,
+                                hasColor,
+                                color,
                                 magenta.creditShopConfig.getConfig().getStringList("shop.gui.item_lore")
                             )
                         ).asGuiItem()
@@ -238,6 +223,36 @@ class CreditShop(private val magenta: Magenta) {
             shopUI.nextPage(player, material, shopCategory, "next", gui)
         }
         gui.open(player)
+    }
+
+    private fun customItems(player: Player, type: String, fileConfiguration: FileConfiguration, guiPaginatedGui: PaginatedGui) {
+        for (item in fileConfiguration.getConfigurationSection("shop.custom-items")?.getKeys(false)!!) {
+            val material = Material.getMaterial(fileConfiguration.getString("shop.custom-items.$item.icon").toString())
+            if (material != null) {
+                if (!fileConfiguration.contains("shop.custom-items.$item.name"))
+                    return player.sendMessage(
+                        ModernText.miniModernText(
+                            magenta.localeConfig.getMessage("magenta.shop.error.not.defined.name"),
+                            Placeholder.parsed("category", type)
+                        )
+                    )
+                if (!fileConfiguration.contains("shop.custom-items.$item.position.slot"))
+                    return player.sendMessage(
+                        ModernText.miniModernText(
+                            magenta.localeConfig.getMessage("magenta.shop.error.not.defined.slot"),
+                            Placeholder.parsed("category", type)
+                        )
+                    )
+                val itemName = fileConfiguration.getString("shop.custom-items.$item.name").toString()
+                val slot = fileConfiguration.getInt("shop.custom-items.$item.position.slot")
+                val glowing = fileConfiguration.getBoolean("shop.custom-items.$item.options.glowing")
+                val lore = fileConfiguration.getStringList("shop.custom-items.$item.lore")
+                val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem {
+                    return@asGuiItem
+                }
+                guiPaginatedGui.setItem(slot, guiItem)
+            }
+        }
     }
 
 

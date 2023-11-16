@@ -1,5 +1,7 @@
 package com.github.encryptsl.magenta.common.database
 
+import com.zaxxer.hikari.HikariDataSource
+
 interface DatabaseConnectorProvider {
     /**
      * This method connecting to database
@@ -8,4 +10,6 @@ interface DatabaseConnectorProvider {
      * @param pass - Password of database
      */
     fun initConnect(jdbcHost: String, user: String, pass: String)
+
+    fun dataSource(): HikariDataSource
 }

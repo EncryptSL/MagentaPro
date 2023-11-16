@@ -40,7 +40,7 @@ class VaultShopInventory(private val magenta: Magenta, private val vault: VaultH
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.SELL, vault.deposite(player, fullPrice), "magenta.shop.success.sell", fullPrice, item)
+            TransactionType.SELL, vault.deposit(player, fullPrice), "magenta.shop.success.sell", fullPrice, item)
     }
 
 }

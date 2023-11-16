@@ -2,6 +2,8 @@ package com.github.encryptsl.magenta.common.utils
 
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -35,6 +37,15 @@ object ModernText {
     fun papi(player: Player, message: String): String
     {
         return if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) PlaceholderAPI.setPlaceholders(player, message) else message
+    }
+
+    @JvmStatic
+    fun <V : Any> hover(action: HoverEvent.Action<V>, value: V): HoverEvent<V> {
+        return HoverEvent.hoverEvent(action, value)
+    }
+    @JvmStatic
+    fun action(action: ClickEvent.Action, value: String): ClickEvent {
+        return ClickEvent.clickEvent(action, value)
     }
 
     private fun initMiniMessage(): MiniMessage {
