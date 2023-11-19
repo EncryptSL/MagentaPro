@@ -2,34 +2,22 @@ package com.github.encryptsl.magenta.common.filter.modules
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.Chat
-import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.common.filter.ChatPunishManager
-import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import org.bukkit.entity.Player
 
-class IPFilter(private val magenta: Magenta, private val violations: Violations) : Chat {
-    override fun isDetected(event: AsyncChatEvent) {
-        val player = event.player
-        val chatPunishManager = ChatPunishManager(magenta, violations)
-        val message = PlainTextComponentSerializer.plainText().serialize(event.message())
+class IPFilter(private val magenta: Magenta) : Chat {
+    override fun isDetected(player: Player, phrase: String): Boolean {
         var detected = false
 
-        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.ipfilter.control")) return false
 
-        if (player.hasPermission("magenta.chat.filter.bypass.ipfilter")) return
+        if (player.hasPermission("magenta.chat.filter.bypass.ipfilter")) return false
 
-        for (m in message.split(" ") ) {
-            if (m.matches(Regex("${magenta.chatControl.getConfig().getString("chat.filters.${violations.name.lowercase()}.ip_regex")}"))) {
+        for (m in phrase.split(" ") ) {
+            if (m.matches(Regex("${magenta.chatControl.getConfig().getString("chat.filters.ipfilter.ip_regex")}"))) {
                 detected = true
             }
         }
 
-        if (detected) {
-            chatPunishManager.action(
-                player, event,
-                magenta.localeConfig.getMessage("magenta.filter.ip_filter"),
-                message
-            )
-        }
+        return detected
     }
 }

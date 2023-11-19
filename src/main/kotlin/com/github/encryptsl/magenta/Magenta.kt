@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta
 
 import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
-import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.config.*
 import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
@@ -18,7 +17,6 @@ import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
-import com.github.encryptsl.magenta.common.filter.modules.*
 import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
@@ -150,11 +148,7 @@ class Magenta : JavaPlugin() {
     private fun handlerListener() {
         val list: ArrayList<Listener> = arrayListOf(
             AsyncChatListener(this),
-            AsyncFilterChat(AntiSpam(this, Violations.ANTISPAM)),
-            AsyncFilterChat(CapsLock(this, Violations.CAPSLOCK)),
-            AsyncFilterChat(IPFilter(this, Violations.IPFILTER)),
-            AsyncFilterChat(Swear(this, Violations.SWEAR)),
-            AsyncFilterChat(WebsiteFilter(this, Violations.WEBSITE)),
+            AsyncFilterChat(this),
             EntityAttackListener(this),
             BlockListener(this),
             PlayerAsyncLogin(this),

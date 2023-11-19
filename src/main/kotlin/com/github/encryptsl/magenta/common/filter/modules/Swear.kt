@@ -2,41 +2,25 @@ package com.github.encryptsl.magenta.common.filter.modules
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.Chat
-import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.common.filter.ChatPunishManager
-import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
-import java.io.File
-import java.util.*
+import com.github.encryptsl.magenta.common.utils.FileUtil
+import org.bukkit.entity.Player
 
 
-class Swear(private val magenta: Magenta, private val violations: Violations) : Chat {
-    override fun isDetected(event: AsyncChatEvent) {
-        val player = event.player
-        val message = PlainTextComponentSerializer.plainText().serialize(event.message())
-        val chatPunishManager = ChatPunishManager(magenta, violations)
+class Swear(private val magenta: Magenta) : Chat {
+    override fun isDetected(player: Player, phrase: String): Boolean {
         var detected = false
 
-        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.swear.control")) return false
 
-        if (player.hasPermission("magenta.chat.filter.bypass.swear")) return
+        if (player.hasPermission("magenta.chat.filter.bypass.swear")) return false
 
-        val sc = Scanner(File(magenta.dataFolder, "chatcontrol/swears.txt"))
-
-        while (sc.hasNext()) {
-            val s = sc.next()
-            if (message.matches(Regex("(.*)$s(.*)"))) {
+        FileUtil.getReadableFile(magenta.dataFolder, "chatcontrol/swears.txt").forEach {
+            if (phrase.matches(Regex("(.*)$it(.*)"))) {
                 detected = true
             }
         }
-        if (detected) {
-            chatPunishManager.action(
-                player,
-                event,
-                magenta.localeConfig.getMessage("magenta.filter.swear"),
-                message
-            )
-        }
+
+        return detected
     }
 
 

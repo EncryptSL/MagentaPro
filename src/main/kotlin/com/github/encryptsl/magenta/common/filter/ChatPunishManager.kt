@@ -14,11 +14,11 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
 
-class ChatPunishManager(private val magenta: Magenta, private val violations: Violations) {
+class ChatPunishManager(private val magenta: Magenta) {
 
     private val flagging = HashMap<UUID, Int>()
 
-    fun action(player: Player, event: AsyncChatEvent, translation: String?, messageFromChat: String) {
+    fun action(player: Player, event: AsyncChatEvent, translation: String?, messageFromChat: String, violations: Violations) {
         val actionList = magenta.config.getStringList("chat.filters.${violations.name.lowercase()}.action")
         if (actionList.contains("none")) return
 

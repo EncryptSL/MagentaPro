@@ -1,50 +1,26 @@
 package com.github.encryptsl.magenta.common.filter.modules
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.chat.Chat
-import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.common.filter.ChatPunishManager
 import com.github.encryptsl.magenta.common.utils.CensorAPI
-import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import org.bukkit.entity.Player
 import java.util.*
 
 
-class AntiSpam(val magenta: Magenta, private val violations: Violations) : Chat {
+class AntiSpam(val magenta: Magenta) {
 
-    private val spam: MutableMap<UUID, String> = HashMap()
-
-    private val chatPunishManager = ChatPunishManager(magenta, violations)
-
-    override fun isDetected(event: AsyncChatEvent) {
-        val player = event.player
-        val uuid = player.uniqueId
-        val message = PlainTextComponentSerializer.plainText().serialize(event.message())
-
-        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+    fun isDetected(player: Player, phrase: String): Boolean {
+        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.antispam.control")) return false
 
         if (player.hasPermission("magenta.chat.filter.bypass.antispam"))
-            return
+            return false
 
-        if (!spam.containsKey(uuid)) {
-            spam[uuid] = message
-            return
-        }
+        SpamCache.spam.putIfAbsent(player.uniqueId, phrase)
+        SpamCache.spam.computeIfPresent(player.uniqueId) { _, _ -> phrase }
 
-        if (!spam[uuid].equals(message, true)) {
-            spam[uuid] = message
-            return
-        }
-
-        if (CensorAPI.checkSimilarity(message, spam[uuid].toString(), magenta.chatControl.getConfig().getInt("chat.filters.antispam.similarity"))) {
-            magenta.schedulerMagenta.delayedTask(magenta, {
-                      spam.remove(uuid, spam[uuid].toString())
-            }, 1000L)
-            chatPunishManager.action(player, event, magenta.localeConfig.getMessage("magenta.filter.antispam"),
-                "Spamovat"
-            )
-        }
+        return CensorAPI.checkSimilarity(phrase, SpamCache.spam[player.uniqueId].toString(), magenta.chatControl.getConfig().getInt("chat.filters.antispam.similarity"))
     }
+}
 
-
+object SpamCache {
+    val spam: MutableMap<UUID, String> = HashMap()
 }
