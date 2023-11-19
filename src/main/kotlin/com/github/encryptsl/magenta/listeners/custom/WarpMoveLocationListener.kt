@@ -25,7 +25,7 @@ class WarpMoveLocationListener(private val magenta: Magenta) : Listener {
                     TagResolver.resolver(Placeholder.parsed("warp", warpName))))
 
 
-        if (player.hasPermission("magenta.warp.move.other"))
+        if (player.hasPermission("magenta.move.warp.other"))
             magenta.warpModel.moveWarp(warpName, location)
         else
             magenta.warpModel.moveWarp(player, warpName, location)

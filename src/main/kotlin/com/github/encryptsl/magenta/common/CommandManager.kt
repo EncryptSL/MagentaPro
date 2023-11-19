@@ -117,7 +117,10 @@ class CommandManager(private val magenta: Magenta) {
                 ?.mapNotNull { VoteHelper.replaceService(it.toString(), "_", ".") } ?: emptyList()
         }
         commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
-            ReportCategories.entries.map { it -> it.name }
+            ReportCategories.entries.map { it.name }
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("worlds") {_, _ ->
+            Bukkit.getWorlds().map { it.name }
         }
     }
 
@@ -149,14 +152,16 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(HatCmd(magenta))
         annotationParser.parse(HealCmd(magenta))
         annotationParser.parse(HomeCmd(magenta))
+        annotationParser.parse(IgnoreCmd(magenta))
+        annotationParser.parse(InvseeCmd(magenta))
         annotationParser.parse(JailCmd(magenta))
         annotationParser.parse(KitCmd(magenta))
         annotationParser.parse(LevelCmd(magenta))
+        annotationParser.parse(LevelsCmd(magenta))
         annotationParser.parse(LightningCmd(magenta))
         annotationParser.parse(MagentaCmd(magenta))
         annotationParser.parse(NickCmd(magenta))
         annotationParser.parse(RandomCmd(magenta))
-        annotationParser.parse(IgnoreCmd(magenta))
         annotationParser.parse(MsgCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))
         annotationParser.parse(ReportCmd(magenta))

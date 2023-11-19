@@ -24,24 +24,22 @@ class KitReceiveListener(private val magenta: Magenta) : Listener {
 
         val timeLeft: Duration = user.cooldownManager.getRemainingDelay("kits.$kitName")
 
-        if (!user.cooldownManager.hasDelay("kits.$kitName")) {
-            runCatching {
-                kitManager.giveKit(player, kitName)
-            }.onSuccess {
-                if (delay != 0L && delay != -1L) {
-                    if (!player.hasPermission("magenta.kit.delay.exempt")) {
-                        user.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
-                        user.save()
-                    }
+        if (user.cooldownManager.hasDelay("kits.$kitName") && !player.hasPermission("magenta.kit.delay.exempt"))
+            return commandHelper.delayMessage(player, "magenta.command.kit.error.delay", timeLeft)
+
+        try {
+            if (delay != 0L && delay != -1L) {
+                if (!player.hasPermission("magenta.kit.delay.exempt")) {
+                    user.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
+                    user.save()
                 }
-                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(
-                    Placeholder.parsed("kit", kitName)
-                )))
-            }.onFailure { e ->
-                player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
             }
-        } else {
-            commandHelper.delayMessage(player, "magenta.command.kit.error.delay", timeLeft)
+            kitManager.giveKit(player, kitName)
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(
+                Placeholder.parsed("kit", kitName)
+            )))
+        } catch (e : Exception) {
+            player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
     }
 

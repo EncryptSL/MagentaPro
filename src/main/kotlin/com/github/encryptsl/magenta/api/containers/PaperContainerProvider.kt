@@ -17,7 +17,7 @@ class PaperContainerProvider : ContainerProvider {
     }
 
     override fun openStonecutter(player: Player): InventoryView? {
-        return player.openWorkbench(null, true)
+        return player.openStonecutter(null, true)
     }
 
     override fun openSmithingTable(player: Player): InventoryView? {

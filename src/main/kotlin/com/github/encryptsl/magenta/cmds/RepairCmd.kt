@@ -27,16 +27,15 @@ class RepairCmd(private val magenta: Magenta) {
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.hand")))
 
         val timeLeft = user.cooldownManager.getRemainingDelay("repair")
-        if (!user.cooldownManager.hasDelay("repair")) {
-            if (delay != 0L && delay != -1L || !player.hasPermission("magenta.repair.delay.exempt")) {
-                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "repair")
-                user.save()
-            }
+        if (user.cooldownManager.hasDelay("repair") && !player.hasPermission("magenta.repair.delay.exempt"))
+            return commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
-            commandHelper.repairItem(player)
-        } else {
-            commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
+        if (delay != 0L && delay != -1L || !player.hasPermission("magenta.repair.delay.exempt")) {
+            user.cooldownManager.setDelay(Duration.ofSeconds(delay), "repair")
+            user.save()
         }
+
+        commandHelper.repairItem(player)
     }
 
     @ProxiedBy("fixall")

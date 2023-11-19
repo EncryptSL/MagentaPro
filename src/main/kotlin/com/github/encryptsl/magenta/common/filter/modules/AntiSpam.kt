@@ -21,7 +21,7 @@ class AntiSpam(val magenta: Magenta, private val violations: Violations) : Chat 
         val uuid = player.uniqueId
         val message = PlainTextComponentSerializer.plainText().serialize(event.message())
 
-        if (!magenta.config.getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
 
         if (player.hasPermission("magenta.chat.filter.bypass.antispam"))
             return
@@ -36,7 +36,7 @@ class AntiSpam(val magenta: Magenta, private val violations: Violations) : Chat 
             return
         }
 
-        if (CensorAPI.checkSimilarity(message, spam[uuid].toString(), magenta.config.getInt("chat.filters.antispam.similarity"))) {
+        if (CensorAPI.checkSimilarity(message, spam[uuid].toString(), magenta.chatControl.getConfig().getInt("chat.filters.antispam.similarity"))) {
             magenta.schedulerMagenta.delayedTask(magenta, {
                       spam.remove(uuid, spam[uuid].toString())
             }, 1000L)

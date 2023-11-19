@@ -39,30 +39,30 @@ class HomeTeleportListener(private val magenta: Magenta) : Listener {
 
         val timeLeft: Duration = user.cooldownManager.getRemainingDelay("home")
 
-        if (!user.cooldownManager.hasDelay("home")) {
-            if (delay != 0L && delay != -1L || !player.hasPermission("magenta.home.delay.exempt")) {
-                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "home")
-                user.save()
-            }
-
-            magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {
-                player.teleport(Location(
-                    Bukkit.getWorld(it.world),
-                    it.x.toDouble(),
-                    it.y.toDouble(),
-                    it.z.toDouble(),
-                    it.yaw, it.pitch)
-                )
-            }
-
-            player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.home.success.teleport"),
-                    TagResolver.resolver(Placeholder.parsed("home", homeName))
-                )
-            )
-        } else {
-            commandHelper.delayMessage(player, "magenta.command.home.error.delay", timeLeft)
+        if (user.cooldownManager.hasDelay("home") && !player.hasPermission("magenta.home.delay.exempt")) {
+            return commandHelper.delayMessage(player, "magenta.command.home.error.delay", timeLeft)
         }
+
+        if (delay != 0L && delay != -1L || !player.hasPermission("magenta.home.delay.exempt")) {
+            user.cooldownManager.setDelay(Duration.ofSeconds(delay), "home")
+            user.save()
+        }
+
+        magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {
+            player.teleport(Location(
+                Bukkit.getWorld(it.world),
+                it.x.toDouble(),
+                it.y.toDouble(),
+                it.z.toDouble(),
+                it.yaw, it.pitch)
+            )
+        }
+
+        player.sendMessage(
+            ModernText.miniModernText(
+                magenta.localeConfig.getMessage("magenta.command.home.success.teleport"),
+                TagResolver.resolver(Placeholder.parsed("home", homeName))
+            )
+        )
     }
 }

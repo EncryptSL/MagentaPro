@@ -3,7 +3,6 @@ package com.github.encryptsl.magenta.cmds
 import cloud.commandframework.annotations.Argument
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.ProxiedBy
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.warp.*
@@ -11,50 +10,40 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 @Suppress("UNUSED")
-@CommandMethod("warp")
 class WarpCmd(private val magenta: Magenta) {
 
-    @CommandMethod("info|i <warp>")
-    @CommandPermission("magenta.warp.info")
-    fun onInfo(commandSender: CommandSender, @Argument(value = "warp", suggestions = "warps") warpName: String) {
-        magenta.schedulerMagenta.doSync(magenta) {
-            magenta.server.pluginManager.callEvent(WarpInfoEvent(commandSender, warpName, InfoType.INFO))
-        }
-    }
-
-    @CommandMethod("create|c <warp>")
-    @CommandPermission("magenta.warp.create")
+    @CommandMethod("setwarp <warp>")
+    @CommandPermission("magenta.setwarp")
     fun onWarpCreate(player: Player, @Argument(value = "warp") warpName: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(WarpCreateEvent(player, player.location, warpName))
         }
     }
 
-    @CommandMethod("delete|d <warp>")
-    @CommandPermission("magenta.warp.delete")
+    @CommandMethod("delwarp <warp>")
+    @CommandPermission("magenta.delwarp")
     fun onWarpDelete(player: Player, @Argument("warp", suggestions = "warps") warpName: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(WarpDeleteEvent(player, warpName))
         }
     }
 
-    @CommandMethod("movehere|mh <warp>")
-    @CommandPermission("magenta.warp.move.here")
+    @CommandMethod("movewarp <warp>")
+    @CommandPermission("magenta.move.warp")
     fun onWarpMoveLocation(player: Player, @Argument("warp", suggestions = "warps") warpName: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(WarpMoveLocationEvent(player, player.location, warpName))
         }
     }
 
-    @CommandMethod("rename|rn <oldWarp> <newName>")
-    @CommandPermission("magenta.warp.rename")
+    @CommandMethod("renamewarp <oldWarp> <newName>")
+    @CommandPermission("magenta.rename.warp")
     fun onWarpRename(player: Player, @Argument("oldWarp", suggestions = "warps") fromWarp: String, @Argument("newName") toWarpName: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(WarpRenameEvent(player, fromWarp, toWarpName))
         }
     }
-    @ProxiedBy("warptp")
-    @CommandMethod("tp|t <warp> [target]")
+    @CommandMethod("warp <warp> [target]")
     @CommandPermission("magenta.warp")
     fun onWarpTeleport(commandSender: CommandSender, @Argument("warp", suggestions = "warps") warpName: String, @Argument(value = "target", suggestions = "players") target: Player?) {
         magenta.schedulerMagenta.doSync(magenta) {
@@ -62,7 +51,6 @@ class WarpCmd(private val magenta: Magenta) {
         }
     }
 
-    @ProxiedBy("warps")
     @CommandMethod("warps")
     @CommandPermission("magenta.warp.list")
     fun onWarps(commandSender: CommandSender) {

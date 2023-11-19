@@ -27,18 +27,18 @@ class HealCmd(private val magenta: Magenta) {
 
         val timeLeft = user.cooldownManager.getRemainingDelay("heal")
 
-        if (!user.cooldownManager.hasDelay("heal")) {
-            if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {
-                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "heal")
-                user.save()
-            }
-
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
-            player.health = 20.0
-            player.foodLevel = 20
-        } else {
-            commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
+        if (user.cooldownManager.hasDelay("heal") && !player.hasPermission("magenta.heal.delay.exempt")) {
+            return commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
         }
+
+        if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {
+            user.cooldownManager.setDelay(Duration.ofSeconds(delay), "heal")
+            user.save()
+        }
+
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
+        player.health = 20.0
+        player.foodLevel = 20
     }
 
     @CommandMethod("heal <player>")

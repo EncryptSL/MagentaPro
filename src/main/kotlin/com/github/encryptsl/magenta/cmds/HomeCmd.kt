@@ -8,28 +8,18 @@ import org.bukkit.entity.Player
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
-@CommandMethod("home")
 class HomeCmd(private val magenta: Magenta) {
 
-    @CommandMethod("info <home>")
-    @CommandPermission("magenta.home.info")
-    fun onRenameHome(player: Player, @Argument(value = "home", suggestions = "homes") homeName: String) {
-        magenta.schedulerMagenta.doSync(magenta) {
-            magenta.server.pluginManager.callEvent(HomeInfoEvent(player, homeName, InfoType.INFO))
-        }
-    }
-
-    @CommandMethod("tp <home>")
-    @CommandPermission("magenta.home.tp")
+    @CommandMethod("home <home>")
+    @CommandPermission("magenta.home")
     fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
         }
     }
 
-    @ProxiedBy("sethome")
-    @CommandMethod("create <home>")
-    @CommandPermission("magenta.home.create")
+    @CommandMethod("sethome <home>")
+    @CommandPermission("magenta.sethome")
     fun onSetHome(player: Player, @Argument(value = "home") home: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
@@ -37,9 +27,8 @@ class HomeCmd(private val magenta: Magenta) {
 
     }
 
-    @ProxiedBy("delhome")
-    @CommandMethod("delete <home>")
-    @CommandPermission("magenta.home.delete")
+    @CommandMethod("delhome <home>")
+    @CommandPermission("magenta.delhome")
     fun onDeleteHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
@@ -47,17 +36,15 @@ class HomeCmd(private val magenta: Magenta) {
 
     }
 
-    @CommandMethod("rename <oldName> <newName>")
-    @CommandPermission("magenta.home.rename")
+    @CommandMethod("renamehome <oldName> <newName>")
+    @CommandPermission("magenta.rename.home")
     fun onRenameHome(player: Player, @Argument(value = "oldName") oldName: String, @Argument(value = "newName") newName: String) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeRenameEvent(player, oldName, newName))
         }
     }
 
-
-    @ProxiedBy("homes")
-    @CommandMethod("homes")
+    @CommandMethod("homes|homelist")
     @CommandPermission("magenta.home.list")
     fun onHomeList(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {

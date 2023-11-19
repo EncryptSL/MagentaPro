@@ -18,16 +18,16 @@ class WebsiteFilter(private val magenta: Magenta, private val violations: Violat
         val chatPunishManager = ChatPunishManager(magenta, violations)
         var detected = false
 
-        if (!magenta.config.getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
 
         if (player.hasPermission("magenta.chat.filter.bypass.websites"))
             return
 
-        if(magenta.config.getStringList("chat.filter.${violations.name.lowercase()}.whitelist").contains(message))
+        if(magenta.chatControl.getConfig().getStringList("chat.filter.${violations.name.lowercase()}.whitelist").contains(message))
             return
 
         for (m in message.split(" ")) {
-            magenta.config.getStringList("chat.filters.${violations.name.lowercase()}.web_regex").forEach { regex ->
+            magenta.chatControl.getConfig().getStringList("chat.filters.${violations.name.lowercase()}.web_regex").forEach { regex ->
                 if (m.contains(Regex("(.*)${regex}(.*)"))) {
                     detected = true
                 }

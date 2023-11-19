@@ -5,8 +5,8 @@ import cloud.commandframework.annotations.CommandDescription
 import cloud.commandframework.annotations.CommandMethod
 import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.ignore.PlayerInsertIgnoreEvent
-import com.github.encryptsl.magenta.api.events.ignore.PlayerRemoveIgnoreEvent
+import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
@@ -17,17 +17,43 @@ class IgnoreCmd(private val magenta: Magenta) {
     @CommandMethod("ignore <player>")
     @CommandPermission("magenta.ignore")
     fun onIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
-        magenta.schedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(PlayerInsertIgnoreEvent(player, target))
-        }
+        if (player.uniqueId == target.uniqueId)
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.yourself")))
+
+        val user = magenta.user.getUser(player.uniqueId)
+        if (user.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exist"),
+                Placeholder.parsed("player", target.name.toString())
+            ))
+
+
+        if (target.player?.hasPermission("magenta.ignore.exempt") == true || magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exempt"),
+                Placeholder.parsed("player", target.name.toString())
+            ))
+
+        user.set("ignore", setOf(target.uniqueId.toString()))
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.success"),
+            Placeholder.parsed("player", target.name.toString())
+        ))
     }
 
     @CommandMethod("unignore <player>")
     @CommandPermission("magenta.unignore")
     fun onUnIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
-        magenta.schedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(PlayerRemoveIgnoreEvent(player, target))
-        }
+        val user = magenta.user.getUser(player.uniqueId)
+
+        if (!user.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.not.exist"),
+                Placeholder.parsed("player", target.name.toString()))
+            )
+
+        val list: MutableList<String> = user.getAccount().getStringList("ignore")
+        list.remove(target.uniqueId.toString())
+        user.set("ignore", list)
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.success.removed"),
+            Placeholder.parsed("player", target.name.toString())
+        ))
     }
 
 }

@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.database.WarpSQL
+import com.github.encryptsl.magenta.common.database.sql.WarpSQL
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import com.github.encryptsl.magenta.common.database.tables.WarpTable

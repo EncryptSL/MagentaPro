@@ -41,6 +41,5 @@ class GmCmd(private val magenta: Magenta) {
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("gamemode", gameMode.name)
         )))
-
     }
 }

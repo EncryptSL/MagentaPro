@@ -17,11 +17,11 @@ class Swear(private val magenta: Magenta, private val violations: Violations) : 
         val chatPunishManager = ChatPunishManager(magenta, violations)
         var detected = false
 
-        if (!magenta.config.getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
+        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.${violations.name.lowercase()}.control")) return
 
         if (player.hasPermission("magenta.chat.filter.bypass.swear")) return
 
-        val sc = Scanner(File(magenta.dataFolder, "swear_list.txt"))
+        val sc = Scanner(File(magenta.dataFolder, "chatcontrol/swears.txt"))
 
         while (sc.hasNext()) {
             val s = sc.next()

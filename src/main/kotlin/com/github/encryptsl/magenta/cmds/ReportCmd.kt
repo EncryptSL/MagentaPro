@@ -32,7 +32,7 @@ class ReportCmd(private val magenta: Magenta) {
         if (player.name == target.name)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.yourself")))
 
-        if (magenta.stringUtils.inInList("report-blacklist", target.name.toString()))
+        if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.exempt")))
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.success"), TagResolver.resolver(

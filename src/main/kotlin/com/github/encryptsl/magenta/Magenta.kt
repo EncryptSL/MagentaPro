@@ -62,6 +62,7 @@ class Magenta : JavaPlugin() {
     val randomConfig: RandomConfig by lazy { RandomConfig(this) }
     val shopConfig: ShopConfig by lazy { ShopConfig(this, "shop/shop.yml") }
     val creditShopConfig: ShopConfig by lazy { ShopConfig(this, "creditshop/shop.yml") }
+    val chatControl: ChatControlConfig by lazy { ChatControlConfig(this) }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
 
@@ -74,7 +75,8 @@ class Magenta : JavaPlugin() {
             .createFromResources("locale/cs_cz.properties", this)
             .createFromResources("kits.yml", this)
             .createFromResources("config.yml", this)
-            .createFromResources("swear_list.txt", this)
+            .createFromResources("chatcontrol/swears.txt", this)
+            .createFromResources("chatcontrol/filter.yml", this)
             .createFromResources("motd.txt", this)
             .createFromResources("citems.yml", this)
             .createFromResources("random.yml", this)
@@ -159,10 +161,10 @@ class Magenta : JavaPlugin() {
             PlayerJoinListener(this),
             PlayerQuitListener(this),
             PlayerTeleportListener(this),
-            PlayerIgnoreListener(this),
             PlayerCommandPreprocessListener(this),
             PlayerPrivateMessageListener(this),
             PlayerInteractionListener(this),
+            PlayerInventoryListener(),
             PlayerMoveListener(this),
             HomeCreateListener(this),
             HomeDeleteListener(this),

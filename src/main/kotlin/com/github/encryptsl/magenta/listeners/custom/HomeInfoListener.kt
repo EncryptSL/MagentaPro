@@ -20,10 +20,18 @@ class HomeInfoListener(private val magenta: Magenta) : Listener {
         when(infoType) {
             InfoType.LIST -> {
                 val list = magenta.homeModel.getHomesByOwner(player).joinToString { s ->
-                    magenta.localeConfig.getMessage("magenta.command.home.success.list.component").replace("<home>", s.homeName)
+                    magenta.localeConfig.getMessage("magenta.command.home.success.list.component")
+                        .replace("<home>", s.homeName)
+                        .replace("info", magenta.config.getString("home-info-format").toString()
+                            .replace("<home>", s.homeName)
+                            .replace("<x>", s.x.toString())
+                            .replace("<y>", s.y.toString())
+                            .replace("<z>", s.z.toString())
+                            .replace("<world>", s.world)
+                        )
                 }
                 player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.success.list"), TagResolver.resolver(
-                    Placeholder.component("homes", ModernText.miniModernText(list))
+                    Placeholder.component("homes", ModernText.miniModernText(list)),
                 )))
             }
             InfoType.INFO -> {

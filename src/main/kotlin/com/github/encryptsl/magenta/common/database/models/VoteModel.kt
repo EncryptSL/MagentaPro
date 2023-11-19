@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.database.VoteSQL
+import com.github.encryptsl.magenta.common.database.sql.VoteSQL
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.tables.VoteTable
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.last_vote

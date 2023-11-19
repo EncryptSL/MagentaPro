@@ -114,12 +114,12 @@ class CommandItemManager(private val magenta: Magenta) {
         val materialName = magenta.cItems.getConfig().getString("citems.$itemName.material").toString()
         val sid = magenta.cItems.getConfig().getInt("citems.$itemName.sid")
         val item = magenta.cItems.getConfig().getString("citems.$itemName.name").toString()
-        val lores = magenta.cItems.getConfig().getStringList("citems.$itemName.lore")
+        val lore = magenta.cItems.getConfig().getStringList("citems.$itemName.lore")
         val glowing = magenta.cItems.getConfig().getBoolean("citems.$itemName.glowing")
         val material = Material.getMaterial(materialName) ?: return
 
 
-        val itemStack = itemFactory.item(material, amount, item, sid, lores, glowing)
+        val itemStack = itemFactory.item(material, amount, item, sid, lore, glowing)
         target.inventory.addItem(itemStack)
         target.updateInventory()
 

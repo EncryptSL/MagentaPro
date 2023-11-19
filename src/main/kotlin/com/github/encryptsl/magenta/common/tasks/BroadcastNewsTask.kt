@@ -9,6 +9,7 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
     override fun run() {
        if (!magenta.config.contains("news")) return
        if (!magenta.config.contains("news.delay")) return
+       if (magenta.server.onlinePlayers.isEmpty()) return
        if (magenta.config.contains("news.random")) {
             if (magenta.config.getBoolean("news.random")) {
                 val format = magenta.config.getString("news.format").toString()

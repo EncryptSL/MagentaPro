@@ -39,15 +39,14 @@ class VoteCmd(val magenta: Magenta) {
     @CommandPermission("magenta.vote.claim.rewards")
     fun onVoteClaimRewards(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
-        if (user.getAccount().contains("votifier.rewards")) {
-            magenta.schedulerMagenta.doSync(magenta) {
-                VoteHelper.giveRewards(user.getVotifierRewards(), player.name)
-            }
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.success.claim.rewards")))
-            user.set("votifier.rewards", null)
-        } else {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.error.not.reward")))
+        if (!user.getAccount().contains("votifier.rewards"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.error.not.reward")))
+
+        magenta.schedulerMagenta.doSync(magenta) {
+            VoteHelper.giveRewards(user.getVotifierRewards(), player.name)
         }
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.success.claim.rewards")))
+        user.set("votifier.rewards", null)
     }
 
     @CommandMethod("vote admin reset <player>")

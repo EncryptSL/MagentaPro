@@ -41,8 +41,11 @@ permissions:
       magenta.helpop.*: true
       magenta.home.*: true
       magenta.ignore.*: true
+      magenta.invsee.*: true
       magenta.jail.*: true
       magenta.kit.*: true
+      magenta.level.*: true
+      magenta.levels.*: true
       magenta.lightning.*: true
       magenta.plugin.*: true
       magenta.msg.*: true
@@ -79,7 +82,6 @@ permissions:
     children:
       magenta.afk: true
       magenta.afk.auto: true
-      magenta.echest: true
       magenta.feedback.*: true
       magenta.report.*: true
       magenta.home.player: true
@@ -87,6 +89,7 @@ permissions:
       magenta.unignore: true
       magenta.kit: true
       magenta.kit.list: true
+      magenta.level.*: true
       magenta.warp: true
       magenta.tpa.*: true
       magenta.msg.*: true
@@ -142,6 +145,7 @@ permissions:
     children:
       magenta.echest: true
       magenta.echest.other: true
+      magenta.echest.modify: true
   magenta.feedback.*:
     description: Permissions for feedback
     default: false
@@ -189,11 +193,10 @@ permissions:
     description: Permissions for all home commands
     default: false
     children:
-      magenta.home.tp: true
-      magenta.home.info: true
-      magenta.home.create: true
-      magenta.home.delete: true
-      magenta.home.rename: true
+      magenta.home: true
+      magenta.sethome: true
+      magenta.delhome: true
+      magenta.renamehome: true
       magenta.home.list: true
       magenta.homes.unlimited: true
       magenta.home.delay.exempt: true
@@ -201,11 +204,10 @@ permissions:
     description: Permissions for all home commands
     default: false
     children:
-      magenta.home.tp: true
-      magenta.home.info: true
-      magenta.home.create: true
-      magenta.home.delete: true
-      magenta.home.rename: true
+      magenta.home: true
+      magenta.sethome: true
+      magenta.delhome: true
+      magenta.renamehome: true
       magenta.home.list: true
   magenta.ignore.*:
     description: Permissions for all ignore commands
@@ -214,6 +216,13 @@ permissions:
       magenta.ignore: true
       magenta.unignore: true
       magenta.ignore.exempt: true
+  magenta.invsee.*:
+    description: Permissions for invsee
+    default: false
+    children:
+      magenta.invsee: true
+      magenta.invsee.modify: true
+      magenta.invsee.modify.prevent: true
   magenta.jail.*:
     description: Permissions for all jail commands
     default: false
@@ -237,6 +246,21 @@ permissions:
       magenta.createkit: true
       magenta.deletekit: true
       magenta.kits.*: true
+  magenta.level.*:
+    description: Permissions for player about levels
+    default: true
+    children:
+      magenta.level: true
+      magenta.level.other: true
+      magenta.level.top: true
+  magenta.levels.*:
+    description: Permissions for manage levels by admin
+    default: false
+    children:
+      magenta.levels.add.level: true
+      magenta.levels.add.experience: true
+      magenta.levels.set.level: true
+      magenta.levels.set.experience: true
   magenta.lightning.*:
     description: Permissions for lightning
     default: false
@@ -338,14 +362,13 @@ permissions:
     children:
       magenta.warp: true
       magenta.warp.other: true
-      magenta.warp.info: true
-      magenta.warp.create: true
-      magenta.warp.delete: true
-      magenta.warp.delete.other: true
-      magenta.warp.move.here: true
-      magenta.warp.move.other: true
-      magenta.warp.rename: true
-      magenta.warp.rename.other: true
+      magenta.setwarp: true
+      magenta.delwarp: true
+      magenta.delwarp.other: true
+      magenta.move.warp: true
+      magenta.move.warp.other: true
+      magenta.rename.warp: true
+      magenta.rename.warp.other: true
       magenta.warp.list: true
       magenta.warp.delay.exempt: true
       magenta.warps.unlimited: true
@@ -354,10 +377,10 @@ permissions:
     default: false
     children:
       magenta.warp: true
-      magenta.warp.create: true
-      magenta.warp.delete: true
-      magenta.warp.move.here: true
-      magenta.warp.rename: true
+      magenta.setwarp: true
+      magenta.delwarp: true
+      magenta.move.warp: true
+      magenta.rename.warp: true
       magenta.warp.list: true
   magenta.exempts.*:
     default: false

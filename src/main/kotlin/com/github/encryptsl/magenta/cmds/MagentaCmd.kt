@@ -97,6 +97,14 @@ class MagentaCmd(private val magenta: Magenta) {
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
+    @CommandPermission("magenta.plugin.reload")
+    @CommandMethod("reload chatcontrol")
+    fun onReloadChatControl(commandSender: CommandSender) {
+        magenta.chatControl.reload()
+        magenta.chatControl.save()
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
 
 
 

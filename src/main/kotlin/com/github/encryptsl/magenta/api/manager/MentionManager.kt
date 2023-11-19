@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.manager
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.chat.PlayerMentionEvent
+import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -24,56 +25,58 @@ class MentionManager(private val magenta: Magenta) {
                             magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
                         }
                     }
-                    val mentioned = Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), ""))
-                    mentioned?.playSound(mentioned,
-                        Sound.valueOf(magenta.config.getString("mentions.sound").toString()),
-                        magenta.config.getString("mentions.volume").toString().toFloat(),
-                        magenta.config.getString("mentions.pitch").toString().toFloat()
-                    )
-                    mentioned?.sendMessage(
-                        ModernText.miniModernText(
-                            magenta.localeConfig.getMessage("magenta.player.mentioned"), TagResolver.resolver(
-                                Placeholder.parsed("player", player.name)
-                            )
-                        )
-                    )
-                    if (mentioned != null) {
-                        chatEvent.message(
-                            ModernText.miniModernText(message.replace(
-                            m,
-                            magenta.config.getString("mentions.formats.player").toString()
-                                .replace("[player]", m)
-                        )))
-                    }
-                }
-                if (m.contains("@everyone")) {
-                    Bukkit.getServer().onlinePlayers.forEach { a ->
-                        //if (player == a) return
-                        a.sendMessage(
-                            ModernText.miniModernText(
-                                magenta.localeConfig.getMessage("magenta.player.mentioned"), TagResolver.resolver(
-                                    Placeholder.parsed("player", a.name)
-                                )
-                            )
-                        )
-                        a.playSound(
-                            a,
+                    val mentioned =
+                        Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), ""))
+
+                    mentioned?.let {
+                        PlayerBuilderAction.player(it).sound(
                             Sound.valueOf(magenta.config.getString("mentions.sound").toString()),
                             magenta.config.getString("mentions.volume").toString().toFloat(),
                             magenta.config.getString("mentions.pitch").toString().toFloat()
-                        )
-                    }
-                    chatEvent.message(
-                        ModernText.miniModernText(
-                            message.replace(
-                                m,
-                                magenta.config.getString("mentions.formats.everyone").toString()
+                        ).message(
+                            ModernText.miniModernText(
+                                magenta.localeConfig.getMessage("magenta.player.mentioned"), TagResolver.resolver(
+                                    Placeholder.parsed("player", player.name)
+                                )
                             )
                         )
-                    )
+                        chatEvent.message(
+                            ModernText.miniModernText(
+                                message.replace(
+                                    m, magenta.config.getString("mentions.formats.player").toString()
+                                        .replace("[player]", mentioned.name)
+                                )
+                            )
+                        )
+                    }
+                    if (m.contains("@everyone")) {
+                        Bukkit.getServer().onlinePlayers.forEach { a ->
+                            //if (player == a) return
+                            a.sendMessage(
+                                ModernText.miniModernText(
+                                    magenta.localeConfig.getMessage("magenta.player.mentioned"), TagResolver.resolver(
+                                        Placeholder.parsed("player", a.name)
+                                    )
+                                )
+                            )
+                            a.playSound(
+                                a,
+                                Sound.valueOf(magenta.config.getString("mentions.sound").toString()),
+                                magenta.config.getString("mentions.volume").toString().toFloat(),
+                                magenta.config.getString("mentions.pitch").toString().toFloat()
+                            )
+                        }
+                        chatEvent.message(
+                            ModernText.miniModernText(
+                                message.replace(
+                                    m,
+                                    magenta.config.getString("mentions.formats.everyone").toString()
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }
     }
-
 }

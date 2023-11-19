@@ -21,7 +21,16 @@ class WarpInfoListener(private val magenta: Magenta) : Listener {
         when(warpInfoType) {
             InfoType.LIST -> {
                 val list = magenta.warpModel.getWarps().joinToString { s ->
-                    magenta.localeConfig.getMessage("magenta.command.warp.success.list.component").replace("<warp>", s.warpName)
+                    magenta.localeConfig.getMessage("magenta.command.warp.success.list.component")
+                        .replace("<warp>", s.warpName)
+                        .replace("<info>", magenta.config.getString("warp-info-format").toString()
+                            .replace("<warp>", s.warpName)
+                            .replace("<owner>", s.owner)
+                            .replace("<x>", s.x.toString())
+                            .replace("<y>", s.y.toString())
+                            .replace("<z>", s.z.toString())
+                            .replace("<world>", s.world)
+                        )
                 }
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.list"), TagResolver.resolver(
                     Placeholder.component("warps", ModernText.miniModernText(list))

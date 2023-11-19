@@ -18,10 +18,17 @@ class JailInfoListener(private val magenta: Magenta) : Listener {
 
         when (infoType) {
             InfoType.LIST -> {
-                val section = magenta.jailConfig.getJail().getConfigurationSection("jails") ?: return
+                val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails") ?: return
 
-                val list = section.getKeys(false).joinToString { s ->
+                val list = jailSection.getKeys(false).joinToString { s ->
                     magenta.localeConfig.getMessage("magenta.command.jail.success.list.component").replace("<jail>", s)
+                        .replace("<info>", magenta.config.getString("jail-info-format").toString()
+                            .replace("<jail>", s)
+                            .replace("<world>", jailSection.getString("$s.location.world").toString())
+                            .replace("<x>", jailSection.getString("$s.location.x").toString())
+                            .replace("<y>", jailSection.getString("$s.location.y").toString())
+                            .replace("<z>", jailSection.getString("$s.location.z").toString())
+                        )
                 }
                 commandSender.sendMessage(
                     ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.list"), TagResolver.resolver(

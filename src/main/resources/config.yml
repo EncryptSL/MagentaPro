@@ -38,7 +38,8 @@ nick-blacklist:
 #- Notch
 #- '^Dinnerbone'
 
-report-blacklist: ["EncryptSL", "a_patress_o", "WZarek775"]
+# A list of users who can't be reported or ignored !
+exempt-blacklist: ["EncryptSL", "a_patress_o", "WZarek775"]
 
 teleport-cooldown: 30
 
@@ -52,22 +53,25 @@ custom-quit-message: "<gray>[<red>-<gray>] <gold><player> <gray>se odpojil !"
 
 online-jail-time: true
 
-jail-info-format:
-  - "<gray>Cela <green><jail>"
-  - "<gray>Souřadnice <green><x> <y> <z>"
-  - "<gray>Svět <green><world>"
+jail-info-format: |-
+  <gray>Cela <green><jail>
+  <gray>Souřadnice <green><x> <y> <z>
+  <gray>Svět <green><world>
+  <green>/jail tp <jail>
 
-home-info-format:
-  - "<gray>Domov <green><home>"
-  - "<gray>Majitel <green><owner>"
-  - "<gray>Souřadnice <green><x> <y> <z>"
-  - "<gray>Svět <green><world>"
+home-info-format: |-
+  <gray>Domov <green><home>
+  <gray>Majitel <green><owner>
+  <gray>Souřadnice <green><x> <y> <z>
+  <gray>Svět <green><world>
+  <green>/home <jail>
 
-warp-info-format:
-  - "<gray>Warp <green><warp>"
-  - "<gray>Majitel warpu <green><owner>"
-  - "<gray>Souřadnice <green><x> <y> <z>"
-  - "<gray>Svět <green><world>"
+warp-info-format: |-
+  <gray>Warp <green><warp>
+  <gray>Majitel warpu <green><owner>
+  <gray>Souřadnice <green><x> <y> <z>
+  <gray>Svět <green><world>
+  <green>/warp <warp>
 
 socialspy-format: <color:#009EFF>[SOCIALSPY] <color:#4AAEFC><player> <color:#90D2FA><message>
 
@@ -226,6 +230,40 @@ silky:
     - NETHERITE_PICKAXE
 
 
+
+# ########################################################
+#                   JOBS - EARN SYSTEM                   #
+#                 Configuration for JOBS                 #
+# ########################################################
+jobs:
+  whitelist_world:
+    - mineworld
+  miner:
+    max_progress: 100
+    action_bar: '<yellow>Progress: <gold><current_progress>/<max_progress>'
+    earn_bar: '<gray>+ <green>408 $'
+    rewards:
+      - 'eco add {player} 408 -s'
+    blocks:
+      - STONE
+      - COAL_ORE
+      - DEEPSLATE_COAL_ORE
+      - IRON_ORE
+      - DEEPSLATE_IRON_ORE
+      - COOPER_ORE
+      - DEEPSLATE_COOPER_ORE
+      - GOLD_ORE
+      - DEEPSLATE_GOLD_ORE
+      - REDSTONE_ORE
+      - DEEPSLATE_REDSTONE_ORE
+      - EMERALD_ORE
+      - DEEPSLATE_EMERALD_ORE
+      - LAPIS_ORE
+      - DEEPSLATE_LAPIS_ORE
+      - DIAMOND_ORE
+      - DEEPSLATE_DIAMOND_ORE
+
+
 # ########################################################
 #                      VOTIFIER                          #
 #              Configuration for rewards                 #
@@ -317,47 +355,3 @@ chat:
 
   group-formats:
     # default: "<gray><name> » <white><message>"
-
-#########################################################
-#                    ChatFilter                         #
-#  bypass permissions:                                  #
-#  magenta.chat.filter.bypass.<name>                    #
-#  actions: [notify,kick,cancel,message]                #
-#########################################################
-  filters:
-    antispam:
-      action:
-        - message
-        - cancel
-      similarity: 80
-      control: true
-    ipfilter:
-      action:
-        - notify
-        - message
-        - cancel
-      control: true
-      ip_regex: \d{1,3}[.|#|,]?\d{1,3}?[.|#|,]\d{1,3}[.|#|,]\d{1,3}|[:]\d{1,5}
-    website:
-      action:
-        - notify
-        - message
-        - cancel
-      control: true
-      web_regex:
-        - (http|https)[\w|\_|\W|\_]*(\.)*(com|eu|_|sk|de|info|cz|io|COM|EU|SK|DE|INFO|CZ|IO)
-        - ^(.* + \W|\d|_|.*|)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+(
-          .*)?$
-      whitelist:
-        - https://youtube.com
-    swear:
-      action:
-        - message
-        - cancel
-      control: true
-    capslock:
-      action:
-        - message
-        - cancel
-      sensitive: 15
-      control: true

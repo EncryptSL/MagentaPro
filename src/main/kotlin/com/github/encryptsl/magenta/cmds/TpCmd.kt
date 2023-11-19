@@ -15,6 +15,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
+import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -28,7 +29,7 @@ class TpCmd(private val magenta: Magenta) {
     @CommandPermission("magenta.tpa")
     fun onTpa(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(TpaRequestEvent(player, target, magenta.config.getLong("teleport-cooldown")))
+            magenta.pluginManager.callEvent(TpaRequestEvent(player, target))
         }
     }
 
@@ -75,6 +76,14 @@ class TpCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", player.name)
             )))
 
+        if (player.uniqueId == target.uniqueId)
+            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself")))
+
+        if (commandSender is Player) {
+            if (commandSender.uniqueId == player.uniqueId)
+                return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself.same")))
+        }
+
         magenta.schedulerMagenta.doSync(magenta) {
             player.teleport(target.location)
         }
@@ -119,9 +128,20 @@ class TpCmd(private val magenta: Magenta) {
         ))
     }
 
-    @CommandMethod("tpall")
+    @CommandMethod("tpall [world]")
     @CommandPermission("magenta.tpall")
-    fun onTeleportAllHere(player: Player) {
+    fun onTeleportAllHere(player: Player, @Argument("world", suggestions = "worlds") world: World?) {
+
+        if (world != null) {
+            magenta.schedulerMagenta.doSync(magenta) {
+                commandHelper.teleportAll(player, world.players)
+            }
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.world.success"),
+                Placeholder.parsed("world", world.name)
+            ))
+            return
+        }
+
         magenta.schedulerMagenta.doSync(magenta) {
             commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
         }

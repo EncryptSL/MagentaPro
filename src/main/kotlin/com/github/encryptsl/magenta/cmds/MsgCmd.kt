@@ -27,8 +27,7 @@ class MsgCmd(private val magenta: Magenta) {
         @Argument(value = "message") @Greedy message: String
     ) {
         magenta.schedulerMagenta.doSync(magenta) {
-            val privateMessageEvent = PlayerPrivateMessageEvent(commandSender, target, message)
-            privateMessageEvent.callEvent()
+            PlayerPrivateMessageEvent(commandSender, target, message).callEvent()
         }
     }
 }

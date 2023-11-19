@@ -9,6 +9,7 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -32,11 +33,7 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
             ))
         }
 
-        if (player.hasPermission("magenta.fly.safelogin")) {
-            player.fallDistance = 0F
-            player.allowFlight = true
-            player.isFlying = true
-        }
+        safeFly(player)
 
         if (user.getAccount().contains("displayname")) {
             player.displayName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
@@ -67,6 +64,14 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
             Placeholder.parsed("joined", Bukkit.getOfflinePlayers().size.toString())
         )))
         user.createDefaultData(player)
+    }
+
+    private fun safeFly(player: Player) {
+        if (player.hasPermission("magenta.fly.safelogin")) {
+            player.fallDistance = 0F
+            player.allowFlight = true
+            player.isFlying = true
+        }
     }
 
 }

@@ -12,13 +12,11 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import net.luckperms.api.cacheddata.CachedMetaData
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
-@Suppress("DEPRECATION")
 class AsyncChatListener(private val magenta: Magenta) : Listener {
 
     private val mentionManager: MentionManager by lazy { MentionManager(magenta) }
@@ -59,22 +57,17 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
                             suggestCommand.replace("{name}", source.name).replace("{player}", source.name))
                         )
                     ),
-                    Placeholder.component("prefix", Component.text(colorize(metaData.prefix ?: "")).hoverEvent(hoverText(source))),
-                    Placeholder.parsed("suffix", colorize(metaData.suffix ?: "")),
-                    Placeholder.parsed("username_color", colorize(metaData.getMetaValue("username-color") ?: "")),
-                    Placeholder.parsed("message_color", colorize(metaData.getMetaValue("message-color") ?: "")),
-                    Placeholder.parsed("message", if (player.hasPermission("magenta.chat.colors")) colorize(plainText) else plainText)
+                    Placeholder.component("prefix", Component.text(magenta.stringUtils.colorize(metaData.prefix ?: "")).hoverEvent(hoverText(source))),
+                    Placeholder.parsed("suffix", magenta.stringUtils.colorize(metaData.suffix ?: "")),
+                    Placeholder.parsed("username_color", magenta.stringUtils.colorize(metaData.getMetaValue("username-color") ?: "")),
+                    Placeholder.parsed("message_color", magenta.stringUtils.colorize(metaData.getMetaValue("message-color") ?: "")),
+                    Placeholder.parsed("message", if (player.hasPermission("magenta.chat.colors")) magenta.stringUtils.colorize(plainText) else plainText)
                 )
             )
         }
     }
-
-    private fun colorize(string: String): String {
-        return ChatColor.translateAlternateColorCodes('&', string)
-    }
-
     private fun hoverText(player: Player): HoverEvent<Component> {
-        return ModernText.hover(HoverEvent.Action.SHOW_TEXT, Component.text(colorize(ModernText.papi(player,"\n${magenta.config.getString("chat.hoverText")}"))))
+        return ModernText.hover(HoverEvent.Action.SHOW_TEXT, Component.text(magenta.stringUtils.colorize(ModernText.papi(player,"\n${magenta.config.getString("chat.hoverText")}"))))
     }
 
     private fun hoverItem(player: Player, message: String, event: AsyncChatEvent) {

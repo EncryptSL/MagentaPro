@@ -4,7 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
-import com.github.encryptsl.magenta.common.CommandHelper
+import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.util.Tick
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -15,8 +15,6 @@ import org.bukkit.event.Listener
 import java.time.Duration
 
 class TpaListener(private val magenta: Magenta) : Listener {
-
-    private val commandHelper: CommandHelper by lazy { CommandHelper(magenta) }
 
     @EventHandler
     fun onTpaAccept(event: TpaAcceptEvent) {
@@ -34,31 +32,20 @@ class TpaListener(private val magenta: Magenta) : Listener {
     fun onTpaRequest(event: TpaRequestEvent) {
         val sender = event.sender
         val target = event.target
-        val delay = event.delay
-
-        val user = magenta.user.getUser(sender.uniqueId)
-        val timeLeft: Duration = user.cooldownManager.getRemainingDelay("tpa")
 
         if (sender.uniqueId == target.uniqueId)
             return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.yourself")))
 
-        if (!user.cooldownManager.hasDelay("tpa")) {
-            if (delay != 0L && delay != -1L) {
-                if (!sender.hasPermission("magenta.tpa.delay.exempt")) {
-                    user.cooldownManager.setDelay(Duration.ofSeconds(delay), "tpa")
-                    user.save()
-                }
-            }
+        if (!magenta.tpaManager.createRequest(sender, target))
+            return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.exist")))
 
-            if (!magenta.tpaManager.createRequest(sender, target))
-                return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.exist")))
-
-
-            magenta.schedulerMagenta.delayedTask(magenta, {
-                magenta.tpaManager.killRequest(sender)
-            }, Tick.tick().fromDuration(Duration.ofSeconds(magenta.config.getLong("tpa-accept-cancellation"))).toLong())
-            target.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
-            target.sendMessage(
+        magenta.schedulerMagenta.delayedTask(magenta, {
+            magenta.tpaManager.killRequest(sender)
+        }, Tick.tick().fromDuration(Duration.ofSeconds(magenta.config.getLong("tpa-accept-cancellation"))).toLong())
+        PlayerBuilderAction
+            .player(target)
+            .sound(Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
+            .message(
                 ModernText.miniModernText(
                     magenta.localeConfig.getMessage("magenta.command.tpa.success.request"), TagResolver.resolver(
                         Placeholder.component("player", sender.displayName()),
@@ -69,12 +56,8 @@ class TpaListener(private val magenta: Magenta) : Listener {
                         Placeholder.parsed(
                             "deny",
                             magenta.localeConfig.getMessage("magenta.command.tpa.success.request.component.deny")
-                        ),
-                    )
+                        ),)
                 )
             )
-        } else {
-            commandHelper.delayMessage(sender, "magenta.command.tpa.error.request.delay", timeLeft)
-        }
     }
 }
