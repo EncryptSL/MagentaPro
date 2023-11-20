@@ -59,6 +59,9 @@ class TpCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", player.name)
             )))
 
+        if (player.uniqueId == target.uniqueId)
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself")))
+
         magenta.schedulerMagenta.doSync(magenta) {
             player.teleport(target)
         }
@@ -77,12 +80,7 @@ class TpCmd(private val magenta: Magenta) {
             )))
 
         if (player.uniqueId == target.uniqueId)
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself")))
-
-        if (commandSender is Player) {
-            if (commandSender.uniqueId == player.uniqueId)
-                return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself.same")))
-        }
+            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself.same")))
 
         magenta.schedulerMagenta.doSync(magenta) {
             player.teleport(target.location)

@@ -222,7 +222,8 @@ permissions:
     children:
       magenta.invsee: true
       magenta.invsee.modify: true
-      magenta.invsee.modify.prevent: true
+      magenta.invsee.prevent.modify: true
+      magenta.invsee.prevent.modify.exempt: true
   magenta.jail.*:
     description: Permissions for all jail commands
     default: false
@@ -389,6 +390,7 @@ permissions:
       magenta.home.delay.exempt: true
       magenta.heal.delay.exempt: true
       magenta.ignore.exempt: true
+      magenta.invsee.prevent.modify.exempt: true
       magenta.jail.exempt: true
       magenta.kit.delay.exempt: true
       magenta.repair.delay.exempt: true
