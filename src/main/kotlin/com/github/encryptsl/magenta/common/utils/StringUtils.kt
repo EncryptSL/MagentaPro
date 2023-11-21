@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.encryptsl.magenta.common.utils
 
 import com.github.encryptsl.magenta.Magenta

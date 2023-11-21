@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.database.sql.VoteSQL
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
+import com.github.encryptsl.magenta.common.database.sql.VoteSQL
 import com.github.encryptsl.magenta.common.database.tables.VoteTable
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.last_vote
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.serviceName
@@ -38,6 +38,10 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
         }
     }
 
+    override fun hasAccount(uuid: UUID): Boolean = transaction {
+        !VoteTable.select(VoteTable.uuid eq uuid.toString()).empty()
+    }
+
     override fun hasAccount(uuid: UUID, serviceName: String): Boolean = transaction {
         !VoteTable.select((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName)).empty()
     }
@@ -54,21 +58,21 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
         }
     }
 
-    override fun setVote(voteImpl: VoteEntity) {
+    override fun setVote(uuid: UUID, serviceName: String, amount: Int) {
         magenta.schedulerMagenta.doAsync(magenta) {
             transaction {
-                VoteTable.update ({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
-                    it[vote] = voteImpl.vote
+                VoteTable.update ({ (VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName) }) {
+                    it[vote] = amount
                 }
             }
         }
     }
 
-    override fun removeVote(voteImpl: VoteEntity) {
+    override fun removeVote(uuid: UUID, serviceName: String, amount: Int) {
         magenta.schedulerMagenta.doAsync(magenta) {
             transaction {
-                VoteTable.update ({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
-                    it[vote] = vote.minus(voteImpl.vote)
+                VoteTable.update ({ (VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName) }) {
+                    it[vote] = vote.minus(amount)
                 }
             }
         }
@@ -98,9 +102,25 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
         }
     }
 
-    override fun cleanVotes() {}
+    override fun resetVotes(uuid: UUID) {
+        magenta.schedulerMagenta.doAsync(magenta) {
+            transaction {
+                VoteTable.update({ VoteTable.uuid eq uuid.toString() }) {
+                    it[vote] = 0
+                }
+            }
+        }
+    }
 
-    override fun cleanAll() {
+    override fun resetVotes() {
+        magenta.schedulerMagenta.doAsync(magenta) {
+            transaction { VoteTable.selectAll().forEach {
+                it[vote] = 0
+            } }
+        }
+    }
+
+    override fun deleteAll() {
         magenta.schedulerMagenta.doAsync(magenta) {
             transaction { VoteTable.deleteAll() }
         }

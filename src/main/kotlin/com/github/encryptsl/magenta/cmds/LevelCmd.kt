@@ -22,10 +22,8 @@ class LevelCmd(private val magenta: Magenta) {
     fun onLevel(player: Player) {
 
         try {
-            val data = magenta.virtualLevel.getLevel(player.uniqueId)
-            val level = data.level
-            val currentExp = data.experience
-            commandHelper.showLevelProgress(player, level, currentExp)
+            val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
+            commandHelper.showLevelProgress(player, level, experience)
         } catch (e : IllegalArgumentException) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"),
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -46,10 +44,8 @@ class LevelCmd(private val magenta: Magenta) {
             ))
 
         try {
-            val data = magenta.virtualLevel.getLevel(target.uniqueId)
-            val level = data.level
-            val currentExp = data.experience
-            commandHelper.showLevelProgress(commandSender, level, currentExp)
+            val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(target.uniqueId)
+            commandHelper.showLevelProgress(commandSender, level, experience)
         } catch (e : IllegalArgumentException) {
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"),
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)

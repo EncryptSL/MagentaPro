@@ -5,9 +5,7 @@ import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.models.VoteModel
 import java.util.*
 
-class VotePlayerAPI(private val magenta: Magenta) : VoteAPI {
-
-    private val voteModel: VoteModel by lazy { VoteModel(magenta) }
+class MagentaVoteAPI(private val magenta: Magenta, private val voteModel: VoteModel) : VoteAPI {
 
     override fun addVote(voteImpl: VoteEntity) {
         if (!hasAccount(voteImpl.uuid, voteImpl.serviceName)) {
@@ -17,14 +15,16 @@ class VotePlayerAPI(private val magenta: Magenta) : VoteAPI {
         }
     }
 
-    override fun setVote(voteImpl: VoteEntity) {
-        voteModel.setVote(voteImpl)
+    override fun setVote(uuid: UUID, serviceName: String, amount: Int) {
+        voteModel.setVote(uuid, serviceName, amount)
     }
 
-    override fun removeVote(voteImpl: VoteEntity) {
-        voteModel.removeVote(voteImpl)
+    override fun removeVote(uuid: UUID, serviceName: String, amount: Int) {
+        voteModel.removeVote(uuid, serviceName, amount)
     }
-
+    override fun hasAccount(uuid: UUID): Boolean {
+        return voteModel.hasAccount(uuid)
+    }
     override fun hasAccount(uuid: UUID, serviceName: String): Boolean {
         return voteModel.hasAccount(uuid, serviceName)
     }
@@ -44,12 +44,16 @@ class VotePlayerAPI(private val magenta: Magenta) : VoteAPI {
         voteModel.removeAccount(uuid)
     }
 
-    override fun cleanVotes() {
-        TODO("Not yet implemented")
+    override fun resetVotes(uuid: UUID) {
+        voteModel.resetVotes(uuid)
     }
 
-    override fun cleanAll() {
-        voteModel.cleanAll()
+    override fun resetVotes() {
+        voteModel.resetVotes()
+    }
+
+    override fun deleteAll() {
+        voteModel.deleteAll()
     }
 
     override fun totalVotes(): Int {

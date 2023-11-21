@@ -7,13 +7,13 @@ import com.github.encryptsl.magenta.api.level.LevelFormula
 class LevelUpTask(private val magenta: Magenta) : Runnable {
     override fun run() {
         magenta.server.onlinePlayers.forEach { player ->
-            val playerData = magenta.virtualLevel.getLevel(player.uniqueId)
-            if (playerData.experience >= LevelFormula.experienceFormula(playerData.level)) {
+            val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
+            if (experience >= LevelFormula.experienceFormula(level)) {
                 magenta.pluginManager.callEvent(VirtualLevelUpEvent(
                     player,
-                    playerData.level,
-                    playerData.experience,
-                    LevelFormula.experienceFormula(playerData.level.plus(1))
+                    level,
+                    experience,
+                    LevelFormula.experienceFormula(level.plus(1))
                 ))
             }
         }

@@ -129,12 +129,12 @@ class VaultShop(private val magenta: Magenta) {
 
                     guiItem.setAction { action ->
                         if (action.isShiftClick && action.isLeftClick) {
-                            vaultShopInventory.buyItem(magenta.itemFactory.shopItem(material, 64), isBuyAllowed, buyPrice, action)
+                            vaultShopInventory.buy(magenta.itemFactory.shopItem(material, 64), isBuyAllowed, buyPrice, action)
                             return@setAction
                         }
 
                         if (action.isLeftClick) {
-                            vaultShopInventory.buyItem(magenta.itemFactory.shopItem(material, 1), isBuyAllowed, buyPrice, action)
+                            vaultShopInventory.buy(magenta.itemFactory.shopItem(material, 1), isBuyAllowed, buyPrice, action)
                             return@setAction
                         }
 
@@ -142,7 +142,7 @@ class VaultShop(private val magenta: Magenta) {
                         if (action.isShiftClick && action.isRightClick) {
                             for (i in 0..35) {
                                 if (player.inventory.getItem(i)?.type == material) {
-                                    vaultShopInventory.sellItem(
+                                    vaultShopInventory.sell(
                                         player.inventory.getItem(i)!!,
                                         isSellAllowed,
                                         sellPrice,
@@ -155,7 +155,7 @@ class VaultShop(private val magenta: Magenta) {
                         }
 
                         if (action.isRightClick) {
-                            vaultShopInventory.sellItem(magenta.itemFactory.shopItem(material, 1), isSellAllowed, sellPrice, action)
+                            vaultShopInventory.sell(magenta.itemFactory.shopItem(material, 1), isSellAllowed, sellPrice, action)
                             return@setAction
                         }
                         action.isCancelled = true

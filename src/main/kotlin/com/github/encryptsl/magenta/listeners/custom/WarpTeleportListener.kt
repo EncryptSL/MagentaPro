@@ -24,12 +24,12 @@ class WarpTeleportListener(private val magenta: Magenta) : Listener {
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist"),
                     TagResolver.resolver(Placeholder.parsed("warp", warpName))))
 
-        runCatching {
-            magenta.warpModel.getWarps().first { s -> s.warpName == warpName }
-        }.onSuccess { warp ->
+        try {
+            val (_: String, _: String, warp: String, world: String, x: Int, y: Int, z: Int, pitch: Float, yaw: Float) = magenta.warpModel.getWarps().first { s -> s.warpName == warpName}
+
             if (commandSender is Player) {
                 if (target == null) {
-                    commandSender.teleport(Location(Bukkit.getWorld(warp.world), warp.x.toDouble(), warp.y.toDouble(), warp.z.toDouble(), warp.yaw, warp.pitch))
+                    commandSender.teleport(Location(Bukkit.getWorld(world), x.toDouble(), y.toDouble(), z.toDouble(), yaw, pitch))
                     commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.teleport.self"), TagResolver.resolver(
                         Placeholder.parsed("warp", warpName)
                     )))
@@ -39,12 +39,12 @@ class WarpTeleportListener(private val magenta: Magenta) : Listener {
                 if (commandSender.hasPermission("magenta.warp.other")) {
                     target.teleport(
                         Location(
-                            Bukkit.getWorld(warp.warpName),
-                            warp.x.toDouble(),
-                            warp.y.toDouble(),
-                            warp.z.toDouble(),
-                            warp.yaw,
-                            warp.pitch
+                            Bukkit.getWorld(warp),
+                            x.toDouble(),
+                            y.toDouble(),
+                            z.toDouble(),
+                            yaw,
+                            pitch
                         )
                     )
                     target.sendMessage(
@@ -66,7 +66,7 @@ class WarpTeleportListener(private val magenta: Magenta) : Listener {
                 }
             } else {
                 if (target != null) {
-                    target.teleport(Location(Bukkit.getWorld(warp.world), warp.x.toDouble(), warp.y.toDouble(), warp.z.toDouble(), warp.yaw, warp.pitch))
+                    target.teleport(Location(Bukkit.getWorld(world), x.toDouble(), y.toDouble(), z.toDouble(), yaw, pitch))
                     target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.teleport.self"), TagResolver.resolver(
                         Placeholder.parsed("warp", warpName)
                     )))
@@ -75,6 +75,9 @@ class WarpTeleportListener(private val magenta: Magenta) : Listener {
                     Placeholder.parsed("warp", warpName)
                 )))
             }
+
+        } catch (e : Exception) {
+            magenta.logger.severe(e.message ?: e.localizedMessage)
         }
     }
 }

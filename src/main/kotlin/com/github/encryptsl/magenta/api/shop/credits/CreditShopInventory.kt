@@ -23,7 +23,6 @@ class CreditShopInventory(private val magenta: Magenta, private val creditLiteHo
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
 
         economyShopIntegration.doCreditTransaction(player, creditLiteHook, message, product, price, quantity, commands)
-
     }
 
 

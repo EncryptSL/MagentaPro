@@ -58,6 +58,7 @@ permissions:
       magenta.social.spy.*: true
       magenta.tpa.*: true
       magenta.vanish.*: true
+      magenta.votes.*: true
       magenta.warp.*: true
       magenta.chat.filter.bypass.*: true
   magenta.moderator:
@@ -93,7 +94,7 @@ permissions:
       magenta.warp: true
       magenta.tpa.*: true
       magenta.msg.*: true
-      magenta.vote.*: true
+      magenta.vote.player: true
   magenta.plugin.*:
     description: Permissions for admins
     default: false
@@ -350,13 +351,23 @@ permissions:
     children:
       magenta.vanish: true
       magenta.vanish.other: true
-  magenta.vote.*:
+  magenta.vote.player:
     description: Permissions for vote and voteparty
     default: false
     children:
       magenta.vote: true
       magenta.vote.claim.rewards: true
       magenta.voteparty: true
+  magenta.votes.*:
+    description: Permissions for managing votes
+    default: false
+    children:
+      magenta.votes.add: true
+      magenta.votes.set: true
+      magenta.votes.reset.player: true
+      magenta.votes.reset.all: true
+      magenta.votes.remove: true
+      magenta.votes.remove.all: true
   magenta.warp.*:
     description: Permissions for all warp commands
     default: false

@@ -48,15 +48,9 @@ class HomeTeleportListener(private val magenta: Magenta) : Listener {
             user.save()
         }
 
-        magenta.homeModel.getHomesByOwner(player).filter { s -> s.homeName == homeName }.first {
-            player.teleport(Location(
-                Bukkit.getWorld(it.world),
-                it.x.toDouble(),
-                it.y.toDouble(),
-                it.z.toDouble(),
-                it.yaw, it.pitch)
-            )
-        }
+        val (_: String, _: String, _: String, world: String, x: Int, y: Int, z: Int, pitch: Float, yaw: Float) = magenta.homeModel.getHomesByOwner(player).first { s -> s.homeName == homeName }
+
+        player.teleport(Location(Bukkit.getWorld(world), x.toDouble(), z.toDouble(), y.toDouble(), yaw, pitch))
 
         player.sendMessage(
             ModernText.miniModernText(

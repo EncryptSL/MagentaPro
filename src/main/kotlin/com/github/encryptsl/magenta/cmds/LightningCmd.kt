@@ -27,5 +27,4 @@ class LightningCmd(private val magenta: Magenta) {
             Placeholder.parsed("player", target.name)
         ))
     }
-
 }

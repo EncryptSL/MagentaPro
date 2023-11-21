@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common.tasks
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
 import com.github.encryptsl.magenta.common.extensions.formatFromSecondsTime
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -12,7 +11,7 @@ import org.bukkit.Sound
 class JailCountDownTask(private val magenta: Magenta) : Runnable {
     override fun run() {
         magenta.server.onlinePlayers.forEach { player ->
-            val account = UserAccount(magenta, player.uniqueId)
+            val account = magenta.user.getUser(player.uniqueId)
             val timeLeft = account.jailManager.remainingTime()
             if (account.jailManager.hasPunish()) {
                 if (timeLeft == 0L) {
