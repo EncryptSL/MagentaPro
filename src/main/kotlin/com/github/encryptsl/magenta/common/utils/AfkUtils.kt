@@ -26,7 +26,7 @@ class AfkUtils(private val magenta: Magenta) {
             forceAfk(uuid, true)
         }
     }
-    fun forceAfk(uuid: UUID, boolean: Boolean) {
+    private fun forceAfk(uuid: UUID, boolean: Boolean) {
         val user = magenta.user.getUser(uuid)
         user.set("afk", boolean)
     }

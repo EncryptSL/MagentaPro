@@ -22,7 +22,6 @@ import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.tasks.LevelUpTask
-import com.github.encryptsl.magenta.common.tasks.PlayerAfkTask
 import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
@@ -141,7 +140,6 @@ class Magenta : JavaPlugin() {
 
     private fun registerTasks() {
         schedulerMagenta.runTaskTimerAsync(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
-        schedulerMagenta.runTaskTimerAsync(this, PlayerAfkTask(this), 20L, 20)
         schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
         schedulerMagenta.runTaskTimerAsync(this, LevelUpTask(this), 20, 1)
     }
