@@ -10,7 +10,7 @@ class Swear(private val magenta: Magenta) : Chat {
     override fun isDetected(player: Player, phrase: String): Boolean {
         var detected = false
 
-        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.swear.control")) return false
+        if (!magenta.chatControl.getConfig().getBoolean("filters.swear.control")) return false
 
         if (player.hasPermission("magenta.chat.filter.bypass.swear")) return false
 

@@ -19,7 +19,7 @@ class ChatPunishManager(private val magenta: Magenta) {
     private val flagging = HashMap<UUID, Int>()
 
     fun action(player: Player, event: AsyncChatEvent, translation: String?, messageFromChat: String, violations: Violations) {
-        val actionList = magenta.config.getStringList("chat.filters.${violations.name.lowercase()}.action")
+        val actionList = magenta.chatControl.getConfig().getStringList("filters.${violations.name.lowercase()}.action")
         if (actionList.contains("none")) return
 
         if (actionList.contains("kick")) {
@@ -40,15 +40,17 @@ class ChatPunishManager(private val magenta: Magenta) {
             }
         }
         if (actionList.contains("notify")) {
-            magenta.serverFeedback.client.send(magenta.serverFeedback.addEmbed {
-                setAuthor(WebhookEmbed.EmbedAuthor("Chat Filter 1.0.0 - Varování", null, null))
-                setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
-                setDescription("Se pokusil napsat něco co je zakázáno !")
-                addField(WebhookEmbed.EmbedField(true, "Detekován Hráč", player.name))
-                addField(WebhookEmbed.EmbedField(true, "Modul", violations.name))
-                addField(WebhookEmbed.EmbedField(false, "Napsal", messageFromChat))
-                setFooter(WebhookEmbed.EmbedFooter("Detekováno ${now()}", null))
-            })
+            try {
+                magenta.serverFeedback.client.send(magenta.serverFeedback.addEmbed {
+                    setAuthor(WebhookEmbed.EmbedAuthor("Chat Filter 1.0.0 - Varování", null, null))
+                    setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
+                    setDescription("Se pokusil napsat něco co je zakázáno !")
+                    addField(WebhookEmbed.EmbedField(true, "Detekován Hráč", player.name))
+                    addField(WebhookEmbed.EmbedField(true, "Modul", violations.name))
+                    addField(WebhookEmbed.EmbedField(false, "Napsal", messageFromChat))
+                    setFooter(WebhookEmbed.EmbedFooter("Detekováno ${now()}", null))
+                })
+            } catch (_: IllegalArgumentException) { }
             Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.admin.notify"), TagResolver.resolver(
                 Placeholder.parsed("player", player.name),
                 Placeholder.parsed("flagged", violations.name),

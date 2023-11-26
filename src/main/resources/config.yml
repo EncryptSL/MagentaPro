@@ -150,7 +150,7 @@ msg:
 news:
 # You can set custom prefix for your broadcast scheduled
 # messages, format supporting minimessage.
-  format: '<gray>[</gray><green>News<gray>]</gray> <message>'
+  format: '<gray>[</gray><red>TIP<gray>]</gray> <message>'
 
 # Random is settings for selecting messages from list
 # randomized based on size in list and random number.
@@ -160,6 +160,10 @@ news:
 # delay is based on minutes.
   delay: 5
 
+  options:
+    broadcast: false
+    actionbar: true
+
 # There you can set your messages, for broadcast
 # Messages supporting base
   messages:
@@ -167,9 +171,17 @@ news:
       !
     - <color:#05B5FC>Ještě jsi dneska nehlasoval ?</color>, <color:#69D0FA>Napiš /vote
       !</color>
-    - <gray>Náš server nabízí i těžební svět <red><bold>/mineworld</bold> <gray>který
-      se resetuje každý měsíc !
-    - <gray>Magické truhly nalezneš na <yellow>/warp crates !
+    - <gray>Náš server nabízí i těžební svět <red>/mineworld <gray>který se resetuje
+      každý měsíc !
+    - <gray>Magické truhly nalezneš na <yellow>/crates<gray> !
+    - <gray>Do přírody se dostaneš pomocí <yellow>/priroda<gray> !
+    - <gray>Na serveru je pro zkrácení chvíle mob aréna připojíš se pomocí <green>/ma
+      join<gray> !
+    - <gray>Hlavní boss se spawnuje vždy kolem <yellow>20:00 <gray>a <yellow>21:00 /warp
+      hlboss
+    - <gray>Na serveru můžeš vždy kolem <yellow>18:00 <gray>a <yellow>19:00 zabít vedlejší
+      bossy na /warp dungeon.
+    - <gray>Věděl jsi že zabíjením bossů můžeš získat zdarma kredity ?
 
 
 #########################################################

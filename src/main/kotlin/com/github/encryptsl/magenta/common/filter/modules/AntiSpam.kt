@@ -9,7 +9,7 @@ import java.util.*
 class AntiSpam(val magenta: Magenta) {
 
     fun isDetected(player: Player, phrase: String): Boolean {
-        if (!magenta.chatControl.getConfig().getBoolean("chat.filters.antispam.control")) return false
+        if (!magenta.chatControl.getConfig().getBoolean("filters.antispam.control")) return false
 
         if (player.hasPermission("magenta.chat.filter.bypass.antispam"))
             return false
@@ -17,7 +17,7 @@ class AntiSpam(val magenta: Magenta) {
         SpamCache.spam.putIfAbsent(player.uniqueId, phrase)
         SpamCache.spam.computeIfPresent(player.uniqueId) { _, _ -> phrase }
 
-        return CensorAPI.checkSimilarity(phrase, SpamCache.spam[player.uniqueId].toString(), magenta.chatControl.getConfig().getInt("chat.filters.antispam.similarity"))
+        return CensorAPI.checkSimilarity(phrase, SpamCache.spam[player.uniqueId].toString(), magenta.chatControl.getConfig().getInt("filters.antispam.similarity"))
     }
 }
 

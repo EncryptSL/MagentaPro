@@ -16,9 +16,25 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
                 val messages = magenta.config.getStringList("news.messages")
                 if (messages.isEmpty()) return
 
-                Bukkit.broadcast(ModernText.miniModernText(format,
-                    Placeholder.parsed("message", messages.random())
-                ))
+                if (magenta.config.getBoolean("news.options.actionbar")) {
+                    magenta.server.onlinePlayers.forEach { player ->
+                        player.sendActionBar(
+                            ModernText.miniModernText(
+                                format,
+                                Placeholder.parsed("message", messages.random())
+                            )
+                        )
+                    }
+                }
+
+                if (magenta.config.getBoolean("news.options.broadcast")) {
+                    Bukkit.broadcast(
+                        ModernText.miniModernText(
+                            format,
+                            Placeholder.parsed("message", messages.random())
+                        )
+                    )
+                }
             }
        }
     }
