@@ -9,12 +9,14 @@ class LevelUpTask(private val magenta: Magenta) : Runnable {
         magenta.server.onlinePlayers.forEach { player ->
             val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
             if (experience >= LevelFormula.experienceFormula(level)) {
-                magenta.pluginManager.callEvent(VirtualLevelUpEvent(
-                    player,
-                    level,
-                    experience,
-                    LevelFormula.experienceFormula(level.plus(1))
-                ))
+                magenta.schedulerMagenta.doSync(magenta) {
+                    magenta.pluginManager.callEvent(VirtualLevelUpEvent(
+                        player,
+                        level,
+                        experience,
+                        LevelFormula.experienceFormula(level.plus(1))
+                    ))
+                }
             }
         }
     }
