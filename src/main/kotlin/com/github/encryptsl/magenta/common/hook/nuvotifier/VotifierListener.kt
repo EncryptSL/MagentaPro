@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerStartedEvent
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.vexsoftware.votifier.model.Vote
 import com.vexsoftware.votifier.model.VotifierEvent
+import com.vexsoftware.votifier.util.QuietException
 import kotlinx.datetime.Instant
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
@@ -21,33 +22,36 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         val timestamp = vote.timeStamp
         val serviceName = VoteHelper.replaceService(vote.serviceName, ".", "_")
         val player = Bukkit.getOfflinePlayer(username)
-        if (!player.hasPlayedBefore()) return
+        if (!player.hasPlayedBefore() || username.isNullOrEmpty()) return
+        try {
+            if (magenta.config.contains("votifier.sound")) {
+                VoteHelper.playSoundForAll(
+                    Sound.valueOf(magenta.config.getString("votifier.sound").toString()),
+                    magenta.config.getString("votifier.volume").toString().toFloat(),
+                    magenta.config.getString("votifier.pitch").toString().toFloat()
+                )
+            }
 
-        if (magenta.config.contains("votifier.sound")) {
-            VoteHelper.playSoundForAll(
-                Sound.valueOf(magenta.config.getString("votifier.sound").toString()),
-                magenta.config.getString("votifier.volume").toString().toFloat(),
-                magenta.config.getString("votifier.pitch").toString().toFloat()
-            )
-        }
+            if (magenta.config.contains("votifier.services.$serviceName")) {
+                processVote(serviceName, player, timestamp.toLong())
+            } else {
+                processDefaultReward(serviceName, player, timestamp.toLong())
+            }
 
-        if (magenta.config.contains("votifier.services.$serviceName")) {
-            processVote(serviceName, player, timestamp.toLong())
-        } else {
-            processDefaultReward(serviceName, player, timestamp.toLong())
-        }
+            if (magenta.config.contains("votifier.cumulative")) {
+                processCumulativeVote(serviceName, player)
+            }
 
-        if (magenta.config.contains("votifier.cumulative")) {
-            processCumulativeVote(serviceName, player)
-        }
+            if (magenta.config.contains("votifier.voteparty")) {
+                if (!magenta.config.getBoolean("votifier.voteparty.enabled")) return
+                if (!magenta.config.contains("votifier.voteparty.countdown")) return
 
-        if (magenta.config.contains("votifier.voteparty")) {
-            if (!magenta.config.getBoolean("votifier.voteparty.enabled")) return
-            if (!magenta.config.contains("votifier.voteparty.countdown")) return
+                VoteHelper.setVotePartyVote(magenta, magenta.config.getInt("votifier.voteparty.current_votes").plus(1))
 
-            VoteHelper.setVotePartyVote(magenta, magenta.config.getInt("votifier.voteparty.current_votes").plus(1))
-
-            checkVoteParty(player)
+                checkVoteParty(player)
+            }
+        } catch (e : QuietException) {
+            magenta.logger.severe(e.message ?: e.localizedMessage)
         }
     }
 
