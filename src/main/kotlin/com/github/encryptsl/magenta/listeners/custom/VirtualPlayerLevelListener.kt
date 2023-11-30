@@ -13,7 +13,7 @@ class VirtualPlayerLevelListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onLevelUp(event: VirtualLevelUpEvent) {
         val offlinePlayer = event.offlinePlayer
-        val level = event.newLevel
+        val level = event.newLevel.plus(1)
         val currentExp = event.currentExp
         val expToLevel = event.experienceToLevel
 
