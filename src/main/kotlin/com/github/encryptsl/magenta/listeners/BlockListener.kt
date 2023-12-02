@@ -75,6 +75,28 @@ class BlockListener(private val magenta: Magenta) : Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun onBlockBreakLevelOre(event: BlockBreakEvent) {
+        val player = event.player
+        val uuid = player.uniqueId
+        val block = event.block
+
+        if (player.hasPermission("magenta.level.mining.bypass")) return
+        val (_, _, level, _) = magenta.levelModel.getLevel(uuid)
+        if (!magenta.config.contains("level.ores.${block.type.name}")) return
+
+        if (!magenta.config.getStringList("level.worlds").contains(player.world.name)) return
+
+        val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
+        if (requiredLevel > level) {
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.mining.level.required"), TagResolver.resolver(
+                Placeholder.parsed("level", level.toString()),
+                Placeholder.parsed("required_level", requiredLevel.toString())
+            )))
+            event.isCancelled = true
+        }
+    }
+
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
         val player = event.player

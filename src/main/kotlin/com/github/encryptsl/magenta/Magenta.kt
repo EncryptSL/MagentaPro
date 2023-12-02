@@ -159,6 +159,7 @@ class Magenta : JavaPlugin() {
             PlayerInteractionListener(this),
             PlayerInventoryListener(),
             PlayerMoveListener(this),
+            PortalListener(this),
             HomeCreateListener(this),
             HomeDeleteListener(this),
             HomeInfoListener(this),

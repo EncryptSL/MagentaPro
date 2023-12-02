@@ -93,6 +93,13 @@ socialspy-commands:
 auto-afk: 5
 
 
+# Portal Section
+# There you can block creating of portals.
+# Methods https://jd.papermc.io/paper/1.20/org/bukkit/event/world/PortalCreateEvent.CreateReason.html
+portal:
+  blacklist: [NETHER_PAIR, END_PLATFORM, FIRE]
+
+
 # Settings for Level UP notifications
 # You can set sound effect when player have level up
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
@@ -112,6 +119,13 @@ level:
     - "Dosahl jsi levelu <yellow><bold><level>"
     - "Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>"
     - ""
+  worlds: [world, world_nether, mineworld]
+  ores:
+    COAL_ORE: 2
+    IRON_ORE: 3
+    GOLD_ORE: 3
+    DIAMOND_ORE: 8
+    NETHERITE_ORE: 11
 
 #########################################################
 #                    MENTIONS                           #

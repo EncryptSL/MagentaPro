@@ -60,6 +60,7 @@ permissions:
       magenta.vanish.*: true
       magenta.votes.*: true
       magenta.warp.*: true
+      magenta.restriction.bypass.*: true
       magenta.chat.filter.bypass.*: true
   magenta.moderator:
     description: Permissions for moderator
@@ -408,6 +409,11 @@ permissions:
       magenta.social.spy.exempt: true
       magenta.tpa.delay.exempt: true
       magenta.warp.delay.exempt: true
+  magenta.restriction.bypass.*:
+    default: false
+    children:
+      magenta.level.mining.bypass: true
+      magenta.portal.blacklist.bypass: true
   magenta.chat.filter.bypass.*:
     default: false
     children:

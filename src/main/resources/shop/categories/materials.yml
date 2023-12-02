@@ -1,0 +1,80 @@
+shop:
+  gui:
+    fill:
+      bottom: BLUE_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    GUNPOWDER:
+      buy:
+        price: 4.6
+      sell:
+        price: 1.5
+    BOONE:
+      buy:
+        price: 3.6
+      sell:
+        price: 1.3
+    STRING:
+      buy:
+        price: 2.6
+      sell:
+        price: 1.2
+    MAGMA_CREAM:
+      buy:
+        price: 2.4
+      sell:
+        price: 1.1
+    BLAZE_ROD:
+      buy:
+        price: 2.4
+      sell:
+        price: 1.0
+    ENDERPEARL:
+      buy:
+        price: 2.6
+      sell:
+        price: 0.8
+    INK_SAC:
+      buy:
+        price: 2.0
+      sell:
+        price: 0.6
+    GLOW_INK_SAC:
+      buy:
+        price: 2.6
+      sell:
+        price: 0.9
+    LEATHER:
+      buy:
+        price: 2.0
+      sell:
+        price: 0.6
+    FEATHER:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.3
+    SPIDER_EYE:
+      buy:
+        price: 1.5
+      sell:
+        price: 0.3
