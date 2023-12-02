@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
@@ -81,6 +82,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val uuid = player.uniqueId
         val block = event.block
 
+        if (player.gameMode == GameMode.CREATIVE) return
         if (player.hasPermission("magenta.level.mining.bypass")) return
         val (_, _, level, _) = magenta.levelModel.getLevel(uuid)
         if (!magenta.config.contains("level.ores.${block.type.name}")) return
@@ -90,6 +92,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
         if (requiredLevel > level) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.mining.level.required"), TagResolver.resolver(
+                Placeholder.parsed("block", block.type.name),
                 Placeholder.parsed("level", level.toString()),
                 Placeholder.parsed("required_level", requiredLevel.toString())
             )))

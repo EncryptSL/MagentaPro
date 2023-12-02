@@ -17,6 +17,28 @@ import org.bukkit.entity.Player
 @CommandDescription("Provided by plugin MagentaPro")
 class RandomCmd(private val magenta: Magenta) {
 
+    @CommandMethod("random world tickets <player> [amount]")
+    @CommandPermission("magenta.random.world.tickets")
+    fun onRandomTickets(
+        commandSender: CommandSender,
+        @Argument(value = "player", suggestions = "players") target: Player,
+        @Argument("amount", defaultValue = "1") @Range(min = "1", max = "100") amount: Int
+    ) {
+        val tickets: List<String> = magenta.randomConfig.getConfig().getStringList("world_tickets.tickets")
+        val randomKey = tickets.random().replace("%amount%", amount.toString())
+        magenta.logger.info("Hráč ${target.name} dostal náhodnou vstupenku !")
+        magenta.schedulerMagenta.doSync(magenta) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
+        }
+        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.world.ticket.success.player"),
+            Placeholder.parsed("amount", amount.toString())
+        ))
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.world.ticket.success.to"), TagResolver.resolver(
+            Placeholder.parsed("player", target.name),
+            Placeholder.parsed("amount", amount.toString())
+        )))
+    }
+
     @CommandMethod("random crates key <player> [amount]")
     @CommandPermission("magenta.random.crates.key")
     fun onRandomCratesKey(

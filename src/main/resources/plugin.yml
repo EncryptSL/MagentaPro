@@ -288,6 +288,7 @@ permissions:
     default: false
     children:
       magenta.random.crates.key: true
+      magenta.random.world.tickets: true
       magenta.random.tag: true
   magenta.repair.*:
     description: Permissions for repair

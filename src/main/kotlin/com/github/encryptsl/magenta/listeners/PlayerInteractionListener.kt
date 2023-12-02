@@ -25,7 +25,11 @@ class PlayerInteractionListener(private val magenta: Magenta) : Listener {
                         if (itemMeta.displayName() == ModernText.miniModernText(item)) {
                             val command = magenta.cItems.getConfig().getString("citems.$it.command").toString()
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(command, player))
-                            player.inventory.remove(itemInHand)
+                            if (itemInHand.amount > 1) {
+                                itemInHand.amount -= 1
+                            } else {
+                                player.inventory.remove(itemInHand)
+                            }
                         }
                     }
                 }
