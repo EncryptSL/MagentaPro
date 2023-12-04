@@ -133,7 +133,7 @@ level:
     DEEPSLATE_DIAMOND_ORE: 10
     EMERALD_ORE: 11
     DEEPSLATE_EMERALD_ORE: 11
-    NETHERITE_ORE: 12
+    ANCIENT_DEBRIS: 12
 
 #########################################################
 #                    MENTIONS                           #

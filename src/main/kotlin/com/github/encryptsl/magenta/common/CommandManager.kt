@@ -161,6 +161,7 @@ class CommandManager(private val magenta: Magenta) {
         annotationParser.parse(LightningCmd(magenta))
         annotationParser.parse(MagentaCmd(magenta))
         annotationParser.parse(NickCmd(magenta))
+        annotationParser.parse(OresCmd(magenta))
         annotationParser.parse(RandomCmd(magenta))
         annotationParser.parse(MsgCmd(magenta))
         annotationParser.parse(RepairCmd(magenta))

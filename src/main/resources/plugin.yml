@@ -256,6 +256,7 @@ permissions:
       magenta.level: true
       magenta.level.other: true
       magenta.level.top: true
+      magenta.ores.progress: true
   magenta.levels.*:
     description: Permissions for manage levels by admin
     default: false
