@@ -13,7 +13,7 @@ class JailCheckListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
 
-        if (user.jailManager.hasPunish() || user.getAccount().getBoolean("jailed")) {
+        if (user.isJailed()) {
             val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails") ?: return
             val randomJail = jailSection.getKeys(false).random()
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.jailed")))

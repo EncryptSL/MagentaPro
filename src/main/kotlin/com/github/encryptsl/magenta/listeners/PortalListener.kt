@@ -18,7 +18,7 @@ class PortalListener(private val magenta: Magenta) : Listener {
             if (player.gameMode == GameMode.CREATIVE) return
             if (player.hasPermission("magenta.portal.blacklist.bypass")) return
             val reason: CreateReason = event.reason
-            if (magenta.config.getStringList("portal.blacklist").contains(reason.name)) {
+            if (magenta.stringUtils.inInList("portal.blacklist", reason.name)) {
                 player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.portal.error")))
                 event.isCancelled = true
             }

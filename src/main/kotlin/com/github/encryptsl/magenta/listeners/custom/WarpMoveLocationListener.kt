@@ -18,7 +18,6 @@ class WarpMoveLocationListener(private val magenta: Magenta) : Listener {
         val location: Location = player.location
         val warpName: String = event.warpName
 
-
         if (!magenta.warpModel.getWarpExist(warpName))
             return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist"),

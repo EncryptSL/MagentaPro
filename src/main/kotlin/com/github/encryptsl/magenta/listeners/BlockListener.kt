@@ -56,8 +56,8 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val block = event.block
         val material = block.type
-        if (!magenta.config.getStringList("jobs.whitelist_world").contains(block.world.name)) return
-        if (!magenta.config.getStringList("jobs.miner.blocks").contains(material.name)) return
+        if (!magenta.stringUtils.inInList("jobs.whitelist_world", player.world.name)) return
+        if (!magenta.stringUtils.inInList("jobs.miner.blocks", material.name)) return
 
         earnMoneyProgress.putIfAbsent(player.uniqueId, 0)
         earnMoneyProgress.computeIfPresent(player.uniqueId) { _, progress -> progress + 1}
@@ -91,7 +91,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val (_, _, level, _) = magenta.levelModel.getLevel(uuid)
         if (!magenta.config.contains("level.ores.${block.type.name}")) return
 
-        if (!magenta.config.getStringList("level.worlds").contains(player.world.name)) return
+        if (!magenta.stringUtils.inInList("level.worlds", player.world.name)) return
 
         val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
         if (requiredLevel > level) {

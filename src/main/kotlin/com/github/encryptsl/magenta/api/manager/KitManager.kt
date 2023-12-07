@@ -42,17 +42,11 @@ class KitManager(private val magenta: Magenta) {
                 }
 
                 for (enchantment in Enchantment.values()) {
-                    if (magenta.kitConfig.getKit()
-                            .contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key.key}")
-                    ) {
+                    val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key.key}"
+                    if (magenta.kitConfig.getKit().contains(enchant)) {
                         item.addEnchantment(
                             enchantment,
-                            magenta.kitConfig.getKit()
-                                .getInt(
-                                    "kits.$kitName.items.${material.name.lowercase()}.enchants.${
-                                        enchantment.key.key
-                                    }"
-                                )
+                            magenta.kitConfig.getKit().getInt(enchant)
                         )
                     }
                 }

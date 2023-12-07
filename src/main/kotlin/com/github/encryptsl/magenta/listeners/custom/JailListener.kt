@@ -36,7 +36,7 @@ class JailListener(private val magenta: Magenta) : Listener {
                 )
             )
 
-        if (user.jailManager.hasPunish() || user.getAccount().getBoolean("jailed"))
+        if (user.isJailed())
             return commandManager.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.jailed"), TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString())
             )))

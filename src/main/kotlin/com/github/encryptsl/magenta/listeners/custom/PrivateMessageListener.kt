@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class PlayerPrivateMessageListener(private val magenta: Magenta) : Listener {
+class PrivateMessageListener(private val magenta: Magenta) : Listener {
 
     @EventHandler
     fun onPrivateMessage(event: PrivateMessageEvent) {

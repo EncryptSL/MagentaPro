@@ -155,7 +155,7 @@ class Magenta : JavaPlugin() {
             PlayerQuitListener(this),
             PlayerTeleportListener(this),
             PlayerCommandPreprocessListener(this),
-            PlayerPrivateMessageListener(this),
+            PrivateMessageListener(this),
             PlayerInteractionListener(this),
             PlayerInventoryListener(),
             PlayerMoveListener(this),

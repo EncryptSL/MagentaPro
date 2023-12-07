@@ -25,7 +25,7 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
 
         magenta.pluginManager.callEvent(JailCheckEvent(player))
 
-        if (magenta.config.getString("custom-join-message") != "none") {
+        if (!magenta.config.getString("custom-join-message").equals("none", ignoreCase = true)) {
             event.joinMessage(ModernText.miniModernText(
                 magenta.config.getString("custom-join-message").toString(), TagResolver.resolver(
                     Placeholder.component("player", player.displayName())

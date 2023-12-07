@@ -37,7 +37,7 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
         val commandSender = event.commandSender
         val target = event.target
         val user = magenta.user.getUser(target.uniqueId)
-        if (user.getAccount().getBoolean("socialspy")) {
+        if (user.isSocialSpy()) {
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.social.spy.success.toggle"),
                 Placeholder.parsed("value", false.toString())
             ))

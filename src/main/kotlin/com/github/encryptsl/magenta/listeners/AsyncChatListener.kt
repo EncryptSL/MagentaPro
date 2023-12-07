@@ -33,7 +33,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
             hoverItem(player, message, event)
         }
 
-        if (user.jailManager.hasPunish()) {
+        if (user.isJailed()) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
                 Placeholder.parsed("action", "psát")
             )))

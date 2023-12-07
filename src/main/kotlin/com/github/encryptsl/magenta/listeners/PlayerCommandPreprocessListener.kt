@@ -18,8 +18,7 @@ class PlayerCommandPreprocessListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val message = event.message
         val command = message.split(" ")[0].replace("/", "").lowercase()
-        val list = magenta.config.getStringList("socialspy-commands")
-        if (list.contains(command) || list.contains("*")) {
+        if (magenta.stringUtils.inInList("socialspy-commands", command) || magenta.stringUtils.inInList("socialspy-commands", "*")) {
             if (!player.hasPermission("magenta.social.spy.exempt")) {
                 Bukkit.getServer().onlinePlayers
                     .filter { UserAccount(magenta, it.uniqueId).isSocialSpy() && it.hasPermission("magenta.social.spy") }

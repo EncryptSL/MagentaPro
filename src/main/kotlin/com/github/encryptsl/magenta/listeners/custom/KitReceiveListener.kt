@@ -28,11 +28,9 @@ class KitReceiveListener(private val magenta: Magenta) : Listener {
             return commandHelper.delayMessage(player, "magenta.command.kit.error.delay", timeLeft)
 
         try {
-            if (delay != 0L && delay != -1L) {
-                if (!player.hasPermission("magenta.kit.delay.exempt")) {
-                    user.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
-                    user.save()
-                }
+            if (delay != 0L && delay != -1L || !player.hasPermission("magenta.kit.delay.exempt")) {
+                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
+                user.save()
             }
             kitManager.giveKit(player, kitName)
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(

@@ -20,6 +20,11 @@ class MentionManager(private val magenta: Magenta) {
             val split = message.split(" ")
             for (m in split) {
                 if (m.contains(magenta.config.getString("mentions.variable").toString())) {
+                    val sound: Sound = Sound.valueOf(magenta.config.getString("mentions.sound").toString())
+                    val volume = magenta.config.getString("mentions.volume").toString().toFloat()
+                    val pitch = magenta.config.getString("mentions.pitch").toString().toFloat()
+                    val mentionedMessage = magenta.localeConfig.getMessage("magenta.player.mentioned")
+
                     magenta.schedulerMagenta.doAsync(magenta) {
                         Bukkit.getPlayer(m.replace("@", ""))?.let {
                             magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
@@ -29,13 +34,8 @@ class MentionManager(private val magenta: Magenta) {
                         Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), ""))
 
                     mentioned?.let {
-                        PlayerBuilderAction.player(it).sound(
-                            Sound.valueOf(magenta.config.getString("mentions.sound").toString()),
-                            magenta.config.getString("mentions.volume").toString().toFloat(),
-                            magenta.config.getString("mentions.pitch").toString().toFloat()
-                        ).message(
-                            ModernText.miniModernText(
-                                magenta.localeConfig.getMessage("magenta.player.mentioned"), TagResolver.resolver(
+                        PlayerBuilderAction.player(it).sound(sound, volume, pitch).message(
+                            ModernText.miniModernText(mentionedMessage, TagResolver.resolver(
                                     Placeholder.parsed("player", player.name)
                                 )
                             )
@@ -53,18 +53,12 @@ class MentionManager(private val magenta: Magenta) {
                         Bukkit.getServer().onlinePlayers.forEach { a ->
                             //if (player == a) return
                             a.sendMessage(
-                                ModernText.miniModernText(
-                                    magenta.localeConfig.getMessage("magenta.player.mentioned"), TagResolver.resolver(
+                                ModernText.miniModernText(mentionedMessage, TagResolver.resolver(
                                         Placeholder.parsed("player", a.name)
                                     )
                                 )
                             )
-                            a.playSound(
-                                a,
-                                Sound.valueOf(magenta.config.getString("mentions.sound").toString()),
-                                magenta.config.getString("mentions.volume").toString().toFloat(),
-                                magenta.config.getString("mentions.pitch").toString().toFloat()
-                            )
+                            a.playSound(a, sound, volume, pitch)
                         }
                         chatEvent.message(
                             ModernText.miniModernText(

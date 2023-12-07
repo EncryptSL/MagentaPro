@@ -29,7 +29,7 @@ class ReportCmd(private val magenta: Magenta) {
         @Argument(value = "category", suggestions = "reportCategories") category: ReportCategories,
         @Argument(value = "message", defaultValue = "Zpráva není specifikovaná.") @Greedy message: String
     ) {
-        if (player.name == target.name)
+        if (player.name.equals(target.name, ignoreCase = true))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.yourself")))
 
         if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))

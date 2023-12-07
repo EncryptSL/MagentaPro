@@ -15,7 +15,7 @@ class PlayerQuitListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
 
-        if (magenta.config.getString("custom-quit-message") != "none") {
+        if (!magenta.config.getString("custom-quit-message").equals("none", ignoreCase = true)) {
             event.quitMessage(
                 ModernText.miniModernText(
                     magenta.config.getString("custom-quit-message").toString(), TagResolver.resolver(

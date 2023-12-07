@@ -18,7 +18,6 @@ class WarpCreateListener(private val magenta: Magenta) : Listener {
         val player: Player = event.player
         val location: Location = event.location
 
-
         if (magenta.warpModel.getWarpExist(warpName))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.exist"), TagResolver.resolver(
                 Placeholder.parsed("warp", warpName)
