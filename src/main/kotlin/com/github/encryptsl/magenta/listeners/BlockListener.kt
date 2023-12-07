@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.jail.JailPlayerEvent
 import com.github.encryptsl.magenta.common.utils.BlockUtils
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -21,17 +20,22 @@ class BlockListener(private val magenta: Magenta) : Listener {
 
     private val earnMoneyProgress = HashMap<UUID, Int>()
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun onBlockBreakJail(event: BlockBreakEvent) {
+        val player = event.player
+        if (magenta.user.getUser(player.uniqueId).isJailed()) {
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
+                Placeholder.parsed("action", "ničit bloky")
+            )))
+            event.isCancelled = true
+        }
+    }
+
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
         val block = event.block
         val silkyTools = magenta.config.getStringList("silky.tools")
-
-        val jailEvent = JailPlayerEvent(player, "ničit bloky")
-        magenta.pluginManager.callEvent(jailEvent)
-        if (jailEvent.isCancelled) {
-            event.isCancelled = true
-        }
 
         if (magenta.config.getBoolean("silky.enabled")) {
             if (block.type == Material.SPAWNER) {
@@ -104,9 +108,10 @@ class BlockListener(private val magenta: Magenta) : Listener {
     fun onBlockPlace(event: BlockPlaceEvent) {
         val player = event.player
 
-        val jailEvent = JailPlayerEvent(player, "pokládat bloky")
-        magenta.pluginManager.callEvent(jailEvent)
-        if (jailEvent.isCancelled) {
+        if (magenta.user.getUser(player.uniqueId).isJailed()) {
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
+                Placeholder.parsed("action", "pokládat bloky")
+            )))
             event.isCancelled = true
         }
 

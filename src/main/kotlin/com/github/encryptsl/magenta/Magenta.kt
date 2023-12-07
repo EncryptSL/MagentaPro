@@ -171,7 +171,6 @@ class Magenta : JavaPlugin() {
             JailCreateListener(this),
             JailDeleteListener(this),
             JailListener(this),
-            JailPlayerListener(this),
             JailPardonListener(this),
             JailTeleportListener(this),
             KitCreateListener(this),

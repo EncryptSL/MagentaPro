@@ -33,7 +33,6 @@ class ConfigUtil {
     fun save() {
         runCatching {
             config.save(file)
-            Bukkit.getLogger().info("${file.name} is saved !")
         }.onFailure { e ->
             plugin.logger.severe(e.message ?: e.localizedMessage)
         }

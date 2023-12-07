@@ -79,7 +79,7 @@ class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Accoun
     }
 
     override fun isJailed(): Boolean {
-        return getAccount().getBoolean("jailed")
+        return getAccount().getBoolean("jailed") || jailManager.hasPunish()
     }
 
     override fun isSocialSpy(): Boolean {

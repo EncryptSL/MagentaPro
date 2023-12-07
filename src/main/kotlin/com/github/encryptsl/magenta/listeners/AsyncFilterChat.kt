@@ -35,6 +35,7 @@ class AsyncFilterChat(private val magenta: Magenta) : Listener {
                 "Spamovat",
                 Violations.ANTISPAM
             )
+            return
         }
         if(capsLock.isDetected(player, phrase)) {
             chatPunishManager.action(
@@ -44,10 +45,10 @@ class AsyncFilterChat(private val magenta: Magenta) : Listener {
                 "Psát CapsLockem",
                 Violations.CAPSLOCK
             )
+            return
         }
         if(ipFilter.isDetected(player, phrase)) {
             chatPunishManager.action(player, event, magenta.localeConfig.getMessage("magenta.filter.ip_filter"), phrase, Violations.IPFILTER)
-
         }
         if(swear.isDetected(player, phrase)) {
             chatPunishManager.action(
@@ -57,9 +58,11 @@ class AsyncFilterChat(private val magenta: Magenta) : Listener {
                 phrase,
                 Violations.SWEAR
             )
+            return
         }
         if(websiteFilter.isDetected(player, phrase)) {
             chatPunishManager.action(player, event, magenta.localeConfig.getMessage("magenta.filter.web_filter"), phrase, Violations.WEBSITE)
+            return
         }
     }
 

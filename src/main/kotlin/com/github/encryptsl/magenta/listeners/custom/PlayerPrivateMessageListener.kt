@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.pm.PlayerPrivateMessageEvent
+import com.github.encryptsl.magenta.api.events.pm.PrivateMessageEvent
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -14,7 +14,7 @@ import org.bukkit.event.Listener
 class PlayerPrivateMessageListener(private val magenta: Magenta) : Listener {
 
     @EventHandler
-    fun onPrivateMessage(event: PlayerPrivateMessageEvent) {
+    fun onPrivateMessage(event: PrivateMessageEvent) {
         val commandSender = event.commandSender
         val target = event.target
         val message = event.message

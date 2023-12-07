@@ -3,7 +3,7 @@ package com.github.encryptsl.magenta.cmds
 import cloud.commandframework.annotations.*
 import cloud.commandframework.annotations.specifier.Greedy
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.pm.PlayerPrivateMessageEvent
+import com.github.encryptsl.magenta.api.events.pm.PrivateMessageEvent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -27,7 +27,7 @@ class MsgCmd(private val magenta: Magenta) {
         @Argument(value = "message") @Greedy message: String
     ) {
         magenta.schedulerMagenta.doSync(magenta) {
-            PlayerPrivateMessageEvent(commandSender, target, message).callEvent()
+            PrivateMessageEvent(commandSender, target, message).callEvent()
         }
     }
 }

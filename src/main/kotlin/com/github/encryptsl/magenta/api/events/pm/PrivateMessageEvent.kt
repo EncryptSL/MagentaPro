@@ -1,11 +1,12 @@
-package com.github.encryptsl.magenta.api.events.jail
+package com.github.encryptsl.magenta.api.events.pm
 
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class JailPlayerEvent(val player: Player, val action: String?) : Event(), Cancellable {
+class PrivateMessageEvent(val commandSender: CommandSender, val target: Player, val message: String) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

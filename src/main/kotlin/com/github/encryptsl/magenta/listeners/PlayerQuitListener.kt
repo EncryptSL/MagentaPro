@@ -16,11 +16,13 @@ class PlayerQuitListener(private val magenta: Magenta) : Listener {
         val user = magenta.user.getUser(player.uniqueId)
 
         if (magenta.config.getString("custom-quit-message") != "none") {
-            event.quitMessage(ModernText.miniModernText(
+            event.quitMessage(
+                ModernText.miniModernText(
                     magenta.config.getString("custom-quit-message").toString(), TagResolver.resolver(
                         Placeholder.component("player", player.displayName())
                     )
-            ))
+                )
+            )
         }
 
         magenta.afk.clear(player.uniqueId)

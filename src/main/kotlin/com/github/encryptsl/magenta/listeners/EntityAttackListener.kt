@@ -1,8 +1,9 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.UserAccount
-import com.github.encryptsl.magenta.api.events.jail.JailPlayerEvent
+import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -16,25 +17,21 @@ class EntityAttackListener(private val magenta: Magenta) : Listener {
     fun onEntityAttack(event: EntityDamageByEntityEvent) {
         val entity = event.entity
         if (entity is Player) {
-            val account = UserAccount(magenta, entity.uniqueId)
+            val player = entity.player ?: return
             if (event.cause  == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-                val playerJailPlayerEvent = JailPlayerEvent(entity, null)
-                playerJailPlayerEvent.callEvent()
-                if(playerJailPlayerEvent.isCancelled) {
+                if (magenta.user.getUser(player.uniqueId).isJailed())
                     event.isCancelled = true
-                }
-                if (account.isJailed() || account.jailManager.hasPunish()) {
-                    event.isCancelled = true
-                }
             }
         }
         if (entity is Mob) {
             if (event.damager is Player) {
                 val player = event.damager as Player
                 if (event.cause  == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-                    val playerJailPlayerEvent = JailPlayerEvent(player, "útočit")
-                    playerJailPlayerEvent.callEvent()
-                    if(playerJailPlayerEvent.isCancelled) {
+                    if (magenta.user.getUser(player.uniqueId).isJailed()) {
+                        player.sendMessage(
+                            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
+                            Placeholder.parsed("action", "útočit")
+                        )))
                         event.isCancelled = true
                     }
                 }
