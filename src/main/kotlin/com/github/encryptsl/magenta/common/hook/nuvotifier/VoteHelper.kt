@@ -26,11 +26,6 @@ object VoteHelper {
         userAccount.set("votifier.rewards", rewards)
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
     }
-
-    fun setVotePartyVote(magenta: Magenta, vote: Int) {
-        magenta.config.set("votifier.voteparty.current_votes", vote)
-        magenta.saveConfig()
-    }
     @JvmStatic
     fun startVoteParty(
         magenta: Magenta,
@@ -49,6 +44,7 @@ object VoteHelper {
                         if (magenta.config.contains("votifier.voteparty.random")) {
                             val player = Bukkit.getOnlinePlayers().random()
                             giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
+                            magenta.voteParty.partyFinished(player.name)
                             magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
                             magenta.notification.client.send(magenta.notification.addEmbed {
                                 setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
@@ -59,7 +55,6 @@ object VoteHelper {
                         }
                     }
                     broadcast(endPartyMessage)
-                    setVotePartyVote(magenta, 0)
                     cancel()
                 }
                 timer--

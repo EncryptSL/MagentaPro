@@ -15,7 +15,7 @@ class VotePartyCmd(private val magenta: Magenta) {
     @CommandMethod("voteparty|vparty")
     @CommandPermission("magenta.voteparty")
     fun onVoteParty(commandSender: CommandSender) {
-        val currentVotes = magenta.config.getInt("votifier.voteparty.current_votes")
+        val (currentVotes, lastParty, lastWinner) = magenta.voteParty.getVoteParty()
         val startAt = magenta.config.getInt("votifier.voteparty.start_at")
 
         if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
@@ -25,7 +25,9 @@ class VotePartyCmd(private val magenta: Magenta) {
             commandSender.sendMessage(ModernText.miniModernText(message, TagResolver.resolver(
                 Placeholder.parsed("remaining_votes", startAt.minus(currentVotes).toString()),
                 Placeholder.parsed("current_votes", currentVotes.toString()),
-                Placeholder.parsed("start_at", startAt.toString())
+                Placeholder.parsed("start_at", startAt.toString()),
+                Placeholder.parsed("last_party", lastParty.toString()),
+                Placeholder.parsed("last_winner", lastWinner ?: "Nobody"),
             )))
         }
     }

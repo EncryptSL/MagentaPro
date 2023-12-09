@@ -12,7 +12,6 @@ interface VoteAPI {
     fun hasAccount(uuid: UUID, serviceName: String): Boolean
     fun getPlayerVote(uuid: UUID): Int
     fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity?
-    fun getVotesForParty(): Int
     fun removeAccount(uuid: UUID)
     fun resetVotes(uuid: UUID)
     fun resetVotes()

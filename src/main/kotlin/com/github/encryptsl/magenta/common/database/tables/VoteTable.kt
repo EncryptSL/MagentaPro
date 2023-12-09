@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
-object VoteTable : Table() {
+object VoteTable : Table("votes") {
     private val id = integer( "id").autoIncrement()
     val username: Column<String> = varchar("username", 36)
     val uuid: Column<String> = varchar("uuid", 36)
@@ -14,7 +14,4 @@ object VoteTable : Table() {
     val last_vote: Column<Instant> = timestamp("last_vote")
 
     override val primaryKey: PrimaryKey = PrimaryKey(id)
-
-    override val tableName: String
-        get() = "votes"
 }

@@ -337,7 +337,6 @@ votifier:
 # when party hit 100 votes, voteparty starts countdown from 60 sec to 1 and players receive rewards.
   voteparty:
     enabled: false
-    current_votes: 0
     start_at: 100
     countdown: 15
     random:

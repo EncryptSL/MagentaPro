@@ -1,11 +1,10 @@
 package com.github.encryptsl.magenta.api.votes
 
-import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.models.VoteModel
 import java.util.*
 
-class MagentaVoteAPI(private val magenta: Magenta, private val voteModel: VoteModel) : VoteAPI {
+class MagentaVoteAPI(private val voteModel: VoteModel) : VoteAPI {
 
     override fun addVote(voteImpl: VoteEntity) {
         if (!hasAccount(voteImpl.uuid, voteImpl.serviceName)) {
@@ -34,10 +33,6 @@ class MagentaVoteAPI(private val magenta: Magenta, private val voteModel: VoteMo
 
     override fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity? {
         return voteModel.getPlayerVote(uuid, serviceName)
-    }
-
-    override fun getVotesForParty(): Int {
-        return magenta.config.getInt("votifier.voteparty.current_votes")
     }
 
     override fun removeAccount(uuid: UUID) {

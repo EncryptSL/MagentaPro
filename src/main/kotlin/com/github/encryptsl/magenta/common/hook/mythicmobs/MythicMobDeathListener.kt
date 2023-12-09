@@ -9,6 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.math.RoundingMode
@@ -18,7 +19,7 @@ class MythicMobDeathListener(private val magenta: Magenta) : Listener {
 
     private val damageMap = HashMap<UUID, Double>()
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     fun onPlayerKillMythicMob(event: EntityDamageByEntityEvent) {
         if (MythicBukkit.inst().apiHelper.isMythicMob(event.entity)) {
             val entityName = MythicBukkit.inst().apiHelper.getMythicMobInstance(event.entity).type.internalName
@@ -35,7 +36,7 @@ class MythicMobDeathListener(private val magenta: Magenta) : Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     fun onMythicMobDeath(event: MythicMobDeathEvent) {
         if (event.killer is Player) {
             val entityName = event.mobType.internalName
@@ -80,21 +81,21 @@ class MythicMobDeathListener(private val magenta: Magenta) : Listener {
     }
 
     private fun damageByRank(position: Int): Double {
-        val topPlayer = sortedByDamage()
-        return if (position in 1..topPlayer.size) {
-            topPlayer.values.elementAt(position - 1)
-        } else {
-            0.0
+        try {
+            val topPlayer = sortedByDamage()
+            return topPlayer.values.elementAt(position - 1)
+        } catch (e : IndexOutOfBoundsException) {
+            return 0.0
         }
     }
 
     private fun nameByRank(position: Int): String {
-        val topPlayer = sortedByDamage()
-        return if (position in 1..topPlayer.size) {
+        try {
+            val topPlayer = sortedByDamage()
             val uuid = topPlayer.keys.elementAt(position - 1)
-            Bukkit.getOfflinePlayer(uuid).name ?: "UNKNOWN"
-        } else {
-            "EMPTY"
+            return Bukkit.getOfflinePlayer(uuid).name ?: "UNKNOWN"
+        } catch (e: IndexOutOfBoundsException) {
+            return "EMPTY"
         }
     }
 
