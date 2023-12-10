@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
-object VotePartyTable : Table("vote_party") {
+object VotePartyTable : Table("magenta_voteparty") {
     private val id = integer("id").autoIncrement()
     val voteParty = varchar("party_name", 16)
     val currentVotes = integer("current_votes")

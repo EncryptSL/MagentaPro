@@ -3,7 +3,7 @@ package com.github.encryptsl.magenta.common.database.tables
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 
-object WarpTable : Table("warps") {
+object WarpTable : Table("magenta_warps") {
     private val id = integer( "id").autoIncrement()
     val uuid: Column<String> = varchar("uuid", 36)
     val username: Column<String> = varchar("username", 36)

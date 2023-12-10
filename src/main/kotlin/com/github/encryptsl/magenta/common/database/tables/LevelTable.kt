@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.common.database.tables
 
 import org.jetbrains.exposed.sql.Table
 
-object LevelTable : Table("levels") {
+object LevelTable : Table("magenta_levels") {
     private val id = integer("id").autoIncrement()
     val username = varchar("username", 36)
     val uuid = varchar("uuid", 36)
