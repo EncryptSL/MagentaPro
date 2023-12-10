@@ -40,8 +40,7 @@ class KitManager(private val magenta: Magenta) {
                     val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
                     item.addLore(lore)
                 }
-
-                for (enchantment in Enchantment.values()) {
+                for (enchantment in listOf<Enchantment>().iterator())  {
                     val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key.key}"
                     if (magenta.kitConfig.getKit().contains(enchant)) {
                         item.addEnchantment(
@@ -115,7 +114,7 @@ class KitManager(private val magenta: Magenta) {
                     val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
                     item.addLore(lore)
                 }
-                for (enchantment in Enchantment.values()) {
+                for (enchantment in listOf<Enchantment>().iterator()) {
                     val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}"
                     if (magenta.kitConfig.getKit().contains(enchant)) {
                         item.addEnchantment(

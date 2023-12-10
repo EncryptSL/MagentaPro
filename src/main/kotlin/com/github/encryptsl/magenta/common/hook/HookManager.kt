@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobDeathListener
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
+import com.github.encryptsl.magenta.common.hook.tradesystem.TradeSystemListener
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 
 class HookManager(private val magenta: Magenta) {
@@ -29,6 +30,20 @@ class HookManager(private val magenta: Magenta) {
             magenta.logger.info("###################################")
             magenta.logger.info("#         Vault not Found         #")
             magenta.logger.info("#     please download vault api   #")
+            magenta.logger.info("###################################")
+        }
+    }
+
+    fun hookTradeSystem() {
+        if (isPluginInstalled("TradeSystem")) {
+            magenta.logger.info("###################################")
+            magenta.logger.info("# TradeSystem Found Hook Success  #")
+            magenta.logger.info("###################################")
+            magenta.pluginManager.registerEvents(TradeSystemListener(magenta), magenta)
+        } else {
+            magenta.logger.info("###################################")
+            magenta.logger.info("#      TradeSystem not Found      #")
+            magenta.logger.info("# please download TradeSystem api #")
             magenta.logger.info("###################################")
         }
     }

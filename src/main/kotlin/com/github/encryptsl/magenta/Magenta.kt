@@ -131,6 +131,7 @@ class Magenta : JavaPlugin() {
     private fun hookRegistration() {
         hookManger.hookLuckPerms()
         hookManger.hookMythicMobs()
+        hookManger.hookTradeSystem()
         hookManger.hookVault()
         hookManger.hookCreditLite()
         hookManger.hookPAPI()

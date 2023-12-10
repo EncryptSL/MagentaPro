@@ -30,6 +30,8 @@ dependencies {
     compileOnly("com.github.encryptsl.credit:CreditLite:1.0.2-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4")
+    compileOnly("com.github.CodingAir:TradeSystem:v2.5.2")
+    compileOnly("com.github.CodingAir:CodingAPI:1.76")
     implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.7")
     implementation("cloud.commandframework:cloud-paper:1.8.4")

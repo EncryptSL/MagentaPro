@@ -36,7 +36,7 @@ class CreditLiteHook(private val magenta: Magenta) {
         return eco!!.getBalance(player)
     }
 
-    fun depositeCredits(player: Player, amount: Double)
+    fun depositCredits(player: Player, amount: Double)
     {
         if (!setupCreditLite())
             throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
