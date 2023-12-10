@@ -41,14 +41,14 @@ class CreditLiteHook(private val magenta: Magenta) {
         if (!setupCreditLite())
             throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        eco!!.depositMoney(player, amount)
+        eco!!.deposit(player, amount)
     }
 
     fun withdrawCredits(player: Player, amount: Double) {
         if (!setupCreditLite())
             throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        eco!!.withDrawMoney(player, amount)
+        eco!!.withdraw(player, amount)
     }
 
 }
