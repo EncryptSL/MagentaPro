@@ -14,14 +14,10 @@ import org.jetbrains.exposed.sql.update
 
 class VotePartyModel(private val magenta: Magenta) : VotePartySQL {
     override fun createTable() {
-        magenta.schedulerMagenta.doAsync(magenta) {
-            transaction {
-                VotePartyTable.insert {
-                    it[voteParty] = "vote_party"
-                    it[currentVotes] = 0
-                    it[lastVoteParty] = null
-                }
-            }
+        VotePartyTable.insert {
+            it[voteParty] = "vote_party"
+            it[currentVotes] = 0
+            it[lastVoteParty] = null
         }
     }
 

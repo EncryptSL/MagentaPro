@@ -1,10 +1,7 @@
 package com.github.encryptsl.magenta.common.database
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.database.tables.HomeTable
-import com.github.encryptsl.magenta.common.database.tables.LevelTable
-import com.github.encryptsl.magenta.common.database.tables.VoteTable
-import com.github.encryptsl.magenta.common.database.tables.WarpTable
+import com.github.encryptsl.magenta.common.database.tables.*
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -27,7 +24,7 @@ class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvide
 
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create(HomeTable, WarpTable, VoteTable, LevelTable)
+            SchemaUtils.create(HomeTable, WarpTable, VoteTable, LevelTable, VotePartyTable)
         }
     }
 

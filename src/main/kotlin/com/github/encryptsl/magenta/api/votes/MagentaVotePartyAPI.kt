@@ -5,7 +5,8 @@ import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 
 class MagentaVotePartyAPI(private val votePartyModel: VotePartyModel) : VotePartyAPI {
     override fun createTable() {
-        if (!votePartyModel.getExistTable()) return
+        if (votePartyModel.getExistTable()) return
+
         votePartyModel.createTable()
     }
     override fun getExistTable(): Boolean {
