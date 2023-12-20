@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta
 
 import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
+import com.github.encryptsl.magenta.api.clan.Clan
 import com.github.encryptsl.magenta.api.config.*
 import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
@@ -38,11 +39,13 @@ class Magenta : JavaPlugin() {
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
     val user: User by lazy { User(this) }
+    val clanAPI: Clan by lazy { Clan(this) }
     val vote: MagentaVoteAPI by lazy { MagentaVoteAPI(VoteModel(this)) }
     val voteParty: MagentaVotePartyAPI by lazy { MagentaVotePartyAPI(VotePartyModel(this)) }
     val virtualLevel: VirtualLevelAPI by lazy { VirtualLevelAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
+    val clanModel: ClanModel by lazy { ClanModel(this) }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
     val levelModel: LevelModel by lazy { LevelModel(this) }
@@ -103,6 +106,7 @@ class Magenta : JavaPlugin() {
     override fun onEnable() {
         val time = measureTime {
             isPaperServer()
+            voteParty.createTable()
             commandManager.registerCommands()
             registerTasks()
             handlerListener()
@@ -159,12 +163,7 @@ class Magenta : JavaPlugin() {
             PlayerInventoryListener(),
             PlayerMoveListener(this),
             PortalListener(this),
-            HomeCreateListener(this),
-            HomeDeleteListener(this),
-            HomeInfoListener(this),
-            HomeMoveLocationListener(this),
-            HomeRenameListener(this),
-            HomeTeleportListener(this),
+            HomeListeners(this),
             JailInfoListener(this),
             JailCheckListener(this),
             JailCreateListener(this),
@@ -172,20 +171,11 @@ class Magenta : JavaPlugin() {
             JailListener(this),
             JailPardonListener(this),
             JailTeleportListener(this),
-            KitCreateListener(this),
-            KitDeleteListener(this),
-            KitGiveListener(this),
-            KitInfoListener(this),
-            KitReceiveListener(this),
+            KitListeners(this),
             SocialSpyListener(this),
             TpaListener(this),
             VirtualPlayerLevelListener(this),
-            WarpCreateListener(this),
-            WarpDeleteListener(this),
-            WarpInfoListener(this),
-            WarpMoveLocationListener(this),
-            WarpRenameListener(this),
-            WarpTeleportListener(this),
+            WarpListeners(this)
         )
 
         val (value, time) = measureTimedValue {
