@@ -1,0 +1,30 @@
+elitemobs_rewards:
+  Sauron:
+    RewardCommands:
+      '1':
+        - credits add {player} 4 -s
+        - levels add {player} 600 points -s
+        - eco add {player} 3500 -s
+        - random world tickets {player} 1
+      '2':
+        - eco add {player} 2500 -s
+        - levels add {player} 350 points -s
+        - cc give p BasicBox 2 {player}
+        - random world tickets {player} 1
+      '3':
+        - eco add {player} 1000 -s
+        - levels add {player} 100 points -s
+        - cc give p BasicBox 1 {player}
+        - random world tickets {player} 1
+    RewardMessage:
+      message:
+        - <green>▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+        - <gold>Sauron byl zabit
+        - ' '
+        - '<red><bold>1. {top_player_1}: {top_damage_1}'
+        - '<gold><bold>2. {top_player_2}: {top_damage_2}'
+        - '<yellow><bold>3. {top_player_3}: {top_damage_3}'
+        - ' '
+        - '<aqua>Tvé poškození: {personal_score}'
+        - ' '
+        - <green>▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀

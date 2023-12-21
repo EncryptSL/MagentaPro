@@ -1,49 +1,47 @@
-package com.github.encryptsl.magenta.common.hook.mythicmobs
+package com.github.encryptsl.magenta.common.hook.elitemobs
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.forEachIndexed
 import com.github.encryptsl.magenta.common.utils.ModernText
-import io.lumine.mythic.bukkit.MythicBukkit
-import io.lumine.mythic.bukkit.events.MythicMobDeathEvent
+import com.magmaguy.elitemobs.api.EliteMobDamagedByPlayerEvent
+import com.magmaguy.elitemobs.api.EliteMobDeathEvent
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.math.RoundingMode
 import java.util.*
 
-class MythicMobDeathListener(private val magenta: Magenta) : Listener {
+class EliteMobsListeners(private val magenta: Magenta) : Listener {
 
     private val damageMap = HashMap<UUID, Double>()
 
     @EventHandler(priority = EventPriority.MONITOR)
-    fun onPlayerKillMythicMob(event: EntityDamageByEntityEvent) {
-        if (MythicBukkit.inst().apiHelper.isMythicMob(event.entity)) {
-            val entityName = MythicBukkit.inst().apiHelper.getMythicMobInstance(event.entity).type.internalName
-            if (magenta.mmConfig.getConfig().contains("mm_rewards.$entityName")) {
-                if (event.damager is Player) {
-                    damageMap[event.damager.uniqueId] = damageMap.getOrDefault(event.damager.uniqueId, 0.0).plus(event.damage)
-                } else if (event.damager is Projectile) {
-                    val projectile: Projectile = event.damager as Projectile
-                    if (projectile.shooter is Player) {
-                        damageMap[event.damager.uniqueId] = damageMap.getOrDefault(event.damager.uniqueId, 0.0).plus(event.damage)
-                    }
+    fun onPlayerDamageEliteMob(event: EliteMobDamagedByPlayerEvent) {
+        val eliteMobEntity = event.eliteMobEntity
+        val player = event.player
+        if (magenta.mmConfig.getConfig().contains("elitemobs_rewards.${eliteMobEntity.name}")) {
+            if (event.entity is Projectile) {
+                val projectile: Projectile = event.entity as Projectile
+                if (projectile.shooter is Player) {
+                    damageMap[player.uniqueId] = damageMap.getOrDefault(player.uniqueId, 0.0).plus(event.damage)
                 }
+                return
             }
+            damageMap[player.uniqueId] = damageMap.getOrDefault(player.uniqueId, 0.0).plus(event.damage)
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    fun onMythicMobDeath(event: MythicMobDeathEvent) {
-        if (event.killer is Player) {
-            val entityName = event.mobType.internalName
-            if (magenta.mmConfig.getConfig().contains("mm_rewards.$entityName")) {
+    fun onMythicMobDeath(event: EliteMobDeathEvent) {
+        if (event.entityDeathEvent.entity.killer is Player) {
+            val entityName = event.eliteEntity.name
+            if (magenta.mmConfig.getConfig().contains("elitemobs_rewards.$entityName")) {
                 val positions = sortedByDamage()
                 positions.forEach { (t, u) ->
-                    for (message in magenta.mmConfig.getConfig().getStringList("mm_rewards.$entityName.RewardMessage.message")) {
+                    for (message in magenta.mmConfig.getConfig().getStringList("elitemobs_rewards.$entityName.RewardMessage.message")) {
                         Bukkit.getPlayer(t)?.sendMessage(ModernText.miniModernTextCenter(
                                 message
                                     .replace("{top_player_1}", nameByRank(1))
@@ -57,10 +55,10 @@ class MythicMobDeathListener(private val magenta: Magenta) : Listener {
                     }
                 }
 
-                if (magenta.mmConfig.getConfig().contains("mm_rewards.$entityName.RewardCommands")) {
+                if (magenta.mmConfig.getConfig().contains("elitemobs_rewards.$entityName.RewardCommands")) {
                     positions.filter { Bukkit.getPlayer(it.key) != null }.entries.forEachIndexed { index, entry ->
                         val onlineP = Bukkit.getPlayer(entry.key)!!
-                        for (command in magenta.mmConfig.getConfig().getStringList("mm_rewards.$entityName.RewardCommands.$index")) {
+                        for (command in magenta.mmConfig.getConfig().getStringList("elitemobs_rewards.$entityName.RewardCommands.$index")) {
                             Bukkit.dispatchCommand(
                                 Bukkit.getConsoleSender(),
                                 command.replace("%player%", onlineP.name).replace("{player}", onlineP.name)
