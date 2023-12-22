@@ -2,8 +2,8 @@ package com.github.encryptsl.magenta.common.hook
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
-import com.github.encryptsl.magenta.common.hook.elitemobs.EliteMobsListeners
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
+import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobsListener
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
@@ -16,19 +16,19 @@ class HookManager(private val magenta: Magenta) {
      * @return Boolean
      */
     private fun isPluginInstalled(pluginName: String): Boolean {
-        return magenta.pluginManager.getPlugin(pluginName) != null
+        return magenta.pluginManager.getPlugin(pluginName) != null && magenta.pluginManager.isPluginEnabled(pluginName)
     }
 
-    fun hookEliteMobs() {
-        if (isPluginInstalled("EliteMobs")) {
+    fun hookMythicMobs() {
+        if (isPluginInstalled("MythicMobs")) {
             magenta.logger.info("###################################")
-            magenta.logger.info("#   EliteMobs Found Hook Success  #")
+            magenta.logger.info("#  MythicMobs Found Hook Success  #")
             magenta.logger.info("###################################")
-            magenta.pluginManager.registerEvents(EliteMobsListeners(magenta), magenta)
+            magenta.pluginManager.registerEvents(MythicMobsListener(magenta), magenta)
         } else {
             magenta.logger.info("###################################")
-            magenta.logger.info("#        EliteMobs not Found      #")
-            magenta.logger.info("#     please download elitemobs   #")
+            magenta.logger.info("#       MythicMobs not Found      #")
+            magenta.logger.info("#    please download mythicmobs   #")
             magenta.logger.info("###################################")
         }
     }
