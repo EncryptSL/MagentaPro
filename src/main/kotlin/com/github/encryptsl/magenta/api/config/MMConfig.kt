@@ -5,7 +5,7 @@ import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
 
 class MMConfig(magenta: Magenta) {
-    private val configUtil = ConfigUtil(magenta, "elitemobs/rewards.yml")
+    private val configUtil = ConfigUtil(magenta, "mythicmobs/rewards.yml")
 
     fun reload() {
         configUtil.reload()

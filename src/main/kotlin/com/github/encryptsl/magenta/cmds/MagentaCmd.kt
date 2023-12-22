@@ -51,7 +51,7 @@ class MagentaCmd(private val magenta: Magenta) {
     }
 
     @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload mmrewards")
+    @CommandMethod("reload mythicrewards")
     fun onReloadMythicRewards(commandSender: CommandSender) {
         magenta.mmConfig.reload()
         magenta.mmConfig.save()
