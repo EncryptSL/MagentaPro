@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.20" apply true
+    kotlin("jvm") version "1.9.22" apply true
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    compileOnly(kotlin("stdlib", "1.9.20"))
+    compileOnly(kotlin("stdlib", "1.9.22"))
     compileOnly("org.jetbrains.exposed:exposed-core:0.44.1")
     compileOnly("org.jetbrains.exposed:exposed-jdbc:0.44.1")
     compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.44.1")
