@@ -5,6 +5,9 @@ import com.github.encryptsl.magenta.common.extensions.forEachIndexed
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.lumine.mythic.bukkit.MythicBukkit
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent
+import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent
+import io.lumine.mythic.bukkit.events.MythicMobSpawnEvent
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
@@ -74,6 +77,34 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
                 damageMap.clear()
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun onSpawnMythicMob(event: MythicMobSpawnEvent) {
+        val internalName = event.mobType.internalName
+        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName")) return
+
+        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages")) return
+        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.spawn")) return
+
+        Bukkit.broadcast(ModernText.miniModernText(
+            magenta.mmConfig.getConfig().getString("mythic_rewards.$internalName.EventMessages.spawn").toString(),
+            Placeholder.parsed("mob", internalName))
+        )
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun onDespawnMythicMob(event: MythicMobDespawnEvent) {
+        val internalName = event.mobType.internalName
+        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName")) return
+
+        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages")) return
+        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.despawn")) return
+
+        Bukkit.broadcast(ModernText.miniModernText(
+            magenta.mmConfig.getConfig().getString("mythic_rewards.$internalName.EventMessages.despawn").toString(),
+            Placeholder.parsed("mob", internalName))
+        )
     }
 
     private fun roundingPersonalDamage(damage: Double): Double {
