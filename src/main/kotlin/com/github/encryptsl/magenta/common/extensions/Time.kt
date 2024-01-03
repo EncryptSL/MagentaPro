@@ -32,12 +32,6 @@ fun convertUptime(millis: Long): String = String.format(
     TimeUnit.MILLISECONDS.toMinutes(millis) % 60,
     TimeUnit.MILLISECONDS.toSeconds(millis) % 60
 )
-
-fun expire(minute: Long): String {
-    val dateStop: LocalDateTime = LocalDateTime.now().plusMinutes(minute)
-    return dateStop.format(DateTimeFormatter.ofPattern("HH:mm"))
-}
-
 fun formatFromSecondsTime(seconds: Long): String {
     val timeOfDay = LocalTime.ofSecondOfDay(seconds)
     return timeOfDay.toString()
