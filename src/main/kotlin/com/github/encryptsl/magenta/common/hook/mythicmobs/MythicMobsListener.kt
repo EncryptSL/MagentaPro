@@ -66,7 +66,7 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
                 if (magenta.mmConfig.getConfig().contains("mythic_rewards.$entityName.RewardCommands")) {
                     positions.filter { Bukkit.getPlayer(it.key) != null }.entries.forEachIndexed { index, entry ->
                         val onlineP = Bukkit.getPlayer(entry.key)!!
-                        for (command in magenta.mmConfig.getConfig().getStringList("elitemobs_rewards.$entityName.RewardCommands.$index")) {
+                        for (command in magenta.mmConfig.getConfig().getStringList("mythic_rewards.$entityName.RewardCommands.$index")) {
                             Bukkit.dispatchCommand(
                                 Bukkit.getConsoleSender(),
                                 command.replace("%player%", onlineP.name).replace("{player}", onlineP.name)
@@ -79,12 +79,10 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOW)
     fun onSpawnMythicMob(event: MythicMobSpawnEvent) {
         val internalName = event.mobType.internalName
         if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName")) return
-
-        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages")) return
         if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.spawn")) return
 
         Bukkit.broadcast(ModernText.miniModernText(
@@ -93,12 +91,11 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
         )
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOW)
     fun onDespawnMythicMob(event: MythicMobDespawnEvent) {
         val internalName = event.mobType.internalName
         if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName")) return
 
-        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages")) return
         if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.despawn")) return
 
         Bukkit.broadcast(ModernText.miniModernText(
