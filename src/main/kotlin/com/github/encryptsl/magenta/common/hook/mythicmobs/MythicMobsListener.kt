@@ -82,13 +82,18 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
     @EventHandler(priority = EventPriority.LOW)
     fun onSpawnMythicMob(event: MythicMobSpawnEvent) {
         val internalName = event.mobType.internalName
-        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName")) return
-        if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.spawn")) return
+        if (event.isFromMythicSpawner) {
+            if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName")) return
+            if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.spawn")) return
 
-        Bukkit.broadcast(ModernText.miniModernText(
-            magenta.mmConfig.getConfig().getString("mythic_rewards.$internalName.EventMessages.spawn").toString(),
-            Placeholder.parsed("mob", internalName))
-        )
+            Bukkit.broadcast(
+                ModernText.miniModernText(
+                    magenta.mmConfig.getConfig().getString("mythic_rewards.$internalName.EventMessages.spawn")
+                        .toString(),
+                    Placeholder.parsed("mob", internalName)
+                )
+            )
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)

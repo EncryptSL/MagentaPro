@@ -8,7 +8,6 @@ import cloud.commandframework.annotations.specifier.Greedy
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
 @Suppress("UNUSED")
@@ -17,8 +16,10 @@ class BroadcastCmd(private val magenta: Magenta) {
     @CommandMethod("broadcast|oznameni <message>")
     @CommandPermission("magenta.broadcast")
     fun onBroadcast(commandSender: CommandSender, @Greedy @Argument(value = "message") message: String) {
-        Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.broadcast"),
-            Placeholder.parsed("message", message)
-        ))
+        commandSender.server.broadcast(
+            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.broadcast"),
+                Placeholder.parsed("message", message)
+            )
+        )
     }
 }

@@ -1,8 +1,8 @@
 mythic_rewards:
   Sauron:
-    EventMessage:
-      spawn: '<green>[DUNGEONS] Hlavní boss <mob> se spawnul a despawne se v 21:00'
-      despawn: '<green>[DUNGEONS] Hlavní boss <mob> se despawnul'
+    EventMessages:
+      spawn: '<green>[DUNGEONS] <white>Hlavní boss <red><mob><white> se spawnul a despawne se v<red> 21:00'
+      despawn: '<green>[DUNGEONS] <white>Hlavní boss <red><mob><white> se despawnul'
     RewardCommands:
       '1':
         - credits add {player} 4 -s
