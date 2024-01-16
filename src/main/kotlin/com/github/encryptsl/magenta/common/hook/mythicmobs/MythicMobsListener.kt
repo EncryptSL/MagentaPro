@@ -63,6 +63,10 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
                     }
                 }
 
+                if (magenta.mmConfig.getConfig().contains("mythic_rewards.$entityName.EventMessages.death")) {
+                    sendBroadcast("mythic_rewards.$entityName.EventMessages.death", entityName)
+                }
+
                 if (magenta.mmConfig.getConfig().contains("mythic_rewards.$entityName.RewardCommands")) {
                     positions.filter { Bukkit.getPlayer(it.key) != null }.entries.forEachIndexed { index, entry ->
                         val onlineP = Bukkit.getPlayer(entry.key)!!
@@ -86,13 +90,7 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
             if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName")) return
             if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.spawn")) return
 
-            Bukkit.broadcast(
-                ModernText.miniModernText(
-                    magenta.mmConfig.getConfig().getString("mythic_rewards.$internalName.EventMessages.spawn")
-                        .toString(),
-                    Placeholder.parsed("mob", internalName)
-                )
-            )
+            sendBroadcast("mythic_rewards.$internalName.EventMessages.spawn", internalName)
         }
     }
 
@@ -103,9 +101,13 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
 
         if (!magenta.mmConfig.getConfig().contains("mythic_rewards.$internalName.EventMessages.despawn")) return
 
+        sendBroadcast("mythic_rewards.$internalName.EventMessages.despawn", internalName)
+    }
+
+    private fun sendBroadcast(localeMessage: String, mobName: String) {
         Bukkit.broadcast(ModernText.miniModernText(
-            magenta.mmConfig.getConfig().getString("mythic_rewards.$internalName.EventMessages.despawn").toString(),
-            Placeholder.parsed("mob", internalName))
+            magenta.mmConfig.getConfig().getString(localeMessage).toString(),
+            Placeholder.parsed("mob", mobName))
         )
     }
 

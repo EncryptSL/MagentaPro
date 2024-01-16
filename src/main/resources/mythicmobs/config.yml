@@ -3,6 +3,7 @@ mythic_rewards:
     EventMessages:
       spawn: '<green>[DUNGEONS] <white>Hlavní boss <red><mob><white> se spawnul a despawne se v<red> 21:00'
       despawn: '<green>[DUNGEONS] <white>Hlavní boss <red><mob><white> se despawnul'
+      death: '<green>[DUNGEONS] <white>Hlavní boss <red><mob><white> byl zdolán !'
     RewardCommands:
       '1':
         - credits add {player} 4 -s

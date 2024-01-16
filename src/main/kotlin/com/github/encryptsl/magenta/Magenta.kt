@@ -77,7 +77,7 @@ class Magenta : JavaPlugin() {
             .createFromResources("motd.txt", this)
             .createFromResources("citems.yml", this)
             .createFromResources("random.yml", this)
-            .createFromResources("mythicmobs/rewards.yml", this)
+            .createFromResources("mythicmobs/config.yml", this)
             .createFromResources("shop/shop.yml", this)
             .createFromResources("creditshop/shop.yml", this)
             .createFromResources("creditshop/categories/galaxy_box_keys.yml", this)
