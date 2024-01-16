@@ -1,9 +1,8 @@
 package com.github.encryptsl.magenta.api.shop
 
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
 
 interface ShopAction {
-    fun buy(item: ItemStack, isBuyAllowed: Boolean, price: Double, inventory: InventoryClickEvent)
-    fun sell(item: ItemStack, isSellAllowed: Boolean, price: Double, inventory: InventoryClickEvent)
+    fun buy(shopPaymentInformation: ShopPaymentInformation, isItemOrCommand: Boolean, commands: MutableList<String>?, inventory: InventoryClickEvent)
+    fun sell(shopPaymentInformation: ShopPaymentInformation, inventory: InventoryClickEvent)
 }

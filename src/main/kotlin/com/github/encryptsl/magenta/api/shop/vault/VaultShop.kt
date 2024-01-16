@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.ShopConfig
+import com.github.encryptsl.magenta.api.shop.ShopPaymentInformation
 import com.github.encryptsl.magenta.api.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -117,6 +118,8 @@ class VaultShop(private val magenta: Magenta) {
 
                     val isBuyAllowed = shopCategory.getConfig().contains("shop.items.${material.name}.buy.price")
                     val isSellAllowed = shopCategory.getConfig().contains("shop.items.${material.name}.sell.price")
+                    val isItem = shopCategory.getConfig().contains("shop.items.${material.name}.buy.commands")
+                    val commands = shopCategory.getConfig().getStringList("shop.items.${material.name}.buy.commands")
 
                     val guiItem = ItemBuilder.from(
                         magenta.itemFactory.shopItem(
@@ -128,13 +131,23 @@ class VaultShop(private val magenta: Magenta) {
                     ).asGuiItem()
 
                     guiItem.setAction { action ->
-                        if (action.isShiftClick && action.isLeftClick) {
-                            vaultShopInventory.buy(magenta.itemFactory.shopItem(material, 64), isBuyAllowed, buyPrice, action)
+                        if (action.isShiftClick && action.isLeftClick && isItem) {
+                            vaultShopInventory.buy(
+                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 64), buyPrice, isBuyAllowed),
+                                false,
+                                null,
+                                action
+                            )
                             return@setAction
                         }
 
                         if (action.isLeftClick) {
-                            vaultShopInventory.buy(magenta.itemFactory.shopItem(material, 1), isBuyAllowed, buyPrice, action)
+                            vaultShopInventory.buy(
+                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1), buyPrice, isBuyAllowed),
+                                isItem,
+                                commands,
+                                action
+                            )
                             return@setAction
                         }
 
@@ -143,9 +156,7 @@ class VaultShop(private val magenta: Magenta) {
                             for (i in 0..35) {
                                 if (player.inventory.getItem(i)?.type == material) {
                                     vaultShopInventory.sell(
-                                        player.inventory.getItem(i)!!,
-                                        isSellAllowed,
-                                        sellPrice,
+                                        ShopPaymentInformation(player.inventory.getItem(i)!!, sellPrice, isSellAllowed),
                                         action
                                     )
                                     return@setAction
@@ -155,7 +166,7 @@ class VaultShop(private val magenta: Magenta) {
                         }
 
                         if (action.isRightClick) {
-                            vaultShopInventory.sell(magenta.itemFactory.shopItem(material, 1), isSellAllowed, sellPrice, action)
+                            vaultShopInventory.sell(ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1), sellPrice, isSellAllowed), action)
                             return@setAction
                         }
                         action.isCancelled = true

@@ -23,7 +23,9 @@ class EconomyShopIntegration(private val magenta: Magenta) {
         economyResponse: EconomyResponse,
         message: String,
         price: Double,
-        item: ItemStack
+        item: ItemStack,
+        commands: MutableList<String>?,
+        isItem: Boolean?
     ) {
         try {
             if (economyResponse.transactionSuccess()) {
@@ -47,7 +49,10 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                         magenta.schedulerMagenta.doSync(magenta) {
                             magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, price.toInt(), item.amount))
                         }
-                        player.inventory.addItem(item)
+                        if (isItem == true && commands.isNullOrEmpty())
+                            player.inventory.addItem(item)
+                        else
+                            commands?.let { ShopHelper.giveRewards(it, player.name, item.amount) }
                     }
                 }
                 player.updateInventory()
