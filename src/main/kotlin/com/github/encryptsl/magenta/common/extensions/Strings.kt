@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta.common.extensions
 
-import java.util.UUID
+import java.util.*
 
 fun Char.compactCensoring(count: Int): String = this.toString().repeat(count)
 

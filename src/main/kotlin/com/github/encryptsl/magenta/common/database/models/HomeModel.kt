@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.database.sql.HomeSQL
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
+import com.github.encryptsl.magenta.common.database.sql.HomeSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import org.bukkit.Location
 import org.bukkit.entity.Player

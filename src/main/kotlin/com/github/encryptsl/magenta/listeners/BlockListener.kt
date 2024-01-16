@@ -14,7 +14,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import java.util.UUID
+import java.util.*
 
 class BlockListener(private val magenta: Magenta) : Listener {
 

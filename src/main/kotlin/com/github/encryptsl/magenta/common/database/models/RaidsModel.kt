@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.database.sql.RaidsSQL
 import org.bukkit.Location
 
 class RaidsModel(private val magenta: Magenta) : RaidsSQL {

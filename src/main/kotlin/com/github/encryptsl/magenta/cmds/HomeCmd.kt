@@ -1,6 +1,9 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.*
+import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.CommandDescription
+import cloud.commandframework.annotations.CommandMethod
+import cloud.commandframework.annotations.CommandPermission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.home.*

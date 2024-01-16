@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.database.sql.LevelSQL
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
+import com.github.encryptsl.magenta.common.database.sql.LevelSQL
 import com.github.encryptsl.magenta.common.database.tables.LevelTable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
