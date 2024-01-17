@@ -31,11 +31,15 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
     }
 
     override fun hasAccount(uuid: UUID): Boolean = transaction {
-        !VoteTable.select(VoteTable.uuid eq uuid.toString()).empty()
+        !VoteTable.select(VoteTable.uuid)
+            .where(VoteTable.uuid eq uuid.toString())
+            .empty()
     }
 
     override fun hasAccount(uuid: UUID, serviceName: String): Boolean = transaction {
-        !VoteTable.select((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName)).empty()
+        !VoteTable.select(VoteTable.uuid, VoteTable.serviceName)
+            .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
+            .empty()
     }
 
 
@@ -71,13 +75,15 @@ class VoteModel(private val magenta: Magenta) : VoteSQL {
     }
 
     override fun getPlayerVote(uuid: UUID): Int = transaction {
-        val user = VoteTable.select(VoteTable.uuid eq uuid.toString())
+        val user = VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString())
 
         return@transaction  user.groupBy(vote).sumOf { row -> row[vote] }
     }
 
     override fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity? = transaction {
-        val user = VoteTable.select((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName)).firstOrNull()
+        val user = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
+            .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
+            .firstOrNull()
 
         return@transaction user?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[last_vote]) }
     }

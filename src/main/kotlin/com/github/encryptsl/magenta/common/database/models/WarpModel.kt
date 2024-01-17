@@ -89,7 +89,7 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     }
 
     override fun getWarpExist(warpName: String): Boolean {
-        return transaction { !WarpTable.select(WarpTable.warpName eq warpName).empty() }
+        return transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
     }
 
     override fun canSetWarp(player: Player): Boolean {
@@ -102,12 +102,12 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
         if (max == -1) return true
 
 
-        return transaction { HomeTable.select(HomeTable.uuid eq player.uniqueId.toString()).count() < max }
+        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId.toString()).count() < max }
     }
 
     override fun <T> getWarp(warpName: String, columnName: Expression<T>): T {
         return transaction {
-            WarpTable.select(WarpTable.warpName eq warpName).first()[columnName]
+            WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).first()[columnName]
         }
     }
 

@@ -14,9 +14,9 @@ softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs]
 libraries:
   - com.zaxxer:HikariCP:5.1.0
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22
-  - org.jetbrains.exposed:exposed-core:0.44.1
-  - org.jetbrains.exposed:exposed-jdbc:0.44.1
-  - org.jetbrains.exposed:exposed-kotlin-datetime:0.44.1
+  - org.jetbrains.exposed:exposed-core:0.46.0
+  - org.jetbrains.exposed:exposed-jdbc:0.46.0
+  - org.jetbrains.exposed:exposed-kotlin-datetime:0.46.0
   - club.minnced:discord-webhooks:0.8.4
 
 description: ${description}

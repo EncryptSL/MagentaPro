@@ -59,7 +59,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun getHomeExist(player: Player, home: String): Boolean {
-        return transaction { !HomeTable.select(HomeTable.home eq home).empty() }
+        return transaction { !HomeTable.select(HomeTable.home).where(HomeTable.home eq home).empty() }
     }
 
     override fun canSetHome(player: Player): Boolean {
@@ -72,7 +72,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
 
         if (max == -1) return true
 
-        return transaction { HomeTable.select(HomeTable.uuid eq player.uniqueId.toString()).count() >= max }
+        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId.toString()).count() >= max }
     }
 
     override fun <T> getHome(home: String, columnName: Expression<T>): T {
@@ -82,7 +82,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun getHomesByOwner(player: Player): List<HomeEntity> {
-        return transaction { HomeTable.select { HomeTable.uuid eq player.uniqueId.toString() }.mapNotNull { r ->
+        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq player.uniqueId.toString()).mapNotNull { r ->
             HomeEntity(
                 r[HomeTable.username],
                 r[HomeTable.uuid],

@@ -7,7 +7,6 @@ import com.github.encryptsl.magenta.common.database.tables.LevelTable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.insertIgnore
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -25,7 +24,7 @@ class LevelModel(private val magenta: Magenta) : LevelSQL {
         }
     }
     override fun hasAccount(uuid: UUID): Boolean = transaction {
-        !LevelTable.select(LevelTable.uuid eq uuid.toString()).empty()
+        !LevelTable.select(LevelTable.uuid).where(LevelTable.uuid eq uuid.toString()).empty()
     }
 
     override fun addLevel(uuid: UUID, level: Int) {
@@ -61,7 +60,7 @@ class LevelModel(private val magenta: Magenta) : LevelSQL {
     }
 
     override fun getLevel(uuid: UUID): LevelEntity = transaction {
-        val user = LevelTable.select(LevelTable.uuid eq uuid.toString()).first()
+        val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).first()
         LevelEntity(user[LevelTable.username], user[LevelTable.uuid], user[LevelTable.level], user[LevelTable.experience])
     }
 
