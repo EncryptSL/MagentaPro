@@ -77,7 +77,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
 
     override fun <T> getHome(home: String, columnName: Expression<T>): T {
         return transaction {
-            HomeTable.select(HomeTable.home eq home).first()[columnName]
+            HomeTable.selectAll().where( HomeTable.home eq home).first()[columnName]
         }
     }
 
