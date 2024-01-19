@@ -110,16 +110,17 @@ class VaultShop(private val magenta: Magenta) {
         }
 
         for (item in shopCategory.getConfig().getConfigurationSection("shop.items")?.getKeys(false)!!) {
-            val material = Material.getMaterial(item)
+            val material = Material.getMaterial(shopCategory.getConfig().getString("shop.items.${item}.icon").toString())
             if (material != null) {
-                if (shopCategory.getConfig().contains("shop.items.${material.name}")) {
-                    val buyPrice = shopCategory.getConfig().getDouble("shop.items.${material.name}.buy.price")
-                    val sellPrice = shopCategory.getConfig().getDouble("shop.items.${material.name}.sell.price")
+                if (shopCategory.getConfig().contains("shop.items.$item")) {
+                    val itemName = shopCategory.getConfig().getString("shop.items.${item}.name")
+                    val buyPrice = shopCategory.getConfig().getDouble("shop.items.${item}.buy.price")
+                    val sellPrice = shopCategory.getConfig().getDouble("shop.items.${item}.sell.price")
 
-                    val isBuyAllowed = shopCategory.getConfig().contains("shop.items.${material.name}.buy.price")
-                    val isSellAllowed = shopCategory.getConfig().contains("shop.items.${material.name}.sell.price")
-                    val isItem = shopCategory.getConfig().contains("shop.items.${material.name}.buy.commands")
-                    val commands = shopCategory.getConfig().getStringList("shop.items.${material.name}.buy.commands")
+                    val isBuyAllowed = shopCategory.getConfig().contains("shop.items.${item}.buy.price")
+                    val isSellAllowed = shopCategory.getConfig().contains("shop.items.${item}.sell.price")
+                    val isItem = shopCategory.getConfig().contains("shop.items.${item}.buy.commands")
+                    val commands = shopCategory.getConfig().getStringList("shop.items.${item}.buy.commands")
 
                     val guiItem = ItemBuilder.from(
                         magenta.itemFactory.shopItem(
@@ -133,7 +134,7 @@ class VaultShop(private val magenta: Magenta) {
                     guiItem.setAction { action ->
                         if (action.isShiftClick && action.isLeftClick && isItem) {
                             vaultShopInventory.buy(
-                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 64), buyPrice, isBuyAllowed),
+                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 64, itemName ?: material.name), buyPrice, isBuyAllowed),
                                 false,
                                 null,
                                 action
@@ -143,7 +144,7 @@ class VaultShop(private val magenta: Magenta) {
 
                         if (action.isLeftClick) {
                             vaultShopInventory.buy(
-                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1), buyPrice, isBuyAllowed),
+                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, itemName ?: material.name), buyPrice, isBuyAllowed),
                                 isItem,
                                 commands,
                                 action
@@ -166,7 +167,7 @@ class VaultShop(private val magenta: Magenta) {
                         }
 
                         if (action.isRightClick) {
-                            vaultShopInventory.sell(ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1), sellPrice, isSellAllowed), action)
+                            vaultShopInventory.sell(ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName ?: material.name), sellPrice, isSellAllowed), action)
                             return@setAction
                         }
                         action.isCancelled = true
@@ -176,7 +177,11 @@ class VaultShop(private val magenta: Magenta) {
                 }
             }
         }
+        controlButtons(player, shopUI, shopCategory, gui)
+        gui.open(player)
+    }
 
+    private fun controlButtons(player: Player, shopUI: ShopUI, shopCategory: ShopConfig, gui: PaginatedGui) {
         for (material in Material.entries) {
             shopUI.previousPage(player, material, shopCategory, "previous", gui)
             shopUI.closeButton(
@@ -188,6 +193,5 @@ class VaultShop(private val magenta: Magenta) {
             )
             shopUI.nextPage(player, material, shopCategory, "next", gui)
         }
-        gui.open(player)
     }
 }

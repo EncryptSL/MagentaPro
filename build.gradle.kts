@@ -30,7 +30,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("net.luckperms:api:5.4")
-    compileOnly("com.github.encryptsl.credit:CreditLite:1.0.3-SNAPSHOT")
+    compileOnly("com.github.encryptsl.credit:CreditLite:1.0.4")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     implementation("solar.squares:pixel-width-utils:1.1.0")

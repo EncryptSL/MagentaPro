@@ -24,132 +24,159 @@ shop:
           col: 6
   items:
     GRASS:
+      icon: "GRASS"
       buy:
         price: 0.2
       sell:
         price: 0.1
     FERN:
+      icon: "FERN"
       buy:
         price: 0.2
       sell:
         price: 0.1
     DEAD_BUSH:
+      icon: "DEAD_BUSH"
       buy:
         price: 0.2
       sell:
         price: 0.1
     RED_MUSHROOM:
+      icon: "RED_MUSHROOM"
       buy:
         price: 0.8
       sell:
         price: 0.4
     BROWN_MUSHROOM:
+      icon: "BROWN_MUSHROOM"
       buy:
         price: 0.8
       sell:
         price: 0.4
     ALLIUM:
+      icon: "ALLIUM"
       buy:
         price: 0.6
       sell:
         price: 0.2
     AZURE_BLUE:
+      icon: "AZURE_BLUE"
       buy:
         price: 0.6
       sell:
         price: 0.2
     BLUEORCHID:
+      icon: "BLUEORCHID"
       buy:
         price: 0.6
       sell:
         price: 0.2
     CORNFLOWER:
+      icon: "CORNFLOWER"
       buy:
         price: 0.6
       sell:
         price: 0.2
     CYANFLOWER:
+      icon: "CYANFLOWER"
       buy:
         price: 0.6
       sell:
         price: 0.2
     DANDELION:
+      icon: "DANDELION"
       buy:
         price: 0.6
       sell:
         price: 0.2
     LILAC:
+      icon: "LILAC"
       buy:
         price: 0.6
       sell:
         price: 0.2
     LILY_OF_THE_VALLEY:
+      icon: "LILY_OF_THE_VALLEY"
       buy:
         price: 0.6
       sell:
         price: 0.2
     PEONY:
+      icon: "PEONY"
       buy:
         price: 0.6
       sell:
         price: 0.2
     POPPY:
+      icon: "POPPY"
       buy:
         price: 0.6
       sell:
         price: 0.2
     ROSE_BUSH:
+      icon: "ROSE_BUSH"
       buy:
         price: 0.6
       sell:
         price: 0.2
     SUN_FLOWER:
+      icon: "SUN_FLOWER"
       buy:
         price: 0.6
       sell:
         price: 0.2
     WHITE_TULIP:
+      icon: "WHITE_TULIP"
       buy:
         price: 0.6
       sell:
         price: 0.2
     RED_TULIP:
+      icon: "RED_TULIP"
       buy:
         price: 0.6
       sell:
         price: 0.2
     ORANGE_TULIP:
+      icon: "ORANGE_TULIP"
       buy:
         price: 0.6
       sell:
         price: 0.2
     PINK_TULIP:
+      icon: "PINK_TULIP"
       buy:
         price: 0.6
       sell:
         price: 0.2
     PINK_PETALS:
+      icon: PINK_PETALS
       buy:
         price: 0.6
       sell:
         price: 0.2
     SPORE_BLOSSOM:
+      icon: "SPORE_BLOSSOM"
       buy:
         price: 0.6
       sell:
         price: 0.2
     SUNFLOWER:
+      icon: "SUNFLOWER"
       buy:
         price: 0.6
       sell:
         price: 0.3
     FLOWER_POT:
+      icon: "FLOWER_POT"
       buy:
         price: 0.3
     CHEST:
+      icon: "CHEST"
       buy:
         price: 4
     SEA_LANTERN:
+      icon: "SEA_LANTERN"
       buy:
         price: 10
       sell:

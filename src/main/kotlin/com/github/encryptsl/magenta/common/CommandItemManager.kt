@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.ItemFactory
+import com.github.encryptsl.magenta.api.ItemBuilder
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -11,7 +11,6 @@ import org.bukkit.entity.Player
 import kotlin.random.Random
 
 class CommandItemManager(private val magenta: Magenta) {
-    private val itemFactory : ItemFactory by lazy { ItemFactory() }
     private val sid = Random(1000).nextInt(9999)
 
     fun createItem(commandSender: CommandSender, itemName: String) {
@@ -119,7 +118,10 @@ class CommandItemManager(private val magenta: Magenta) {
         val material = Material.getMaterial(materialName) ?: return
 
 
-        val itemStack = itemFactory.item(material, amount, item, sid, lore, glowing)
+        val itemStack = ItemBuilder(material, amount)
+            .setName(ModernText.miniModernText(item, Placeholder.parsed("sid", sid.toString())))
+            .setGlowing(glowing)
+            .addLore(lore.map { ModernText.miniModernText(it) }.toMutableList()).create()
         target.inventory.addItem(itemStack)
         target.updateInventory()
 

@@ -24,62 +24,81 @@ shop:
           col: 6
   items:
     REDSTONE:
+      icon: "REDSTONE"
       buy:
         price: 140
       sell:
         price: 35
     REDSTONE_TORCH:
+      icon: "REDSTONE_TORCH"
       buy:
         price: 140
     REPEATER:
+      icon: "REPEATER"
       buy:
         price: 451.5
     COMPARATOR:
+      icon: "COMPARATOR"
       buy:
         price: 466.5
     TARGET:
+      icon: "TARGET"
       buy:
         price: 560
     PISTON:
+      icon: "PISTON"
       buy:
         price: 608.45
     STICKY_PISTON:
+      icon: "STICKY_PISTON"
       buy:
         price: 609.45
     RAIL:
+      icon: "RAIL"
       buy:
         price: 780
     POWERED_RAIL:
+      icon: "POWERED_RAIL"
       buy:
         price: 1040
     DETECTOR_RAIL:
+      icon: "DETECTOR_RAIL"
       buy:
         price: 980
     ACTIVATOR_RAIL:
+      icon: "ACTIVATOR_RAIL"
       buy:
         price: 980
     REDSTONE_LAMP:
+      icon: "REDSTONE_LAMP"
       buy:
         price: 560
     MINECART:
+      icon: "MINECART"
       buy:
         price: 700
     HOPPER_MINECART:
+      icon: "HOPPER_MINECART"
       buy:
         price: 1420
     HOEPPER:
+      icon: "HOPPER"
       buy:
         price: 720
     OBSERVER:
+      icon: "OBSERVER"
       buy:
         price: 325
     DISPENSER:
+      icon: "DISPENSER"
       buy:
         price: 157.5
     DROPPER:
+      icon: "DROPPER"
       buy:
         price: 157.5
     DAYLIGHT_DETECTOR:
+      icon: "DAYLIGHT_DETECTOR"
       buy:
         price: 65.7
 

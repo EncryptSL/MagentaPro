@@ -10,15 +10,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class ItemFactory {
-
-    fun item(material: Material, amount: Int, itemName: String, sid: Int, lores: List<String>, glowing: Boolean): ItemStack {
-
-        return ItemBuilder(material, amount)
-            .setName(ModernText.miniModernText(itemName, Placeholder.parsed("sid", sid.toString())))
-            .setGlowing(glowing)
-            .addLore(lores.map { ModernText.miniModernText(it) }.toMutableList()).create()
-    }
-
     fun item(material: Material, itemName: String, lores: List<String>, glowing: Boolean): ItemStack {
         return ItemBuilder(material, 1)
             .setName(ModernText.miniModernText(itemName))
@@ -86,15 +77,12 @@ class ItemFactory {
         return itemBuilder.create()
     }
 
-    fun shopItem(material: Material, amount: Int): ItemStack {
-        return ItemStack(material, amount)
-    }
-
     fun shopItem(material: Material, name: String): ItemStack {
         return ItemBuilder(material, 1).setName(ModernText.miniModernText(name)).create()
     }
 
-    fun shopItem(material: Material, name: String, glowing: Boolean): ItemStack {
-        return ItemBuilder(material, 1).setName(ModernText.miniModernText(name)).setGlowing(glowing).create()
+    fun shopItem(material: Material, amount: Int, name: String): ItemStack {
+        return ItemBuilder(material, amount).setName(ModernText.miniModernText(name)).create()
     }
+
 }

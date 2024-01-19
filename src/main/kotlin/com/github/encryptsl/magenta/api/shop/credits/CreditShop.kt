@@ -71,7 +71,7 @@ class CreditShop(private val magenta: Magenta) {
                     val name = magenta.creditShopConfig.getConfig().getString("shop.categories.$category.name").toString()
 
                     val item = ItemBuilder.from(
-                        magenta.itemFactory.shopItem(material, name, glowing)
+                        com.github.encryptsl.magenta.api.ItemBuilder(material, 1).setName(ModernText.miniModernText(name)).setGlowing(glowing).create()
                     ).asGuiItem { action ->
                         if (action.isRightClick || action.isLeftClick) {
                             openCategory(player, category)
@@ -126,8 +126,7 @@ class CreditShop(private val magenta: Magenta) {
 
         if (shopCategory.getConfig().contains("shop.items")) {
             for (item in shopCategory.getConfig().getConfigurationSection("shop.items")?.getKeys(false)!!) {
-                val material =
-                    Material.getMaterial(shopCategory.getConfig().getString("shop.items.$item.icon").toString())
+                val material = Material.getMaterial(shopCategory.getConfig().getString("shop.items.$item.icon").toString())
                 if (material != null) {
                     if (shopCategory.getConfig().contains("shop.items.$item")) {
 
@@ -211,18 +210,22 @@ class CreditShop(private val magenta: Magenta) {
                 }
             }
         }
+        controlButtons(player, shopUI, shopCategory, gui)
+        gui.open(player)
+    }
+
+    private fun controlButtons(player: Player, shopUI: ShopUI, shopConfig: ShopConfig, paginatedGui: PaginatedGui) {
         for (material in Material.entries) {
-            shopUI.nextPage(player, material, shopCategory, "previous", gui)
+            shopUI.nextPage(player, material, shopConfig, "previous", paginatedGui)
             shopUI.closeButton(
                 player,
                 material,
-                gui,
-                shopCategory,
+                paginatedGui,
+                shopConfig,
                 this
             )
-            shopUI.nextPage(player, material, shopCategory, "next", gui)
+            shopUI.nextPage(player, material, shopConfig, "next", paginatedGui)
         }
-        gui.open(player)
     }
 
     private fun customItems(player: Player, type: String, fileConfiguration: FileConfiguration, guiPaginatedGui: PaginatedGui) {

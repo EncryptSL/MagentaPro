@@ -24,61 +24,73 @@ shop:
           col: 6
   items:
     WHEAT_SEEDS:
+      icon: "WHEAT_SEEDS"
       buy:
         price: 4.5
       sell:
         price: 2.5
     PUMPKIN_SEEDS:
+      icon: "PUMPKIN_SEEDS"
       buy:
         price: 4.5
       sell:
         price: 2.5
     MELON_SEEDS:
+      icon: "MELON_SEEDS"
       buy:
         price: 4.5
       sell:
         price: 2.5
     BEETROOT_SEEDS:
+      icon: "BEETROOT_SEEDS"
       buy:
         price: 4.5
       sell:
         price: 2.5
     WHEAT:
+      icon: "WHEAT"
       buy:
         price: 4.5
       sell:
         price: 3.5
     SUGAR_CANE:
+      icon: "SUGAR_CANE"
       buy:
         price: 4.5
       sell:
         price: 3.5
     BAMBOO:
+      icon: "BAMBOO"
       buy:
         price: 4.5
       sell:
         price: 2.5
     CACTUS:
+      icon: "CACTUS"
       buy:
         price: 4.5
       sell:
         price: 3.5
     WHITE_WOOL:
+      icon: "WHITE_WOOL"
       buy:
         price: 16
       sell:
         price: 6
     GLOW_BERRIES:
+      icon: "GLOW_BERRIES"
       buy:
         price: 16
       sell:
         price: 10
     HONEY_BOTTLE:
+      icon: "HONEY_BOTTLE"
       buy:
         price: 20
       sell:
         price: 15
     CHORUS_FRUIT:
+      icon: "CHORUS_FRUIT"
       buy:
         price: 50
       sell:

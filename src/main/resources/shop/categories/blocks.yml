@@ -24,76 +24,91 @@ shop:
           col: 6
   items:
     GRASS_BLOCK:
+      icon: "DIRT"
       buy:
         price: 3.5
       sell:
         price: 0.9
     DIRT:
+      icon: "DIRT"
       buy:
         price: 2.5
       sell:
         price: 0.4
     PODZOL:
+      icon: "PODZOL"
       buy:
         price: 5.2
       sell:
         price: 0.6
     WARPED_NYLIUM:
+      icon: "WARPED_NYLIUM"
       buy:
         price: 5.5
       sell:
         price: 0.6
     GRAVEL:
+      icon: "GRAVEL"
       buy:
         price: 2.3
       sell:
         price: 0.3
     SAND:
+      icon: "SAND"
       buy:
         price: 2.3
       sell:
         price: 0.3
     RED_SAND:
+      icon: "RED_SAND"
       buy:
         price: 2.3
       sell:
         price: 0.3
     GLASS:
+      icon: "GLASS"
       buy:
         price: 2.3
       sell:
         price: 1.5
     GLOWSTONE:
+      icon: "GLOWSTONE"
       buy:
         price: 30.9
       sell:
         price: 2.5
     SHROOMLIGHT:
+      icon: "SHROOMLIGHT"
       buy:
         price: 30.9
       sell:
         price: 2.5
     SEA_LANTERN:
+      icon: "SEA_LANTERN"
       buy:
         price: 50.9
       sell:
         price: 5.5
     SPONGE:
+      icon: "SPONGE"
       buy:
         price: 350.5
       sell:
         price: 40.5
     SNOW_BLOCK:
+      icon: "SNOW_BLOCK"
       buy:
         price: 5.9
       sell:
         price: 2.5
     ICE:
+      icon: "ICE"
       buy:
         price: 6.9
       sell:
         price: 1.5
     PACKED_ICE:
+      icon: "PACKED_ICE"
       buy:
         price: 8.9
       sell:

@@ -24,76 +24,91 @@ shop:
           col: 6
   items:
     COOKED_STEAK:
+      icon: "COOKED_STEAK"
       buy:
         price: 3.5
       sell:
         price: 2.5
     COOKED_MUTTON:
+      icon: "COOKED_MUTTON"
       buy:
         price: 3.5
       sell:
         price: 2.5
     COOKED_CHICKEN:
+      icon: "COOKED_CHICKEN"
       buy:
         price: 3.5
       sell:
         price: 2.5
     COOKED_RABBIT:
+      icon: "COOKED_RABBIT"
       buy:
         price: 3.5
       sell:
         price: 2.5
     COOKED_COD:
+      icon: "COOKED_COD"
       buy:
         price: 3.5
       sell:
         price: 2.5
     COOKED_SALMON:
+      icon: "COOKED_SALMON"
       buy:
         price: 3.5
       sell:
         price: 2.5
     CARROT:
+      icon: "CARROT"
       buy:
         price: 2.5
       sell:
         price: 1.5
-    POTATOE:
+    POTATO:
+      icon: "POTATO"
       buy:
         price: 2.5
       sell:
         price: 1.5
     MELONE:
+      icon: "MELONE"
       buy:
         price: 2.5
       sell:
         price: 1.5
     BEETROOT:
+      icon: "BEETROOT"
       buy:
         price: 2.5
       sell:
         price: 1.5
     COOKIE:
+      icon: "COOKIE"
       buy:
         price: 4.5
       sell:
         price: 1.5
     PUMPKIN_PIE:
+      icon: "PUMPKIN_PIE"
       buy:
         price: 4.5
       sell:
         price: 3.5
     CAKE:
+      icon: "CAKE"
       buy:
         price: 4.5
       sell:
         price: 3.5
     SWEET_BERRIES:
+      icon: "SWEET_BERRIES"
       buy:
         price: 2.5
       sell:
         price: 1.5
     ROOTEN_FLESH:
+      icon: "ROOTEN_FLESH"
       buy:
         price: 1.5
       sell:

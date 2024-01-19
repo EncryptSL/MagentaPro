@@ -24,69 +24,83 @@ shop:
           col: 6
   items:
     STONE:
+      icon: "STONE"
       buy:
         price: 3.5
       sell:
         price: 0.5
     COBBLESTONE:
+      icon: "COBBLESTONE"
       buy:
         price: 2.5
       sell:
         price: 0.3
     GRANITE:
+      icon: "GRANITE"
       buy:
         price: 2.5
       sell:
         price: 0.3
     ANDESITE:
+      icon: "ANDESITE"
       buy:
         price: 2.5
       sell:
         price: 0.3
     DIORITE:
+      icon: "DIORITE"
       buy:
         price: 2.5
       sell:
         price: 0.3
     END_STONE:
+      icon: "END_STONE"
       buy:
         price: 5
       sell:
         price: 1.3
     NETHERRACK:
+      icon: "NETHERRACK"
       buy:
         price: 5
       sell:
         price: 0.3
     DEEPSLATE:
+      icon: "DEEPSLATE"
       buy:
         price: 3.5
       sell:
         price: 0.5
     BASALT:
+      icon: "BASALT"
       buy:
         price: 3.5
       sell:
         price: 0.5
     OBSIDIAN:
+      icon: "OBSIDIAN"
       buy:
         price: 35
       sell:
         price: 6.5
     CRYING_OBSIDIAN:
+      icon: "CRYING_OBSIDIAN"
       sell:
         price: 250
     SANDSTONE:
+      icon: "SANDSTONE"
       buy:
         price: 3.5
       sell:
         price: 0.5
     TERRACOTA:
+      icon: "TERRACOTA"
       buy:
         price: 5.5
       sell:
         price: 0.9
     COBBLED_DEEPSLATE:
+      icon: "COBBLED_DEEPSLATE"
       buy:
         price: 5.5
       sell:

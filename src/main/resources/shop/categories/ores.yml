@@ -24,42 +24,51 @@ shop:
           col: 6
   items:
     IRON_INGOT:
+      icon: "IRON_INGOT"
       buy:
         price: 130
       sell:
         price: 50
     GOLD_INGOT:
+      icon: "GOLD_INGOT"
       buy:
         price: 150
       sell:
         price: 65
     COPPER_INGOT:
+      icon: "COPPER_INGOT"
       buy:
         price: 25
       sell:
         price: 5
     DIAMOND:
+      icon: "DIAMOND"
       sell:
         price: 100
     COAL:
+      icon: "COAL"
       buy:
         price: 12
       sell:
         price: 1.0
     QUARTZ:
+      icon: "QUARTZ"
       buy:
         price: 15
       sell:
         price: 3.0
     LAPIS_LAZULI:
+      icon: "LAPIS_LAZULI"
       buy:
         price: 15
       sell:
         price: 3.0
     EMERALD:
+      icon: "EMERALD"
       buy:
         price: 650
     NETHERITE_INGOT:
+      icon: "NETHERITE_INGOT"
       buy:
         price: 25000
       sell:

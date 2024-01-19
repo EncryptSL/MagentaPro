@@ -24,166 +24,199 @@ shop:
           col: 6
   items:
     OAK_LOG:
+      icon: "OAK_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.9
     SPRUCE_LOG:
+      icon: "SPRUCE_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.4
     BIRCH_LOG:
+      icon: "BIRCH_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.9
     JUNGLE_LOG:
+      icon: "JUNGLE_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.9
     ACACIA_LOG:
+      icon: "ACACIA_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.9
     DARK_OAK_LOG:
+      icon: "DARK_OAK_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.9
     MANGROVE_LOG:
+      icon: "MANGROVE_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.9
     CHERRY_LOG:
+      icon: "CHERRY_LOG"
       buy:
         price: 8.6
       sell:
         price: 0.9
     OAK_PLANKS:
+      icon: "OAK_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     SPRUCE_PLANKS:
+      icon: "SPRUCE_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     BIRCH_PLANKS:
+      icon: "BIRCH_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     JUNGLE_PLANKS:
+      icon: "JUNGLE_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     DARK_OAK_PLANKS:
+      icon: "DARK_OAK_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     ACACIA_PLANKS:
+      icon: "ACACIA_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     MANGROVE_PLANKS:
+      icon: "MANGROVE_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     CHERRY_PLANKS:
+      icon: "CHERY_PLANKS"
       buy:
         price: 2.15
       sell:
         price: 0.4
     OAK_LEAVES:
+      icon: "OAK_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     SPRUCE_LEAVES:
+      icon: "SPRUCE_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     BIRCH_LEAVES:
+      icon: "BIRCH_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     JUNGLE_LEAVES:
+      icon: "JUNGLE_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     ACACIA_LEAVES:
+      icon: "ACACIA_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     DARK_OAK_LEAVES:
+      icon: "DARK_OAK_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     MANGROVE_LEAVES:
+      icon: "MANGROVE_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     CHERRY_LEAVES:
+      icon: "CHERRY_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     AZALEA_LEAVES:
+      icon: "AZALEA_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     FLOWERING_AZALEA_LEAVES:
+      icon: "FLOWERING_AZALEA_LEAVES"
       buy:
         price: 1.5
       sell:
         price: 0.2
     OAK_SAPLING:
+      icon: "OAK_SAPLING"
       buy:
         price: 6.5
       sell:
         price: 0.3
     SPRUCE_SAPLING:
+      icon: "SPRUCE_SAPLING"
       buy:
         price: 6.5
       sell:
         price: 0.3
     BIRCH_SAPLING:
+      icon: "BIRCH_SAPLING"
       buy:
         price: 6.5
       sell:
         price: 0.3
     JUNGLE_SAPLING:
+      icon: "JUNGLE_SAPLING"
       buy:
         price: 6.5
       sell:
         price: 0.3
     ACACIA_SAPLING:
+      icon: "ACACIA_SAPLING"
       buy:
         price: 6.5
       sell:
         price: 0.3
     DARK_OAK_SAPLING:
+      icon: "DARK_OAK_SAPLING"
       buy:
         price: 6.5
       sell:
         price: 0.3
     CHERRY_SAPLING:
+      icon: "CHERRY_SAPLING"
       buy:
         price: 6.5
       sell:
