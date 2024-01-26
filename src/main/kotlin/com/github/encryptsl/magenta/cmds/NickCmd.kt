@@ -2,8 +2,8 @@ package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.Argument
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -18,8 +18,8 @@ class NickCmd(private val magenta: Magenta) {
 
     private val commandHelper = CommandHelper(magenta)
 
-    @CommandMethod("nick <nickname>")
-    @CommandPermission("magenta.nick")
+    @Command("nick <nickname>")
+    @Permission("magenta.nick")
     fun onNick(player: Player, @Argument(value = "nickname") nickName: String) {
         if (magenta.stringUtils.isNickBlacklisted(nickName) && !player.hasPermission("magenta.nick.blacklist.bypass"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.error.blacklisted"),
@@ -38,8 +38,8 @@ class NickCmd(private val magenta: Magenta) {
         ))
     }
 
-    @CommandMethod("nick <nickname> <player>")
-    @CommandPermission("magenta.nick.other")
+    @Command("nick <nickname> <player>")
+    @Permission("magenta.nick.other")
     fun onNickOther(commandSender: CommandSender, @Argument(value = "nickname") nickName: String, @Argument(value = "player", suggestions = "players") target: Player) {
         if (magenta.stringUtils.isNickBlacklisted(nickName) && !target.hasPermission("magenta.nick.blacklist.bypass"))
             return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.error.blacklisted"),
@@ -62,15 +62,15 @@ class NickCmd(private val magenta: Magenta) {
         )))
     }
 
-    @CommandMethod("unnick")
-    @CommandPermission("magenta.nick.other")
+    @Command("unnick")
+    @Permission("magenta.nick.other")
     fun onUnNick(player: Player) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed.back"), Placeholder.parsed("nickname", player.name)))
         commandHelper.changeDisplayName(player, player.name)
     }
 
-    @CommandMethod("unnick <player>")
-    @CommandPermission("magenta.unnick.other")
+    @Command("unnick <player>")
+    @Permission("magenta.unnick.other")
     fun onUnNickOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.nick.success.changed.back"), Placeholder.parsed("nickname", target.name)))
         commandHelper.changeDisplayName(target, target.name)

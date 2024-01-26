@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -12,8 +12,8 @@ import org.bukkit.command.CommandSender
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class VotePartyCmd(private val magenta: Magenta) {
-    @CommandMethod("voteparty|vparty")
-    @CommandPermission("magenta.voteparty")
+    @Command("voteparty|vparty")
+    @Permission("magenta.voteparty")
     fun onVoteParty(commandSender: CommandSender) {
         val (currentVotes, lastParty, lastWinner) = magenta.voteParty.getVoteParty()
         val startAt = magenta.config.getInt("votifier.voteparty.start_at")

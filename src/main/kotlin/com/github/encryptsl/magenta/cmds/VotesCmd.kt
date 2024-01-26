@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -17,8 +17,8 @@ import org.bukkit.command.CommandSender
 @CommandDescription("Provided by plugin MagentaPro")
 class VotesCmd(private val magenta: Magenta) {
 
-    @CommandMethod("votes add <service> <player> <amount>")
-    @CommandPermission("magenta.votes.add")
+    @Command("votes add <service> <player> <amount>")
+    @Permission("magenta.votes.add")
     fun onVotesAdd(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
@@ -40,8 +40,8 @@ class VotesCmd(private val magenta: Magenta) {
         )))
     }
 
-    @CommandMethod("votes set <service> <player> <amount>")
-    @CommandPermission("magenta.votes.set")
+    @Command("votes set <service> <player> <amount>")
+    @Permission("magenta.votes.set")
     fun onVotesSet(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
@@ -63,8 +63,8 @@ class VotesCmd(private val magenta: Magenta) {
             )))
     }
 
-    @CommandMethod("votes reset player <player>")
-    @CommandPermission("magenta.votes.reset.player")
+    @Command("votes reset player <player>")
+    @Permission("magenta.votes.reset.player")
     fun onVotesReset(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
@@ -84,8 +84,8 @@ class VotesCmd(private val magenta: Magenta) {
             ))
     }
 
-    @CommandMethod("votes reset all")
-    @CommandPermission("magenta.votes.reset.all")
+    @Command("votes reset all")
+    @Permission("magenta.votes.reset.all")
     fun onVotesResetAll(
         commandSender: CommandSender
     ) {
@@ -93,8 +93,8 @@ class VotesCmd(private val magenta: Magenta) {
         commandSender.sendMessage(
             ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.votes.success.reset.all")))
     }
-    @CommandMethod("votes remove vote <service> <player> <amount>")
-    @CommandPermission("magenta.votes.remove")
+    @Command("votes remove vote <service> <player> <amount>")
+    @Permission("magenta.votes.remove")
     fun onVotesRemove(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
@@ -117,8 +117,8 @@ class VotesCmd(private val magenta: Magenta) {
         )))
     }
 
-    @CommandMethod("votes remove all")
-    @CommandPermission("magenta.votes.remove.all")
+    @Command("votes remove all")
+    @Permission("magenta.votes.remove.all")
     fun onVotesDeleteAll(commandSender: CommandSender) {
         magenta.vote.deleteAll()
         commandSender.sendMessage(

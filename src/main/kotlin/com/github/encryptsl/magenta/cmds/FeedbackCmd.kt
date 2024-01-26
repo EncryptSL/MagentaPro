@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.cmds
 
+import cloud.commandframework.annotation.specifier.Greedy
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.specifier.Greedy
+import cloud.commandframework.annotations.Permission
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.avatar
@@ -17,8 +17,8 @@ import org.bukkit.entity.Player
 @CommandDescription("Provided by plugin MagentaPro")
 class FeedbackCmd(private val magenta: Magenta) {
 
-    @CommandMethod("feedback <message>")
-    @CommandPermission("magenta.feedback")
+    @Command("feedback <message>")
+    @Permission("magenta.feedback")
     fun onReport(
         player: Player,
         @Argument(value = "message") @Greedy message: String

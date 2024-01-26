@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.cmds
 
+import cloud.commandframework.annotation.specifier.Range
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.specifier.Range
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -17,12 +17,12 @@ import org.bukkit.entity.Player
 @CommandDescription("Provided by plugin MagentaPro")
 class RandomCmd(private val magenta: Magenta) {
 
-    @CommandMethod("random world tickets <player> [amount]")
-    @CommandPermission("magenta.random.world.tickets")
+    @Command("random world tickets <player> [amount]")
+    @Permission("magenta.random.world.tickets")
     fun onRandomTickets(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "players") target: Player,
-        @Argument("amount", defaultValue = "1") @Range(min = "1", max = "100") amount: Int
+        @Argument("amount") @Range(min = "1", max = "100") amount: Int = 1
     ) {
         val tickets: List<String> = magenta.randomConfig.getConfig().getStringList("world_tickets.tickets")
         val randomKey = tickets.random().replace("%amount%", amount.toString())
@@ -39,12 +39,12 @@ class RandomCmd(private val magenta: Magenta) {
         )))
     }
 
-    @CommandMethod("random crates key <player> [amount]")
-    @CommandPermission("magenta.random.crates.key")
+    @Command("random crates key <player> [amount]")
+    @Permission("magenta.random.crates.key")
     fun onRandomCratesKey(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "players") target: Player,
-        @Argument("amount", defaultValue = "1") @Range(min = "1", max = "100") amount: Int
+        @Argument("amount") @Range(min = "1", max = "100") amount: Int = 1
     ) {
         val keys: List<String> = magenta.randomConfig.getConfig().getStringList("crates.keys")
         val randomKey = keys.random().replace("%amount%", amount.toString())
@@ -61,8 +61,8 @@ class RandomCmd(private val magenta: Magenta) {
         )))
     }
 
-    @CommandMethod("random tag <type> <player>")
-    @CommandPermission("magenta.random.tag")
+    @Command("random tag <type> <player>")
+    @Permission("magenta.random.tag")
     fun onRandomTag(
         commandSender: CommandSender,
         @Argument(value = "type", suggestions = "tags") type: String,

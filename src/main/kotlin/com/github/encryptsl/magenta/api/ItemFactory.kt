@@ -17,8 +17,8 @@ class ItemFactory {
             .addLore(lores.map { ModernText.miniModernText(it) }.toMutableList()).create()
     }
 
-    fun shopItem(material: Material, buyPrice:Double, sellPrice:Double, fileConfiguration: FileConfiguration): ItemStack {
-        val itemStack = ItemBuilder(material, 1)
+    fun shopItem(itemName: String, material: Material, buyPrice:Double, sellPrice:Double, fileConfiguration: FileConfiguration): ItemStack {
+        val itemStack = ItemBuilder(material, 1).setName(ModernText.miniModernText(itemName))
         val lore = fileConfiguration.getStringList("shop.gui.item_lore")
 
         if (lore.isNotEmpty()) {
@@ -30,9 +30,9 @@ class ItemFactory {
             }.toMutableList()
             itemStack.addLore(lores)
         }
-        if (fileConfiguration.contains("shop.items.${material.name}.options")) {
-            if (fileConfiguration.contains("shop.items.${material.name}.options.color")) {
-                val color: Color = Color.fromRGB(fileConfiguration.getInt("shop.items.${material.name}.options.color"))
+        if (fileConfiguration.contains("shop.items.${itemName}.options")) {
+            if (fileConfiguration.contains("shop.items.${itemName}.options.color")) {
+                val color: Color = Color.fromRGB(fileConfiguration.getInt("shop.items.${itemName}.options.color"))
                 itemStack.setPotion(true, color)
             }
         }

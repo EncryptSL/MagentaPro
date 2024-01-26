@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.cmds
 
+import cloud.commandframework.annotation.specifier.Greedy
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.specifier.Greedy
+import cloud.commandframework.annotations.Permission
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
@@ -21,13 +21,13 @@ import org.bukkit.entity.Player
 @CommandDescription("Provided by plugin EncryptSL")
 class ReportCmd(private val magenta: Magenta) {
 
-    @CommandMethod("report <player> <category> [message]")
-    @CommandPermission("magenta.report")
+    @Command("report <player> <category> [message]")
+    @Permission("magenta.report")
     fun onReport(
         player: Player,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "category", suggestions = "reportCategories") category: ReportCategories,
-        @Argument(value = "message", defaultValue = "Zpráva není specifikovaná.") @Greedy message: String
+        @Argument(value = "message") @Greedy message: String = "Zpráva není specifikovaná."
     ) {
         if (player.name.equals(target.name, ignoreCase = true))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.yourself")))

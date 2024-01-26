@@ -2,8 +2,8 @@ package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.Argument
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -19,8 +19,8 @@ class HealCmd(private val magenta: Magenta) {
 
     private val commandHelper: CommandHelper by lazy { CommandHelper(magenta) }
 
-    @CommandMethod("heal")
-    @CommandPermission("magenta.heal")
+    @Command("heal")
+    @Permission("magenta.heal")
     fun onHeal(player: Player) {
         val delay = magenta.config.getLong("heal-cooldown")
         val user = magenta.user.getUser(player.uniqueId)
@@ -41,8 +41,8 @@ class HealCmd(private val magenta: Magenta) {
         player.foodLevel = 20
     }
 
-    @CommandMethod("heal <player>")
-    @CommandPermission("magenta.heal.other")
+    @Command("heal <player>")
+    @Permission("magenta.heal.other")
     fun onHeal(commandSender: CommandSender, @Argument(value="player", suggestions = "players") target: Player) {
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
         target.health = 20.0

@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -16,8 +16,8 @@ import org.bukkit.event.player.PlayerTeleportEvent
 @CommandDescription("Provided by plugin MagentaPro")
 class BackCmd(private val magenta: Magenta) {
 
-    @CommandMethod("back")
-    @CommandPermission("magenta.back")
+    @Command("back")
+    @Permission("magenta.back")
     fun onBack(player: Player) {
         val userAccount = UserAccount(magenta, player.uniqueId)
         magenta.schedulerMagenta.doSync(magenta){
@@ -26,8 +26,8 @@ class BackCmd(private val magenta: Magenta) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success")))
     }
 
-    @CommandMethod("back <player>")
-    @CommandPermission("magenta.back.other")
+    @Command("back <player>")
+    @Permission("magenta.back.other")
     fun onBack(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val userAccount = UserAccount(magenta, target.uniqueId)
 

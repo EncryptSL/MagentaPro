@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import org.bukkit.entity.Player
 
@@ -10,48 +10,48 @@ import org.bukkit.entity.Player
 @CommandDescription("Provided by plugin MagentaPro")
 class ContainersCmd(private val magenta: Magenta) {
 
-    @CommandMethod("anvil")
-    @CommandPermission("magenta.anvil")
+    @Command("anvil")
+    @Permission("magenta.anvil")
     fun onAnvil(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openAnvil(player)
         }
     }
 
-    @CommandMethod("grindstone|gstone")
-    @CommandPermission("magenta.grindstone")
+    @Command("grindstone|gstone")
+    @Permission("magenta.grindstone")
     fun onGrindstone(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openGrindStone(player)
         }
     }
 
-    @CommandMethod("loom")
-    @CommandPermission("magenta.loom")
+    @Command("loom")
+    @Permission("magenta.loom")
     fun onLoom(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openLoom(player)
         }
     }
 
-    @CommandMethod("stonecutter|stonec")
-    @CommandPermission("magenta.stonecutter")
+    @Command("stonecutter|stonec")
+    @Permission("magenta.stonecutter")
     fun onStoneCutter(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openStonecutter(player)
         }
     }
 
-    @CommandMethod("smithingtable|smithing")
-    @CommandPermission("magenta.smithingtable")
+    @Command("smithingtable|smithing")
+    @Permission("magenta.smithingtable")
     fun onSmithingTable(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openSmithingTable(player)
         }
     }
 
-    @CommandMethod("workbench|crafting")
-    @CommandPermission("magenta.workbench")
+    @Command("workbench|crafting")
+    @Permission("magenta.workbench")
     fun onWorkBench(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openWorkBench(player)

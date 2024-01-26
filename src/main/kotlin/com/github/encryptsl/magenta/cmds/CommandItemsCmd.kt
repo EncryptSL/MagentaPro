@@ -1,11 +1,11 @@
 package com.github.encryptsl.magenta.cmds
 
+import cloud.commandframework.annotation.specifier.Greedy
+import cloud.commandframework.annotation.specifier.Range
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.specifier.Greedy
-import cloud.commandframework.annotations.specifier.Range
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandItemManager
 import org.bukkit.Material
@@ -18,8 +18,8 @@ class CommandItemsCmd(magenta: Magenta) {
 
     private val itemCommandItemManager = CommandItemManager(magenta)
 
-    @CommandMethod("commanditem|ci create <item>")
-    @CommandPermission("magenta.citem.create")
+    @Command("commanditem|ci create <item>")
+    @Permission("magenta.citem.create")
     fun onCommandItemCreate(
         commandSender: CommandSender,
         @Argument(value = "item") itemName: String
@@ -27,8 +27,8 @@ class CommandItemsCmd(magenta: Magenta) {
         itemCommandItemManager.createItem(commandSender, itemName)
     }
 
-    @CommandMethod("commanditem|ci setName <item> <name>")
-    @CommandPermission("magenta.citem.set.name")
+    @Command("commanditem|ci setName <item> <name>")
+    @Permission("magenta.citem.set.name")
     fun onCommandItemSetName(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -37,8 +37,8 @@ class CommandItemsCmd(magenta: Magenta) {
         itemCommandItemManager.setName(commandSender, itemName, name)
     }
 
-    @CommandMethod("commanditem|ci setMaterial <item> <material>")
-    @CommandPermission("magenta.citem.set.material")
+    @Command("commanditem|ci setMaterial <item> <material>")
+    @Permission("magenta.citem.set.material")
     fun onCommandItemSetName(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -47,8 +47,8 @@ class CommandItemsCmd(magenta: Magenta) {
         itemCommandItemManager.setMaterial(commandSender, itemName, material)
     }
 
-    @CommandMethod("commanditem|ci setlore <item> <lore>")
-    @CommandPermission("magenta.citem.set.lore")
+    @Command("commanditem|ci setlore <item> <lore>")
+    @Permission("magenta.citem.set.lore")
     fun onCommandItemSetLore(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -58,8 +58,8 @@ class CommandItemsCmd(magenta: Magenta) {
         itemCommandItemManager.setLore(commandSender, itemName, loreSplit)
     }
 
-    @CommandMethod("commanditem|ci setcommand <item> <command>")
-    @CommandPermission("magenta.citem.set.command")
+    @Command("commanditem|ci setcommand <item> <command>")
+    @Permission("magenta.citem.set.command")
     fun onCommandItemSetCommand(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -68,8 +68,8 @@ class CommandItemsCmd(magenta: Magenta) {
         itemCommandItemManager.setCommand(commandSender, itemName, command)
     }
 
-    @CommandMethod("commanditem|ci give <item> <amount> <player>")
-    @CommandPermission("magenta.citem.give")
+    @Command("commanditem|ci give <item> <amount> <player>")
+    @Permission("magenta.citem.give")
     fun onCommandItemGive(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,

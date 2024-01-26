@@ -16,8 +16,8 @@ class RepairCmd(private val magenta: Magenta) {
 
     private val commandHelper = CommandHelper(magenta)
 
-    @CommandMethod("repair")
-    @CommandPermission("magenta.repair.item")
+    @Command("repair")
+    @Permission("magenta.repair.item")
     fun onRepair(player: Player) {
         val inventory = player.inventory
         val delay = magenta.config.getLong("repair-cooldown")
@@ -39,8 +39,8 @@ class RepairCmd(private val magenta: Magenta) {
     }
 
     @ProxiedBy("fixall")
-    @CommandMethod("repair all [target]")
-    @CommandPermission("magenta.repair.all")
+    @Command("repair all [target]")
+    @Permission("magenta.repair.all")
     fun onRepairAll(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player?) {
         if (commandSender is Player) {
             if (target == null) {

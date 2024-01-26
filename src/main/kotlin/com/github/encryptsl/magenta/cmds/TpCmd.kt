@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
@@ -25,24 +25,24 @@ class TpCmd(private val magenta: Magenta) {
 
     private val commandHelper = CommandHelper(magenta)
 
-    @CommandMethod("tpa <target>")
-    @CommandPermission("magenta.tpa")
+    @Command("tpa <target>")
+    @Permission("magenta.tpa")
     fun onTpa(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaRequestEvent(player, target))
         }
     }
 
-    @CommandMethod("tpaccept")
-    @CommandPermission("magenta.tpaccept")
+    @Command("tpaccept")
+    @Permission("magenta.tpaccept")
     fun onTpaAccept(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaAcceptEvent(player))
         }
     }
 
-    @CommandMethod("tpadeny")
-    @CommandPermission("magenta.tpadeny")
+    @Command("tpadeny")
+    @Permission("magenta.tpadeny")
     fun onTpaDeny(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaDenyEvent(player))
@@ -50,8 +50,8 @@ class TpCmd(private val magenta: Magenta) {
     }
 
 
-    @CommandMethod("tp <player>")
-    @CommandPermission("magenta.tp")
+    @Command("tp <player>")
+    @Permission("magenta.tp")
     fun onTeleport(player: Player, @Argument(value = "player", suggestions = "players") target: Player) {
         val account = UserAccount(magenta, target.uniqueId)
         if (!account.getAccount().getBoolean("teleportenabled") && !player.hasPermission("magenta.tp.exempt"))
@@ -70,8 +70,8 @@ class TpCmd(private val magenta: Magenta) {
         )))
     }
 
-    @CommandMethod("tp <player> <target>")
-    @CommandPermission("magenta.tp.other")
+    @Command("tp <player> <target>")
+    @Permission("magenta.tp.other")
     fun onTeleportConsole(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
         val targetAccount = UserAccount(magenta, target.uniqueId)
         if (!targetAccount.getAccount().getBoolean("teleportenabled") && !commandSender.hasPermission("magenta.tp.exempt"))
@@ -94,8 +94,8 @@ class TpCmd(private val magenta: Magenta) {
         )))
     }
 
-    @CommandMethod("tpo <target>")
-    @CommandPermission("magenta.tpo")
+    @Command("tpo <target>")
+    @Permission("magenta.tpo")
     fun onTeleportOfflineLocation(player: Player, @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer) {
         magenta.schedulerMagenta.doSync(magenta) {
             commandHelper.teleportOffline(player, offlinePlayer)
@@ -106,8 +106,8 @@ class TpCmd(private val magenta: Magenta) {
         ))
     }
 
-    @CommandMethod("tphere [target]")
-    @CommandPermission("magenta.tphere")
+    @Command("tphere [target]")
+    @Permission("magenta.tphere")
     fun onTeleportHere(player: Player, @Argument(value = "target") target: Player?) {
 
         if (target == null) {
@@ -126,8 +126,8 @@ class TpCmd(private val magenta: Magenta) {
         ))
     }
 
-    @CommandMethod("tpall [world]")
-    @CommandPermission("magenta.tpall")
+    @Command("tpall [world]")
+    @Permission("magenta.tpall")
     fun onTeleportAllHere(player: Player, @Argument("world", suggestions = "worlds") world: World?) {
 
         if (world != null) {

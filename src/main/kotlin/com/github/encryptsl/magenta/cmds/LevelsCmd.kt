@@ -2,8 +2,8 @@ package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.Argument
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -15,8 +15,8 @@ import org.bukkit.command.CommandSender
 @CommandDescription("Provided by plugin MagentaPro")
 class LevelsCmd(private val magenta: Magenta) {
 
-    @CommandMethod("levels add <player> <amount> level")
-    @CommandPermission("magenta.levels.add.level")
+    @Command("levels add <player> <amount> level")
+    @Permission("magenta.levels.add.level")
     fun onLevelAdd(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
@@ -46,8 +46,8 @@ class LevelsCmd(private val magenta: Magenta) {
             )))
     }
 
-    @CommandMethod("levels set <player> <amount> level")
-    @CommandPermission("magenta.levels.set.level")
+    @Command("levels set <player> <amount> level")
+    @Permission("magenta.levels.set.level")
     fun onLevelSet(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
@@ -77,8 +77,8 @@ class LevelsCmd(private val magenta: Magenta) {
             )))
     }
 
-    @CommandMethod("levels add <player> <amount> points [silent]")
-    @CommandPermission("magenta.levels.experience.add")
+    @Command("levels add <player> <amount> points [silent]")
+    @Permission("magenta.levels.experience.add")
     fun onLevelPointsAdd(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
@@ -117,8 +117,8 @@ class LevelsCmd(private val magenta: Magenta) {
             )))
     }
 
-    @CommandMethod("levels set <player> <amount> points")
-    @CommandPermission("magenta.levels.set.experience")
+    @Command("levels set <player> <amount> points")
+    @Permission("magenta.levels.set.experience")
     fun onLevelPointsSet(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,

@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -11,12 +11,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.configuration.InvalidConfigurationException
 
 @Suppress("UnstableApiUsage", "UNUSED")
-@CommandMethod("magenta|mg")
+@Command("magenta|mg")
 @CommandDescription("Provided by plugin MagentaPro")
 class MagentaCmd(private val magenta: Magenta) {
 
-    @CommandPermission("magenta.plugin.help")
-    @CommandMethod("help")
+    @Permission("magenta.plugin.help")
+    @Command("help")
     fun onHelp(commandSender: CommandSender) {
         commandSender.sendMessage(ModernText.miniModernText("<blue>―――――"))
         commandSender.sendMessage(ModernText.miniModernText("<blue>| <color:#4C76FB>Plugin: <yellow>${magenta.pluginMeta.displayName}"))
@@ -26,8 +26,8 @@ class MagentaCmd(private val magenta: Magenta) {
         commandSender.sendMessage(ModernText.miniModernText("<blue>―――――"))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload config")
+    @Permission("magenta.plugin.reload")
+    @Command("reload config")
     fun onReloadConfig(commandSender: CommandSender) {
         try {
             magenta.config.options().parseComments(true)
@@ -39,8 +39,8 @@ class MagentaCmd(private val magenta: Magenta) {
         }
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload shop")
+    @Permission("magenta.plugin.reload")
+    @Command("reload shop")
     fun onReloadShopConfig(commandSender: CommandSender) {
         magenta.shopConfig.reload()
         magenta.shopConfig.save()
@@ -50,55 +50,55 @@ class MagentaCmd(private val magenta: Magenta) {
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload mythicrewards")
+    @Permission("magenta.plugin.reload")
+    @Command("reload mythicrewards")
     fun onReloadMythicRewards(commandSender: CommandSender) {
         magenta.mmConfig.reload()
         magenta.mmConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload randomconfig")
+    @Permission("magenta.plugin.reload")
+    @Command("reload randomconfig")
     fun onReloadRandomConfig(commandSender: CommandSender) {
         magenta.randomConfig.reload()
         magenta.randomConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload citems")
+    @Permission("magenta.plugin.reload")
+    @Command("reload citems")
     fun onReloadActivationItems(commandSender: CommandSender) {
         magenta.cItems.reload()
         magenta.cItems.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload locale")
+    @Permission("magenta.plugin.reload")
+    @Command("reload locale")
     fun onReloadLocale(commandSender: CommandSender) {
         magenta.localeConfig.loadLocale("locale/cs_cz.properties")
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload kits")
+    @Permission("magenta.plugin.reload")
+    @Command("reload kits")
     fun onReloadKits(commandSender: CommandSender) {
         magenta.kitConfig.reload()
         magenta.kitConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload jails")
+    @Permission("magenta.plugin.reload")
+    @Command("reload jails")
     fun onReloadJails(commandSender: CommandSender) {
         magenta.jailConfig.reload()
         magenta.jailConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
-    @CommandPermission("magenta.plugin.reload")
-    @CommandMethod("reload chatcontrol")
+    @Permission("magenta.plugin.reload")
+    @Command("reload chatcontrol")
     fun onReloadChatControl(commandSender: CommandSender) {
         magenta.chatControl.reload()
         magenta.chatControl.save()

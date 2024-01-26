@@ -17,8 +17,8 @@ class LevelCmd(private val magenta: Magenta) {
 
     private val commandHelper = CommandHelper(magenta)
 
-    @CommandMethod("level")
-    @CommandPermission("magenta.level")
+    @Command("level")
+    @Permission("magenta.level")
     fun onLevel(player: Player) {
 
         try {
@@ -32,8 +32,8 @@ class LevelCmd(private val magenta: Magenta) {
         }
     }
 
-    @CommandMethod("level <player>")
-    @CommandPermission("magenta.level.other")
+    @Command("level <player>")
+    @Permission("magenta.level.other")
     fun onLevelOther(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
@@ -55,8 +55,8 @@ class LevelCmd(private val magenta: Magenta) {
     }
 
     @ProxiedBy("toplevels")
-    @CommandMethod("leveltop")
-    @CommandPermission("magenta.level.top")
+    @Command("leveltop")
+    @Permission("magenta.level.top")
     fun onLevelTop(commandSender: CommandSender) {
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.top.header")))
         magenta.virtualLevel.getLevels(10).toList().sortedByDescending { a -> a.second }.positionIndexed { k, v ->

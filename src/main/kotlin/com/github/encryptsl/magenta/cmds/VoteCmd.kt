@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -13,8 +13,8 @@ import org.bukkit.entity.Player
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class VoteCmd(val magenta: Magenta) {
-    @CommandMethod("vote")
-    @CommandPermission("magenta.vote")
+    @Command("vote")
+    @Permission("magenta.vote")
     fun onVote(player: Player) {
         val services: List<String> = magenta.config.getConfigurationSection("votifier.services")?.getKeys(false)
             ?.filter { service -> !service.contains("default") } ?: return
@@ -30,8 +30,8 @@ class VoteCmd(val magenta: Magenta) {
         }
     }
 
-    @CommandMethod("vote claim rewards")
-    @CommandPermission("magenta.vote.claim.rewards")
+    @Command("vote claim rewards")
+    @Permission("magenta.vote.claim.rewards")
     fun onVoteClaimRewards(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
         if (!user.getAccount().contains("votifier.rewards"))

@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -13,8 +13,8 @@ import org.bukkit.inventory.EquipmentSlot
 @CommandDescription("Provided by plugin MagentaPro")
 class HatCmd(private val magenta: Magenta) {
 
-    @CommandMethod("hat")
-    @CommandPermission("magenta.hat")
+    @Command("hat")
+    @Permission("magenta.hat")
     fun onHat(player: Player) {
         val inventory = player.inventory
         val itemInMainHand = inventory.itemInMainHand

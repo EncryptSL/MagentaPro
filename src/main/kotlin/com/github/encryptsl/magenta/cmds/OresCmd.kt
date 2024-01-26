@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Command
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -18,8 +18,8 @@ class OresCmd(private val magenta: Magenta) {
 
     private val shopUI: ShopUI by lazy { ShopUI(magenta) }
 
-    @CommandMethod("ores")
-    @CommandPermission("magenta.ores.progress")
+    @Command("ores")
+    @Permission("magenta.ores.progress")
     fun onOresProgress(player: Player) {
         magenta.schedulerMagenta.doSync(magenta) {
             openProgress(player)

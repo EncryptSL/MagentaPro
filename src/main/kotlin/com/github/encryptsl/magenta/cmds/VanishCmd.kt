@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.cmds
 
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -18,8 +18,8 @@ class VanishCmd(private val magenta: Magenta) {
 
     private val commandHelper by lazy { CommandHelper(magenta) }
 
-    @CommandMethod("vanish")
-    @CommandPermission("magenta.vanish")
+    @Command("vanish")
+    @Permission("magenta.vanish")
     fun onVanish(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
         val isVanished = user.getAccount().getBoolean("vanished")
@@ -41,8 +41,8 @@ class VanishCmd(private val magenta: Magenta) {
         }
     }
 
-    @CommandMethod("vanish <player>")
-    @CommandPermission("magenta.vanish.other")
+    @Command("vanish <player>")
+    @Permission("magenta.vanish.other")
     fun onVanishOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val user = magenta.user.getUser(target.uniqueId)
         val isVanished = user.getAccount().getBoolean("vanished")

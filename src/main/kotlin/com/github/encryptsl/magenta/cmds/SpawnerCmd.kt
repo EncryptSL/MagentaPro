@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.cmds
 
+import cloud.commandframework.annotation.specifier.Range
 import cloud.commandframework.annotations.Argument
+import cloud.commandframework.annotations.Command
 import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.CommandMethod
-import cloud.commandframework.annotations.CommandPermission
-import cloud.commandframework.annotations.specifier.Range
+import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -22,8 +22,8 @@ import org.bukkit.inventory.meta.BlockStateMeta
 @CommandDescription("Provided by plugin MagentaPro")
 class SpawnerCmd(private val magenta: Magenta) {
 
-    @CommandMethod("spawner set <type>")
-    @CommandPermission("magenta.spawner.set")
+    @Command("spawner set <type>")
+    @Permission("magenta.spawner.set")
     fun onSpawnerSet(player: Player, @Argument(value = "type", suggestions = "mobs") entity: EntityType) {
         val block = player.getTargetBlock(null, 10)
 
@@ -37,8 +37,8 @@ class SpawnerCmd(private val magenta: Magenta) {
         player.sendMessage(ModernText.miniModernText("<green>Spawner is now type ${entity.name}"))
     }
 
-    @CommandMethod("spawner give <type> <amount> <player>")
-    @CommandPermission("magenta.spawner.give")
+    @Command("spawner give <type> <amount> <player>")
+    @Permission("magenta.spawner.give")
     fun onSpawnerGive(
         commandSender: CommandSender,
         @Argument(value = "type", suggestions = "mobs") entity: EntityType,

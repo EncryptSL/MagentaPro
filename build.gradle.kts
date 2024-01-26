@@ -35,8 +35,8 @@ dependencies {
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.7")
-    implementation("cloud.commandframework:cloud-paper:1.8.4")
-    implementation("cloud.commandframework:cloud-annotations:1.8.4")
+    implementation("cloud.commandframework:cloud-paper:2.0.0-SNAPSHOT")
+    implementation("cloud.commandframework:cloud-annotations:2.0.0-SNAPSHOT")
 }
 tasks {
     build {

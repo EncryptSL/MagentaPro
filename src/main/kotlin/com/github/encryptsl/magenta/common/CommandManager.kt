@@ -1,12 +1,11 @@
 package com.github.encryptsl.magenta.common
 
+import cloud.commandframework.SenderMapper
 import cloud.commandframework.annotations.AnnotationParser
-import cloud.commandframework.arguments.parser.ParserParameters
-import cloud.commandframework.arguments.parser.StandardParameters
 import cloud.commandframework.bukkit.CloudBukkitCapabilities
-import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator
-import cloud.commandframework.meta.CommandMeta
+import cloud.commandframework.execution.ExecutionCoordinator
 import cloud.commandframework.paper.PaperCommandManager
+import cloud.commandframework.suggestion.Suggestion
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.cmds.*
@@ -17,25 +16,23 @@ import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import java.util.function.Function
+import java.util.concurrent.CompletableFuture
 
 
 class CommandManager(private val magenta: Magenta) {
 
     private fun createCommandManager(): PaperCommandManager<CommandSender> {
-        val executionCoordinatorFunction = AsynchronousCommandExecutionCoordinator.builder<CommandSender>().build()
-        val mapperFunction = Function.identity<CommandSender>()
+        val executionCoordinatorFunction = ExecutionCoordinator.builder<CommandSender>().build()
+        val mapperFunction = SenderMapper.identity<CommandSender>()
         val commandManager = PaperCommandManager(
             magenta,
             executionCoordinatorFunction,
             mapperFunction,
-            mapperFunction
         )
-        if (commandManager.hasCapability(CloudBukkitCapabilities.BRIGADIER)) {
+        if (commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             commandManager.registerBrigadier()
-            commandManager.brigadierManager()?.setNativeNumberSuggestions(false)
-        }
-        if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+            commandManager.brigadierManager().setNativeNumberSuggestions(false)
+        } else if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
             (commandManager as PaperCommandManager<*>).registerAsynchronousCompletions()
         }
         return commandManager
@@ -43,93 +40,98 @@ class CommandManager(private val magenta: Magenta) {
 
 
     private fun createAnnotationParser(commandManager: PaperCommandManager<CommandSender>): AnnotationParser<CommandSender> {
-        val commandMetaFunction = Function<ParserParameters, CommandMeta> { p: ParserParameters ->
-            CommandMeta.simple() // Decorate commands with descriptions
-                .with(CommandMeta.DESCRIPTION, p[StandardParameters.DESCRIPTION, "No Description"])
-                .build()
-        }
         return AnnotationParser(
             commandManager,
             CommandSender::class.java,
-            commandMetaFunction /* Mapper for command meta instances */
         )
     }
 
     private fun registerSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
         commandManager.parserRegistry().registerSuggestionProvider("gamemodes") {sender, _ ->
-            GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { it.name.lowercase() }
+            CompletableFuture.completedFuture(
+                GameMode.entries
+                    .filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }
+                    .map { Suggestion.simple(it.name) }
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("players") {_, input ->
-            Bukkit.getOnlinePlayers().toList().filter { p -> p.name.startsWith(input, ignoreCase = true) }.mapNotNull { it.name }
+            CompletableFuture.completedFuture(Bukkit.getOnlinePlayers()
+                .filter { p -> p.name.startsWith(input.input(), true) }
+                .map { Suggestion.simple(it.name) }
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("offlinePlayers") { _, input ->
-            Bukkit.getOfflinePlayers().toList()
-                .filter { p ->
-                    p.name?.startsWith(input, ignoreCase = true) ?: false
-                }
-                .mapNotNull { it.name }
+            CompletableFuture.completedFuture(Bukkit.getOfflinePlayers()
+                .filter { p -> p.name?.startsWith(input.input(), true) ?: false }
+                .map { Suggestion.simple(it.name ?: it.uniqueId.toString()) }
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("citems") {_, _ ->
-            magenta.cItems.getConfig().getConfigurationSection("citems")
-                ?.getKeys(false)?.mapNotNull { a -> a.toString() } ?: emptyList()
+            CompletableFuture.completedFuture(magenta.cItems.getConfig().getConfigurationSection("citems")
+                ?.getKeys(false)
+                ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!)
         }
         commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
-            magenta.kitConfig.getKit().getConfigurationSection("kits")?.getKeys(false)
-                ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
-                ?.mapNotNull { a -> a.toString() } ?: emptyList()
+            CompletableFuture.completedFuture(
+                magenta.kitConfig.getKit().getConfigurationSection("kits")?.getKeys(false)
+                    ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
+                    ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("jails") { _, _ ->
-            magenta.jailConfig.getJail().getConfigurationSection("jails")
-                ?.getKeys(false)
-                ?.mapNotNull { it.toString() } ?: emptyList()
+            CompletableFuture.completedFuture(
+                magenta.jailConfig.getJail().getConfigurationSection("jails")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
-            val player = sender.sender as Player
-            return@registerSuggestionProvider magenta.homeModel.getHomesByOwner(player).map { s -> s.homeName }
+            val player = sender.sender() as Player
+            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player).map { s -> Suggestion.simple(s.homeName) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
-            magenta.warpModel.getWarps().map { s -> s.warpName }
+            CompletableFuture.completedFuture(magenta.warpModel.getWarps().map { s -> Suggestion.simple(s.warpName) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("tags") {_, _ ->
-            magenta.randomConfig.getConfig().getConfigurationSection("tags")
-                ?.getKeys(false)
-                ?.mapNotNull { it.toString() } ?: emptyList()
+            CompletableFuture.completedFuture(
+                magenta.randomConfig.getConfig().getConfigurationSection("tags")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
-            materials()
+            CompletableFuture.completedFuture(Material.entries.map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
-            entities()
+            CompletableFuture.completedFuture(EntityType.entries.map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("shops") {_, _ ->
-            magenta.shopConfig.getConfig().getConfigurationSection("shop.categories")
-                ?.getKeys(false)
-                ?.mapNotNull { it.toString() } ?: emptyList()
+            CompletableFuture.completedFuture(
+                magenta.shopConfig.getConfig().getConfigurationSection("shop.categories")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("creditshops") {_, _ ->
-            magenta.creditShopConfig.getConfig().getConfigurationSection("shop.categories")
-                ?.getKeys(false)
-                ?.mapNotNull { it.toString() } ?: emptyList()
+            CompletableFuture.completedFuture(
+                magenta.creditShopConfig.getConfig().getConfigurationSection("shop.categories")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("services") {_, _ ->
-            magenta.config.getConfigurationSection("votifier.services")
-                ?.getKeys(false)
-                ?.mapNotNull { VoteHelper.replaceService(it.toString(), "_", ".") } ?: emptyList()
+            CompletableFuture.completedFuture(
+                magenta.config.getConfigurationSection("votifier.services")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(VoteHelper.replaceService(it.toString(), "_", ".")) }!!
+            )
         }
         commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
-            ReportCategories.entries.map { it.name }
+            CompletableFuture.completedFuture(ReportCategories.entries.map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("worlds") {_, _ ->
-            Bukkit.getWorlds().map { it.name }
+            CompletableFuture.completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
         }
-    }
-
-    private fun materials(): List<String> {
-        return Material.entries.map { it.name }
-    }
-
-    private fun entities(): List<String> {
-        return EntityType.entries.map { it.name }
     }
 
     fun registerCommands() {
