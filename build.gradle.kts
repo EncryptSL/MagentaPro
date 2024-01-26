@@ -56,7 +56,6 @@ tasks {
             relocate("dev.triumphteam.gui", "com.github.encryptsl.magenta.libs.gui")
             relocate("solar.squeres", "com.github.encryptsl.libs.solar")
         }
-        destinationDirectory = File("C:\\Users\\Rydlo\\Documents\\PaperServers\\1.20.1\\plugins")
     }
 }
 
