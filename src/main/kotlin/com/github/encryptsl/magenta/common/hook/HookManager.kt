@@ -38,7 +38,7 @@ class HookManager(private val magenta: Magenta) {
             magenta.logger.info("###################################")
             magenta.logger.info("#        LuckPerms registered     #")
             magenta.logger.info("###################################")
-            LuckPermsAPI(magenta).setupLuckPerms()
+            LuckPermsAPI().setupLuckPerms()
         } else {
             magenta.logger.info("###################################")
             magenta.logger.info("#        LuckPerms not Found      #")

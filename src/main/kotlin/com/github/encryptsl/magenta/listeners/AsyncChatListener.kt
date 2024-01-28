@@ -11,7 +11,6 @@ import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
-import net.luckperms.api.cacheddata.CachedMetaData
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -20,7 +19,7 @@ import org.bukkit.event.Listener
 class AsyncChatListener(private val magenta: Magenta) : Listener {
 
     private val mentionManager: MentionManager by lazy { MentionManager(magenta) }
-    private val luckPermsHook: LuckPermsAPI by lazy { LuckPermsAPI(magenta) }
+    private val luckPermsHook: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun chat(event: AsyncChatEvent) {
@@ -40,10 +39,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
             event.isCancelled = true
         }
 
-        val metaData: CachedMetaData = luckPermsHook.getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
-        val group = metaData.primaryGroup ?: ""
-
-        val format = magenta.config.getString("chat.group-formats.$group") ?: magenta.config.getString("chat.default-format").toString()
+        val format = magenta.config.getString("chat.group-formats.${luckPermsHook.getGroup(player)}") ?: magenta.config.getString("chat.default-format").toString()
         val suggestCommand = magenta.config.getString("chat.suggestCommand") ?: ""
 
         event.renderer { source, _, ms, _ ->
@@ -57,10 +53,10 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
                             suggestCommand.replace("{name}", source.name).replace("{player}", source.name))
                         )
                     ),
-                    Placeholder.component("prefix", Component.text(magenta.stringUtils.colorize(metaData.prefix ?: "")).hoverEvent(hoverText(source))),
-                    Placeholder.parsed("suffix", magenta.stringUtils.colorize(metaData.suffix ?: "")),
-                    Placeholder.parsed("username_color", magenta.stringUtils.colorize(metaData.getMetaValue("username-color") ?: "")),
-                    Placeholder.parsed("message_color", magenta.stringUtils.colorize(metaData.getMetaValue("message-color") ?: "")),
+                    Placeholder.component("prefix", Component.text(magenta.stringUtils.colorize(luckPermsHook.getPrefix(player))).hoverEvent(hoverText(source))),
+                    Placeholder.parsed("suffix", magenta.stringUtils.colorize(luckPermsHook.getSuffix(player))),
+                    Placeholder.parsed("username_color", magenta.stringUtils.colorize(luckPermsHook.getMetaValue(player, "username-color"))),
+                    Placeholder.parsed("message_color", magenta.stringUtils.colorize(luckPermsHook.getMetaValue(player, "message-color"))),
                     Placeholder.parsed("message", if (player.hasPermission("magenta.chat.colors")) magenta.stringUtils.colorize(plainText) else plainText)
                 )
             )
