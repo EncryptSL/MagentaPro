@@ -1,10 +1,5 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotation.specifier.Greedy
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
@@ -16,6 +11,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotation.specifier.Greedy
+import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin EncryptSL")
@@ -27,7 +24,7 @@ class ReportCmd(private val magenta: Magenta) {
         player: Player,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "category", suggestions = "reportCategories") category: ReportCategories,
-        @Argument(value = "message") @Greedy message: String = "Zpráva není specifikovaná."
+        @Argument(value = "message") @Default("Zpráva není specifikovaná.") @Greedy message: String
     ) {
         if (player.name.equals(target.name, ignoreCase = true))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.yourself")))
