@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.Command
-import cloud.commandframework.annotations.Permission
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder

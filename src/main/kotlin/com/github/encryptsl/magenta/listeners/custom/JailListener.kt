@@ -14,7 +14,7 @@ import org.bukkit.event.Listener
 
 class JailListener(private val magenta: Magenta) : Listener {
 
-    private val luckPerms: LuckPermsAPI by lazy { LuckPermsAPI(magenta) }
+    private val luckPerms: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @EventHandler
     fun onJail(event: JailEvent) {

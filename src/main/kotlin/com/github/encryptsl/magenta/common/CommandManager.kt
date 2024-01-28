@@ -1,11 +1,5 @@
 package com.github.encryptsl.magenta.common
 
-import cloud.commandframework.SenderMapper
-import cloud.commandframework.annotations.AnnotationParser
-import cloud.commandframework.bukkit.CloudBukkitCapabilities
-import cloud.commandframework.execution.ExecutionCoordinator
-import cloud.commandframework.paper.PaperCommandManager
-import cloud.commandframework.suggestion.Suggestion
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.cmds.*
@@ -16,6 +10,12 @@ import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.incendo.cloud.SenderMapper
+import org.incendo.cloud.annotations.AnnotationParser
+import org.incendo.cloud.bukkit.CloudBukkitCapabilities
+import org.incendo.cloud.execution.ExecutionCoordinator
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
 import java.util.concurrent.CompletableFuture
 
 
@@ -132,51 +132,56 @@ class CommandManager(private val magenta: Magenta) {
         commandManager.parserRegistry().registerSuggestionProvider("worlds") {_, _ ->
             CompletableFuture.completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
         }
+        commandManager.parserRegistry().registerSuggestionProvider("flags") {_, _ ->
+            CompletableFuture.completedFuture(listOf("true", "false", "t", "f").map { Suggestion.simple(it) })
+        }
     }
 
     fun registerCommands() {
-        magenta.logger.info("Registering commands with Cloud Command Framework !")
+        try {
+            magenta.logger.info("Registering commands with Cloud Command Framework !")
+            val commandManager = createCommandManager()
+            registerSuggestionProviders(commandManager)
+            val annotationParser = createAnnotationParser(commandManager)
 
-        val commandManager = createCommandManager()
-
-        registerSuggestionProviders(commandManager)
-
-        val annotationParser = createAnnotationParser(commandManager)
-        annotationParser.parse(AfkCmd(magenta))
-        annotationParser.parse(BackCmd(magenta))
-        annotationParser.parse(BroadcastCmd(magenta))
-        annotationParser.parse(CommandItemsCmd(magenta))
-        annotationParser.parse(ContainersCmd(magenta))
-        annotationParser.parse(EnderChestCmd(magenta))
-        annotationParser.parse(FeedbackCmd(magenta))
-        annotationParser.parse(FlyCmd(magenta))
-        annotationParser.parse(GmCmd(magenta))
-        annotationParser.parse(HatCmd(magenta))
-        annotationParser.parse(HealCmd(magenta))
-        annotationParser.parse(HomeCmd(magenta))
-        annotationParser.parse(IgnoreCmd(magenta))
-        annotationParser.parse(InvseeCmd(magenta))
-        annotationParser.parse(JailCmd(magenta))
-        annotationParser.parse(KitCmd(magenta))
-        annotationParser.parse(LevelCmd(magenta))
-        annotationParser.parse(LevelsCmd(magenta))
-        annotationParser.parse(LightningCmd(magenta))
-        annotationParser.parse(MagentaCmd(magenta))
-        annotationParser.parse(NickCmd(magenta))
-        annotationParser.parse(OresCmd(magenta))
-        annotationParser.parse(RandomCmd(magenta))
-        annotationParser.parse(MsgCmd(magenta))
-        annotationParser.parse(RepairCmd(magenta))
-        annotationParser.parse(ReportCmd(magenta))
-        annotationParser.parse(ShopCmd(magenta))
-        annotationParser.parse(SocialSpyCmd(magenta))
-        annotationParser.parse(SpawnerCmd(magenta))
-        annotationParser.parse(TpCmd(magenta))
-        annotationParser.parse(VanishCmd(magenta))
-        annotationParser.parse(VoteCmd(magenta))
-        annotationParser.parse(VotePartyCmd(magenta))
-        annotationParser.parse(VotesCmd(magenta))
-        annotationParser.parse(WarpCmd(magenta))
+            annotationParser.parse(AfkCmd(magenta))
+            annotationParser.parse(BackCmd(magenta))
+            annotationParser.parse(BroadcastCmd(magenta))
+            annotationParser.parse(CommandItemsCmd(magenta))
+            annotationParser.parse(ContainersCmd(magenta))
+            annotationParser.parse(EnderChestCmd(magenta))
+            annotationParser.parse(FeedbackCmd(magenta))
+            annotationParser.parse(FlyCmd(magenta))
+            annotationParser.parse(GmCmd(magenta))
+            annotationParser.parse(HatCmd(magenta))
+            annotationParser.parse(HealCmd(magenta))
+            annotationParser.parse(HomeCmd(magenta))
+            annotationParser.parse(IgnoreCmd(magenta))
+            annotationParser.parse(InvseeCmd(magenta))
+            annotationParser.parse(JailCmd(magenta))
+            annotationParser.parse(KitCmd(magenta))
+            annotationParser.parse(LevelCmd(magenta))
+            annotationParser.parse(LevelsCmd(magenta))
+            annotationParser.parse(LightningCmd(magenta))
+            annotationParser.parse(MagentaCmd(magenta))
+            annotationParser.parse(NickCmd(magenta))
+            annotationParser.parse(OresCmd(magenta))
+            annotationParser.parse(RandomCmd(magenta))
+            annotationParser.parse(MsgCmd(magenta))
+            annotationParser.parse(RepairCmd(magenta))
+            annotationParser.parse(ReportCmd(magenta))
+            annotationParser.parse(ShopCmd(magenta))
+            annotationParser.parse(SocialSpyCmd(magenta))
+            annotationParser.parse(SpawnerCmd(magenta))
+            annotationParser.parse(TpCmd(magenta))
+            annotationParser.parse(VanishCmd(magenta))
+            annotationParser.parse(VoteCmd(magenta))
+            annotationParser.parse(VotePartyCmd(magenta))
+            annotationParser.parse(VotesCmd(magenta))
+            annotationParser.parse(WarpCmd(magenta))
+        } catch (e : NoClassDefFoundError) {
+            magenta.logger.severe(e.message ?: e.localizedMessage)
+        }
     }
 
 }

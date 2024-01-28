@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotation.specifier.Greedy
-import cloud.commandframework.annotations.*
+import org.incendo.cloud.annotation.specifier.Greedy
+import org.incendo.cloud.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.pm.PrivateMessageEvent
 import org.bukkit.command.CommandSender

@@ -1,15 +1,12 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.Argument
-import cloud.commandframework.annotations.CommandDescription
-import cloud.commandframework.annotations.Command
-import cloud.commandframework.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
+import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -77,15 +74,14 @@ class LevelsCmd(private val magenta: Magenta) {
             )))
     }
 
-    @Command("levels add <player> <amount> points [silent]")
+    @Command("levels add <player> <amount> points")
     @Permission("magenta.levels.experience.add")
     fun onLevelPointsAdd(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int,
-        @Argument(value = "silent") silent: String?
+        @Flag(value = "silent", aliases = ["t", "f"], suggestions = "flags") silent: Boolean
     ) {
-        val s = silent?.contains("-s") ?: false
         if (!magenta.virtualLevel.hasAccount(target.uniqueId))
             return commandSender.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.error.not.account"),
@@ -100,7 +96,7 @@ class LevelsCmd(private val magenta: Magenta) {
                     Placeholder.parsed("experience", amount.toString()),
                 )))
 
-        if (s) {
+        if (silent) {
             target.player?.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.levels.success.experience.add.silent"),
                     Placeholder.parsed("experience", amount.toString())

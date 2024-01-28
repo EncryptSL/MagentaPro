@@ -1,25 +1,20 @@
 package com.github.encryptsl.magenta.common.hook.luckperms
 
-import com.github.encryptsl.magenta.Magenta
 import net.luckperms.api.LuckPerms
+import net.luckperms.api.LuckPermsProvider
+import net.luckperms.api.cacheddata.CachedMetaData
 import org.bukkit.OfflinePlayer
-import org.bukkit.plugin.ServicesManager
+import org.bukkit.entity.Player
 
-class LuckPermsAPI(private val magenta: Magenta) {
-
-    private val plugin = "LuckPerms"
-
-    private lateinit var luckPerms: LuckPerms
+class LuckPermsAPI {
 
     fun setupLuckPerms(): Boolean {
-        if (magenta.pluginManager.getPlugin(plugin) != null && magenta.pluginManager.isPluginEnabled(plugin)) {
-            val sm: ServicesManager = magenta.server.servicesManager
-            this.luckPerms = sm.load(LuckPerms::class.java)!!
-
-            return true
+        return try {
+            Class.forName("net.luckperms.api.LuckPerms")
+            true
+        } catch (e : ClassNotFoundException) {
+            false
         }
-
-        return false
     }
 
     fun hasPermission(player: OfflinePlayer, permission: String): Boolean
@@ -29,10 +24,49 @@ class LuckPermsAPI(private val magenta: Magenta) {
         return getLuckPerms().getPlayerAdapter(OfflinePlayer::class.java).getPermissionData(player).checkPermission(permission).asBoolean()
     }
 
-    fun getLuckPerms(): LuckPerms {
+    fun getGroup(player: Player): String {
         if (!setupLuckPerms())
             throw Exception("LuckPerms Missing")
 
-        return this.luckPerms
+        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val group = metaData.primaryGroup ?: ""
+
+        return group
+    }
+
+    fun getPrefix(player: Player): String {
+        if (!setupLuckPerms())
+            throw Exception("LuckPerms Missing")
+
+        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val prefix = metaData.prefix ?: ""
+
+        return prefix
+    }
+
+    fun getSuffix(player: Player): String {
+        if (!setupLuckPerms())
+            throw Exception("LuckPerms Missing")
+
+        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val suffix = metaData.suffix ?: ""
+
+        return suffix
+    }
+
+    fun getMetaValue(player: Player, value: String): String {
+        if (!setupLuckPerms())
+            throw Exception("LuckPerms Missing")
+
+        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+
+        return metaData.getMetaValue(value) ?: ""
+    }
+
+    private fun getLuckPerms(): LuckPerms {
+        if (!setupLuckPerms())
+            throw Exception("LuckPerms Missing")
+
+        return LuckPermsProvider.get()
     }
 }

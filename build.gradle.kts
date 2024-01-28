@@ -28,15 +28,15 @@ dependencies {
     compileOnly("com.zaxxer:HikariCP:5.1.0")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
     compileOnly("me.clip:placeholderapi:2.11.5")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("net.luckperms:api:5.4")
-    compileOnly("com.github.encryptsl.credit:CreditLite:1.0.4")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
+    compileOnly("com.github.encryptsl.credit:CreditLite:1.0.5")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.7")
-    implementation("cloud.commandframework:cloud-paper:2.0.0-SNAPSHOT")
-    implementation("cloud.commandframework:cloud-annotations:2.0.0-SNAPSHOT")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.1")
+    implementation("org.incendo:cloud-annotations:2.0.0-beta.1")
 }
 tasks {
     build {
@@ -51,8 +51,8 @@ tasks {
         enabled = false
     }
     shadowJar {
+        relocate("cloud.commandframework", "cloud-core")
         minimize {
-            relocate("cloud.commandframework", "com.github.encryptsl.magenta.libs.cloud")
             relocate("dev.triumphteam.gui", "com.github.encryptsl.magenta.libs.gui")
             relocate("solar.squeres", "com.github.encryptsl.libs.solar")
         }

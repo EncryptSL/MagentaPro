@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
-import cloud.commandframework.annotations.*
+import org.incendo.cloud.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
