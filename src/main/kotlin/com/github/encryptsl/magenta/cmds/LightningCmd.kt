@@ -12,7 +12,7 @@ import org.incendo.cloud.annotations.*
 class LightningCmd(private val magenta: Magenta) {
     @Command("lightning|thor <player>")
     @Permission("magenta.lightning")
-    fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Flag(value = "damage", aliases = ["t", "f"], suggestions = "flags") damage: Boolean) {
+    fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Flag(value = "damage", aliases = ["d"]) damage: Boolean) {
         magenta.schedulerMagenta.doSync(magenta) {
             if (damage) {
                 target.world.strikeLightning(target.location)

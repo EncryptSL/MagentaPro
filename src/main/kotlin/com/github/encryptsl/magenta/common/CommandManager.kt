@@ -132,9 +132,6 @@ class CommandManager(private val magenta: Magenta) {
         commandManager.parserRegistry().registerSuggestionProvider("worlds") {_, _ ->
             CompletableFuture.completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
         }
-        commandManager.parserRegistry().registerSuggestionProvider("flags") {_, _ ->
-            CompletableFuture.completedFuture(listOf("true", "false", "t", "f").map { Suggestion.simple(it) })
-        }
     }
 
     fun registerCommands() {

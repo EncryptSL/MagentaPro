@@ -80,7 +80,7 @@ class LevelsCmd(private val magenta: Magenta) {
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int,
-        @Flag(value = "silent", aliases = ["t", "f"], suggestions = "flags") silent: Boolean
+        @Flag(value = "silent", aliases = ["s"]) silent: Boolean
     ) {
         if (!magenta.virtualLevel.hasAccount(target.uniqueId))
             return commandSender.sendMessage(
