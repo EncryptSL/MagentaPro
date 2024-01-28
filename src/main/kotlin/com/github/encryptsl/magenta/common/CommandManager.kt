@@ -60,10 +60,9 @@ class CommandManager(private val magenta: Magenta) {
                 .map { Suggestion.simple(it.name) }
             )
         }
-        commandManager.parserRegistry().registerSuggestionProvider("offlinePlayers") { _, input ->
+        commandManager.parserRegistry().registerSuggestionProvider("offlinePlayers") { _, _ ->
             CompletableFuture.completedFuture(Bukkit.getOfflinePlayers()
-                .filter { p -> p.name?.startsWith(input.input(), true) ?: false }
-                .map { Suggestion.simple(it.name ?: it.uniqueId.toString()) }
+                .map { Suggestion.simple(it.name.toString()) }
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("citems") {_, _ ->

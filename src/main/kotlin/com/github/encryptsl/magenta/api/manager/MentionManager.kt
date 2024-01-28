@@ -27,7 +27,9 @@ class MentionManager(private val magenta: Magenta) {
 
                     magenta.schedulerMagenta.doAsync(magenta) {
                         Bukkit.getPlayer(m.replace("@", ""))?.let {
-                            magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
+                            magenta.schedulerMagenta.doSync(magenta) {
+                                magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
+                            }
                         }
                     }
                     val mentioned =
