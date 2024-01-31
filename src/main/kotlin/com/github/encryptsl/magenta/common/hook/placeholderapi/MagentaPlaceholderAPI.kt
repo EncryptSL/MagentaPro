@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common.hook.placeholderapi
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.level.LevelFormula
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.Bukkit
@@ -23,7 +22,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
         val args = identifier.split("_")
         val string = args.getOrNull(1)?.toString()
         val rank = args.getOrNull(3)?.toIntOrNull()
-        val account = UserAccount(magenta, player.uniqueId)
+        val user = magenta.user.getUser(player.uniqueId)
         val levelEntity = magenta.virtualLevel.getLevel(player.uniqueId)
 
 
@@ -35,8 +34,8 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
             "afk" -> magenta.afk.isAfk(player.uniqueId).toString()
             "level" -> levelEntity.level.toString()
             "level_progress" -> LevelFormula.levelProgress(levelEntity.level, levelEntity.experience).toString()
-            "socialspy" -> account.getAccount().getBoolean("socialspy").toString()
-            "vanished" -> account.getAccount().getBoolean("vanished").toString()
+            "socialspy" -> user.isSocialSpy().toString()
+            "vanished" -> user.isVanished().toString()
             "votes" -> magenta.vote.getPlayerVote(player.uniqueId).toString()
             "total_votes" -> magenta.vote.totalVotes().toString()
             "voteparty_now" -> magenta.voteParty.getVoteParty().currentVotes.toString()

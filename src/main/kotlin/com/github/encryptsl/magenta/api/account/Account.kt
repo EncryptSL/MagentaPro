@@ -15,6 +15,7 @@ interface Account {
     fun isJailed(): Boolean
     fun isSocialSpy(): Boolean
     fun isAfk(): Boolean
+    fun isVanished(): Boolean
     fun getVotifierRewards(): MutableList<String>
     fun getLastLocation(): Location
     fun getAccount(): FileConfiguration

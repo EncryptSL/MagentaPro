@@ -90,6 +90,10 @@ class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Accoun
         return getAccount().getBoolean("afk")
     }
 
+    override fun isVanished(): Boolean {
+        return getAccount().getBoolean("vanished")
+    }
+
     override fun getVotifierRewards(): MutableList<String> {
         return getAccount().getStringList("votifier.rewards")
     }
