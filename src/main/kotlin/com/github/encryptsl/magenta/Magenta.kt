@@ -185,4 +185,8 @@ class Magenta : JavaPlugin() {
         logger.info("Bukkit listeners registered (${list.size}) in time $time -> $value")
         list.removeAll(list.toSet())
     }
+
+    fun getUserAPI(): User {
+        return user
+    }
 }
