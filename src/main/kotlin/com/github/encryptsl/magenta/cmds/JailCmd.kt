@@ -1,7 +1,5 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotation.specifier.Greedy
-import org.incendo.cloud.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.jail.*
@@ -11,6 +9,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotation.specifier.Greedy
+import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
 @CommandDescription("Provived by plugin MagentaPro")
@@ -64,18 +64,15 @@ class JailCmd(private val magenta: Magenta) {
 
         if (commandSender is Player) {
             if (target == null) {
-                val user = magenta.user.getUser(commandSender.uniqueId)
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
                     Placeholder.parsed("jail", jailName)
                 )))
 
                 magenta.schedulerMagenta.doSync(magenta) {
-                    magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, user.jailManager.getJailLocation(jailName)))
+                    magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
                 }
                 return
             }
-            val targetAccount = magenta.user.getUser(target.uniqueId)
-
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
                 Placeholder.parsed("jail", jailName)
             )))
@@ -86,12 +83,11 @@ class JailCmd(private val magenta: Magenta) {
             )))
 
             magenta.schedulerMagenta.doSync(magenta) {
-                magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, targetAccount.jailManager.getJailLocation(jailName)))
+                magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
             }
         } else {
             if (target == null) return
 
-            val targetAccount = magenta.user.getUser(target.uniqueId)
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
                 Placeholder.parsed("jail", jailName)
             )))
@@ -102,7 +98,7 @@ class JailCmd(private val magenta: Magenta) {
             )))
 
             magenta.schedulerMagenta.doSync(magenta) {
-                magenta.pluginManager.callEvent(JailTeleportEvent(target, targetAccount.jailManager.getJailLocation(jailName)))
+                magenta.pluginManager.callEvent(JailTeleportEvent(target, magenta.jailManager.getJailLocation(jailName)))
             }
         }
 

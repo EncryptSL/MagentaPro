@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta.common.hook.creditlite
 
-import com.github.encryptsl.credit.CreditLite
+import com.github.encryptsl.credit.api.economy.CreditEconomy
 import com.github.encryptsl.magenta.Magenta
 import org.bukkit.entity.Player
 
@@ -19,14 +19,14 @@ class CreditLiteHook(private val magenta: Magenta) {
         if (!setupCreditLite())
             throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        return CreditLite().getAPI().has(player, amount)
+        return CreditEconomy.has(player, amount)
     }
 
     fun getCredits(player: Player): Double {
         if (!setupCreditLite())
             throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        return CreditLite().getAPI().getBalance(player)
+        return CreditEconomy.getBalance(player)
     }
 
     fun depositCredits(player: Player, amount: Double)
@@ -34,14 +34,13 @@ class CreditLiteHook(private val magenta: Magenta) {
         if (!setupCreditLite())
             throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        CreditLite().getAPI().deposit(player, amount)
+        CreditEconomy.deposit(player, amount)
     }
 
     fun withdrawCredits(player: Player, amount: Double) {
         if (!setupCreditLite())
             throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        CreditLite().getAPI().withdraw(player, amount)
+        CreditEconomy.withdraw(player, amount)
     }
-
 }

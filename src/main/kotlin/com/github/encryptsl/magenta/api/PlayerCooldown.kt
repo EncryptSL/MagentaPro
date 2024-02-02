@@ -9,7 +9,6 @@ class PlayerCooldown(val uuid: UUID, private val userAccount: UserAccount) {
 
     fun setDelay(duration: Duration?, type: String) {
         userAccount.getAccount().set("timestamps.$type", Instant.now().plus(duration).toEpochMilli())
-
     }
 
     // Check if cooldown has expired

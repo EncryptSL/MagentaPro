@@ -1,23 +1,25 @@
 package com.github.encryptsl.magenta.api.account
 
-import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PlayerCooldown
-import com.github.encryptsl.magenta.api.manager.JailManager
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
+import java.time.Duration
 import java.util.*
 
-class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Account {
+class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account {
 
-    private val configUtil = ConfigUtil(magenta, "/players/$uuid.yml")
+    private val configUtil = ConfigUtil(plugin,"/players/$uuid.yml")
+    private val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
+
     val cooldownManager: PlayerCooldown by lazy { PlayerCooldown(uuid, this) }
-    val jailManager: JailManager by lazy { JailManager(magenta, this) }
 
     override fun createDefaultData(player: Player) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        schedulerMagenta.doAsync(plugin) {
             getAccount().set("teleportenabled", true)
             getAccount().set("godmode", false)
             getAccount().set("jailed", false)
@@ -41,7 +43,7 @@ class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Accoun
     }
 
     override fun saveLastLocation(player: Player) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        schedulerMagenta.doAsync(plugin) {
             getAccount().set("lastlocation.world-name", player.world.name)
             getAccount().set("lastlocation.x", player.location.x)
             getAccount().set("lastlocation.y", player.location.y)
@@ -52,21 +54,32 @@ class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Accoun
         }
     }
     override fun saveQuitData(player: Player) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        schedulerMagenta.doAsync(plugin) {
             getAccount().set("timestamps.logout", System.currentTimeMillis())
             save()
         }
     }
 
+    override fun setJailTimeout(seconds: Long) {
+        cooldownManager.setDelay(Duration.ofSeconds(seconds), "jail")
+        save()
+    }
+
+    override fun setOnlineTime(millis: Long) {
+        val onlineTime = plugin.config.getBoolean("online-jail-time")
+        set("timestamps.onlinejail", if (onlineTime) millis else 0)
+        save()
+    }
+
     override fun set(path: String, value: Any?) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        schedulerMagenta.doAsync(plugin) {
             getAccount().set(path, value)
             save()
         }
     }
 
     override fun set(path: String, list: MutableList<Any>) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        schedulerMagenta.doAsync(plugin) {
             list.forEach { item ->
                 getAccount().set(path, item)
             }
@@ -79,7 +92,7 @@ class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Accoun
     }
 
     override fun isJailed(): Boolean {
-        return getAccount().getBoolean("jailed") || jailManager.hasPunish()
+        return getAccount().getBoolean("jailed") || hasPunish()
     }
 
     override fun isSocialSpy(): Boolean {
@@ -92,6 +105,22 @@ class UserAccount(private val magenta: Magenta, private val uuid: UUID) : Accoun
 
     override fun isVanished(): Boolean {
         return getAccount().getBoolean("vanished")
+    }
+
+    override fun hasPunish(): Boolean {
+        val onlineTime = plugin.config.getBoolean("online-jail-time")
+
+        return if (onlineTime) getOnlineJailedTime() > 0 else cooldownManager.hasDelay("jail")
+    }
+
+    override fun getOnlineJailedTime(): Long {
+        return getAccount().getLong("timestamps.onlinejail")
+    }
+
+    override fun getRemainingTime(): Long {
+        val onlineTime = plugin.config.getBoolean("online-jail-time")
+
+        return if (onlineTime) getOnlineJailedTime().minus(1) else cooldownManager.getRemainingDelay("jail").seconds
     }
 
     override fun getVotifierRewards(): MutableList<String> {

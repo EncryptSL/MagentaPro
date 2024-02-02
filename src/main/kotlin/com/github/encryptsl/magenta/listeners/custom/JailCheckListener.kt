@@ -19,7 +19,7 @@ class JailCheckListener(private val magenta: Magenta) : Listener {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.jailed")))
 
             magenta.schedulerMagenta.doSync(magenta) {
-                player.teleport(user.jailManager.getJailLocation(randomJail))
+                player.teleport(magenta.jailManager.getJailLocation(randomJail))
             }
             event.isCancelled = true
         } else {

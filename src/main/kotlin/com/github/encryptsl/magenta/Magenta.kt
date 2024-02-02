@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
 import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
+import com.github.encryptsl.magenta.api.manager.JailManager
 import com.github.encryptsl.magenta.api.manager.KitManager
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
@@ -32,7 +33,8 @@ import java.util.concurrent.ThreadLocalRandom
 import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
 
-class Magenta : JavaPlugin() {
+open class Magenta : JavaPlugin() {
+
 
     lateinit var paperContainerProvider: PaperContainerProvider
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
@@ -62,6 +64,7 @@ class Magenta : JavaPlugin() {
     val chatControl: ChatControlConfig by lazy { ChatControlConfig(this) }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
+    val jailManager: JailManager by lazy { JailManager(jailConfig) }
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
@@ -184,9 +187,5 @@ class Magenta : JavaPlugin() {
 
         logger.info("Bukkit listeners registered (${list.size}) in time $time -> $value")
         list.removeAll(list.toSet())
-    }
-
-    fun getUserAPI(): User {
-        return user
     }
 }

@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.api.account
 
-import com.github.encryptsl.magenta.Magenta
+import org.bukkit.plugin.Plugin
 import java.util.*
 
-class User(private val magenta: Magenta) {
+class User(private val plugin: Plugin) {
     fun getUser(uuid: UUID): UserAccount {
-        return UserAccount(magenta, uuid)
+        return UserAccount(plugin, uuid)
     }
 }

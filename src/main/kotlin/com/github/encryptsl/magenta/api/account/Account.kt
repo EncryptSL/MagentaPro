@@ -11,11 +11,19 @@ interface Account {
     fun saveQuitData(player: Player)
     fun set(path: String, value: Any?)
     fun set(path: String, list: MutableList<Any>)
+    fun setJailTimeout(seconds: Long)
+    fun setOnlineTime(millis: Long)
     fun save()
     fun isJailed(): Boolean
     fun isSocialSpy(): Boolean
     fun isAfk(): Boolean
     fun isVanished(): Boolean
+
+    fun getOnlineJailedTime(): Long
+
+    fun getRemainingTime(): Long
+    fun hasPunish(): Boolean
+
     fun getVotifierRewards(): MutableList<String>
     fun getLastLocation(): Location
     fun getAccount(): FileConfiguration

@@ -60,8 +60,8 @@ class JailListener(private val magenta: Magenta) : Listener {
             Placeholder.parsed("player", target.name ?: target.uniqueId.toString()),
             Placeholder.parsed("reason", reason.toString()),
         )))
-        user.jailManager.setJailTimeout(jailTime)
-        user.jailManager.setOnlineTime(jailTime)
+        user.setJailTimeout(jailTime)
+        user.setOnlineTime(jailTime)
     }
 
 }

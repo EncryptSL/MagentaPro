@@ -12,14 +12,14 @@ class JailCountDownTask(private val magenta: Magenta) : Runnable {
     override fun run() {
         magenta.server.onlinePlayers.forEach { player ->
             val account = magenta.user.getUser(player.uniqueId)
-            val timeLeft = account.jailManager.remainingTime()
-            if (account.jailManager.hasPunish()) {
+            val timeLeft = account.getRemainingTime()
+            if (account.hasPunish()) {
                 if (timeLeft == 0L) {
                     magenta.schedulerMagenta.doSync(magenta) {
                         magenta.pluginManager.callEvent(JailPardonEvent(player))
                     }
                 }
-                account.jailManager.setOnlineTime(timeLeft)
+                account.setOnlineTime(timeLeft)
                 player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1.15f, 1.15f)
                 player.sendActionBar(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.remaining"), TagResolver.resolver(
                     Placeholder.parsed("remaining", formatFromSecondsTime(timeLeft))
