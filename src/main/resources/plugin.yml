@@ -404,7 +404,7 @@ permissions:
     default: false
     children:
       magenta.afk.kick.exempt: true
-      magenta.fly.exempt: true
+      magenta.fly.modify.exempt: true
       magenta.gamemode.modify.exempt: true
       magenta.home.delay.exempt: true
       magenta.heal.delay.exempt: true
