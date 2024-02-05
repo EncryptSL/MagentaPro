@@ -15,17 +15,15 @@ class JailDeleteListener(private val magenta: Magenta) : Listener {
         val commandSender = event.commandSender
         val jailName = event.jailName
 
-        runCatching {
-             magenta.jailConfig.getJail().getConfigurationSection("jails")
-        }.onSuccess {
-            it?.set(jailName, null)
+        try {
+            val jails = magenta.jailConfig.getJail().getConfigurationSection("jails")
+            jails?.set(jailName, null)
             magenta.jailConfig.save()
             magenta.jailConfig.reload()
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.deleted"), TagResolver.resolver(
                 Placeholder.parsed("jail", jailName)
             )))
-
-        }.onFailure {
+        } catch (e : Exception) {
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.not.exist"), TagResolver.resolver(
                 Placeholder.parsed("jail", jailName)
             )))

@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.util.Tick
@@ -39,7 +40,7 @@ class TpaListener(private val magenta: Magenta) : Listener {
         if (!magenta.tpaManager.createRequest(sender, target))
             return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.exist")))
 
-        magenta.schedulerMagenta.delayedTask(magenta, {
+        SchedulerMagenta.delayedTask(magenta, {
             magenta.tpaManager.killRequest(sender)
         }, Tick.tick().fromDuration(Duration.ofSeconds(magenta.config.getLong("tpa-accept-cancellation"))).toLong())
         PlayerBuilderAction

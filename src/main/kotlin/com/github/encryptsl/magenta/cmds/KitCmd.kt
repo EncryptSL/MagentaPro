@@ -1,16 +1,17 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.kit.*
 import com.github.encryptsl.magenta.api.manager.KitManager
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -22,7 +23,7 @@ class KitCmd(private val magenta: Magenta) {
         if (!player.hasPermission("magenta.kits.$kit") && !player.hasPermission("magenta.kits.*"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
 
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(
                 KitReceiveEvent(
                     player,
@@ -37,7 +38,7 @@ class KitCmd(private val magenta: Magenta) {
     @Command("kit <kit> <target>")
     @Permission("magenta.kit.other")
     fun onKitOther(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(KitGiveEvent(commandSender, target, kit, KitManager(magenta)))
         }
     }
@@ -45,7 +46,7 @@ class KitCmd(private val magenta: Magenta) {
     @Command("kits")
     @Permission("magenta.kit.list")
     fun onKitList(commandSender: CommandSender) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(KitInfoEvent(commandSender, null, InfoType.LIST))
         }
     }
@@ -53,7 +54,7 @@ class KitCmd(private val magenta: Magenta) {
     @Command("showkit <kit>")
     @Permission("magenta.showkit")
     fun onShowKit(commandSender: CommandSender, @Argument(value = "kit", suggestions = "kits") kit: String) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(KitInfoEvent(commandSender, kit, InfoType.INFO))
         }
     }
@@ -61,7 +62,7 @@ class KitCmd(private val magenta: Magenta) {
     @Command("createkit <kit> [delay]")
     @Permission("magenta.createkit")
     fun onKitCreate(player: Player, @Argument(value = "kit") kit: String, @Argument(value = "delay") delay: Int = 150) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(KitCreateEvent(player, kit, delay, KitManager(magenta)))
         }
     }
@@ -69,7 +70,7 @@ class KitCmd(private val magenta: Magenta) {
     @Command("deletekit <kit>")
     @Permission("magenta.deletekit")
     fun onKitDelete(commandSender: CommandSender, @Argument(value = "kit", suggestions = "kits") kit: String) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(KitDeleteEvent(commandSender, kit))
         }
     }

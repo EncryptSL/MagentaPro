@@ -64,10 +64,10 @@ class VotifierListener(private val magenta: Magenta) : Listener {
                 serviceName
             )
             val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.$serviceName.rewards")
-            if (!player.isOnline) {
-                VoteHelper.saveOfflineReward(magenta, player, rewards)
-                return
-            }
+
+            if (!player.isOnline)
+                return VoteHelper.saveOfflineReward(magenta, player, rewards)
+
             VoteHelper.giveRewards(rewards, player.name.toString())
         }
     }
@@ -83,10 +83,9 @@ class VotifierListener(private val magenta: Magenta) : Listener {
                     serviceName
                 )
                 val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.default.rewards")
-                if (!player.isOnline) {
-                    VoteHelper.saveOfflineReward(magenta, player, rewards)
-                    return
-                }
+
+                if (!player.isOnline)
+                    return VoteHelper.saveOfflineReward(magenta, player, rewards)
 
                 VoteHelper.giveRewards(rewards, player.name.toString())
                 magenta.logger.severe("Service for vote $serviceName not set in config.yml")
@@ -102,10 +101,9 @@ class VotifierListener(private val magenta: Magenta) : Listener {
                 )
             }
             val rewards: MutableList<String> = magenta.config.getStringList("votifier.cumulative.${magenta.vote.getPlayerVote(player.uniqueId)}.rewards")
-            if (!player.isOnline) {
-                VoteHelper.saveOfflineReward(magenta, player, rewards)
-                return
-            }
+            if (!player.isOnline)
+                return VoteHelper.saveOfflineReward(magenta, player, rewards)
+
             VoteHelper.giveRewards(rewards, player.name.toString())
         }
     }

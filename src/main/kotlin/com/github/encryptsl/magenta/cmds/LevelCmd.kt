@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.*
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
@@ -10,6 +9,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -20,7 +20,6 @@ class LevelCmd(private val magenta: Magenta) {
     @Command("level")
     @Permission("magenta.level")
     fun onLevel(player: Player) {
-
         try {
             val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
             commandHelper.showLevelProgress(player, level, experience)

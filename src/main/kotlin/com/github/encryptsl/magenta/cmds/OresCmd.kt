@@ -1,9 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -11,6 +9,9 @@ import dev.triumphteam.gui.components.GuiType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -21,7 +22,7 @@ class OresCmd(private val magenta: Magenta) {
     @Command("ores")
     @Permission("magenta.ores.progress")
     fun onOresProgress(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             openProgress(player)
         }
     }

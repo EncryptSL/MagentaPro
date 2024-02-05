@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.account
 
 import com.github.encryptsl.magenta.api.PlayerCooldown
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
+import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -14,12 +15,12 @@ import java.util.*
 class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account {
 
     private val configUtil = ConfigUtil(plugin,"/players/$uuid.yml")
-    private val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
 
     val cooldownManager: PlayerCooldown by lazy { PlayerCooldown(uuid, this) }
+    val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI(plugin) }
 
     override fun createDefaultData(player: Player) {
-        schedulerMagenta.doAsync(plugin) {
+        SchedulerMagenta.doAsync(plugin) {
             getAccount().set("teleportenabled", true)
             getAccount().set("godmode", false)
             getAccount().set("jailed", false)
@@ -43,7 +44,7 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     }
 
     override fun saveLastLocation(player: Player) {
-        schedulerMagenta.doAsync(plugin) {
+        SchedulerMagenta.doAsync(plugin) {
             getAccount().set("lastlocation.world-name", player.world.name)
             getAccount().set("lastlocation.x", player.location.x)
             getAccount().set("lastlocation.y", player.location.y)
@@ -54,7 +55,7 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
         }
     }
     override fun saveQuitData(player: Player) {
-        schedulerMagenta.doAsync(plugin) {
+        SchedulerMagenta.doAsync(plugin) {
             getAccount().set("timestamps.logout", System.currentTimeMillis())
             save()
         }
@@ -72,14 +73,14 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     }
 
     override fun set(path: String, value: Any?) {
-        schedulerMagenta.doAsync(plugin) {
+        SchedulerMagenta.doAsync(plugin) {
             getAccount().set(path, value)
             save()
         }
     }
 
     override fun set(path: String, list: MutableList<Any>) {
-        schedulerMagenta.doAsync(plugin) {
+        SchedulerMagenta.doAsync(plugin) {
             list.forEach { item ->
                 getAccount().set(path, item)
             }
@@ -121,6 +122,14 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
         val onlineTime = plugin.config.getBoolean("online-jail-time")
 
         return if (onlineTime) getOnlineJailedTime().minus(1) else cooldownManager.getRemainingDelay("jail").seconds
+    }
+
+    override fun getVotes(): Int {
+        return voteAPI.getPlayerVote(uuid)
+    }
+
+    override fun getVotesByService(serviceName: String): Int {
+        return voteAPI.getPlayerVote(uuid, serviceName)?.vote ?: 0
     }
 
     override fun getVotifierRewards(): MutableList<String> {

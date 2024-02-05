@@ -34,11 +34,10 @@ class HookManager(private val magenta: Magenta) {
     }
 
     fun hookLuckPerms() {
-        if (isPluginInstalled("LuckPerms")) {
+        if (isPluginInstalled("LuckPerms") && LuckPermsAPI().setupLuckPerms()) {
             magenta.logger.info("###################################")
             magenta.logger.info("#        LuckPerms registered     #")
             magenta.logger.info("###################################")
-            LuckPermsAPI().setupLuckPerms()
         } else {
             magenta.logger.info("###################################")
             magenta.logger.info("#        LuckPerms not Found      #")
@@ -48,11 +47,10 @@ class HookManager(private val magenta: Magenta) {
     }
 
     fun hookVault() {
-        if (isPluginInstalled("Vault")) {
+        if (isPluginInstalled("Vault") && VaultHook(magenta).setupEconomy()) {
             magenta.logger.info("###################################")
             magenta.logger.info("# Vault registered like a service #")
             magenta.logger.info("###################################")
-            VaultHook(magenta).setupEconomy()
         } else {
             magenta.logger.info("###################################")
             magenta.logger.info("#         Vault not Found         #")
@@ -62,11 +60,10 @@ class HookManager(private val magenta: Magenta) {
     }
 
     fun hookCreditLite() {
-        if (isPluginInstalled("CreditLite")) {
+        if (isPluginInstalled("CreditLite") && CreditLiteHook(magenta).setupCreditLite()) {
             magenta.logger.info("###################################")
             magenta.logger.info("# CreditLite registered like a service#")
             magenta.logger.info("###################################")
-            CreditLiteHook(magenta).setupCreditLite()
         } else {
             magenta.logger.info("###################################")
             magenta.logger.info("#       CreditLite not Found      #")

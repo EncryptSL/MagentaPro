@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common.tasks
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.extensions.formatFromSecondsTime
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -15,7 +16,7 @@ class JailCountDownTask(private val magenta: Magenta) : Runnable {
             val timeLeft = account.getRemainingTime()
             if (account.hasPunish()) {
                 if (timeLeft == 0L) {
-                    magenta.schedulerMagenta.doSync(magenta) {
+                    SchedulerMagenta.doSync(magenta) {
                         magenta.pluginManager.callEvent(JailPardonEvent(player))
                     }
                 }

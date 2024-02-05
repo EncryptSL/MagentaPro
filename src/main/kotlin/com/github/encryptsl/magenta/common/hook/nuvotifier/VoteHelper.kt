@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.trimUUID
@@ -39,7 +40,7 @@ object VoteHelper {
             override fun run() {
                 broadcastActionBar(broadcastMessage, timer)
                 if (timer == 0) {
-                    magenta.schedulerMagenta.doSync(magenta) {
+                    SchedulerMagenta.doSync(magenta) {
                         giveRewards(Bukkit.getOnlinePlayers(), commands)
                         if (magenta.config.contains("votifier.voteparty.random")) {
                             val player = Bukkit.getOnlinePlayers().random()

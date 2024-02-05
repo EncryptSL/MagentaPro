@@ -1,10 +1,11 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -13,7 +14,7 @@ class ContainersCmd(private val magenta: Magenta) {
     @Command("anvil")
     @Permission("magenta.anvil")
     fun onAnvil(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openAnvil(player)
         }
     }
@@ -21,7 +22,7 @@ class ContainersCmd(private val magenta: Magenta) {
     @Command("grindstone|gstone")
     @Permission("magenta.grindstone")
     fun onGrindstone(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openGrindStone(player)
         }
     }
@@ -29,7 +30,7 @@ class ContainersCmd(private val magenta: Magenta) {
     @Command("loom")
     @Permission("magenta.loom")
     fun onLoom(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openLoom(player)
         }
     }
@@ -37,7 +38,7 @@ class ContainersCmd(private val magenta: Magenta) {
     @Command("stonecutter|stonec")
     @Permission("magenta.stonecutter")
     fun onStoneCutter(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openStonecutter(player)
         }
     }
@@ -45,7 +46,7 @@ class ContainersCmd(private val magenta: Magenta) {
     @Command("smithingtable|smithing")
     @Permission("magenta.smithingtable")
     fun onSmithingTable(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openSmithingTable(player)
         }
     }
@@ -53,7 +54,7 @@ class ContainersCmd(private val magenta: Magenta) {
     @Command("workbench|crafting")
     @Permission("magenta.workbench")
     fun onWorkBench(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.paperContainerProvider.openWorkBench(player)
         }
     }

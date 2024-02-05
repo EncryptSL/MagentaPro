@@ -1,18 +1,19 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import com.github.encryptsl.magenta.common.database.sql.HomeSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class HomeModel(private val magenta: Magenta) : HomeSQL {
+class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun createHome(player: Player, location: Location, home: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction {
                 HomeTable.insertIgnore {
                     it[username] = player.name
@@ -30,13 +31,13 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun deleteHome(player: Player, home: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { HomeTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) } }
         }
     }
 
     override fun moveHome(player: Player, home: String, location: Location) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { HomeTable.update( {  (HomeTable.uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -49,7 +50,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     }
 
     override fun renameHome(player: Player, oldHomeName: String, newHomeName: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction {
                 HomeTable.update({ HomeTable.uuid eq player.uniqueId.toString() and (HomeTable.home eq oldHomeName) }) {
                     it[home] = newHomeName
@@ -65,7 +66,7 @@ class HomeModel(private val magenta: Magenta) : HomeSQL {
     override fun canSetHome(player: Player): Boolean {
         if (player.hasPermission("magenta.homes.unlimited")) return true
 
-        val section = magenta.config.getConfigurationSection("homes.groups") ?: return false
+        val section = plugin.config.getConfigurationSection("homes.groups") ?: return false
 
         val max = section.getKeys(false).filter { player.hasPermission("magenta.homes.$it") }.firstNotNullOf { section.getInt(it) }
 

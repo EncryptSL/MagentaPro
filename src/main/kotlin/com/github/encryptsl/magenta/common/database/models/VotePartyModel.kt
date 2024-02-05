@@ -1,10 +1,11 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.database.entity.VotePartyEntity
 import com.github.encryptsl.magenta.common.database.sql.VotePartySQL
 import com.github.encryptsl.magenta.common.database.tables.VotePartyTable
 import kotlinx.datetime.Clock
+import org.bukkit.plugin.Plugin
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
@@ -12,7 +13,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
-class VotePartyModel(private val magenta: Magenta) : VotePartySQL {
+class VotePartyModel(private val plugin: Plugin) : VotePartySQL {
     override fun createTable() {
         VotePartyTable.insert {
             it[voteParty] = "vote_party"
@@ -22,7 +23,7 @@ class VotePartyModel(private val magenta: Magenta) : VotePartySQL {
     }
 
     override fun updateParty() {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { VotePartyTable.update({ VotePartyTable.voteParty eq "vote_party" }) {
                 it[currentVotes] = currentVotes.plus(1)
             } }
@@ -30,7 +31,7 @@ class VotePartyModel(private val magenta: Magenta) : VotePartySQL {
     }
 
     override fun partyFinished(winner: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { VotePartyTable.update({VotePartyTable.voteParty eq "vote_party"}) {
                 it[currentVotes] = 0
                 it[lastVoteParty] = Clock.System.now()
@@ -40,7 +41,7 @@ class VotePartyModel(private val magenta: Magenta) : VotePartySQL {
     }
 
     override fun resetParty() {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { VotePartyTable.update({ VotePartyTable.voteParty eq "vote_party" }) {
                 it[currentVotes] = 0
                 it[lastVoteParty] = null

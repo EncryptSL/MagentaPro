@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.shop.CreditShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopSellEvent
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditException
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
@@ -40,13 +41,13 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                 )
                 when (transactionType) {
                     TransactionType.SELL -> {
-                        magenta.schedulerMagenta.doSync(magenta) {
+                        SchedulerMagenta.doSync(magenta) {
                             magenta.pluginManager.callEvent(ShopSellEvent(player, item.type.name, price.toInt(), item.amount))
                         }
                         player.inventory.removeItem(item)
                     }
                     TransactionType.BUY -> {
-                        magenta.schedulerMagenta.doSync(magenta) {
+                        SchedulerMagenta.doSync(magenta) {
                             magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, price.toInt(), item.amount))
                         }
                         if (isItem == true && commands.isNullOrEmpty())
@@ -69,7 +70,7 @@ class EconomyShopIntegration(private val magenta: Magenta) {
             if (!creditLiteHook.hasCredits(player, price))
                 return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.credit")))
 
-                magenta.schedulerMagenta.doSync(magenta) {
+                SchedulerMagenta.doSync(magenta) {
                     magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
                 }
 

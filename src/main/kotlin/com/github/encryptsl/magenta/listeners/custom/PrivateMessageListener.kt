@@ -25,7 +25,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         val user = magenta.user.getUser(target.uniqueId)
 
         if (commandSender is Player) {
-            if (user.getAccount().getStringList("ignore").contains(commandSender.player?.uniqueId.toString())) {
+            if (user.getAccount().getStringList("ignore").contains(commandSender.uniqueId.toString())) {
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error")))
                 event.isCancelled = true
             }

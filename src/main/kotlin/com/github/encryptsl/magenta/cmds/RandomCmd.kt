@@ -1,17 +1,18 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotation.specifier.Range
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotation.specifier.Range
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -27,7 +28,7 @@ class RandomCmd(private val magenta: Magenta) {
         val tickets: List<String> = magenta.randomConfig.getConfig().getStringList("world_tickets.tickets")
         val randomKey = tickets.random().replace("%amount%", amount.toString())
         magenta.logger.info("Hráč ${target.name} dostal náhodnou vstupenku !")
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
         }
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.world.ticket.success.player"),
@@ -49,7 +50,7 @@ class RandomCmd(private val magenta: Magenta) {
         val keys: List<String> = magenta.randomConfig.getConfig().getStringList("crates.keys")
         val randomKey = keys.random().replace("%amount%", amount.toString())
         magenta.logger.info("Hráč ${target.name} dostal náhodný klíč !")
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
         }
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.crates.key.success.player"),
@@ -78,7 +79,7 @@ class RandomCmd(private val magenta: Magenta) {
             return
         }
         magenta.logger.info("Hráč ${target.name} již $randomTag oprávnění vlastní proto mu byl nabídnut jiný tag !")
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 magenta.stringUtils.magentaPlaceholders("lp user %player% permission set ${tags.random()}", target)
             )

@@ -1,9 +1,10 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.database.sql.LevelSQL
 import com.github.encryptsl.magenta.common.database.tables.LevelTable
+import org.bukkit.plugin.Plugin
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.insertIgnore
@@ -12,9 +13,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.util.*
 
-class LevelModel(private val magenta: Magenta) : LevelSQL {
+class LevelModel(private val plugin: Plugin) : LevelSQL {
     override fun createAccount(levelEntity: LevelEntity) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { LevelTable.insertIgnore {
                 it[username] = levelEntity.username
                 it[uuid] = levelEntity.uuid

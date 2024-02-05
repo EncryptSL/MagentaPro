@@ -1,14 +1,11 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -18,6 +15,10 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -28,7 +29,7 @@ class TpCmd(private val magenta: Magenta) {
     @Command("tpa <target>")
     @Permission("magenta.tpa")
     fun onTpa(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaRequestEvent(player, target))
         }
     }
@@ -36,7 +37,7 @@ class TpCmd(private val magenta: Magenta) {
     @Command("tpaccept")
     @Permission("magenta.tpaccept")
     fun onTpaAccept(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaAcceptEvent(player))
         }
     }
@@ -44,7 +45,7 @@ class TpCmd(private val magenta: Magenta) {
     @Command("tpadeny")
     @Permission("magenta.tpadeny")
     fun onTpaDeny(player: Player) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(TpaDenyEvent(player))
         }
     }
@@ -62,7 +63,7 @@ class TpCmd(private val magenta: Magenta) {
         if (player.uniqueId == target.uniqueId)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself")))
 
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             player.teleport(target)
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.self"), TagResolver.resolver(
@@ -82,7 +83,7 @@ class TpCmd(private val magenta: Magenta) {
         if (player.uniqueId == target.uniqueId)
             return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.error.yourself.same")))
 
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             player.teleport(target.location)
         }
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tp.success.to"), TagResolver.resolver(
@@ -97,7 +98,7 @@ class TpCmd(private val magenta: Magenta) {
     @Command("tpo <target>")
     @Permission("magenta.tpo")
     fun onTeleportOfflineLocation(player: Player, @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             commandHelper.teleportOffline(player, offlinePlayer)
         }
 
@@ -111,14 +112,14 @@ class TpCmd(private val magenta: Magenta) {
     fun onTeleportHere(player: Player, @Argument(value = "target") target: Player?) {
 
         if (target == null) {
-            magenta.schedulerMagenta.doSync(magenta) {
+            SchedulerMagenta.doSync(magenta) {
                 commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
             }
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.success")))
             return
         }
 
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             target.teleport(player)
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tphere.success"),
@@ -131,7 +132,7 @@ class TpCmd(private val magenta: Magenta) {
     fun onTeleportAllHere(player: Player, @Argument("world", suggestions = "worlds") world: World?) {
 
         if (world != null) {
-            magenta.schedulerMagenta.doSync(magenta) {
+            SchedulerMagenta.doSync(magenta) {
                 commandHelper.teleportAll(player, world.players)
             }
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.world.success"),
@@ -140,7 +141,7 @@ class TpCmd(private val magenta: Magenta) {
             return
         }
 
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
         }
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.success")))

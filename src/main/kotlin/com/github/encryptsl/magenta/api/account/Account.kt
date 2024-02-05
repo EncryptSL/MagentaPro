@@ -24,6 +24,8 @@ interface Account {
     fun getRemainingTime(): Long
     fun hasPunish(): Boolean
 
+    fun getVotes(): Int
+    fun getVotesByService(serviceName: String): Int
     fun getVotifierRewards(): MutableList<String>
     fun getLastLocation(): Location
     fun getAccount(): FileConfiguration

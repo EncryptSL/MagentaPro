@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.common.filter
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.enums.Violations
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.trimUUID
@@ -27,7 +28,7 @@ class ChatPunishManager(private val magenta: Magenta) {
             flagging.computeIfPresent(player.uniqueId) { _, i -> i + 1 } ?: 1
             val score = flagging[player.uniqueId] ?: 0
             if (score >= 2) {
-                magenta.schedulerMagenta.doSync(magenta) {
+                SchedulerMagenta.doSync(magenta) {
                     player.kick(
                         ModernText.miniModernText(
                             magenta.localeConfig.getMessage("magenta.filter.action.kick"), TagResolver.resolver(

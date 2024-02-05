@@ -27,7 +27,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
 
 
         if (identifier.startsWith("votes_")) {
-            return magenta.vote.getPlayerVote(player.uniqueId, string.toString())?.vote.toString()
+            return user.getVotesByService(string.toString()).toString()
         }
 
         return when (identifier) {
@@ -36,7 +36,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
             "level_progress" -> LevelFormula.levelProgress(levelEntity.level, levelEntity.experience).toString()
             "socialspy" -> user.isSocialSpy().toString()
             "vanished" -> user.isVanished().toString()
-            "votes" -> magenta.vote.getPlayerVote(player.uniqueId).toString()
+            "votes" -> user.getVotes().toString()
             "total_votes" -> magenta.vote.totalVotes().toString()
             "voteparty_now" -> magenta.voteParty.getVoteParty().currentVotes.toString()
             "voteparty_max" -> magenta.config.getInt("votifier.voteparty.start_at").toString()

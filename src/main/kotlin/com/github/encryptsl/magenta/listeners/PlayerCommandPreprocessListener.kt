@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -21,7 +20,7 @@ class PlayerCommandPreprocessListener(private val magenta: Magenta) : Listener {
         if (magenta.stringUtils.inInList("socialspy-commands", command) || magenta.stringUtils.inInList("socialspy-commands", "*")) {
             if (!player.hasPermission("magenta.social.spy.exempt")) {
                 Bukkit.getServer().onlinePlayers
-                    .filter { UserAccount(magenta, it.uniqueId).isSocialSpy() && it.hasPermission("magenta.social.spy") }
+                    .filter { magenta.user.getUser(it.uniqueId).isSocialSpy() && it.hasPermission("magenta.social.spy") }
                     .forEach { p ->
                         p.sendMessage(
                             ModernText.miniModernText(

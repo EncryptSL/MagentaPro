@@ -16,7 +16,10 @@ import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
-import com.github.encryptsl.magenta.common.database.models.*
+import com.github.encryptsl.magenta.common.database.models.HomeModel
+import com.github.encryptsl.magenta.common.database.models.LevelModel
+import com.github.encryptsl.magenta.common.database.models.VotePartyModel
+import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
@@ -40,11 +43,10 @@ open class Magenta : JavaPlugin() {
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
     val user: User by lazy { User(this) }
-    val vote: MagentaVoteAPI by lazy { MagentaVoteAPI(VoteModel(this)) }
+    val vote: MagentaVoteAPI by lazy { MagentaVoteAPI(this) }
     val voteParty: MagentaVotePartyAPI by lazy { MagentaVotePartyAPI(VotePartyModel(this)) }
     val virtualLevel: VirtualLevelAPI by lazy { VirtualLevelAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
-    val schedulerMagenta: SchedulerMagenta by lazy { SchedulerMagenta() }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
     val levelModel: LevelModel by lazy { LevelModel(this) }
@@ -142,9 +144,9 @@ open class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        schedulerMagenta.runTaskTimerAsync(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
-        schedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
-        schedulerMagenta.runTaskTimerAsync(this, LevelUpTask(this), 20, 1)
+        SchedulerMagenta.runTaskTimerAsync(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
+        SchedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
+        SchedulerMagenta.runTaskTimerAsync(this, LevelUpTask(this), 20, 1)
     }
 
     private fun handlerListener() {

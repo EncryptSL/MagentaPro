@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -38,7 +39,7 @@ class TpaManager(private val magenta: Magenta) {
                     )
                 )
                 target.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
-                magenta.schedulerMagenta.doSync(magenta) {
+                SchedulerMagenta.doSync(magenta) {
                     target.teleport(player)
                 }
                 request.remove(player.uniqueId)

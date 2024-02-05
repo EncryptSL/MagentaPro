@@ -1,13 +1,13 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -29,7 +29,6 @@ class HatCmd(private val magenta: Magenta) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.hat.success.set"),
             Placeholder.component("item", itemInMainHand.displayName())
         ))
-
     }
 
 }

@@ -1,19 +1,20 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.sql.WarpSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import com.github.encryptsl.magenta.common.database.tables.WarpTable
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class WarpModel(private val magenta: Magenta) : WarpSQL {
+class WarpModel(private val plugin: Plugin) : WarpSQL {
     override fun creteWarp(player: Player, location: Location, warpName: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction {
                 WarpTable.insertIgnore {
                     it[username] = player.name
@@ -31,19 +32,19 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     }
 
     override fun deleteWarp(warpName: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { WarpTable.deleteWhere { WarpTable.warpName eq warpName } }
         }
     }
 
     override fun deleteWarp(player: Player, warpName: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { WarpTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) } }
         }
     }
 
     override fun moveWarp(warpName: String, location: Location) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { WarpTable.update( { WarpTable.warpName eq warpName }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -56,7 +57,7 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     }
 
     override fun moveWarp(player: Player, warpName: String, location: Location) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction { WarpTable.update( { (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -69,7 +70,7 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     }
 
     override fun renameWarp(oldWarpName: String, newWarpName: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction {
                 WarpTable.update({ WarpTable.warpName eq oldWarpName }) {
                     it[warpName] = newWarpName
@@ -79,7 +80,7 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     }
 
     override fun renameWarp(player: Player, oldWarpName: String, newWarpName: String) {
-        magenta.schedulerMagenta.doAsync(magenta) {
+        SchedulerMagenta.doAsync(plugin) {
             transaction {
                 WarpTable.update({ (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq oldWarpName) }) {
                     it[warpName] = newWarpName
@@ -95,7 +96,7 @@ class WarpModel(private val magenta: Magenta) : WarpSQL {
     override fun canSetWarp(player: Player): Boolean {
         if (player.hasPermission("magenta.warps.unlimited")) return true
 
-        val section = magenta.config.getConfigurationSection("warps.groups") ?: return false
+        val section = plugin.config.getConfigurationSection("warps.groups") ?: return false
 
         val max = section.getKeys(false).filter { player.hasPermission("magenta.warps.$it") }.map { section.getInt(it) }.first()
 

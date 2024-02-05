@@ -1,16 +1,17 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -25,7 +26,7 @@ class VanishCmd(private val magenta: Magenta) {
         val isVanished = user.getAccount().getBoolean("vanished")
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
-            magenta.schedulerMagenta.doSync(magenta) {
+            SchedulerMagenta.doSync(magenta) {
                 commandHelper.doVanish(players, player, isVanished)
             }
         }
@@ -48,10 +49,9 @@ class VanishCmd(private val magenta: Magenta) {
         val isVanished = user.getAccount().getBoolean("vanished")
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
-            if (isVanished)
-                players.showPlayer(magenta, target)
-            else
-                players.hidePlayer(magenta, target)
+            SchedulerMagenta.doSync(magenta) {
+                commandHelper.doVanish(players, target, isVanished)
+            }
         }
 
         val mode = commandHelper.isVanished(isVanished)

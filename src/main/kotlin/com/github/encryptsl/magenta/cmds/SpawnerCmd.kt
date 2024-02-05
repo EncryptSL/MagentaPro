@@ -1,11 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotation.specifier.Range
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -16,6 +12,11 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BlockStateMeta
+import org.incendo.cloud.annotation.specifier.Range
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 
 @Suppress("UNUSED")
@@ -30,7 +31,7 @@ class SpawnerCmd(private val magenta: Magenta) {
         if (block.type != Material.SPAWNER)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.error.not.spawner")))
 
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             val creatureSpawner: CreatureSpawner = block.state as CreatureSpawner
             creatureSpawner.spawnedType = entity
         }
@@ -45,7 +46,7 @@ class SpawnerCmd(private val magenta: Magenta) {
         @Argument(value = "amount") @Range(min = "1", max = "100") amount: Int,
         @Argument(value = "player", suggestions = "players") target: Player
     ) {
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             val spawner = ItemStack(Material.SPAWNER, amount)
             val spawnerMeta = spawner.itemMeta
             val bsm: BlockStateMeta = spawner.itemMeta as BlockStateMeta

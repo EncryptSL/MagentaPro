@@ -7,7 +7,7 @@ import org.bukkit.scheduler.BukkitTask
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
-class SchedulerMagenta : IScheduler {
+object SchedulerMagenta : IScheduler {
     override fun runAtFixedRate(
         plugin: Plugin,
         scheduledTask: Consumer<ScheduledTask>,

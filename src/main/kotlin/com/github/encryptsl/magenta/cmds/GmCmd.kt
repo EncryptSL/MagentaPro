@@ -1,20 +1,24 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
+import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class GmCmd(private val magenta: Magenta) {
+
+    private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @Command("gamemode|gm <mode>")
     @Permission("magenta.gamemode")
@@ -25,7 +29,7 @@ class GmCmd(private val magenta: Magenta) {
             )))
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
-        magenta.schedulerMagenta.doSync(magenta) {
+        SchedulerMagenta.doSync(magenta) {
             player.gameMode = gameMode
         }
     }
@@ -33,7 +37,10 @@ class GmCmd(private val magenta: Magenta) {
     @Command("gamemode|gm <mode> <target>")
     @Permission("magenta.gamemode.other")
     fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
-        magenta.schedulerMagenta.doSync(magenta) {
+
+        if (luckPermsAPI.hasPermission(target, "magenta.gamemode.modify.exempt")) return
+
+        SchedulerMagenta.doSync(magenta) {
             target.gameMode = gameMode
         }
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))

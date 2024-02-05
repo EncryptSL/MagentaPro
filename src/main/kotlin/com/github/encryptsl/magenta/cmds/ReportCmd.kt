@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.trimUUID
+import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -18,6 +19,8 @@ import org.incendo.cloud.annotations.*
 @CommandDescription("Provided by plugin EncryptSL")
 class ReportCmd(private val magenta: Magenta) {
 
+    private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
+
     @Command("report <player> <category> [message]")
     @Permission("magenta.report")
     fun onReport(
@@ -29,7 +32,7 @@ class ReportCmd(private val magenta: Magenta) {
         if (player.name.equals(target.name, ignoreCase = true))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.yourself")))
 
-        if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
+        if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()) || luckPermsAPI.hasPermission(target, "magenta.report.exempt"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.exempt")))
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.success"), TagResolver.resolver(

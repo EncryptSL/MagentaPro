@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.extensions
 
 import org.apache.commons.lang3.time.DurationFormatUtils
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -40,3 +41,7 @@ fun formatFromSecondsTime(seconds: Long): String {
 fun datetime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
 
 fun now(): String = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+
+fun convertInstant(instant: Instant): String {
+    return DateTimeFormatter.ofPattern("MM-dd hh:mm yyyy").format(instant)
+}

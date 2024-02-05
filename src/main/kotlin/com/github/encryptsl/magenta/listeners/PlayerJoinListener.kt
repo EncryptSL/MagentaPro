@@ -11,6 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
@@ -20,12 +21,8 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
-        val newbies = magenta.config.getConfigurationSection("newbies")!!
-        val kit = newbies.getString("kit") ?: "tools"
 
-        magenta.pluginManager.callEvent(JailCheckEvent(player))
-
-        if (!magenta.config.getString("custom-join-message").equals("none", ignoreCase = true)) {
+        if (!magenta.config.getString("custom-join-message").equals("none", ignoreCase = true) || !user.isVanished()) {
             event.joinMessage(ModernText.miniModernText(
                 magenta.config.getString("custom-join-message").toString(), TagResolver.resolver(
                     Placeholder.component("player", player.displayName())
@@ -56,14 +53,19 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
             }
             return
         }
-        if (kit.isNotEmpty()) {
-            magenta.kitManager.giveKit(player, kit)
-        }
+
+        magenta.kitManager.giveKit(player, magenta.config.getString("newbies.kit").toString())
+
         Bukkit.broadcast(ModernText.miniModernText(magenta.config.getString("newbies.announcement").toString(), TagResolver.resolver(
             Placeholder.parsed("player", player.name),
             Placeholder.parsed("joined", Bukkit.getOfflinePlayers().size.toString())
         )))
         user.createDefaultData(player)
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    fun onPlayerJoinCheckJail(event: PlayerJoinEvent) {
+        magenta.pluginManager.callEvent(JailCheckEvent(event.player))
     }
 
     private fun safeFly(player: Player) {

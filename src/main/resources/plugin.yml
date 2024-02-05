@@ -60,6 +60,7 @@ permissions:
       magenta.vanish.*: true
       magenta.votes.*: true
       magenta.warp.*: true
+      magenta.vip.expire.other: true
       magenta.restriction.bypass.*: true
       magenta.chat.filter.bypass.*: true
   magenta.moderator:
@@ -77,6 +78,7 @@ permissions:
       magenta.lightning.*: true
       magenta.shop.*: true
       magenta.social.spy: true
+      magenta.vote.expire.other: true
       magenta.chat.filter.bypass.*: true
   magenta.player:
     description: Permissions for player
@@ -95,6 +97,7 @@ permissions:
       magenta.warp: true
       magenta.tpa.*: true
       magenta.msg.*: true
+      magenta.vip.expire: true
       magenta.vote.player: true
   magenta.plugin.*:
     description: Permissions for admins
@@ -401,6 +404,8 @@ permissions:
     default: false
     children:
       magenta.afk.kick.exempt: true
+      magenta.fly.exempt: true
+      magenta.gamemode.modify.exempt: true
       magenta.home.delay.exempt: true
       magenta.heal.delay.exempt: true
       magenta.ignore.exempt: true

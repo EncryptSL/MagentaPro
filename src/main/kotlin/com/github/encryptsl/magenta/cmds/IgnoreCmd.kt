@@ -1,18 +1,21 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class IgnoreCmd(private val magenta: Magenta) {
+
+    private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @Command("ignore <player>")
     @Permission("magenta.ignore")
@@ -27,7 +30,7 @@ class IgnoreCmd(private val magenta: Magenta) {
             ))
 
 
-        if (target.player?.hasPermission("magenta.ignore.exempt") == true || magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
+        if (luckPermsAPI.hasPermission(target,"magenta.ignore.exempt") || magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exempt"),
                 Placeholder.parsed("player", target.name.toString())
             ))
