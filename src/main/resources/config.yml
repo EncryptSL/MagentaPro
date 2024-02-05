@@ -99,6 +99,10 @@ auto-afk: 5
 portal:
   blacklist: [NETHER_PAIR, END_PLATFORM, FIRE]
 
+# Change world settings
+# Enable or disable message about change world !
+# true = enabled, false = disabled.
+change-world-message: true
 
 # Settings for Level UP notifications
 # You can set sound effect when player have level up

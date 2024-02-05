@@ -14,6 +14,8 @@ class PlayerChangeWorldListener(private val magenta: Magenta) : Listener {
     fun onPlayerChangeWorld(event: PlayerChangedWorldEvent) {
         val player = event.player
 
+        if (!magenta.config.getBoolean("change-world-message")) return
+
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.player.change.world"), TagResolver.resolver(
             Placeholder.parsed("world", player.world.name)
         )))
