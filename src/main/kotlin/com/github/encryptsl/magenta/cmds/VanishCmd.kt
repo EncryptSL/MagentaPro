@@ -23,19 +23,18 @@ class VanishCmd(private val magenta: Magenta) {
     @Permission("magenta.vanish")
     fun onVanish(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
-        val isVanished = user.getAccount().getBoolean("vanished")
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
             SchedulerMagenta.doSync(magenta) {
-                commandHelper.doVanish(players, player, isVanished)
+                commandHelper.doVanish(players, player, user.isVanished())
             }
         }
 
-        val mode = commandHelper.isVanished(isVanished)
+        val mode = commandHelper.isVanished(user.isVanished())
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
 
-        if (isVanished) {
+        if (user.isVanished()) {
             user.set("vanished", false)
         } else {
             user.set("vanished", true)
@@ -46,15 +45,14 @@ class VanishCmd(private val magenta: Magenta) {
     @Permission("magenta.vanish.other")
     fun onVanishOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val user = magenta.user.getUser(target.uniqueId)
-        val isVanished = user.getAccount().getBoolean("vanished")
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
             SchedulerMagenta.doSync(magenta) {
-                commandHelper.doVanish(players, target, isVanished)
+                commandHelper.doVanish(players, target, user.isVanished())
             }
         }
 
-        val mode = commandHelper.isVanished(isVanished)
+        val mode = commandHelper.isVanished(user.isVanished())
 
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
 
@@ -63,7 +61,7 @@ class VanishCmd(private val magenta: Magenta) {
             Placeholder.parsed("mode", mode)
         )))
 
-        if (isVanished) {
+        if (user.isVanished()) {
             user.set("vanished", false)
         } else {
             user.set("vanished", true)

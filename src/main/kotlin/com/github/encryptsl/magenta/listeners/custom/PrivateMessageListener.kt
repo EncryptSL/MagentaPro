@@ -25,7 +25,12 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         val user = magenta.user.getUser(target.uniqueId)
 
         if (commandSender is Player) {
-            if (user.getAccount().getStringList("ignore").contains(commandSender.uniqueId.toString())) {
+            val whisper = magenta.user.getUser(commandSender.uniqueId)
+
+            val userHaveBlockedSender = user.getAccount().getStringList("ignore").contains(commandSender.uniqueId.toString())
+            val whisperHaveBlockedTarget = whisper.getAccount().getStringList("ignore").contains(target.uniqueId.toString())
+
+            if (userHaveBlockedSender || whisperHaveBlockedTarget) {
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error")))
                 event.isCancelled = true
             }

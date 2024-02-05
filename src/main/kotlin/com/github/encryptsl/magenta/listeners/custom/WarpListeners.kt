@@ -181,9 +181,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
 
                 target.teleport(location)
                 target.sendMessage(ModernText.miniModernText(teleportSelfMessage, Placeholder.parsed("warp", warpName)))
-                commandSender.sendMessage(ModernText.miniModernText(teleportMessageTo, Placeholder.parsed("warp", warpName)))
-
-                return
+                return commandSender.sendMessage(ModernText.miniModernText(teleportMessageTo, Placeholder.parsed("warp", warpName)))
             }
 
             if (target != null) {

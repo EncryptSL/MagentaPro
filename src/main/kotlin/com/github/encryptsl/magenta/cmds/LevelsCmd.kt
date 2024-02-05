@@ -96,13 +96,11 @@ class LevelsCmd(private val magenta: Magenta) {
                     Placeholder.parsed("experience", amount.toString()),
                 )))
 
-        if (silent) {
-            target.player?.sendMessage(
-                ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.levels.success.experience.add.silent"),
+        if (silent)
+            return target.player.let { it?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.levels.success.experience.add.silent"),
                     Placeholder.parsed("experience", amount.toString())
                 ))
-            return
-        }
+            }
 
         target.player?.sendMessage(
             ModernText.miniModernText(

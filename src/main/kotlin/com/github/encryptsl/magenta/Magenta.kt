@@ -156,6 +156,7 @@ open class Magenta : JavaPlugin() {
             EntityAttackListener(this),
             BlockListener(this),
             PlayerAsyncLogin(this),
+            PlayerChangeWorldListener(this),
             PlayerJoinListener(this),
             PlayerQuitListener(this),
             PlayerTeleportListener(this),

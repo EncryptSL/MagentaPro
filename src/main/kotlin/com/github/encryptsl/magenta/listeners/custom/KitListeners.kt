@@ -20,15 +20,14 @@ class KitListeners(private val magenta: Magenta) : Listener {
         val kitDelay = event.delay
         val kitManager = event.kitManager
 
-        runCatching {
+        try {
             kitManager.createKit(player, kitName, kitDelay)
-        }.onSuccess {
             player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.created"), TagResolver.resolver(
-                Placeholder.parsed("kit", kitName),
-                Placeholder.parsed("delay", kitDelay.toString())
-            )))
-        }.onFailure { e ->
+                    Placeholder.parsed("kit", kitName),
+                    Placeholder.parsed("delay", kitDelay.toString())
+                )))
+        } catch (e : Exception) {
             player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
     }
@@ -37,11 +36,11 @@ class KitListeners(private val magenta: Magenta) : Listener {
     fun onKitDelete(event: KitDeleteEvent) {
         val commandSender = event.commandSender
         val kitName = event.kitName
-        runCatching {
+
+        try {
             magenta.kitManager.deleteKit(kitName)
-        }.onSuccess {
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.deleted"), Placeholder.parsed("kit", kitName)))
-        }.onFailure { e ->
+        } catch (e : Exception) {
             commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
     }
@@ -53,9 +52,8 @@ class KitListeners(private val magenta: Magenta) : Listener {
         val kitName = event.kitName
         val kitManager = event.kitManager
 
-        runCatching {
+        try {
             kitManager.giveKit(target, kitName)
-        }.onSuccess {
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(
                 Placeholder.parsed("kit", kitName)
             )))
@@ -63,7 +61,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))
-        }.onFailure { e ->
+        } catch (e : Exception) {
             commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
         }
     }

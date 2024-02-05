@@ -27,25 +27,22 @@ class TpaManager(private val magenta: Magenta) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.not.exist")))
         } else {
             val target = Bukkit.getPlayer(UUID.fromString(request[player.uniqueId]?.to.toString()))
+                ?: return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.accept")))
 
-            if (target != null) {
-                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted")))
-                target.sendMessage(
-                    ModernText.miniModernText(
-                        magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted.to"),
-                        TagResolver.resolver(
-                            Placeholder.parsed("player", target.name)
-                        )
+            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted")))
+            target.sendMessage(
+                ModernText.miniModernText(
+                    magenta.localeConfig.getMessage("magenta.command.tpa.success.request.accepted.to"),
+                    TagResolver.resolver(
+                        Placeholder.parsed("player", target.name)
                     )
                 )
-                target.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
-                SchedulerMagenta.doSync(magenta) {
-                    target.teleport(player)
-                }
-                request.remove(player.uniqueId)
-            } else {
-                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.accept")))
+            )
+            target.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
+            SchedulerMagenta.doSync(magenta) {
+                target.teleport(player)
             }
+            request.remove(player.uniqueId)
         }
     }
 
