@@ -3,7 +3,6 @@ package com.github.encryptsl.magenta.listeners.custom
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.warp.*
-import com.github.encryptsl.magenta.common.database.tables.WarpTable
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -88,14 +87,16 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                         Placeholder.parsed("warp", warpName)
                     ))
 
+                val warp = magenta.warpModel.getWarp(warpName)
+
                 magenta.config.getStringList("warp-info-format").forEach { s ->
                     commandSender.sendMessage(ModernText.miniModernText(s, TagResolver.resolver(
-                        Placeholder.parsed("warp", magenta.warpModel.getWarp(warpName, WarpTable.warpName)),
-                        Placeholder.parsed("owner", magenta.warpModel.getWarp(warpName, WarpTable.username)),
-                        Placeholder.parsed("world", magenta.warpModel.getWarp(warpName, WarpTable.world)),
-                        Placeholder.parsed("x", magenta.warpModel.getWarp(warpName, WarpTable.x).toString()),
-                        Placeholder.parsed("y", magenta.warpModel.getWarp(warpName, WarpTable.y).toString()),
-                        Placeholder.parsed("z", magenta.warpModel.getWarp(warpName, WarpTable.z).toString()),
+                        Placeholder.parsed("warp", warp.warpName),
+                        Placeholder.parsed("owner", warp.owner),
+                        Placeholder.parsed("world", warp.world),
+                        Placeholder.parsed("x", warp.x.toString()),
+                        Placeholder.parsed("y", warp.y.toString()),
+                        Placeholder.parsed("z", warp.z.toString()),
                     )))
                 }
             }

@@ -83,32 +83,24 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun getHomesByOwner(player: Player): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq player.uniqueId.toString()).mapNotNull { r ->
-            HomeEntity(
-                r[HomeTable.username],
-                r[HomeTable.uuid],
-                r[HomeTable.home],
-                r[HomeTable.world],
-                r[HomeTable.x],
-                r[HomeTable.y],
-                r[HomeTable.z],
-                r[HomeTable.pitch],
-                r[HomeTable.yaw])
-        } }
+        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq player.uniqueId.toString()).mapNotNull{rowResultToHomeEntity(it)} }
     }
 
     override fun getHomes(): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().mapNotNull { r ->
-            HomeEntity(
-            r[HomeTable.username],
-            r[HomeTable.uuid],
-            r[HomeTable.home],
-            r[HomeTable.world],
-            r[HomeTable.x],
-            r[HomeTable.y],
-            r[HomeTable.z],
-            r[HomeTable.pitch],
-            r[HomeTable.yaw])
-        } }
+        return transaction { HomeTable.selectAll().mapNotNull {rowResultToHomeEntity(it)} }
+    }
+
+    private fun rowResultToHomeEntity(row: ResultRow): HomeEntity {
+        return HomeEntity(
+            row[HomeTable.username],
+            row[HomeTable.uuid],
+            row[HomeTable.home],
+            row[HomeTable.world],
+            row[HomeTable.x],
+            row[HomeTable.y],
+            row[HomeTable.z],
+            row[HomeTable.pitch],
+            row[HomeTable.pitch]
+        )
     }
 }

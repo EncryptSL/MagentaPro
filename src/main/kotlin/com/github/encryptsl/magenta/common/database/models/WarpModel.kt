@@ -106,24 +106,28 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId.toString()).count() < max }
     }
 
-    override fun <T> getWarp(warpName: String, columnName: Expression<T>): T {
-        return transaction {
-            WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).first()[columnName]
+    override fun getWarp(warpName: String): WarpEntity {
+       val row = transaction {
+            WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).first()
         }
+
+        return rowResultToWarpEntity(row)
     }
 
     override fun getWarps(): List<WarpEntity> {
-        return transaction { WarpTable.selectAll().mapNotNull { r ->
-            WarpEntity(
-                r[WarpTable.username],
-                r[WarpTable.uuid],
-                r[WarpTable.warpName],
-                r[WarpTable.world],
-                r[WarpTable.x],
-                r[WarpTable.y],
-                r[WarpTable.z],
-                r[WarpTable.pitch],
-                r[WarpTable.yaw])
-        } }
+        return transaction { WarpTable.selectAll().mapNotNull {rowResultToWarpEntity(it)} }
+    }
+
+    private fun rowResultToWarpEntity(row: ResultRow): WarpEntity {
+        return WarpEntity(
+            row[WarpTable.username],
+            row[WarpTable.uuid],
+            row[WarpTable.warpName],
+            row[WarpTable.world],
+            row[WarpTable.x],
+            row[WarpTable.y],
+            row[WarpTable.z],
+            row[WarpTable.pitch],
+            row[WarpTable.yaw])
     }
 }
