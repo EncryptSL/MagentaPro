@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.filter.ChatPunishManager
 import com.github.encryptsl.magenta.common.filter.modules.*
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -26,18 +25,14 @@ class AsyncFilterChat(private val magenta: Magenta) : Listener {
     fun onAsyncChat(event: AsyncChatEvent) {
         val player: Player = event.player
         val phrase = PlainTextComponentSerializer.plainText().serialize(event.message())
-        if(antiSpam.isDetected(player, phrase)) {
-            SchedulerMagenta.delayedTask(magenta, {
-                SpamCache.spam.remove(player.uniqueId, SpamCache.spam[player.uniqueId].toString())
-            }, 1000L)
-            chatPunishManager.action(player,
+        if(antiSpam.isDetected(player, phrase))
+           return chatPunishManager.action(player,
                 event,
                 magenta.localeConfig.getMessage("magenta.filter.antispam"),
                 "Spamovat",
                 Violations.ANTISPAM
             )
-            return
-        }
+
         if(capsLock.isDetected(player, phrase))
             return chatPunishManager.action(
                 player,
