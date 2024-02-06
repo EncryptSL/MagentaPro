@@ -22,12 +22,15 @@ class PlayerJoinListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
 
-        if (!magenta.config.getString("custom-join-message").equals("none", ignoreCase = true) || !user.isVanished()) {
-            event.joinMessage(ModernText.miniModernText(
-                magenta.config.getString("custom-join-message").toString(), TagResolver.resolver(
-                    Placeholder.component("player", player.displayName())
-                )
-            ))
+        if (!magenta.config.getString("custom-join-message").equals("none", ignoreCase = true)) {
+            if (user.isVanished())
+                event.joinMessage(null)
+            else
+                event.joinMessage(ModernText.miniModernText(
+                    magenta.config.getString("custom-join-message").toString(), TagResolver.resolver(
+                        Placeholder.component("player", player.displayName())
+                    )
+                ))
         }
 
         safeFly(player)

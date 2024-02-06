@@ -15,14 +15,17 @@ class PlayerQuitListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
 
-        if (!magenta.config.getString("custom-quit-message").equals("none", ignoreCase = true) || !user.isVanished()) {
-            event.quitMessage(
-                ModernText.miniModernText(
-                    magenta.config.getString("custom-quit-message").toString(), TagResolver.resolver(
-                        Placeholder.component("player", player.displayName())
+        if (!magenta.config.getString("custom-quit-message").equals("none", ignoreCase = true)) {
+            if (user.isVanished())
+                event.quitMessage(null)
+            else
+                event.quitMessage(
+                    ModernText.miniModernText(
+                        magenta.config.getString("custom-quit-message").toString(), TagResolver.resolver(
+                            Placeholder.component("player", player.displayName())
+                        )
                     )
                 )
-            )
         }
 
         magenta.afk.clear(player.uniqueId)
