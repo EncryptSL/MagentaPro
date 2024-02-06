@@ -35,7 +35,10 @@ class IgnoreCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", target.name.toString())
             ))
 
-        user.set("ignore", user.getAccount().getStringList("ignore").add(target.uniqueId.toString()))
+        val ignoreList:MutableList<String> = user.getAccount().getStringList("ignore")
+        ignoreList.add(target.uniqueId.toString())
+
+        user.set("ignore", ignoreList)
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.success"),
             Placeholder.parsed("player", target.name.toString())
         ))
