@@ -32,7 +32,7 @@ class JailCmd(private val magenta: Magenta) {
         @Argument(value = "jailName", suggestions = "jails") jailName: String,
         @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer,
         @Argument(value = "time") time: Long = 120,
-        @Argument(value = "reason") @Greedy reason: String = "Protože bagr ?!"
+        @Argument(value = "reason") @Default("Protože Bagr ?!") @Greedy reason: String
     ) {
         SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(JailEvent(commandSender, jailName, offlinePlayer, time, reason))

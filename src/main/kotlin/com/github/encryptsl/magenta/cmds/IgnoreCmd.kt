@@ -30,7 +30,12 @@ class IgnoreCmd(private val magenta: Magenta) {
             ))
 
 
-        if (luckPermsAPI.hasPermission(target,"magenta.ignore.exempt") || magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
+        if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exempt"),
+                Placeholder.parsed("player", target.name.toString())
+            ))
+
+        if (luckPermsAPI.hasPermission(target,"magenta.ignore.exempt"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exempt"),
                 Placeholder.parsed("player", target.name.toString())
             ))
