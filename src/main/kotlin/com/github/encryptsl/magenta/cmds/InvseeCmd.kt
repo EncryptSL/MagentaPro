@@ -18,8 +18,7 @@ class InvseeCmd(private val magenta: Magenta) {
     @Command("invsee <target>")
     @Permission("magenta.invsee")
     fun onInvseePlayer(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
-        if (luckPermsAPI.hasPermission(target, "magenta.invsee.exempt"))
-            return
+        if (target.hasPermission("magenta.invsee.exempt")) return
 
         SchedulerMagenta.doSync(magenta) {
             player.openInventory(target.inventory)

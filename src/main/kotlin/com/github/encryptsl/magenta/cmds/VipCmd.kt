@@ -21,7 +21,7 @@ class VipCmd(private val magenta: Magenta) {
     private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
     private val group: String = "vip"
 
-    @Command("vip expire")
+    @Command("vipexpire")
     @Permission("magenta.vip.expire")
     fun onVIPExpire(player: Player) {
         try {
@@ -37,7 +37,7 @@ class VipCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("vip expire <player>")
+    @Command("vipexpire <player>")
     @Permission("magenta.vip.expire.other")
     fun onVIPExpireOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         try {
@@ -52,7 +52,7 @@ class VipCmd(private val magenta: Magenta) {
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"),
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
             ))
-            magenta.logger.severe(e.message ?: e.localizedMessage)
+            magenta.logger.severe(e.printStackTrace().toString())
         }
     }
 }

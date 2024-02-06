@@ -38,7 +38,7 @@ class GmCmd(private val magenta: Magenta) {
     @Permission("magenta.gamemode.other")
     fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
 
-        if (luckPermsAPI.hasPermission(target, "magenta.gamemode.modify.exempt")) return
+        if (target.hasPermission("magenta.gamemode.modify.exempt")) return
 
         SchedulerMagenta.doSync(magenta) {
             target.gameMode = gameMode

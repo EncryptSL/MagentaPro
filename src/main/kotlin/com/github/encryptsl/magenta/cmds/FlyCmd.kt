@@ -27,7 +27,7 @@ class FlyCmd(magenta: Magenta) {
     @Permission("magenta.fly.other")
     fun onFlyTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player) {
 
-        if (luckPermsAPI.hasPermission(target, "magenta.fly.modify.exempt")) return
+        if (target.hasPermission("magenta.fly.modify.exempt")) return
 
         commandHelper.allowFly(commandSender, target)
     }

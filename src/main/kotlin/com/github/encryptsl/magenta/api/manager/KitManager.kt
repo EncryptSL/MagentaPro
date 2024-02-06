@@ -13,6 +13,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 
+
 class KitManager(private val magenta: Magenta) {
 
     fun giveKit(player: Player, kitName: String) {
@@ -40,7 +41,10 @@ class KitManager(private val magenta: Magenta) {
                     val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
                     item.addLore(lore)
                 }
-                for (enchantment in Enchantment.values())  {
+
+                val iterator: Iterator<Enchantment> = Enchantment.values().iterator()
+
+                iterator.forEach { enchantment ->
                     val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}"
                     if (magenta.kitConfig.getKit().contains(enchant)) {
                         item.addEnchantment(
