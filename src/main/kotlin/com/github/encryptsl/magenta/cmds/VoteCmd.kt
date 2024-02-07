@@ -62,7 +62,7 @@ class VoteCmd(val magenta: Magenta) {
     }
 
     private fun openMilestonesGui(player: Player) {
-        if (magenta.config.contains("votifier.milestones-gui") || magenta.config.contains("votifier.cumulative"))
+        if (!magenta.config.contains("votifier.milestones-gui") && !magenta.config.contains("votifier.cumulative"))
             return player.sendMessage(ModernText.miniModernText("<red>Milníky nejsou nastavené !"))
 
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
@@ -70,13 +70,14 @@ class VoteCmd(val magenta: Magenta) {
 
         if (magenta.config.contains("votifier.milestones-gui.items")) {
             for (item in magenta.config.getConfigurationSection("votifier.milestones-gui.items")?.getKeys(false)!!) {
-                val material = Material.getMaterial(magenta.config.getString("votifier.milestones.gui.items.$item.item").toString())
+                val material = Material.getMaterial(magenta.config.getString("votifier.milestones-gui.items.$item.item").toString())
                 if (material != null) {
                     val itemStack = ItemBuilder(material, 1).setName(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.items.$item.name").toString()))
+                    val requiredVotes = magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes").minus(playerVotes)
                     val unlockedLores = magenta.config.getStringList("votifier.milestones-gui.items.$item.unlocked-lore").map { ModernText.miniModernText(it) }.toMutableList()
-                    val lockedLores = magenta.config.getStringList("votifier.milestones-gui.items.$item.locked-lore").map { ModernText.miniModernText(it) }.toMutableList()
+                    val lockedLores = magenta.config.getStringList("votifier.milestones-gui.items.$item.locked-lore").map { ModernText.miniModernText(it, Placeholder.parsed("required_votes", requiredVotes.toString())) }.toMutableList()
 
-                    if (magenta.config.getInt("votifier.cumulative.$playerVotes") > playerVotes) {
+                    if (magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes") > playerVotes) {
                         itemStack.addLore(lockedLores)
                     } else {
                         itemStack.addLore(unlockedLores)

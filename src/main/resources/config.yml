@@ -399,6 +399,7 @@ votifier:
       milestone_10:
         item: 'EXPERIENCE_BOTTLE'
         name: '<gold>Milník <white>#1'
+        required_votes: 10
         unlocked-lore:
           - '<gray>Informace'
           - '<gray>Stav: <green>Milník byl dokončen !'
@@ -412,6 +413,7 @@ votifier:
       milestone_30:
         item: 'EXPERIENCE_BOTTLE'
         name: '<gold>Milník <white>#2'
+        required_votes: 30
         unlocked-lore:
           - '<gray>Informace'
           - '<gray>Stav: <green>Milník byl dokončen !'
@@ -425,6 +427,7 @@ votifier:
       milestone_50:
         item: 'EXPERIENCE_BOTTLE'
         name: '<gold>Milník <white>#3'
+        required_votes: 50
         unlocked-lore:
           - '<gray>Informace'
           - '<gray>Stav: <green>Milník byl dokončen !'
