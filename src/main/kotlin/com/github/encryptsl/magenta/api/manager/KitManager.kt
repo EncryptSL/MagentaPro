@@ -55,7 +55,6 @@ class KitManager(private val magenta: Magenta) {
                 }
 
                 inv.addItem(item.create())
-                player.updateInventory()
             }
         }
     }

@@ -26,7 +26,7 @@ class EconomyShopIntegration(private val magenta: Magenta) {
         price: Double,
         item: ItemStack,
         commands: MutableList<String>?,
-        isItem: Boolean?
+        isCommand: Boolean?
     ) {
         try {
             if (economyResponse.transactionSuccess()) {
@@ -50,13 +50,12 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                         SchedulerMagenta.doSync(magenta) {
                             magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, price.toInt(), item.amount))
                         }
-                        if (isItem == true && commands.isNullOrEmpty())
+                        if (isCommand == false && commands.isNullOrEmpty())
                             player.inventory.addItem(item)
                         else
                             commands?.let { ShopHelper.giveRewards(it, player.name, item.amount) }
                     }
                 }
-                player.updateInventory()
             } else {
                 player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.money")))
             }
