@@ -66,7 +66,7 @@ class VoteCmd(val magenta: Magenta) {
             return player.sendMessage(ModernText.miniModernText("<red>Milníky nejsou nastavené !"))
 
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
-        val gui = shopUI.paginatedGui(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.title") ?: player.name), 6)
+        val gui = shopUI.paginatedGui(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.gui.title") ?: player.name), 6)
 
         if (magenta.config.contains("votifier.milestones-gui.items")) {
             for (item in magenta.config.getConfigurationSection("votifier.milestones-gui.items")?.getKeys(false)!!) {
