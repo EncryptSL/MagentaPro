@@ -1,14 +1,14 @@
 package com.github.encryptsl.magenta.cmds
 
+import com.github.encryptsl.magenta.Magenta
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
-import com.github.encryptsl.magenta.Magenta
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
 
-@Suppress("UNUSED")
+@Suppress("UNUSED", "UNUSED_PARAMETER")
 @CommandDescription("Provided by plugin MagentaPro")
 class AfkCmd(private val magenta: Magenta) {
     @Command("afk")

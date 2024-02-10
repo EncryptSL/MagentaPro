@@ -1,16 +1,16 @@
 package com.github.encryptsl.magenta.cmds
 
+import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.CommandItemManager
+import org.bukkit.Material
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotation.specifier.Range
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
-import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.CommandItemManager
-import org.bukkit.Material
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")

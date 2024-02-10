@@ -14,12 +14,8 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import java.util.*
 
 class BlockListener(private val magenta: Magenta) : Listener {
-
-    private val earnMoneyProgress = HashMap<UUID, Int>()
-
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreakJail(event: BlockBreakEvent) {
         val player = event.player
@@ -37,17 +33,17 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val block = event.block
         val silkyTools = magenta.config.getStringList("silky.tools")
 
-        if (magenta.config.getBoolean("silky.enabled")) {
-            if (block.type == Material.SPAWNER) {
-                val itemInHand = player.inventory.itemInMainHand
-                val tools = silkyTools.contains(itemInHand.type.name)
-                if (tools && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) {
-                    if (!player.hasPermission("magenta.silky.spawner"))
-                        return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.silky.spawner.error.permissions")))
+        if (!magenta.config.getBoolean("silky.enabled")) return
 
-                    BlockUtils.dropSpawner(block)
-                }
-            }
+        if (block.type == Material.SPAWNER) {
+            val itemInHand = player.inventory.itemInMainHand
+            val tools = silkyTools.contains(itemInHand.type.name)
+            if (!tools && !itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) return
+
+            if (!player.hasPermission("magenta.silky.spawner"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.silky.spawner.error.permissions")))
+
+            BlockUtils.dropSpawner(block)
         }
     }
 
@@ -56,12 +52,12 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val block = event.block
         val material = block.type
+        val user = magenta.user.getUser(player.uniqueId)
         if (!magenta.stringUtils.inInList("jobs.whitelist_world", player.world.name)) return
         if (!magenta.stringUtils.inInList("jobs.miner.blocks", material.name)) return
 
-        earnMoneyProgress.putIfAbsent(player.uniqueId, 0)
-        earnMoneyProgress.computeIfPresent(player.uniqueId) { _, progress -> progress + 1}
-        val currentProgress = earnMoneyProgress[player.uniqueId] ?: 0
+        user.set("mined.blocks", user.getAccount().getInt("mined.blocks", 0) + 1)
+        val currentProgress = user.getAccount().getInt("mined.blocks")
 
         player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.action_bar").toString(), TagResolver.resolver(
             Placeholder.parsed("current_progress", currentProgress.toString()),
@@ -73,7 +69,8 @@ class BlockListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("current_progress", currentProgress.toString()),
                 Placeholder.parsed("max_progress", magenta.config.getInt("jobs.miner.max_progress").toString()),
             )))
-            earnMoneyProgress.remove(player.uniqueId)
+
+            user.set("mined.blocks", 0)
             magenta.config.getStringList("jobs.miner.rewards").forEach {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(it, player))
             }

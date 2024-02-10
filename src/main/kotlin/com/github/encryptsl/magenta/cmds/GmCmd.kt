@@ -8,6 +8,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.GameMode
 import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
@@ -29,24 +30,44 @@ class GmCmd(private val magenta: Magenta) {
             )))
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
-        SchedulerMagenta.doSync(magenta) {
-            player.gameMode = gameMode
-        }
+        setGameModeToTarget(player, gameMode)
     }
 
     @Command("gamemode|gm <mode> <target>")
     @Permission("magenta.gamemode.other")
     fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
+        setGameModeProxy(commandSender, target, gameMode)
+    }
 
-        if (target.hasPermission("magenta.gamemode.modify.exempt")) return
+    private fun setGameModeProxy(commandSender: CommandSender, target: Player, gameMode: GameMode) {
+        val isSenderConsole = commandSender is ConsoleCommandSender
 
-        SchedulerMagenta.doSync(magenta) {
-            target.gameMode = gameMode
+        if (isSenderConsole || commandSender.isOp) {
+            setGameModeByConsoleOrOperator(commandSender, target, gameMode)
+        } else {
+            if (target.hasPermission("magenta.gamemode.modify.exempt")) return
+
+            setGameModeToTarget(target, gameMode)
+            sendMessages(commandSender, target, gameMode)
         }
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
+    }
+
+    private fun setGameModeByConsoleOrOperator(commandSender: CommandSender, target: Player, gameMode: GameMode) {
+        setGameModeToTarget(target, gameMode)
+        sendMessages(commandSender, target, gameMode)
+    }
+
+    private fun sendMessages(commandSender: CommandSender, player: Player, gameMode: GameMode) {
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.to"), TagResolver.resolver(
-            Placeholder.parsed("player", target.name),
+            Placeholder.parsed("player", player.name),
             Placeholder.parsed("gamemode", gameMode.name)
         )))
+    }
+
+    private fun setGameModeToTarget(player: Player, gameMode: GameMode) {
+        SchedulerMagenta.doSync(magenta) {
+            player.gameMode = gameMode
+        }
     }
 }

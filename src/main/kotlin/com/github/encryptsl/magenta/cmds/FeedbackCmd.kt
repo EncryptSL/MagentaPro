@@ -1,10 +1,5 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotation.specifier.Greedy
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.avatar
@@ -12,6 +7,11 @@ import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.trimUUID
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotation.specifier.Greedy
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")

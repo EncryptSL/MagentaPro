@@ -1,14 +1,14 @@
 package com.github.encryptsl.magenta.cmds
 
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.Permission
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.InvalidConfigurationException
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UnstableApiUsage", "UNUSED")
 @Command("magenta|mg")
