@@ -8,6 +8,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.block.Sign
+import org.bukkit.block.sign.Side
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -73,6 +75,19 @@ class BlockListener(private val magenta: Magenta) : Listener {
             user.set("mined.blocks", 0)
             magenta.config.getStringList("jobs.miner.rewards").forEach {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(it, player))
+            }
+        }
+    }
+
+    @EventHandler
+    fun onBreakWarpSign(event: BlockBreakEvent) {
+        val player = event.player
+        val block = event.block
+
+        if (block.type.name.endsWith("_SIGN")) {
+            val sign: Sign = block.state as Sign
+            if (sign.getSide(Side.FRONT).line(0).contains(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp"))) && !player.hasPermission("magenta.sign.warp.break")) {
+                event.isCancelled = true
             }
         }
     }

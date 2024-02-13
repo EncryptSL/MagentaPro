@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.sql.WarpSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import com.github.encryptsl.magenta.common.database.tables.WarpTable
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -108,10 +109,17 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
 
     override fun getWarp(warpName: String): WarpEntity {
        val row = transaction {
-            WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).first()
+            WarpTable.selectAll().where(WarpTable.warpName eq warpName).first()
         }
 
         return rowResultToWarpEntity(row)
+    }
+
+    override fun toLocation(warpName: String): Location {
+        val rowResult = getWarp(warpName)
+
+        return Location(Bukkit.getWorld(rowResult.world), rowResult.x.toDouble(),
+            rowResult.y.toDouble(), rowResult.z.toDouble(), rowResult.yaw, rowResult.pitch)
     }
 
     override fun getWarps(): List<WarpEntity> {

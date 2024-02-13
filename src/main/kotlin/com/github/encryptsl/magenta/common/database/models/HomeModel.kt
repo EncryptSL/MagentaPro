@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import com.github.encryptsl.magenta.common.database.sql.HomeSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -84,6 +85,12 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
 
     override fun getHomesByOwner(player: Player): List<HomeEntity> {
         return transaction { HomeTable.selectAll().where( HomeTable.uuid eq player.uniqueId.toString()).mapNotNull{rowResultToHomeEntity(it)} }
+    }
+
+    override fun toLocation(player: Player, home: String): Location {
+        val homes = getHomesByOwner(player).first { h -> h.homeName == home }
+
+        return Location(Bukkit.getWorld(homes.world), homes.x.toDouble(), homes.y.toDouble(), homes.z.toDouble(), homes.yaw, homes.pitch)
     }
 
     override fun getHomes(): List<HomeEntity> {

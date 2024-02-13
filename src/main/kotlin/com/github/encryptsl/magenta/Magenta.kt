@@ -157,6 +157,7 @@ open class Magenta : JavaPlugin() {
             BlockListener(this),
             PlayerListener(this),
             PlayerCommandPreprocessListener(this),
+            SignListener(this),
             PrivateMessageListener(this),
             PortalListener(this),
             HomeListeners(this),

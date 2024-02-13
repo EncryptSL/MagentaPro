@@ -16,5 +16,6 @@ interface WarpSQL {
     fun getWarpExist(warpName: String): Boolean
     fun canSetWarp(player: Player): Boolean
     fun getWarp(warpName: String): WarpEntity
+    fun toLocation(warpName: String): Location
     fun getWarps(): List<WarpEntity>
 }

@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import solar.squares.pixelwidth.utils.CenterAPI
@@ -25,10 +26,12 @@ object ModernText {
         return miniMessage.deserialize(convertVariables(message), resolver).decoration(TextDecoration.ITALIC, false)
     }
 
+    @JvmStatic
     fun miniModernTextCenter(message: String): Component {
         return CenterAPI.center(miniMessage.deserialize(message))
     }
 
+    @JvmStatic
     fun miniModernTextCenter(message: String, resolver: TagResolver): Component {
         return CenterAPI.center(miniMessage.deserialize(convertVariables(message), resolver))
     }
@@ -38,6 +41,9 @@ object ModernText {
     {
         return if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) PlaceholderAPI.setPlaceholders(player, message) else message
     }
+
+    fun convertComponentToText(component: Component): String
+        = PlainTextComponentSerializer.plainText().serialize(component)
 
     @JvmStatic
     fun <V : Any> hover(action: HoverEvent.Action<V>, value: V): HoverEvent<V> {

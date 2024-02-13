@@ -14,6 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 
 
+@Suppress("DEPRECATION")
 class KitManager(private val magenta: Magenta) {
 
     fun giveKit(player: Player, kitName: String) {

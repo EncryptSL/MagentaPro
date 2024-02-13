@@ -61,6 +61,7 @@ permissions:
       magenta.votes.*: true
       magenta.warp.*: true
       magenta.vip.expire.other: true
+      magenta.signs.*: true
       magenta.restriction.bypass.*: true
       magenta.chat.filter.bypass.*: true
   magenta.moderator:
@@ -401,6 +402,11 @@ permissions:
       magenta.move.warp: true
       magenta.rename.warp: true
       magenta.warp.list: true
+  magenta.signs.*:
+    default: false
+    children:
+      magenta.sign.warp.place: true
+      magenta.sign.warp.break: true
   magenta.exempts.*:
     default: false
     children:

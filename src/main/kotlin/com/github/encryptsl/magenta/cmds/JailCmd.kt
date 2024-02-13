@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
 
-@Suppress("UNUSED")
+@Suppress("UNUSED", "UNUSED_PARAMETER")
 @CommandDescription("Provived by plugin MagentaPro")
 class JailCmd(private val magenta: Magenta) {
 

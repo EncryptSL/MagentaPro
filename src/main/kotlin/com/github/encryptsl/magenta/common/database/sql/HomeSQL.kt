@@ -19,6 +19,8 @@ interface HomeSQL {
 
     fun getHomesByOwner(player: Player): List<HomeEntity>
 
+    fun toLocation(player: Player, home: String): Location
+
     fun getHomes(): List<HomeEntity>
 
 }

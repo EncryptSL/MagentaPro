@@ -6,7 +6,6 @@ import com.github.encryptsl.magenta.api.events.warp.*
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -163,9 +162,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                     TagResolver.resolver(Placeholder.parsed("warp", warpName))))
 
         try {
-            val (_: String, _: String, _: String, world: String, x: Int, y: Int, z: Int, pitch: Float, yaw: Float) = magenta.warpModel.getWarps().first { s -> s.warpName == warpName}
-
-            val location = Location(Bukkit.getWorld(world), x.toDouble(), y.toDouble(), z.toDouble(), yaw, pitch)
+            val location = magenta.warpModel.toLocation(warpName)
             val teleportSelfMessage = magenta.localeConfig.getMessage("magenta.command.warp.success.teleport.self")
             val teleportMessageTo = magenta.localeConfig.getMessage("magenta.command.warp.success.teleport.to")
 

@@ -8,7 +8,6 @@ import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -200,9 +199,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             user.save()
         }
 
-        val (_: String, _: String, _: String, world: String, x: Int, y: Int, z: Int, pitch: Float, yaw: Float) = magenta.homeModel.getHomesByOwner(player).first { s -> s.homeName == homeName }
-
-        player.teleport(Location(Bukkit.getWorld(world), x.toDouble(), z.toDouble(), y.toDouble(), yaw, pitch))
+        player.teleport(magenta.homeModel.toLocation(player, homeName))
 
         player.sendMessage(
             ModernText.miniModernText(

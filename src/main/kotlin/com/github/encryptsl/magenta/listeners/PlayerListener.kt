@@ -10,11 +10,14 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
+import org.bukkit.block.Sign
+import org.bukkit.block.sign.Side
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.*
@@ -170,6 +173,41 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    fun onPlayerInteractSignWarp(event: PlayerInteractEvent) {
+        val player = event.player
+        val block = event.clickedBlock ?: return
+        if (event.action != Action.RIGHT_CLICK_BLOCK) return
+
+        if (!block.type.name.endsWith("_SIGN")) return
+
+            val sign: Sign = block.state as Sign
+
+            val side = sign.getSide(Side.FRONT)
+
+        if (!side.line(0).toString().contains(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp")).toString()))
+            return
+
+        if (!sign.isWaxed) {
+            sign.isWaxed = true
+        }
+
+        val convertedWarpName = ModernText.convertComponentToText(side.line(1))
+
+        if (convertedWarpName.isBlank() || convertedWarpName.isEmpty()) {
+            block.breakNaturally()
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp.error.name.empty")))
+        }
+
+        if (!magenta.warpModel.getWarpExist(convertedWarpName)) {
+            block.breakNaturally()
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp.error.not.exist"), Placeholder.component("warp", side.line(1))))
+        }
+
+        player.teleport(magenta.warpModel.toLocation(convertedWarpName))
+        event.isCancelled = true
     }
 
     @EventHandler(priority = EventPriority.LOW)
