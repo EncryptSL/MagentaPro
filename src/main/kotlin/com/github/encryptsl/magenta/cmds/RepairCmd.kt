@@ -26,13 +26,12 @@ class RepairCmd(private val magenta: Magenta) {
         if (inventory.itemInMainHand.type.isEmpty || inventory.itemInMainHand.type.isAir || inventory.itemInMainHand.isEmpty)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.hand")))
 
-        val timeLeft = user.cooldownManager.getRemainingDelay("repair")
-        if (user.cooldownManager.hasDelay("repair") && !player.hasPermission("magenta.repair.delay.exempt"))
+        val timeLeft = user.getRemainingCooldown("repair")
+        if (user.hasDelay("repair") && !player.hasPermission("magenta.repair.delay.exempt"))
             return commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
         if (delay != 0L && delay != -1L || !player.hasPermission("magenta.repair.delay.exempt")) {
-            user.cooldownManager.setDelay(Duration.ofSeconds(delay), "repair")
-            user.save()
+            user.setDelay(Duration.ofSeconds(delay), "repair")
         }
 
         commandHelper.repairItem(player)

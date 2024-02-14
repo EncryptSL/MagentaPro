@@ -13,7 +13,7 @@ class JailCountDownTask(private val magenta: Magenta) : Runnable {
     override fun run() {
         magenta.server.onlinePlayers.forEach { player ->
             val account = magenta.user.getUser(player.uniqueId)
-            val timeLeft = account.getRemainingTime()
+            val timeLeft = account.getRemainingJailTime()
             if (account.hasPunish()) {
                 if (timeLeft == 0L) {
                     SchedulerMagenta.doSync(magenta) {

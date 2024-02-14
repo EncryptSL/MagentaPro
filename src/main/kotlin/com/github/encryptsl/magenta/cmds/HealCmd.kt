@@ -25,15 +25,14 @@ class HealCmd(private val magenta: Magenta) {
         val delay = magenta.config.getLong("heal-cooldown")
         val user = magenta.user.getUser(player.uniqueId)
 
-        val timeLeft = user.cooldownManager.getRemainingDelay("heal")
+        val timeLeft = user.getRemainingCooldown("heal")
 
-        if (user.cooldownManager.hasDelay("heal") && !player.hasPermission("magenta.heal.delay.exempt")) {
+        if (user.hasDelay("heal") && !player.hasPermission("magenta.heal.delay.exempt")) {
             return commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
         }
 
         if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {
-            user.cooldownManager.setDelay(Duration.ofSeconds(delay), "heal")
-            user.save()
+            user.setDelay(Duration.ofSeconds(delay), "heal")
         }
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
