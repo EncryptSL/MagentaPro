@@ -8,6 +8,7 @@ import dev.triumphteam.gui.components.GuiType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerTeleportEvent
 
 class HomeGUI(private val magenta: Magenta) {
 
@@ -35,8 +36,14 @@ class HomeGUI(private val magenta: Magenta) {
                 itemHomeBuilder.addLore(lores)
             }
 
-            val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem()
+            val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem {action ->
+                if (action.isLeftClick) {
+                    player.teleport(magenta.homeModel.toLocation(player, home.homeName), PlayerTeleportEvent.TeleportCause.PLUGIN)
+                }
+            }
+
             gui.addItem(item)
+            gui.open(player)
         }
     }
 }
