@@ -188,15 +188,14 @@ class HomeListeners(private val magenta: Magenta) : Listener {
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.not.exist"),
                     TagResolver.resolver(Placeholder.parsed("home", homeName))))
 
-        val timeLeft: Duration = user.cooldownManager.getRemainingDelay("home")
+        val timeLeft: Duration = user.getRemainingCooldown("home")
 
-        if (user.cooldownManager.hasDelay("home") && !player.hasPermission("magenta.home.delay.exempt")) {
+        if (user.hasDelay("home") && !player.hasPermission("magenta.home.delay.exempt")) {
             return commandHelper.delayMessage(player, "magenta.command.home.error.delay", timeLeft)
         }
 
         if (delay != 0L && delay != -1L || !player.hasPermission("magenta.home.delay.exempt")) {
-            user.cooldownManager.setDelay(Duration.ofSeconds(delay), "home")
-            user.save()
+            user.setDelay(Duration.ofSeconds(delay), "home")
         }
 
         player.teleport(magenta.homeModel.toLocation(player, homeName))

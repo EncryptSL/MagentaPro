@@ -102,15 +102,14 @@ class KitListeners(private val magenta: Magenta) : Listener {
         val kitManager = event.kitManager
         val user = magenta.user.getUser(player.uniqueId)
 
-        val timeLeft: Duration = user.cooldownManager.getRemainingDelay("kits.$kitName")
+        val timeLeft: Duration = user.getRemainingCooldown("kits.$kitName")
 
-        if (user.cooldownManager.hasDelay("kits.$kitName") && !player.hasPermission("magenta.kit.delay.exempt"))
+        if (user.hasDelay("kits.$kitName") && !player.hasPermission("magenta.kit.delay.exempt"))
             return commandHelper.delayMessage(player, "magenta.command.kit.error.delay", timeLeft)
 
         try {
             if (delay != 0L && delay != -1L || !player.hasPermission("magenta.kit.delay.exempt")) {
-                user.cooldownManager.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
-                user.save()
+                user.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
             }
             kitManager.giveKit(player, kitName)
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(

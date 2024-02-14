@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.api.account
 
-import com.github.encryptsl.magenta.api.PlayerCooldown
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
@@ -10,13 +9,13 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Duration
+import java.time.Instant
 import java.util.*
 
 class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account {
 
     private val configUtil = ConfigUtil(plugin,"/players/$uuid.yml")
 
-    val cooldownManager: PlayerCooldown by lazy { PlayerCooldown(uuid, this) }
     val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI(plugin) }
 
     override fun createDefaultData(player: Player) {
@@ -62,14 +61,12 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     }
 
     override fun setJailTimeout(seconds: Long) {
-        cooldownManager.setDelay(Duration.ofSeconds(seconds), "jail")
-        save()
+        setDelay(Duration.ofSeconds(seconds), "jail")
     }
 
     override fun setOnlineTime(millis: Long) {
         val onlineTime = plugin.config.getBoolean("online-jail-time")
         set("timestamps.onlinejail", if (onlineTime) millis else 0)
-        save()
     }
 
     override fun set(path: String, value: Any?) {
@@ -86,6 +83,14 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
             }
             save()
         }
+    }
+
+    override fun setDelay(duration: Duration?, type: String) {
+        set("timestamps.$type", Instant.now().plus(duration).toEpochMilli())
+    }
+
+    override fun resetDelay(type: String) {
+        set("timestamps.$type", 0)
     }
 
     override fun save() {
@@ -111,17 +116,32 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     override fun hasPunish(): Boolean {
         val onlineTime = plugin.config.getBoolean("online-jail-time")
 
-        return if (onlineTime) getOnlineJailedTime() > 0 else cooldownManager.hasDelay("jail")
+        return if (onlineTime) getOnlineJailedTime() > 0 else hasDelay("jail")
+    }
+
+    override fun hasDelay(type: String): Boolean {
+        val cooldown: Instant = Instant.ofEpochMilli(getAccount().getLong("timestamps.$type"))
+        return Instant.now().isBefore(cooldown)
     }
 
     override fun getOnlineJailedTime(): Long {
         return getAccount().getLong("timestamps.onlinejail")
     }
 
-    override fun getRemainingTime(): Long {
+    override fun getRemainingJailTime(): Long {
         val onlineTime = plugin.config.getBoolean("online-jail-time")
 
-        return if (onlineTime) getOnlineJailedTime().minus(1) else cooldownManager.getRemainingDelay("jail").seconds
+        return if (onlineTime) getOnlineJailedTime().minus(1) else getRemainingCooldown("jail").seconds
+    }
+
+    override fun getRemainingCooldown(type: String): Duration {
+        val delay: Instant = Instant.ofEpochMilli(getAccount().getLong("timestamps.$type"))
+        val now = Instant.now()
+        return if (now.isBefore(delay)) {
+            Duration.between(now, delay)
+        } else {
+            Duration.ZERO
+        }
     }
 
     override fun getVotes(): Int {

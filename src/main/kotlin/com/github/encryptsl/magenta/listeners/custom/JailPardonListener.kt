@@ -31,8 +31,8 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
             ), "magenta.jail.pardon.event"
         )
 
-        user.cooldownManager.removeDelay("jail")
-        user.cooldownManager.removeDelay("onlinejail")
+        user.resetDelay("jail")
+        user.resetDelay("onlinejail")
     }
 
 }
