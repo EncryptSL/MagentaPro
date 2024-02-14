@@ -61,7 +61,11 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun setHomeIcon(player: Player, home: String, icon: String) {
-        transaction { HomeTable.update({HomeTable.uuid eq player.uniqueId}) {} }
+        SchedulerMagenta.doAsync(plugin) {
+            transaction { HomeTable.update({HomeTable.uuid eq player.uniqueId and (HomeTable.home eq home)}) {
+                it[homeIcon] = icon
+            } }
+        }
     }
 
     override fun getHomeExist(player: Player, home: String): Boolean {

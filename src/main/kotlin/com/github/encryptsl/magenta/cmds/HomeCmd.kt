@@ -1,16 +1,15 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.InfoType
-import com.github.encryptsl.magenta.api.events.home.*
+import com.github.encryptsl.magenta.api.events.home.HomeCreateEvent
+import com.github.encryptsl.magenta.api.events.home.HomeDeleteEvent
+import com.github.encryptsl.magenta.api.events.home.HomeRenameEvent
+import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.home.HomeGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -34,8 +33,9 @@ class HomeCmd(private val magenta: Magenta) {
         }
     }
 
+    @Command("sethomeicon <home> [icon]")
     @Permission("magenta.sethomeicon")
-    fun onSetHomeIcon(player: Player, @Argument(value = "home") home: String, icon: Material) {
+    fun onSetHomeIcon(player: Player, @Argument(value = "home") home: String, @Argument("icon", suggestions = "homeIcons") @Default("OAK_DOOR") icon: Material) {
         SchedulerMagenta.doSync(magenta) {
             magenta.homeModel.setHomeIcon(player, home, icon.name)
         }
@@ -47,7 +47,6 @@ class HomeCmd(private val magenta: Magenta) {
         SchedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
         }
-
     }
 
     @Command("renamehome <oldName> <newName>")
@@ -58,11 +57,12 @@ class HomeCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("homes|homelist")
+    @Command("homes")
     @Permission("magenta.home.list")
     fun onHomeList(player: Player) {
-        SchedulerMagenta.doSync(magenta) {
+        homeMenuGUI.openHomeGUI(player)
+        /*SchedulerMagenta.doSync(magenta) {
             magenta.pluginManager.callEvent(HomeInfoEvent(player, null, InfoType.LIST))
-        }
+        }*/
     }
 }

@@ -27,7 +27,7 @@ class JailListener(private val magenta: Magenta) : Listener {
 
         if (luckPerms.hasPermission(target,"magenta.jail.exempt")) return
 
-        if (magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") == null)
+        if (magenta.jailConfig.getConfig().getConfigurationSection("jails.$jailName") == null)
             return commandManager.sendMessage(
                 ModernText.miniModernText(
                     magenta.localeConfig.getMessage("magenta.command.jail.error.exist"), TagResolver.resolver(
@@ -42,7 +42,7 @@ class JailListener(private val magenta: Magenta) : Listener {
             )))
 
         if (target.player != null) {
-            val jailSection = magenta.jailConfig.getJail().getConfigurationSection("jails.$jailName") ?: return
+            val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails.$jailName") ?: return
             target.player?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.jailed")))
 
             magenta.pluginManager.callEvent(JailTeleportEvent(target.player!!, Location(

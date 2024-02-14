@@ -16,7 +16,7 @@ class JailDeleteListener(private val magenta: Magenta) : Listener {
         val jailName = event.jailName
 
         try {
-            val jails = magenta.jailConfig.getJail().getConfigurationSection("jails")
+            val jails = magenta.jailConfig.getConfig().getConfigurationSection("jails")
             jails?.set(jailName, null)
             magenta.jailConfig.save()
             magenta.jailConfig.reload()

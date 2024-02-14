@@ -104,7 +104,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         if (max == -1) return true
 
 
-        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId.toString()).count() < max }
+        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
     }
 
     override fun getWarp(warpName: String): WarpEntity {
