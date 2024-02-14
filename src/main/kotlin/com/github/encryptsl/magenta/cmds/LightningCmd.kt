@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
@@ -14,13 +13,8 @@ class LightningCmd(private val magenta: Magenta) {
     @Command("lightning|thor <player>")
     @Permission("magenta.lightning")
     fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Flag(value = "damage", aliases = ["d"]) damage: Boolean) {
-        SchedulerMagenta.doSync(magenta) {
-            if (damage) {
-                target.world.strikeLightning(target.location)
-            } else {
-                target.world.strikeLightningEffect(target.location)
-            }
-        }
+        if (damage) target.world.strikeLightning(target.location) else target.world.strikeLightningEffect(target.location)
+
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.lightning.success.to"),
             Placeholder.parsed("player", target.name)
         ))

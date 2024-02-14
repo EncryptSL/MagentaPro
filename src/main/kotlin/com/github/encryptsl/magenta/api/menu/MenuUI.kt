@@ -1,0 +1,257 @@
+package com.github.encryptsl.magenta.api.menu
+
+import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
+import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
+import com.github.encryptsl.magenta.common.utils.ModernText
+import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.components.GuiType
+import dev.triumphteam.gui.components.util.GuiFiller
+import dev.triumphteam.gui.guis.Gui
+import dev.triumphteam.gui.guis.GuiItem
+import dev.triumphteam.gui.guis.PaginatedGui
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.Material
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.Player
+
+class MenuUI(private val magenta: Magenta) : Menu {
+
+    override fun simpleGui(title: String, size: Int, guiType: GuiType): Gui {
+        return Gui.gui()
+            .title(ModernText.miniModernText(title))
+            .type(guiType)
+            .rows(size)
+            .disableItemPlace()
+            .disableItemTake()
+            .disableItemDrop()
+            .disableItemSwap()
+            .create()
+    }
+
+    override fun paginatedGui(title: Component, size: Int): PaginatedGui {
+        return Gui.paginated()
+            .title(title)
+            .rows(size)
+            .disableItemPlace()
+            .disableItemTake()
+            .disableItemDrop()
+            .disableItemSwap()
+            .create()
+    }
+
+    override fun fillBorder(
+        guiFiller: GuiFiller,
+        fileConfiguration: FileConfiguration
+    ) {
+        if (fileConfiguration.contains("menu.gui.fill.border")) {
+            guiFiller.fillBorder(
+                GuiItem(
+                    Material.valueOf(
+                        fileConfiguration.getString("menu.gui.fill.border").toString()
+                    )
+                )
+            )
+            return
+        }
+    }
+
+    override fun fillTop(
+        guiFiller: GuiFiller,
+        fileConfiguration: FileConfiguration
+    ) {
+        if (fileConfiguration.contains("menu.gui.fill.top")) {
+            guiFiller.fillTop(
+                GuiItem(
+                    Material.valueOf(
+                        fileConfiguration.getString("menu.gui.fill.top").toString()
+                    )
+                )
+            )
+            return
+        }
+    }
+
+    override fun fillBottom(
+        guiFiller: GuiFiller,
+        fileConfiguration: FileConfiguration
+    ) {
+        if (fileConfiguration.contains("menu.gui.fill.bottom")) {
+            guiFiller.fillBottom(
+                GuiItem(
+                    Material.valueOf(
+                        fileConfiguration.getString("menu.gui.fill.bottom").toString()
+                    )
+                )
+            )
+            return
+        }
+    }
+
+    override fun fillFull(
+        guiFiller: GuiFiller,
+        fileConfiguration: FileConfiguration
+    ) {
+        if (fileConfiguration.contains("menu.gui.fill.full")) {
+            guiFiller.fill(
+                GuiItem(
+                    Material.valueOf(
+                        fileConfiguration.getString("menu.gui.fill.full").toString()
+                    )
+                )
+            )
+            return
+        }
+    }
+
+    override fun fillSide(
+        guiFiller: GuiFiller,
+        fileConfiguration: FileConfiguration
+    ) {
+        if (fileConfiguration.contains("menu.gui.fill.side")) {
+            val side = fileConfiguration.get("menu.gui.fill.mode") ?: GuiFiller.Side.BOTH
+
+            val type = GuiFiller.Side.valueOf(side.toString())
+
+            guiFiller.fillSide(type, listOf(
+                GuiItem(
+                    Material.valueOf(
+                        fileConfiguration.getString("menu.gui.fill.side").toString()
+                    )
+                ))
+            )
+            return
+        }
+    }
+
+    override fun previousPage(
+        player: Player,
+        material: Material,
+        fileConfiguration: FileConfiguration,
+        btnType: String,
+        gui: PaginatedGui
+    ) {
+        if (fileConfiguration.contains("menu.gui.button.$btnType")) {
+            if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions")))
+
+            if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.row"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row")))
+
+            if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.col"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col")))
+
+            if (fileConfiguration.getString("menu.gui.button.$btnType.item").equals(material.name, true)) {
+                gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
+                    fileConfiguration.getInt("menu.gui.button.$btnType.positions.col"),
+                    ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.$btnType.name").toString()))
+                        .asGuiItem { gui.previous() }
+                )
+            }
+        }
+    }
+
+    override fun nextPage(
+        player: Player,
+        material: Material,
+        fileConfiguration: FileConfiguration,
+        btnType: String,
+        gui: PaginatedGui
+    ) {
+        if (fileConfiguration.contains("menu.gui.button.$btnType")) {
+            if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.row"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.col"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (fileConfiguration.getString("menu.gui.button.$btnType.item").equals(material.name, true)) {
+                gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
+                    fileConfiguration.getInt("menu.gui.button.$btnType.positions.col"),
+                    ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.$btnType.name").toString()))
+                        .asGuiItem { gui.next() }
+                )
+            }
+        }
+    }
+
+    override fun closeButton(
+        player: Player,
+        material: Material,
+        gui: PaginatedGui,
+        fileConfiguration: FileConfiguration,
+        vaultShop: VaultShop
+    ) {
+        if (fileConfiguration.contains("menu.gui.button.close")) {
+            if (!fileConfiguration.contains("menu.gui.button.close.positions"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.close.positions.row"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.close.action"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.action"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) {
+                gui.setItem(fileConfiguration.getInt("menu.gui.button.close.positions.row"),
+                    fileConfiguration.getInt("menu.gui.button.close.positions.col"),
+                    ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
+                        .asGuiItem {
+                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) vaultShop.openShop(player) else gui.close(
+                                player
+                            )
+                        })
+            }
+        }
+    }
+
+    override fun closeButton(
+        player: Player,
+        material: Material,
+        gui: PaginatedGui,
+        fileConfiguration: FileConfiguration,
+        creditShop: CreditShop
+    ) {
+        if (fileConfiguration.contains("menu.gui.button.close")) {
+            if (!fileConfiguration.contains("menu.gui.button.close.positions"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.close.positions.row"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (!fileConfiguration.contains("menu.gui.button.close.action"))
+                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.action"), Placeholder.parsed("file", fileConfiguration.name)))
+
+            if (fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) {
+                gui.setItem(fileConfiguration.getInt("menu.gui.button.close.positions.row"),
+                    fileConfiguration.getInt("menu.gui.button.close.positions.col"),
+                    ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
+                        .asGuiItem {
+                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) creditShop.openShop(player) else gui.close(
+                                player
+                            )
+                        })
+            }
+        }
+    }
+
+    fun useAllFillers(filler: GuiFiller, fileConfiguration: FileConfiguration) {
+        if (fileConfiguration.contains("menu.gui.fill")) {
+            fillBorder(filler, fileConfiguration)
+            fillTop(filler, fileConfiguration)
+            fillBottom(filler, fileConfiguration)
+            fillSide(filler, fileConfiguration)
+            fillFull(filler, fileConfiguration)
+        }
+    }
+}

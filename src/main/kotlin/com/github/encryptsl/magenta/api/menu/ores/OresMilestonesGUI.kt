@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.ores
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopUI
+import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -11,29 +11,32 @@ import org.bukkit.entity.Player
 
 class OresMilestonesGUI(private val magenta: Magenta) {
 
-    private val shopUI: ShopUI by lazy { ShopUI(magenta) }
+    private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     fun openMilestonesOresGUI(player: Player) {
-        val gui = shopUI.simpleGui(magenta.oresMenuConfig.getConfig().getString("menu.display").toString(), 6, GuiType.CHEST)
+        val gui = menuUI.simpleGui(magenta.oresMenuConfig.getConfig().getString("menu.gui.display").toString(), 6, GuiType.CHEST)
+
+
+        menuUI.useAllFillers(gui.filler, magenta.oresMenuConfig.getConfig())
 
         for (material in Material.entries) {
             if (magenta.config.contains("level.ores.${material.name}")) {
                 val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
                 itemStack.setName(ModernText.miniModernText(
-                    magenta.oresMenuConfig.getConfig().getString("menu.item.display")
+                    magenta.oresMenuConfig.getConfig().getString("menu.gui.item.display")
                         ?: player.name, Placeholder.parsed("item", material.name)
                 ))
                 val requiredLevel = magenta.config.getInt("level.ores.${material.name}")
                 if (magenta.levelModel.getLevel(player.uniqueId).level < magenta.config.getInt("level.ores.${material.name}")) {
                     val lores = magenta.oresMenuConfig
                         .getConfig()
-                        .getStringList("menu.item.locked-lore")
+                        .getStringList("menu.gui.item.locked-lore")
                         .map { ModernText.miniModernText(it, Placeholder.parsed("level", requiredLevel.toString())) }
                         .toMutableList()
                     itemStack.addLore(lores)
                 } else {
                     val lores = magenta.oresMenuConfig
                         .getConfig()
-                        .getStringList("menu.item.unlocked-lore")
+                        .getStringList("menu.gui.item.unlocked-lore")
                         .map { ModernText.miniModernText(it) }
                         .toMutableList()
                     itemStack.addLore(lores)

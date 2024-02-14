@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -25,9 +24,7 @@ class VanishCmd(private val magenta: Magenta) {
         val user = magenta.user.getUser(player.uniqueId)
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
-            SchedulerMagenta.doSync(magenta) {
-                commandHelper.doVanish(players, player, user.isVanished())
-            }
+            commandHelper.doVanish(players, player, user.isVanished())
         }
 
         val mode = commandHelper.isVanished(user.isVanished())
@@ -47,9 +44,7 @@ class VanishCmd(private val magenta: Magenta) {
         val user = magenta.user.getUser(target.uniqueId)
 
         magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
-            SchedulerMagenta.doSync(magenta) {
-                commandHelper.doVanish(players, target, user.isVanished())
-            }
+            commandHelper.doVanish(players, target, user.isVanished())
         }
 
         val mode = commandHelper.isVanished(user.isVanished())

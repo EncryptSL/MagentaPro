@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.pm.PrivateMessageEvent
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
@@ -27,8 +26,6 @@ class MsgCmd(private val magenta: Magenta) {
         @Argument(value = "player", suggestions = "players") target: Player,
         @Argument(value = "message") @Greedy message: String
     ) {
-        SchedulerMagenta.doSync(magenta) {
-            PrivateMessageEvent(commandSender, target, message).callEvent()
-        }
+        PrivateMessageEvent(commandSender, target, message).callEvent()
     }
 }

@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -31,10 +30,9 @@ class SpawnerCmd(private val magenta: Magenta) {
         if (block.type != Material.SPAWNER)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.error.not.spawner")))
 
-        SchedulerMagenta.doSync(magenta) {
-            val creatureSpawner: CreatureSpawner = block.state as CreatureSpawner
-            creatureSpawner.spawnedType = entity
-        }
+        val creatureSpawner: CreatureSpawner = block.state as CreatureSpawner
+        creatureSpawner.spawnedType = entity
+
         player.sendMessage(ModernText.miniModernText("<green>Spawner is now type ${entity.name}"))
     }
 
@@ -46,22 +44,19 @@ class SpawnerCmd(private val magenta: Magenta) {
         @Argument(value = "amount") @Range(min = "1", max = "100") amount: Int,
         @Argument(value = "player", suggestions = "players") target: Player
     ) {
-        SchedulerMagenta.doSync(magenta) {
-            val spawner = ItemStack(Material.SPAWNER, amount)
-            val spawnerMeta = spawner.itemMeta
-            val bsm: BlockStateMeta = spawner.itemMeta as BlockStateMeta
-            val blockState = bsm.blockState
+        val spawner = ItemStack(Material.SPAWNER, amount)
+        val spawnerMeta = spawner.itemMeta
+        val bsm: BlockStateMeta = spawner.itemMeta as BlockStateMeta
+        val blockState = bsm.blockState
 
-            spawnerMeta.displayName(ModernText.miniModernText("<red>SPAWNER <yellow>${entity.name}"))
+        spawnerMeta.displayName(ModernText.miniModernText("<red>SPAWNER <yellow>${entity.name}"))
+        val creatureSpawner: CreatureSpawner = blockState as CreatureSpawner
 
-            val creatureSpawner: CreatureSpawner = blockState as CreatureSpawner
-            creatureSpawner.spawnedType to entity
-            bsm.blockState = blockState
-            creatureSpawner.update()
-            spawner.setItemMeta(spawnerMeta)
-
-            target.inventory.addItem(spawner)
-        }
+        creatureSpawner.spawnedType to entity
+        bsm.blockState = blockState
+        creatureSpawner.update()
+        spawner.setItemMeta(spawnerMeta)
+        target.inventory.addItem(spawner)
 
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.success.given"), TagResolver.resolver(
             Placeholder.parsed("type", entity.name),

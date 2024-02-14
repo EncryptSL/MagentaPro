@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.home
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopUI
+import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -13,10 +13,16 @@ import org.bukkit.event.player.PlayerTeleportEvent
 
 class HomeGUI(private val magenta: Magenta) {
 
-    private val shopUI: ShopUI by lazy { ShopUI(magenta) }
+    private val menuUI: MenuUI by lazy { MenuUI(magenta) }
 
     fun openHomeGUI(player: Player) {
-        val gui = shopUI.simpleGui(magenta.homeMenuConfig.getConfig().getString("menu.display").toString(), 6, GuiType.CHEST)
+        val gui = menuUI.simpleGui(
+            magenta.homeMenuConfig.getConfig().getString("menu.gui.display").toString(),
+            magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6),
+            GuiType.CHEST)
+
+        menuUI.useAllFillers(gui.filler, magenta.homeMenuConfig.getConfig())
+
         magenta.homeModel.getHomesByOwner(player).forEach { home ->
 
             val material = Material.getMaterial(home.homeIcon) ?: Material.OAK_DOOR
@@ -52,7 +58,7 @@ class HomeGUI(private val magenta: Magenta) {
             }
 
             gui.addItem(item)
-            gui.open(player)
         }
+        gui.open(player)
     }
 }

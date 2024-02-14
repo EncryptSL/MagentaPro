@@ -20,9 +20,7 @@ class JailCmd(private val magenta: Magenta) {
     @Command("jail info <name>")
     @Permission("magenta.jail.info")
     fun onJailInfo(commandSender: CommandSender, @Argument(value = "name", suggestions = "jails") jailName: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(JailInfoEvent(commandSender, jailName, InfoType.INFO))
-        }
+        magenta.pluginManager.callEvent(JailInfoEvent(commandSender, jailName, InfoType.INFO))
     }
 
     @Command("jail player <jailName> <player> [time] [reason]")
@@ -34,9 +32,7 @@ class JailCmd(private val magenta: Magenta) {
         @Argument(value = "time") time: Long = 120,
         @Argument(value = "reason") @Default("Protože Bagr ?!") @Greedy reason: String
     ) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(JailEvent(commandSender, jailName, offlinePlayer, time, reason))
-        }
+        magenta.pluginManager.callEvent(JailEvent(commandSender, jailName, offlinePlayer, time, reason))
     }
 
     @Command("jail pardon <player>")
@@ -45,18 +41,14 @@ class JailCmd(private val magenta: Magenta) {
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer,
     ) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(JailPardonEvent(offlinePlayer))
-        }
+        magenta.pluginManager.callEvent(JailPardonEvent(offlinePlayer))
     }
 
 
     @Command("jail create <name>")
     @Permission("magenta.jail.create")
     fun onJailCreate(player: Player, @Argument(value = "name") jailName: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(JailCreateEvent(player, jailName, player.location))
-        }
+        magenta.pluginManager.callEvent(JailCreateEvent(player, jailName, player.location))
     }
 
     @Command("jail tp <name> [player]")
@@ -69,9 +61,7 @@ class JailCmd(private val magenta: Magenta) {
                     Placeholder.parsed("jail", jailName)
                 )))
 
-                SchedulerMagenta.doSync(magenta) {
-                    magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
-                }
+                magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
                 return
             }
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
@@ -83,9 +73,7 @@ class JailCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", target.name)
             )))
 
-            SchedulerMagenta.doSync(magenta) {
-                magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
-            }
+            magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
         } else {
             if (target == null) return
 
@@ -98,9 +86,7 @@ class JailCmd(private val magenta: Magenta) {
                 Placeholder.parsed("player", target.name)
             )))
 
-            SchedulerMagenta.doSync(magenta) {
-                magenta.pluginManager.callEvent(JailTeleportEvent(target, magenta.jailManager.getJailLocation(jailName)))
-            }
+            magenta.pluginManager.callEvent(JailTeleportEvent(target, magenta.jailManager.getJailLocation(jailName)))
         }
 
     }
@@ -108,18 +94,14 @@ class JailCmd(private val magenta: Magenta) {
     @Command("jail delete <name>")
     @Permission("magenta.jail.delete")
     fun onJailDelete(commandSender: CommandSender, @Argument(value = "name", suggestions = "jails") jailName: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(JailDeleteEvent(commandSender, jailName))
-        }
+        magenta.pluginManager.callEvent(JailDeleteEvent(commandSender, jailName))
     }
 
     @ProxiedBy("jails")
     @Command("jail list")
     @Permission("magenta.jail.list")
     fun onJails(commandSender: CommandSender) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(JailInfoEvent(commandSender, null, InfoType.LIST))
-        }
+        magenta.pluginManager.callEvent(JailInfoEvent(commandSender, null, InfoType.LIST))
     }
 
 }

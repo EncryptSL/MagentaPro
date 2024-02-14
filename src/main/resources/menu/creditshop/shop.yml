@@ -1,6 +1,6 @@
-shop:
+menu:
   gui:
-    name: <gold>KREDIT SHOP
+    display: <gold>KREDIT SHOP
     categoryName: <gold>KREDIT SHOP - <yellow><category>
     size: 3
     fill:

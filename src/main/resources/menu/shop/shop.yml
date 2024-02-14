@@ -1,6 +1,6 @@
-shop:
+menu:
   gui:
-    name: <dark_gray>SHOP
+    display: <dark_gray>SHOP
     categoryName: <dark_gray> SHOP - <yellow><category>
     fill:
       border: BLUE_STAINED_GLASS_PANE

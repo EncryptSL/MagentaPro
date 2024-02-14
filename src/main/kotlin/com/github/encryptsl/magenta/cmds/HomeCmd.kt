@@ -61,8 +61,5 @@ class HomeCmd(private val magenta: Magenta) {
     @Permission("magenta.home.list")
     fun onHomeList(player: Player) {
         homeMenuGUI.openHomeGUI(player)
-        /*SchedulerMagenta.doSync(magenta) {
-            magenta.pluginManager.callEvent(HomeInfoEvent(player, null, InfoType.LIST))
-        }*/
     }
 }

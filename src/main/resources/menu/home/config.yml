@@ -1,5 +1,9 @@
 menu:
-  display: "<dark_blue>Tvé Domovy"
+  gui:
+    display: "<dark_blue>Tvé Domovy"
+    size: 6
+    fill:
+      border: GREEN_STAINED_GLASS_PANE
   home-info:
       display: "<yellow><home>"
       lore:

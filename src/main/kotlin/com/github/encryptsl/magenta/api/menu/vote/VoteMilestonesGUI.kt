@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.api.menu.vote
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.ItemBuilder
-import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopUI
+import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -12,13 +12,13 @@ import org.bukkit.entity.Player
 
 class VoteMilestonesGUI(private val magenta: Magenta) {
 
-    private val shopUI: ShopUI by lazy { ShopUI(magenta) }
+    private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     fun openVoteMilestonesGui(player: Player) {
         if (!magenta.config.contains("votifier.milestones-gui") && !magenta.config.contains("votifier.cumulative"))
             return player.sendMessage(ModernText.miniModernText("<red>Milníky nejsou nastavené !"))
 
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
-        val gui = shopUI.paginatedGui(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.gui.title") ?: player.name), 6)
+        val gui = menuUI.paginatedGui(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.gui.title") ?: player.name), 6)
 
         if (magenta.config.contains("votifier.milestones-gui.items")) {
             for (item in magenta.config.getConfigurationSection("votifier.milestones-gui.items")?.getKeys(false)!!) {

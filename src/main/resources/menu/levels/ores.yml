@@ -1,5 +1,8 @@
 menu:
-  display: '<dark_gray><underlined>Orečka Postup'
+  gui:
+    display: '<dark_gray><underlined>Orečka Postup'
+    fill:
+      border: GREEN_STAINED_GLASS_PANE
   item:
     display: '<yellow><item>'
     locked-lore:

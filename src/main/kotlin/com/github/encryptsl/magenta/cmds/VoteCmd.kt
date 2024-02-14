@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.api.menu.vote.VoteMilestonesGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
@@ -18,7 +17,6 @@ import org.incendo.cloud.annotations.Permission
 @CommandDescription("Provided by plugin MagentaPro")
 class VoteCmd(val magenta: Magenta) {
 
-    private val shopUI: ShopUI by lazy { ShopUI(magenta) }
     private val voteMilestonesGUI: VoteMilestonesGUI by lazy { VoteMilestonesGUI(magenta) }
 
     @Command("vote")
@@ -53,9 +51,7 @@ class VoteCmd(val magenta: Magenta) {
         if (!user.getAccount().contains("votifier.rewards"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.error.not.reward")))
 
-        SchedulerMagenta.doSync(magenta) {
-            VoteHelper.giveRewards(user.getVotifierRewards(), player.name)
-        }
+        VoteHelper.giveRewards(user.getVotifierRewards(), player.name)
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.success.claim.rewards")))
         user.set("votifier.rewards", null)
     }

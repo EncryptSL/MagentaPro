@@ -21,9 +21,7 @@ class BackCmd(private val magenta: Magenta) {
     @Permission("magenta.back")
     fun onBack(player: Player) {
         val userAccount = UserAccount(magenta, player.uniqueId)
-        SchedulerMagenta.doSync(magenta){
-            player.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
-        }
+        player.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success")))
     }
 

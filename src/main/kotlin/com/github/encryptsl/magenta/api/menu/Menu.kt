@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.menu.shop.helpers
+package com.github.encryptsl.magenta.api.menu
 
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
-interface ShopItems {
+interface Menu {
 
     fun simpleGui(title: String, size: Int, guiType: GuiType): Gui
 
@@ -29,7 +29,7 @@ interface ShopItems {
     fun previousPage(
         player: Player,
         material: Material,
-        shopCategory: UniversalConfig,
+        fileConfiguration: FileConfiguration,
         btnType: String,
         gui: PaginatedGui
     )
@@ -37,7 +37,7 @@ interface ShopItems {
     fun nextPage(
         player: Player,
         material: Material,
-        shopCategory: UniversalConfig,
+        fileConfiguration: FileConfiguration,
         btnType: String,
         gui: PaginatedGui
     )
@@ -46,7 +46,7 @@ interface ShopItems {
         player: Player,
         material: Material,
         gui: PaginatedGui,
-        shopCategory: UniversalConfig,
+        fileConfiguration: FileConfiguration,
         vaultShop: VaultShop
     )
 
@@ -54,7 +54,7 @@ interface ShopItems {
         player: Player,
         material: Material,
         gui: PaginatedGui,
-        shopCategory: UniversalConfig,
+        fileConfiguration: FileConfiguration,
         creditShop: CreditShop
     )
 

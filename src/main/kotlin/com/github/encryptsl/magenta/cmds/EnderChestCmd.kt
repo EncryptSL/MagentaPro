@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
@@ -15,9 +14,7 @@ class EnderChestCmd(private val magenta: Magenta) {
     @Command("echest|enderchest")
     @Permission("magenta.echest")
     fun onEnderChest(player: Player) {
-        SchedulerMagenta.doSync(magenta) {
-            player.openInventory(player.enderChest)
-        }
+        player.openInventory(player.enderChest)
     }
 
     @Command("echest|enderchest <player>")
@@ -26,9 +23,7 @@ class EnderChestCmd(private val magenta: Magenta) {
         player: Player,
         @Argument(value = "player", suggestions = "players") target: Player
     ) {
-        SchedulerMagenta.doSync(magenta) {
-            player.openInventory(target.enderChest)
-        }
+        player.openInventory(target.enderChest)
     }
 
 }
