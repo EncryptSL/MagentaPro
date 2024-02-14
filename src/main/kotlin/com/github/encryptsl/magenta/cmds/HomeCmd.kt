@@ -35,7 +35,7 @@ class HomeCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("sethomeicon <home> [icon]")
+    @Command("sethomeicon <home> <icon>")
     @Permission("magenta.sethomeicon")
     fun onSetHomeIcon(player: Player, @Argument(value = "home", suggestions = "homes") home: String, @Argument("icon", suggestions = "homeIcons") icon: String) {
         magenta.homeModel.setHomeIcon(player, home, icon)

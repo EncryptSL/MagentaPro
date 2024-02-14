@@ -132,9 +132,8 @@ class CommandManager(private val magenta: Magenta) {
             CompletableFuture.completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("homeIcons") {_, _ ->
-            CompletableFuture.completedFuture(Material.entries
-                .filter { i -> magenta.homeMenuConfig.getConfig().contains("menu.home-items.${i.name}") }
-                .map { Suggestion.simple(it.name) }
+            CompletableFuture.completedFuture(magenta.homeMenuConfig.getConfig().getStringList("menu.home-items")
+                .map { Suggestion.simple(it) }
             )
         }
     }
