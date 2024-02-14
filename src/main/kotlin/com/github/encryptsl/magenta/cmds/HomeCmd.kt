@@ -7,9 +7,11 @@ import com.github.encryptsl.magenta.api.events.home.HomeRenameEvent
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.home.HomeGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
-import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.*
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -35,10 +37,8 @@ class HomeCmd(private val magenta: Magenta) {
 
     @Command("sethomeicon <home> [icon]")
     @Permission("magenta.sethomeicon")
-    fun onSetHomeIcon(player: Player, @Argument(value = "home") home: String, @Argument("icon", suggestions = "homeIcons") @Default("OAK_DOOR") icon: Material) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.homeModel.setHomeIcon(player, home, icon.name)
-        }
+    fun onSetHomeIcon(player: Player, @Argument(value = "home", suggestions = "homes") home: String, @Argument("icon", suggestions = "homeIcons") icon: String) {
+        magenta.homeModel.setHomeIcon(player, home, icon)
     }
 
     @Command("delhome <home>")
