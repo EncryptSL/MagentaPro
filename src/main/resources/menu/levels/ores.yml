@@ -1,0 +1,15 @@
+menu:
+  display: '<dark_gray><underlined>Orečka Postup'
+  item:
+    display: '<yellow><item>'
+    locked-lore:
+      - '<gray>Informace'
+      - ''
+      - '<gold>Potřebný Level <green><level>'
+      - '<white>Tuto rudu momentálně nemůžeš těžit !'
+      - '<yellow>Stav <red>Uzamčeno'
+    unlocked-lore:
+      - '<gray>Informace'
+      - ''
+      - '<white>Tutu rudu můžeš nyní těžit !'
+      - '<yellow>Stav <green>Odemčeno'

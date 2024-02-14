@@ -64,6 +64,7 @@ open class Magenta : JavaPlugin() {
     val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
     val creditShopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/shop.yml") }
     val homeMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/config.yml") }
+    val oresMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/levels/ores.yml") }
     val chatControl: ChatControlConfig by lazy { ChatControlConfig(this) }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }

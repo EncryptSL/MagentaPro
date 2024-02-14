@@ -58,6 +58,14 @@ class MagentaCmd(private val magenta: Magenta) {
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 
+    @Command("magenta.plugin.reload")
+    @Command("reload oregui")
+    fun onReloadLevelOreGUI(commandSender: CommandSender) {
+        magenta.oresMenuConfig.reload()
+        magenta.oresMenuConfig.save()
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
     @Permission("magenta.plugin.reload")
     @Command("reload mythicrewards")
     fun onReloadMythicRewards(commandSender: CommandSender) {
