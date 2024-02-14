@@ -99,6 +99,7 @@ open class Magenta : JavaPlugin() {
             .createFromResources("menu/shop/categories/stone.yml", this)
             .createFromResources("menu/shop/categories/wood.yml", this)
             .createFromResources("menu/home/config.yml", this)
+            .createFromResources("menu/levels/ores.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         DatabaseConnector(this).initConnect(
