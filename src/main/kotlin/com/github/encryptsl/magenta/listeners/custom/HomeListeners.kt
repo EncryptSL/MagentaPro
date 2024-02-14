@@ -25,7 +25,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
 
         val worldsWhitelist = magenta.config.getStringList("homes.whitelist")
 
-        if (!worldsWhitelist.contains(player.location.world.name) || !worldsWhitelist.contains("*"))
+        if ((!worldsWhitelist.contains(location.world.name) && !worldsWhitelist.contains("*")) && !player.hasPermission("magenta.home.whitelist.exempt"))
             return player.sendMessage(
                 ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.error.blocked"),
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
