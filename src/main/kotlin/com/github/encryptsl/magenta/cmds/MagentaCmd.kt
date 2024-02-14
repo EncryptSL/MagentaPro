@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
+import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
@@ -47,6 +47,14 @@ class MagentaCmd(private val magenta: Magenta) {
         magenta.creditShopConfig.reload()
         magenta.creditShopConfig.save()
         ShopHelper.reloadShopConfigs(magenta)
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @Permission("magenta.plugin.reload")
+    @Command("reload homegui")
+    fun onReloadHomeGUI(commandSender: CommandSender) {
+        magenta.homeMenuConfig.reload()
+        magenta.homeMenuConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 

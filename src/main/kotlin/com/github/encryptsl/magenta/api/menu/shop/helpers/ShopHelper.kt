@@ -1,7 +1,7 @@
-package com.github.encryptsl.magenta.api.shop.helpers
+package com.github.encryptsl.magenta.api.menu.shop.helpers
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.config.ShopConfig
+import com.github.encryptsl.magenta.api.config.UniversalConfig
 import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
 
@@ -30,7 +30,7 @@ object ShopHelper {
     fun reloadShopConfigs(magenta: Magenta) {
         val shopConfig = magenta.shopConfig.getConfig()
         shopConfig.getConfigurationSection("shop.categories")?.getKeys(false)?.forEach { category ->
-            val categoryConfig = ShopConfig(magenta, "shop/categories/$category.yml")
+            val categoryConfig = UniversalConfig(magenta, "shop/categories/$category.yml")
             if (categoryConfig.fileExist()) {
                 categoryConfig.reload()
                 categoryConfig.save()
@@ -41,7 +41,7 @@ object ShopHelper {
         }
         val zeusConfig = magenta.creditShopConfig.getConfig()
         zeusConfig.getConfigurationSection("shop.categories")?.getKeys(false)?.forEach { category ->
-            val categoryConfig = ShopConfig(magenta, "creditshop/categories/$category.yml")
+            val categoryConfig = UniversalConfig(magenta, "creditshop/categories/$category.yml")
             if (categoryConfig.fileExist()) {
                 categoryConfig.reload()
                 categoryConfig.save()

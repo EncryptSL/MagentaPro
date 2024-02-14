@@ -4,12 +4,13 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.configuration.file.FileConfiguration
 
-class JailConfig(magenta: Magenta) {
+class UniversalConfig(magenta: Magenta, type: String) {
 
-    private val configUtil = ConfigUtil(magenta, "jails.yml")
+    private val configUtil = ConfigUtil(magenta, type)
 
-    fun getJail(): FileConfiguration {
-        return configUtil.getConfig()
+    fun fileExist(): Boolean
+    {
+        return configUtil.file.isFile
     }
 
     fun reload() {
@@ -19,4 +20,9 @@ class JailConfig(magenta: Magenta) {
     fun save() {
         configUtil.save()
     }
+
+    fun getConfig(): FileConfiguration {
+        return configUtil.getConfig()
+    }
+
 }

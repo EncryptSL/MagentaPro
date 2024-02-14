@@ -57,16 +57,17 @@ open class Magenta : JavaPlugin() {
 
     val localeConfig: Locale by lazy { Locale(this) }
     val kitConfig: KitConfig by lazy { KitConfig(this) }
-    val jailConfig: JailConfig by lazy { JailConfig(this) }
+    val jailConfig: UniversalConfig by lazy { UniversalConfig(this, "jails.yml") }
     val mmConfig: MMConfig by lazy { MMConfig(this) }
     val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
     val randomConfig: RandomConfig by lazy { RandomConfig(this) }
-    val shopConfig: ShopConfig by lazy { ShopConfig(this, "shop/shop.yml") }
-    val creditShopConfig: ShopConfig by lazy { ShopConfig(this, "creditshop/shop.yml") }
+    val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
+    val creditShopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/shop.yml") }
+    val homeMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/config.yml") }
     val chatControl: ChatControlConfig by lazy { ChatControlConfig(this) }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
-    val jailManager: JailManager by lazy { JailManager(jailConfig) }
+    val jailManager: JailManager by lazy { JailManager(jailConfig.getConfig()) }
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
@@ -83,19 +84,20 @@ open class Magenta : JavaPlugin() {
             .createFromResources("citems.yml", this)
             .createFromResources("random.yml", this)
             .createFromResources("mythicmobs/config.yml", this)
-            .createFromResources("shop/shop.yml", this)
-            .createFromResources("creditshop/shop.yml", this)
-            .createFromResources("creditshop/categories/galaxy_box_keys.yml", this)
-            .createFromResources("shop/categories/blocks.yml", this)
-            .createFromResources("shop/categories/decoration.yml", this)
-            .createFromResources("shop/categories/farms.yml", this)
-            .createFromResources("shop/categories/food.yml", this)
-            .createFromResources("shop/categories/materials.yml", this)
-            .createFromResources("shop/categories/ores.yml", this)
-            .createFromResources("shop/categories/redstones.yml", this)
-            .createFromResources("shop/categories/special_items.yml", this)
-            .createFromResources("shop/categories/stone.yml", this)
-            .createFromResources("shop/categories/wood.yml", this)
+            .createFromResources("menu/shop/shop.yml", this)
+            .createFromResources("menu/creditshop/shop.yml", this)
+            .createFromResources("menu/creditshop/categories/galaxy_box_keys.yml", this)
+            .createFromResources("menu/shop/categories/blocks.yml", this)
+            .createFromResources("menu/shop/categories/decoration.yml", this)
+            .createFromResources("menu/shop/categories/farms.yml", this)
+            .createFromResources("menu/shop/categories/food.yml", this)
+            .createFromResources("menu/shop/categories/materials.yml", this)
+            .createFromResources("menu/shop/categories/ores.yml", this)
+            .createFromResources("menu/shop/categories/redstones.yml", this)
+            .createFromResources("menu/shop/categories/special_items.yml", this)
+            .createFromResources("menu/shop/categories/stone.yml", this)
+            .createFromResources("menu/shop/categories/wood.yml", this)
+            .createFromResources("menu/home/config.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         DatabaseConnector(this).initConnect(

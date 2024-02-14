@@ -1,11 +1,11 @@
-package com.github.encryptsl.magenta.api.shop.vault
+package com.github.encryptsl.magenta.api.menu.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.shop.EconomyShopIntegration
-import com.github.encryptsl.magenta.api.shop.ShopAction
-import com.github.encryptsl.magenta.api.shop.ShopPaymentInformation
-import com.github.encryptsl.magenta.api.shop.TransactionType
-import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
+import com.github.encryptsl.magenta.api.menu.shop.EconomyShopIntegration
+import com.github.encryptsl.magenta.api.menu.shop.ShopAction
+import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
+import com.github.encryptsl.magenta.api.menu.shop.TransactionType
+import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.entity.Player

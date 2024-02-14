@@ -79,7 +79,7 @@ class CommandManager(private val magenta: Magenta) {
         }
         commandManager.parserRegistry().registerSuggestionProvider("jails") { _, _ ->
             CompletableFuture.completedFuture(
-                magenta.jailConfig.getJail().getConfigurationSection("jails")
+                magenta.jailConfig.getConfig().getConfigurationSection("jails")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(it.toString()) }!!
             )
@@ -173,7 +173,6 @@ class CommandManager(private val magenta: Magenta) {
             annotationParser.parse(VanishCmd(magenta))
             annotationParser.parse(VipCmd(magenta))
             annotationParser.parse(VoteCmd(magenta))
-            annotationParser.parse(VotePartyCmd(magenta))
             annotationParser.parse(VotesCmd(magenta))
             annotationParser.parse(WarpCmd(magenta))
         } catch (e : NoClassDefFoundError) {

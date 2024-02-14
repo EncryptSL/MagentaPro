@@ -18,7 +18,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
             transaction {
                 HomeTable.insertIgnore {
                     it[username] = player.name
-                    it[uuid] = player.uniqueId.toString()
+                    it[uuid] = player.uniqueId
                     it[HomeTable.home] = home
                     it[world] = location.world.name
                     it[x] = location.x.toInt()
@@ -33,13 +33,13 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
 
     override fun deleteHome(player: Player, home: String) {
         SchedulerMagenta.doAsync(plugin) {
-            transaction { HomeTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) } }
+            transaction { HomeTable.deleteWhere { (uuid eq player.uniqueId) and (HomeTable.home eq home) } }
         }
     }
 
     override fun moveHome(player: Player, home: String, location: Location) {
         SchedulerMagenta.doAsync(plugin) {
-            transaction { HomeTable.update( {  (HomeTable.uuid eq player.uniqueId.toString()) and (HomeTable.home eq home) }) {
+            transaction { HomeTable.update( {  (HomeTable.uuid eq player.uniqueId) and (HomeTable.home eq home) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
                 it[y] = location.y.toInt()
@@ -53,11 +53,15 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun renameHome(player: Player, oldHomeName: String, newHomeName: String) {
         SchedulerMagenta.doAsync(plugin) {
             transaction {
-                HomeTable.update({ HomeTable.uuid eq player.uniqueId.toString() and (HomeTable.home eq oldHomeName) }) {
+                HomeTable.update({ HomeTable.uuid eq player.uniqueId and (HomeTable.home eq oldHomeName) }) {
                     it[home] = newHomeName
                 }
             }
         }
+    }
+
+    override fun setHomeIcon(player: Player, home: String, icon: String) {
+        transaction { HomeTable.update({HomeTable.uuid eq player.uniqueId}) {} }
     }
 
     override fun getHomeExist(player: Player, home: String): Boolean {
@@ -74,7 +78,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
 
         if (max == -1) return true
 
-        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId.toString()).count() >= max }
+        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() >= max }
     }
 
     override fun <T> getHome(home: String, columnName: Expression<T>): T {
@@ -84,7 +88,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun getHomesByOwner(player: Player): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq player.uniqueId.toString()).mapNotNull{rowResultToHomeEntity(it)} }
+        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq player.uniqueId).mapNotNull{rowResultToHomeEntity(it)} }
     }
 
     override fun toLocation(player: Player, home: String): Location {
@@ -102,6 +106,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
             row[HomeTable.username],
             row[HomeTable.uuid],
             row[HomeTable.home],
+            row[HomeTable.homeIcon],
             row[HomeTable.world],
             row[HomeTable.x],
             row[HomeTable.y],

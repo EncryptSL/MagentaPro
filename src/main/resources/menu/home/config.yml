@@ -1,0 +1,15 @@
+menu:
+  display: "<dark_blue>Tvé Domovy"
+  home-info:
+      display: "<yellow><home>"
+      lore:
+      - <gray>Domov <green><home>
+      - <gray>Majitel <green><owner>
+      - <gray>Souřadnice <green><x> <y> <z>
+      - <gray>Svět <green><world>
+      - <green>/home <jail>
+  home-items:
+    - RED_BED
+    - NAME_TAG
+    - GOLD_BLOCK
+    - OAK_DOOR

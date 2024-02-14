@@ -11,6 +11,7 @@ interface HomeSQL {
     fun deleteHome(player: Player, home: String)
     fun moveHome(player: Player, home: String, location: Location)
     fun renameHome(player: Player, oldHomeName: String, newHomeName: String)
+    fun setHomeIcon(player: Player, home: String, icon: String)
     fun getHomeExist(player: Player, home: String): Boolean
 
     fun canSetHome(player: Player): Boolean

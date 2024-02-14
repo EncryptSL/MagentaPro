@@ -1,11 +1,11 @@
-package com.github.encryptsl.magenta.api.shop
+package com.github.encryptsl.magenta.api.menu.shop
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.shop.CreditShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopSellEvent
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
-import com.github.encryptsl.magenta.api.shop.helpers.ShopHelper
+import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditException
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.hook.vault.VaultException

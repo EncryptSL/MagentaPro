@@ -1,8 +1,8 @@
-package com.github.encryptsl.magenta.api.shop.credits
+package com.github.encryptsl.magenta.api.menu.shop.credits
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.config.ShopConfig
-import com.github.encryptsl.magenta.api.shop.helpers.ShopUI
+import com.github.encryptsl.magenta.api.config.UniversalConfig
+import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -18,7 +18,7 @@ class CreditShop(private val magenta: Magenta) {
 
     private val creditLiteHook: CreditLiteHook by lazy { CreditLiteHook(magenta) }
     private val creditShopInventory: CreditShopInventory by lazy { CreditShopInventory(magenta, creditLiteHook) }
-    private val shopUI: ShopUI by lazy {ShopUI(magenta)}
+    private val shopUI: ShopUI by lazy { ShopUI(magenta) }
 
     fun openShop(player: Player) {
         val gui: Gui = shopUI.simpleGui(
@@ -87,7 +87,7 @@ class CreditShop(private val magenta: Magenta) {
 
 
     fun openCategory(player: Player, type: String) {
-        val shopCategory = ShopConfig(magenta, "creditshop/categories/$type.yml")
+        val shopCategory = UniversalConfig(magenta, "menu/creditshop/categories/$type.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
                 ModernText.miniModernText(
@@ -214,7 +214,7 @@ class CreditShop(private val magenta: Magenta) {
         gui.open(player)
     }
 
-    private fun controlButtons(player: Player, shopUI: ShopUI, shopConfig: ShopConfig, paginatedGui: PaginatedGui) {
+    private fun controlButtons(player: Player, shopUI: ShopUI, shopConfig: UniversalConfig, paginatedGui: PaginatedGui) {
         for (material in Material.entries) {
             shopUI.nextPage(player, material, shopConfig, "previous", paginatedGui)
             shopUI.closeButton(

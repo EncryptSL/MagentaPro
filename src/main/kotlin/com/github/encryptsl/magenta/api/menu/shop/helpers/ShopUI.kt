@@ -1,9 +1,9 @@
-package com.github.encryptsl.magenta.api.shop.helpers
+package com.github.encryptsl.magenta.api.menu.shop.helpers
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.config.ShopConfig
-import com.github.encryptsl.magenta.api.shop.credits.CreditShop
-import com.github.encryptsl.magenta.api.shop.vault.VaultShop
+import com.github.encryptsl.magenta.api.config.UniversalConfig
+import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
+import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -128,7 +128,7 @@ class ShopUI(private val magenta: Magenta) : ShopItems {
     override fun previousPage(
         player: Player,
         material: Material,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         btnType: String,
         gui: PaginatedGui
     ) {
@@ -155,7 +155,7 @@ class ShopUI(private val magenta: Magenta) : ShopItems {
     override fun nextPage(
         player: Player,
         material: Material,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         btnType: String,
         gui: PaginatedGui
     ) {
@@ -183,7 +183,7 @@ class ShopUI(private val magenta: Magenta) : ShopItems {
         player: Player,
         material: Material,
         gui: PaginatedGui,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         vaultShop: VaultShop
     ) {
         if (shopCategory.getConfig().contains("shop.gui.button.close")) {
@@ -216,7 +216,7 @@ class ShopUI(private val magenta: Magenta) : ShopItems {
         player: Player,
         material: Material,
         gui: PaginatedGui,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         creditShop: CreditShop
     ) {
         if (shopCategory.getConfig().contains("shop.gui.button.close")) {

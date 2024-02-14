@@ -1,9 +1,9 @@
-package com.github.encryptsl.magenta.api.shop.vault
+package com.github.encryptsl.magenta.api.menu.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.config.ShopConfig
-import com.github.encryptsl.magenta.api.shop.ShopPaymentInformation
-import com.github.encryptsl.magenta.api.shop.helpers.ShopUI
+import com.github.encryptsl.magenta.api.config.UniversalConfig
+import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
+import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopUI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -72,7 +72,7 @@ class VaultShop(private val magenta: Magenta) {
     }
 
     fun openCategory(player: Player, type: String) {
-        val shopCategory = ShopConfig(magenta, "shop/categories/$type.yml")
+        val shopCategory = UniversalConfig(magenta, "menu/shop/categories/$type.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
                 ModernText.miniModernText(
@@ -177,7 +177,7 @@ class VaultShop(private val magenta: Magenta) {
         gui.open(player)
     }
 
-    private fun controlButtons(player: Player, shopUI: ShopUI, shopCategory: ShopConfig, gui: PaginatedGui) {
+    private fun controlButtons(player: Player, shopUI: ShopUI, shopCategory: UniversalConfig, gui: PaginatedGui) {
         for (material in Material.entries) {
             shopUI.previousPage(player, material, shopCategory, "previous", gui)
             shopUI.closeButton(

@@ -16,7 +16,7 @@ class JailCreateListener(private val magenta: Magenta) : Listener {
         val jailName = event.jailName
         val location = event.location
 
-        if (magenta.jailConfig.getJail().getConfigurationSection(jailName) != null)
+        if (magenta.jailConfig.getConfig().getConfigurationSection(jailName) != null)
             return player.sendMessage(
                 ModernText.miniModernText(
                     magenta.localeConfig.getMessage("magenta.command.jail.error.exist"), TagResolver.resolver(
@@ -25,12 +25,12 @@ class JailCreateListener(private val magenta: Magenta) : Listener {
                 )
             )
 
-        magenta.jailConfig.getJail().set("jails.$jailName.location.world", location.world.name)
-        magenta.jailConfig.getJail().set("jails.$jailName.location.x", location.x)
-        magenta.jailConfig.getJail().set("jails.$jailName.location.y", location.y)
-        magenta.jailConfig.getJail().set("jails.$jailName.location.z", location.z)
-        magenta.jailConfig.getJail().set("jails.$jailName.location.yaw", location.yaw)
-        magenta.jailConfig.getJail().set("jails.$jailName.location.pitch", location.pitch)
+        magenta.jailConfig.getConfig().set("jails.$jailName.location.world", location.world.name)
+        magenta.jailConfig.getConfig().set("jails.$jailName.location.x", location.x)
+        magenta.jailConfig.getConfig().set("jails.$jailName.location.y", location.y)
+        magenta.jailConfig.getConfig().set("jails.$jailName.location.z", location.z)
+        magenta.jailConfig.getConfig().set("jails.$jailName.location.yaw", location.yaw)
+        magenta.jailConfig.getConfig().set("jails.$jailName.location.pitch", location.pitch)
         magenta.jailConfig.save()
         magenta.jailConfig.reload()
 

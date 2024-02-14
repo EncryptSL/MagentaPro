@@ -1,8 +1,8 @@
-package com.github.encryptsl.magenta.api.shop.helpers
+package com.github.encryptsl.magenta.api.menu.shop.helpers
 
-import com.github.encryptsl.magenta.api.config.ShopConfig
-import com.github.encryptsl.magenta.api.shop.credits.CreditShop
-import com.github.encryptsl.magenta.api.shop.vault.VaultShop
+import com.github.encryptsl.magenta.api.config.UniversalConfig
+import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
+import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.components.util.GuiFiller
 import dev.triumphteam.gui.guis.Gui
@@ -29,7 +29,7 @@ interface ShopItems {
     fun previousPage(
         player: Player,
         material: Material,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         btnType: String,
         gui: PaginatedGui
     )
@@ -37,7 +37,7 @@ interface ShopItems {
     fun nextPage(
         player: Player,
         material: Material,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         btnType: String,
         gui: PaginatedGui
     )
@@ -46,7 +46,7 @@ interface ShopItems {
         player: Player,
         material: Material,
         gui: PaginatedGui,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         vaultShop: VaultShop
     )
 
@@ -54,7 +54,7 @@ interface ShopItems {
         player: Player,
         material: Material,
         gui: PaginatedGui,
-        shopCategory: ShopConfig,
+        shopCategory: UniversalConfig,
         creditShop: CreditShop
     )
 

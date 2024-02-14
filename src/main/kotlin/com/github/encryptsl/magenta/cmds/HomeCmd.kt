@@ -3,7 +3,9 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.home.*
+import com.github.encryptsl.magenta.api.menu.home.HomeGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
@@ -13,6 +15,8 @@ import org.incendo.cloud.annotations.Permission
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
 class HomeCmd(private val magenta: Magenta) {
+
+    private val homeMenuGUI: HomeGUI by lazy { HomeGUI(magenta) }
 
     @Command("home <home>")
     @Permission("magenta.home")
@@ -27,6 +31,13 @@ class HomeCmd(private val magenta: Magenta) {
     fun onSetHome(player: Player, @Argument(value = "home") home: String) {
         SchedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
+        }
+    }
+
+    @Permission("magenta.sethomeicon")
+    fun onSetHomeIcon(player: Player, @Argument(value = "home") home: String, icon: Material) {
+        SchedulerMagenta.doSync(magenta) {
+            magenta.homeModel.setHomeIcon(player, home, icon.name)
         }
     }
 

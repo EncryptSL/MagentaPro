@@ -39,6 +39,62 @@ class GmCmd(private val magenta: Magenta) {
         setGameModeProxy(commandSender, target, gameMode)
     }
 
+    @Command("gma")
+    @Permission("magenta.gamemode")
+    fun onGameModeSelfAdventure(player: Player) {
+        val gamemode = GameMode.ADVENTURE
+
+        if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+                Placeholder.parsed("gamemode", gamemode.name)
+            )))
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+
+        setGameModeToTarget(player, gamemode)
+    }
+
+    @Command("gmc")
+    @Permission("magenta.gamemode")
+    fun onGameModeSelfCreative(player: Player) {
+        val gamemode = GameMode.CREATIVE
+
+        if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+                Placeholder.parsed("gamemode", gamemode.name)
+            )))
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+
+        setGameModeToTarget(player, gamemode)
+    }
+
+    @Command("gmsp")
+    @Permission("magenta.gamemode")
+    fun onGameModeSelfSpectator(player: Player) {
+        val gamemode = GameMode.SPECTATOR
+
+        if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+                Placeholder.parsed("gamemode", gamemode.name)
+            )))
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+
+        setGameModeToTarget(player, gamemode)
+    }
+
+    @Command("gms")
+    @Permission("magenta.gamemode")
+    fun onGameModeSelfSurvival(player: Player) {
+        val gamemode = GameMode.SURVIVAL
+
+        if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+                Placeholder.parsed("gamemode", gamemode.name)
+            )))
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+
+        setGameModeToTarget(player, gamemode)
+    }
+
     private fun setGameModeProxy(commandSender: CommandSender, target: Player, gameMode: GameMode) {
         val isSenderConsole = commandSender is ConsoleCommandSender
 

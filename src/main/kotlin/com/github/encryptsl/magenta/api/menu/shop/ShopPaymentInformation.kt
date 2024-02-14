@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.shop
+package com.github.encryptsl.magenta.api.menu.shop
 
 import org.bukkit.inventory.ItemStack
 

@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
+import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
-import com.github.encryptsl.magenta.api.shop.credits.CreditShop
-import com.github.encryptsl.magenta.api.shop.vault.VaultShop
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command

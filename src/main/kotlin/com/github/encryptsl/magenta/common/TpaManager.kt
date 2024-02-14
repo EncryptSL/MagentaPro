@@ -50,7 +50,7 @@ class TpaManager(private val magenta: Magenta) {
         if (!request.containsKey(player.uniqueId)) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.not.exist")))
         } else {
-            val sender = Bukkit.getPlayer(UUID.fromString(request[player.uniqueId]?.from.toString()))
+            val sender = request[player.uniqueId]?.from?.let { Bukkit.getPlayer(it) }
             sender?.playSound(sender, Sound.BLOCK_NOTE_BLOCK_BASS, 1.5F, 1.5F)
             sender?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.denied.to")))
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.denied")))
@@ -60,7 +60,7 @@ class TpaManager(private val magenta: Magenta) {
 
     fun killRequest(player: Player) {
         if (request.containsKey(player.uniqueId)) {
-            val expire = Bukkit.getPlayer(request[player.uniqueId]?.to.toString())
+            val expire = request[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
             expire?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.expired")))
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.expired.to"),
                 Placeholder.parsed("player", Bukkit.getOfflinePlayer(UUID.fromString(request[player.uniqueId].toString())).name.toString())

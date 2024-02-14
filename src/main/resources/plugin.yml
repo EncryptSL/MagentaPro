@@ -201,6 +201,7 @@ permissions:
     children:
       magenta.home: true
       magenta.sethome: true
+      magenta.sethomeicon: true
       magenta.delhome: true
       magenta.renamehome: true
       magenta.home.list: true
