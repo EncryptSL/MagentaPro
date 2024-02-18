@@ -55,6 +55,20 @@ class MagentaCmd(private val magenta: Magenta) {
     fun onReloadHomeGUI(commandSender: CommandSender) {
         magenta.homeMenuConfig.reload()
         magenta.homeMenuConfig.save()
+        magenta.homeEditorConfig.reload()
+        magenta.homeEditorConfig.save()
+        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
+    }
+
+    @Permission("magenta.plugin.reload")
+    @Command("reload warpgui")
+    fun onReloadWarpGUI(commandSender: CommandSender) {
+        magenta.warpMenuConfig.reload()
+        magenta.warpMenuConfig.save()
+        magenta.warpEditorConfig.reload()
+        magenta.warpEditorConfig.save()
+        magenta.warpPlayerMenuConfig.reload()
+        magenta.warpPlayerMenuConfig.save()
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }
 

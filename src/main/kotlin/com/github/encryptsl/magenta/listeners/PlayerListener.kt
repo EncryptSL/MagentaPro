@@ -49,11 +49,6 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
         safeFly(player)
 
-        if (user.getAccount().contains("displayname")) {
-            player.displayName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
-            player.playerListName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
-        }
-
         if (player.hasPlayedBefore()) {
             user.set("timestamps.login", System.currentTimeMillis())
 

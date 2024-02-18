@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.home
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -9,11 +10,11 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerTeleportEvent
 
 class HomeGUI(private val magenta: Magenta) {
 
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
+    private val homeEditorGUI: HomeEditorGUI by lazy { HomeEditorGUI(magenta, this) }
 
     fun openHomeGUI(player: Player) {
         val gui = menuUI.simpleGui(
@@ -53,10 +54,13 @@ class HomeGUI(private val magenta: Magenta) {
 
             val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem {action ->
                 if (action.isLeftClick) {
-                    player.teleport(magenta.homeModel.toLocation(player, home.homeName), PlayerTeleportEvent.TeleportCause.PLUGIN)
+                    magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.homeName, magenta.config.getLong("teleport-cooldown")))
+                    return@asGuiItem
+                }
+                if (action.isRightClick) {
+                    homeEditorGUI.openHomeEditorGUI(player, home.homeName)
                 }
             }
-
             gui.addItem(item)
         }
         gui.open(player)

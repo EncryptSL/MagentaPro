@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.warp.*
+import com.github.encryptsl.magenta.api.menu.warp.WarpGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -12,6 +13,8 @@ import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 class WarpCmd(private val magenta: Magenta) {
+
+    private val warpGUI: WarpGUI by lazy { WarpGUI(magenta) }
 
     @Command("setwarp <warp>")
     @Permission("magenta.setwarp")
@@ -55,7 +58,9 @@ class WarpCmd(private val magenta: Magenta) {
     @Command("warps")
     @Permission("magenta.warp.list")
     fun onWarps(commandSender: CommandSender) {
-        SchedulerMagenta.doSync(magenta) {
+        if (commandSender is Player) {
+            warpGUI.openMenu(commandSender)
+        } else {
             magenta.server.pluginManager.callEvent(WarpInfoEvent(commandSender, null, InfoType.LIST))
         }
     }

@@ -1,8 +1,5 @@
 package com.github.encryptsl.magenta.api.menu
 
-import com.github.encryptsl.magenta.api.config.UniversalConfig
-import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
-import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.components.util.GuiFiller
 import dev.triumphteam.gui.guis.Gui
@@ -15,6 +12,7 @@ import org.bukkit.entity.Player
 interface Menu {
 
     fun simpleGui(title: String, size: Int, guiType: GuiType): Gui
+    fun simpleGui(title: Component, size: Int, guiType: GuiType): Gui
 
     fun paginatedGui(title: Component, size: Int): PaginatedGui
 
@@ -47,15 +45,6 @@ interface Menu {
         material: Material,
         gui: PaginatedGui,
         fileConfiguration: FileConfiguration,
-        vaultShop: VaultShop
+        menuExtender: MenuExtender,
     )
-
-    fun closeButton(
-        player: Player,
-        material: Material,
-        gui: PaginatedGui,
-        fileConfiguration: FileConfiguration,
-        creditShop: CreditShop
-    )
-
 }

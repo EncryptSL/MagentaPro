@@ -13,9 +13,11 @@ interface WarpSQL {
     fun moveWarp(player: Player, warpName: String, location: Location)
     fun renameWarp(oldWarpName: String, newWarpName: String)
     fun renameWarp(player: Player, oldWarpName: String, newWarpName: String)
+    fun setWarpIcon(player: Player, warpName: String, icon: String)
     fun getWarpExist(warpName: String): Boolean
     fun canSetWarp(player: Player): Boolean
     fun getWarp(warpName: String): WarpEntity
     fun toLocation(warpName: String): Location
+    fun getWarpsByOwner(player: Player): List<WarpEntity>
     fun getWarps(): List<WarpEntity>
 }

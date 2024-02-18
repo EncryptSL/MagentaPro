@@ -1,0 +1,35 @@
+menu:
+  gui:
+    display: "<dark_blue>Tvé warpy (<count>)"
+    size: 6
+    fill:
+      border: YELLOW_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 1
+      close:
+        item: BOOK
+        action: back
+        name: <green>Zpět do menu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 9
+  warp-info:
+    display: "<yellow><warp>"
+    lore:
+      - ""
+      - <gray>Svět <green><world>
+      - <gray>Souřadnice <green><x> <y> <z>
+      - ""
+      - <aqua>Klikni <green>levým <aqua>pro teleport!
+      - <aqua>Klikni <red>pravým <aqua>pro nastavení!

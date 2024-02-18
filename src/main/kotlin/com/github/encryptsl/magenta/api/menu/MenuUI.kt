@@ -1,8 +1,6 @@
 package com.github.encryptsl.magenta.api.menu
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
-import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -21,6 +19,18 @@ class MenuUI(private val magenta: Magenta) : Menu {
     override fun simpleGui(title: String, size: Int, guiType: GuiType): Gui {
         return Gui.gui()
             .title(ModernText.miniModernText(title))
+            .type(guiType)
+            .rows(size)
+            .disableItemPlace()
+            .disableItemTake()
+            .disableItemDrop()
+            .disableItemSwap()
+            .create()
+    }
+
+    override fun simpleGui(title: Component, size: Int, guiType: GuiType): Gui {
+        return Gui.gui()
+            .title(title)
             .type(guiType)
             .rows(size)
             .disableItemPlace()
@@ -184,7 +194,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
         material: Material,
         gui: PaginatedGui,
         fileConfiguration: FileConfiguration,
-        vaultShop: VaultShop
+        menuExtender: MenuExtender,
     ) {
         if (fileConfiguration.contains("menu.gui.button.close")) {
             if (!fileConfiguration.contains("menu.gui.button.close.positions"))
@@ -196,48 +206,12 @@ class MenuUI(private val magenta: Magenta) : Menu {
             if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
                 return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col"), Placeholder.parsed("file", fileConfiguration.name)))
 
-            if (!fileConfiguration.contains("menu.gui.button.close.action"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.action"), Placeholder.parsed("file", fileConfiguration.name)))
-
             if (fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.close.positions.row"),
                     fileConfiguration.getInt("menu.gui.button.close.positions.col"),
                     ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
                         .asGuiItem {
-                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) vaultShop.openShop(player) else gui.close(
-                                player
-                            )
-                        })
-            }
-        }
-    }
-
-    override fun closeButton(
-        player: Player,
-        material: Material,
-        gui: PaginatedGui,
-        fileConfiguration: FileConfiguration,
-        creditShop: CreditShop
-    ) {
-        if (fileConfiguration.contains("menu.gui.button.close")) {
-            if (!fileConfiguration.contains("menu.gui.button.close.positions"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions"), Placeholder.parsed("file", fileConfiguration.name)))
-
-            if (!fileConfiguration.contains("menu.gui.button.close.positions.row"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row"), Placeholder.parsed("file", fileConfiguration.name)))
-
-            if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col"), Placeholder.parsed("file", fileConfiguration.name)))
-
-            if (!fileConfiguration.contains("menu.gui.button.close.action"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.action"), Placeholder.parsed("file", fileConfiguration.name)))
-
-            if (fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) {
-                gui.setItem(fileConfiguration.getInt("menu.gui.button.close.positions.row"),
-                    fileConfiguration.getInt("menu.gui.button.close.positions.col"),
-                    ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
-                        .asGuiItem {
-                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) creditShop.openShop(player) else gui.close(
+                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) menuExtender.openMenu(player) else gui.close(
                                 player
                             )
                         })

@@ -1,0 +1,56 @@
+menu:
+  gui:
+    display: "<dark_blue>Warp <gray>(<warp>)"
+    size: 6
+    fill:
+      border: BLUE_STAINED_GLASS_PANE
+  icon:
+    name: "<aqua><icon>"
+    lore:
+      - "<green>Kliknutím nastavíš ikonu <gray>(<icon>) !"
+  items:
+    buttons:
+      back_to_menu:
+        name: "<gray>Zpět do Menu"
+        icon: "BOOK"
+        slot: 0
+        action: "BACK_TO_MENU"
+      new_location:
+        name: "<green>Nastavit Lokaci"
+        icon: MAP
+        slot: 3
+        action: "SET_HOME"
+        lore:
+          - "<gray>Kliknutím nastavíš novou lokaci domova.."
+          - "<gray>na tvé aktuální pozici kde se nacházíš."
+      set_icons:
+        name: "<green>Nastavit Ikonu"
+        icon: PAPER
+        slot: 4
+        action: "SET_ICON"
+        lore:
+          - "<gray>Klikni pro nastavení ikony."
+      delete_home:
+        name: "<red>Smazat Warp"
+        icon: BARRIER
+        slot: 8
+        action: "DELETE_HOME"
+  icons:
+    - RED_BED
+    - NAME_TAG
+    - DEAD_BUSH
+    - PAINTING
+    - IRON_BLOCK
+    - DIAMOND_BLOCK
+    - GOLD_BLOCK
+    - EMERALD
+    - CRAFTING_TABLE
+    - COMMAND_BLOCK
+    - GOLDEN_APPLE
+    - CLOCK
+    - BOOK
+    - FLOWER_POT
+    - NETHER_STAR
+    - HAY_BLOCK
+    - OAK_DOOR
+    - OAK_SIGN

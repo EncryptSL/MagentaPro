@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.api.account
 
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.Bukkit
@@ -14,50 +13,45 @@ import java.util.*
 
 class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account {
 
-    private val configUtil = ConfigUtil(plugin,"/players/$uuid.yml")
+    private val configUtil = ConfigUtil(plugin, "/players/$uuid.yml")
 
-    val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI(plugin) }
+    private val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI(plugin) }
 
     override fun createDefaultData(player: Player) {
-        SchedulerMagenta.doAsync(plugin) {
-            getAccount().set("teleportenabled", true)
-            getAccount().set("godmode", false)
-            getAccount().set("jailed", false)
-            getAccount().set("afk", false)
-            getAccount().set("ip-address", player.address.address.hostAddress)
-            getAccount().set("socialspy", false)
-            getAccount().set("timestamps.lastteleport", 0)
-            getAccount().set("timestamps.lastheal", 0)
-            getAccount().set("timestamps.jail", 0)
-            getAccount().set("timestamps.onlinejail", 0)
-            getAccount().set("timestamps.logout", 0)
-            getAccount().set("timestamps.login", System.currentTimeMillis())
-            getAccount().set("lastlocation.world-name", player.world.name)
-            getAccount().set("lastlocation.x", player.location.x)
-            getAccount().set("lastlocation.y", player.location.y)
-            getAccount().set("lastlocation.z", player.location.z)
-            getAccount().set("lastlocation.yaw", player.location.yaw)
-            getAccount().set("lastlocation.pitch", player.location.pitch)
-            save()
-        }
+        getAccount().set("teleportenabled", true)
+        getAccount().set("godmode", false)
+        getAccount().set("jailed", false)
+        getAccount().set("afk", false)
+        getAccount().set("ip-address", player.address.address.hostAddress)
+        getAccount().set("socialspy", false)
+        getAccount().set("timestamps.lastteleport", 0)
+        getAccount().set("timestamps.lastheal", 0)
+        getAccount().set("timestamps.jail", 0)
+        getAccount().set("timestamps.onlinejail", 0)
+        getAccount().set("timestamps.logout", 0)
+        getAccount().set("timestamps.login", System.currentTimeMillis())
+        getAccount().set("lastlocation.world-name", player.world.name)
+        getAccount().set("lastlocation.x", player.location.x)
+        getAccount().set("lastlocation.y", player.location.y)
+        getAccount().set("lastlocation.z", player.location.z)
+        getAccount().set("lastlocation.yaw", player.location.yaw)
+        getAccount().set("lastlocation.pitch", player.location.pitch)
+        save()
     }
 
     override fun saveLastLocation(player: Player) {
-        SchedulerMagenta.doAsync(plugin) {
-            getAccount().set("lastlocation.world-name", player.world.name)
-            getAccount().set("lastlocation.x", player.location.x)
-            getAccount().set("lastlocation.y", player.location.y)
-            getAccount().set("lastlocation.z", player.location.z)
-            getAccount().set("lastlocation.yaw", player.location.yaw)
-            getAccount().set("lastlocation.pitch", player.location.pitch)
-            save()
-        }
+        getAccount().set("lastlocation.world-name", player.world.name)
+        getAccount().set("lastlocation.x", player.location.x)
+        getAccount().set("lastlocation.y", player.location.y)
+        getAccount().set("lastlocation.z", player.location.z)
+        getAccount().set("lastlocation.yaw", player.location.yaw)
+        getAccount().set("lastlocation.pitch", player.location.pitch)
+        save()
     }
+
     override fun saveQuitData(player: Player) {
-        SchedulerMagenta.doAsync(plugin) {
-            getAccount().set("timestamps.logout", System.currentTimeMillis())
-            save()
-        }
+        getAccount().set("timestamps.logout", System.currentTimeMillis())
+        save()
     }
 
     override fun setJailTimeout(seconds: Long) {
@@ -69,28 +63,24 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
         set("timestamps.onlinejail", if (onlineTime) millis else 0)
     }
 
-    override fun set(path: String, value: Any?) {
-        SchedulerMagenta.doAsync(plugin) {
-            getAccount().set(path, value)
-            save()
-        }
-    }
-
-    override fun set(path: String, list: MutableList<Any>) {
-        SchedulerMagenta.doAsync(plugin) {
-            list.forEach { item ->
-                getAccount().set(path, item)
-            }
-            save()
-        }
-    }
-
     override fun setDelay(duration: Duration?, type: String) {
         set("timestamps.$type", Instant.now().plus(duration).toEpochMilli())
     }
 
     override fun resetDelay(type: String) {
         set("timestamps.$type", 0)
+    }
+
+    override fun set(path: String, value: Any?) {
+        getAccount().set(path, value)
+        save()
+    }
+
+    override fun set(path: String, list: MutableList<Any>) {
+        list.forEach { item ->
+            getAccount().set(path, item)
+        }
+        save()
     }
 
     override fun save() {

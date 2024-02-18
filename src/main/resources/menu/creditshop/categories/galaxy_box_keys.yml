@@ -13,7 +13,7 @@ menu:
       close:
         item: RED_CONCRETE
         action: back
-        name: <green>Zpět do měnu
+        name: <green>Zpět do menu
         positions:
           row: 6
           col: 5

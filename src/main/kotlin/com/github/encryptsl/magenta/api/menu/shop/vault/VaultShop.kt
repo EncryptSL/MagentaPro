@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.menu.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.UniversalConfig
+import com.github.encryptsl.magenta.api.menu.MenuExtender
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
@@ -14,13 +15,13 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class VaultShop(private val magenta: Magenta) {
+class VaultShop(private val magenta: Magenta) : MenuExtender {
 
     private val vault: VaultHook by lazy { VaultHook(magenta) }
     private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta, vault) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
 
-    fun openShop(player: Player) {
+    override fun openMenu(player: Player) {
         val gui: Gui = menuUI.simpleGui(magenta.shopConfig.getConfig().getString("menu.gui.display").toString(),
             magenta.shopConfig.getConfig().getInt("menu.gui.size", 6), GuiType.CHEST)
 
@@ -174,7 +175,7 @@ class VaultShop(private val magenta: Magenta) {
                 material,
                 gui,
                 shopCategory.getConfig(),
-                this
+                this,
             )
             menuUI.nextPage(player, material, shopCategory.getConfig(), "next", gui)
         }

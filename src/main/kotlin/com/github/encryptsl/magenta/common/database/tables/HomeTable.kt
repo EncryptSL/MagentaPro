@@ -9,7 +9,7 @@ object HomeTable : Table("magenta_homes") {
     val uuid: Column<UUID> = uuid("uuid")
     val username: Column<String> = varchar("username", 36)
     val home: Column<String> = varchar("home", 36)
-    val homeIcon: Column<String> = varchar("home_icon", 10).default("OAK_DOOR")
+    val homeIcon: Column<String> = varchar("home_icon", 13).default("RED_BED")
     val world: Column<String> = varchar("world", 20)
     val x: Column<Int> = integer("x")
     val y: Column<Int> = integer("y")

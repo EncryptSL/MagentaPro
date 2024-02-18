@@ -7,13 +7,10 @@ menu:
   home-info:
       display: "<yellow><home>"
       lore:
+      - ""
       - <gray>Domov <green><home>
-      - <gray>Majitel <green><owner>
       - <gray>Souřadnice <green><x> <y> <z>
       - <gray>Svět <green><world>
-      - <green>/home <jail>
-  home-items:
-    - RED_BED
-    - NAME_TAG
-    - GOLD_BLOCK
-    - OAK_DOOR
+      - ""
+      - <aqua>Klikni <green>levým <aqua>pro teleport!
+      - <aqua>Klikni <red>pravým <aqua>pro nastavení!

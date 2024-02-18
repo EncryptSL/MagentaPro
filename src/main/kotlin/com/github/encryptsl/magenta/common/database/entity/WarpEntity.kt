@@ -4,6 +4,7 @@ data class WarpEntity(
     val owner: String,
     val uuid: String,
     val warpName: String,
+    val warpIcon: String,
     val world: String,
     val x: Int,
     val y: Int,

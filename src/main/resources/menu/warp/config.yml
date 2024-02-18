@@ -1,0 +1,44 @@
+menu:
+  gui:
+    display: "<dark_blue>Veřejné Warpy (<count>)"
+    size: 6
+    fill:
+      border: YELLOW_STAINED_GLASS_PANE
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 1
+      close:
+        item: BOOK
+        name: <green>Zavřít Menu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 9
+  items:
+    buttons:
+      open_owner_warps:
+        name: "<green>Tvé Warpy"
+        icon: BARREL
+        positions:
+          row: 6
+          col: 2
+        action: "OPEN_MENU"
+        lore:
+          - "<gray>Kliknutím otevřeš své warpy.."
+  warp-info:
+    display: "<yellow><warp>"
+    lore:
+      - ""
+      - <gray>Vlastník <green><owner>
+      - <gray>Svět <green><world>
+      - ""
+      - <white>Klikni pro teleport!

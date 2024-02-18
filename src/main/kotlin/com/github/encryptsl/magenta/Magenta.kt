@@ -63,8 +63,12 @@ open class Magenta : JavaPlugin() {
     val randomConfig: RandomConfig by lazy { RandomConfig(this) }
     val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
     val creditShopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/shop.yml") }
-    val homeMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/config.yml") }
     val oresMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/levels/ores.yml") }
+    val homeMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/config.yml") }
+    val homeEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/editor/home_editor.yml") }
+    val warpMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/config.yml") }
+    val warpPlayerMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/owner_warps.yml") }
+    val warpEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/editor/warp_editor.yml") }
     val chatControl: ChatControlConfig by lazy { ChatControlConfig(this) }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
@@ -99,6 +103,10 @@ open class Magenta : JavaPlugin() {
             .createFromResources("menu/shop/categories/stone.yml", this)
             .createFromResources("menu/shop/categories/wood.yml", this)
             .createFromResources("menu/home/config.yml", this)
+            .createFromResources("menu/home/editor/home_editor.yml", this)
+            .createFromResources("menu/warp/config.yml", this)
+            .createFromResources("menu/warp/owner_warps.yml", this)
+            .createFromResources("menu/warp/editor/warp_editor.yml", this)
             .createFromResources("menu/levels/ores.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")

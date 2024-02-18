@@ -90,6 +90,17 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         }
     }
 
+    override fun setWarpIcon(player: Player, warpName: String, icon: String) {
+        SchedulerMagenta.doAsync(plugin) {
+            transaction {
+                WarpTable.update({(WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName)}) {
+                    it[warpIcon] = icon
+                }
+            }
+        }
+    }
+
+
     override fun getWarpExist(warpName: String): Boolean {
         return transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
     }
@@ -122,6 +133,10 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
             rowResult.y.toDouble(), rowResult.z.toDouble(), rowResult.yaw, rowResult.pitch)
     }
 
+    override fun getWarpsByOwner(player: Player): List<WarpEntity> {
+        return transaction { WarpTable.selectAll().where(WarpTable.uuid eq player.uniqueId.toString()).mapNotNull { rowResultToWarpEntity(it) } }
+    }
+
     override fun getWarps(): List<WarpEntity> {
         return transaction { WarpTable.selectAll().mapNotNull {rowResultToWarpEntity(it)} }
     }
@@ -131,6 +146,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
             row[WarpTable.username],
             row[WarpTable.uuid],
             row[WarpTable.warpName],
+            row[WarpTable.warpIcon],
             row[WarpTable.world],
             row[WarpTable.x],
             row[WarpTable.y],
