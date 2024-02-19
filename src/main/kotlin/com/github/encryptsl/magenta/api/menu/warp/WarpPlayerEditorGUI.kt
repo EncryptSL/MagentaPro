@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -18,6 +19,8 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
     private val warpPlayerGUI: WarpPlayerGUI by lazy { WarpPlayerGUI(magenta, WarpGUI(magenta), this) }
 
     private val ignoreSlots = listOf(17, 18, 26, 27, 35, 36, 44)
+
+    private var clicked = false
 
     fun openWarpPlayerEditor(player: Player, warpName: String) {
         val gui = menu.simpleGui(
@@ -82,12 +85,14 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
     private fun backToMenu(player: Player, fileConfiguration: FileConfiguration, el: String) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("BACK_TO_MENU", true)) {
+            clicked = false
             warpPlayerGUI.openMenu(player)
         }
     }
 
     private fun setLocation(player: Player, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_WARP", true)) {
+            clicked = false
             clearIcons(gui)
             magenta.warpModel.moveWarp(player, warpName, player.location)
             player.sendMessage(
@@ -113,38 +118,44 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
     private fun loadIcons(player: Player, gui: Gui, warpName: String, fileConfiguration: FileConfiguration) {
         val icons: List<Material> = fileConfiguration.getStringList("menu.icons").filter { s -> Material.getMaterial(s)?.name == s }.map { Material.getMaterial(it)!! }
         val itemName = fileConfiguration.getString("menu.icon.name")
-        icons.forEachIndexedSlots { i, m ->
-            if (!ignoreSlots.contains(i)) {
-                val lore = fileConfiguration.getStringList("menu.icon.lore")
-                    .map { ModernText.miniModernText(it, Placeholder.parsed("icon", m.name)) }
-                    .toMutableList()
-                gui.setItem(i, ItemBuilder.from(
-                    com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
-                        .setName(
-                            ModernText.miniModernText(itemName ?: m.name,
-                                Placeholder.parsed("icon", m.name))
-                        ).addLore(lore)
-                        .create()
-                ).asGuiItem { action ->
-                    magenta.warpModel.setWarpIcon(player, warpName, m.name)
-                    if (action.isLeftClick) {
-                        player.sendMessage(
-                            ModernText.miniModernText(
-                                magenta.localeConfig.getMessage("magenta.command.warp.success.change.icon"),
-                                TagResolver.resolver(
-                                    Placeholder.parsed("warp", warpName),
-                                    Placeholder.parsed("icon", m.name)
-                                )
-                            )
-                        )
-                    }
-                })
-            }
+
+        if (clicked) return
+        clicked = true
+        for (m in icons) {
+            val lore = fileConfiguration.getStringList("menu.icon.lore")
+                .map { ModernText.miniModernText(it, Placeholder.parsed("icon", m.name)) }
+                .toMutableList()
+            setIcon(player, warpName, itemName ?: m.name, gui, m, lore)
         }
+    }
+
+    private fun setIcon(player: Player, warpName: String, itemName: String, gui: Gui, m: Material, lore: MutableList<Component>) {
+        gui.addItem(ItemBuilder.from(
+            com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
+                .setName(
+                    ModernText.miniModernText(itemName,
+                        Placeholder.parsed("icon", m.name))
+                ).addLore(lore)
+                .create()
+        ).asGuiItem { action ->
+            magenta.warpModel.setWarpIcon(player, warpName, m.name)
+            if (action.isLeftClick) {
+                player.sendMessage(
+                    ModernText.miniModernText(
+                        magenta.localeConfig.getMessage("magenta.command.warp.success.change.icon"),
+                        TagResolver.resolver(
+                            Placeholder.parsed("warp", warpName),
+                            Placeholder.parsed("icon", m.name)
+                        )
+                    )
+                )
+            }
+        })
     }
 
     private fun deleteHome(player: Player, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("DELETE_HOME", true)) {
+            clicked = false
             magenta.homeModel.deleteHome(player, warpName)
             gui.close(player)
             player.sendMessage(
@@ -160,14 +171,4 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             }
         }
     }
-
-    private inline fun <T> Iterable<T>.forEachIndexedSlots(action: (index: Int, T) -> Unit) {
-        var index = 10
-        for (item in this) action(checkIndexOverflow(index++), item)
-    }
-
-    private fun checkIndexOverflow(index: Int): Int {
-        return index
-    }
-
 }

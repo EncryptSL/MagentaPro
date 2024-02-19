@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -17,6 +18,8 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
     private val menu: MenuUI by lazy { MenuUI(magenta) }
 
     private val ignoreSlots = listOf(17, 18, 26, 27, 35, 36, 44)
+
+    private var clicked = false
 
     fun openHomeEditorGUI(player: Player, homeName: String) {
         val gui = menu.simpleGui(
@@ -79,12 +82,14 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
 
     private fun backToMenu(player: Player, fileConfiguration: FileConfiguration, el: String) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("BACK_TO_MENU", true)) {
+            clicked = false
             homeGUI.openHomeGUI(player)
         }
     }
 
     private fun setLocation(player: Player, homeName: String,fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_HOME", true)) {
+            clicked =false
             clearIcons(gui)
             magenta.homeModel.moveHome(player, homeName, player.location)
             player.sendMessage(
@@ -105,40 +110,47 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
 
         val icons: List<Material> = fileConfiguration.getStringList("menu.icons").filter { m -> Material.getMaterial(m)?.name != null }.map { Material.getMaterial(it)!! }
 
+
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_ICON", true)) {
-            icons.forEachIndexedSlots { i, m ->
+            if (clicked) return
+            clicked = true
+
+            for (m in icons) {
                 val lore = fileConfiguration.getStringList("menu.icon.lore")
                     .map { ModernText.miniModernText(it, Placeholder.parsed("icon", m.name)) }
                     .toMutableList()
-                if (!ignoreSlots.contains(i)) {
-                    gui.setItem(i, ItemBuilder.from(
-                        com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
-                            .setName(ModernText.miniModernText(itemName ?: m.name,
-                                Placeholder.parsed("icon", m.name))
-                            ).addLore(lore)
-                            .create()
-                    ).asGuiItem { action ->
-                        if (action.isLeftClick) {
-                            magenta.homeModel.setHomeIcon(player, homeName, m.name)
-                            player.sendMessage(
-                                ModernText.miniModernText(
-                                    magenta.localeConfig.getMessage("magenta.command.home.success.change.icon"),
-                                    TagResolver.resolver(
-                                        Placeholder.parsed("home", homeName),
-                                        Placeholder.parsed("icon", m.name)
-                                    )
-                                )
-                            )
-                        }
-                    })
-                }
+                setIcon(player, homeName, gui, itemName ?: m.name, m, lore)
             }
             gui.update()
         }
     }
 
+    private fun setIcon(player: Player, homeName: String, gui: Gui, itemName: String, m: Material, lore: MutableList<Component>) {
+        gui.addItem(ItemBuilder.from(
+            com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
+                .setName(ModernText.miniModernText(itemName,
+                    Placeholder.parsed("icon", m.name))
+                ).addLore(lore)
+                .create()
+        ).asGuiItem { action ->
+            if (action.isLeftClick) {
+                magenta.homeModel.setHomeIcon(player, homeName, m.name)
+                player.sendMessage(
+                    ModernText.miniModernText(
+                        magenta.localeConfig.getMessage("magenta.command.home.success.change.icon"),
+                        TagResolver.resolver(
+                            Placeholder.parsed("home", homeName),
+                            Placeholder.parsed("icon", m.name)
+                        )
+                    )
+                )
+            }
+        })
+    }
+
     private fun deleteHome(player: Player, homeName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("DELETE_HOME", true)) {
+            clicked = false
             magenta.homeModel.deleteHome(player, homeName)
             gui.close(player)
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.success.deleted"),
@@ -152,14 +164,5 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                 gui.removeItem(i)
             }
         }
-    }
-
-    private inline fun <T> Iterable<T>.forEachIndexedSlots(action: (index: Int, T) -> Unit) {
-        var index = 10
-        for (item in this) action(checkIndexOverflow(index++), item)
-    }
-
-    private fun checkIndexOverflow(index: Int): Int {
-        return index
     }
 }

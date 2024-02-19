@@ -37,6 +37,8 @@ dependencies {
     implementation("dev.triumphteam:triumph-gui:3.1.7")
     implementation("org.incendo:cloud-paper:2.0.0-beta.2")
     implementation("org.incendo:cloud-annotations:2.0.0-beta.2")
+    testImplementation(kotlin("test"))
+    testImplementation("org.bspfsystems:yamlconfiguration:2.0.1")
 }
 tasks {
     build {
@@ -48,7 +50,7 @@ tasks {
         }
     }
     test {
-        enabled = false
+        useJUnitPlatform()
     }
     shadowJar {
         relocate("cloud.commandframework", "cloud-core")
