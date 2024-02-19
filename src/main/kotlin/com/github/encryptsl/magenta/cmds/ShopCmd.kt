@@ -28,15 +28,15 @@ class ShopCmd(magenta: Magenta) {
         vaultShop.openCategory(player, type)
     }
 
-    @Command("creditshop")
+    @Command("creditshop|cshop")
     @Permission("magenta.credit.shop")
-    fun onShopZeus(player: Player) {
-        vaultShop.openMenu(player)
+    fun onCreditShop(player: Player) {
+        creditShop.openMenu(player)
     }
 
-    @Command("creditshop open <type>")
+    @Command("creditshop|cshop open <type>")
     @Permission("magenta.credit.shop.open")
-    fun onShopOpenZeus(player: Player, @Argument(value = "type", suggestions = "creditshops") type: String) {
+    fun onOpenCreditShop(player: Player, @Argument(value = "type", suggestions = "creditshops") type: String) {
         creditShop.openCategory(player, type)
     }
 

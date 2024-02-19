@@ -19,7 +19,7 @@ class ItemFactory {
 
     fun shopItem(itemName: String, material: Material, buyPrice:Double, sellPrice:Double, fileConfiguration: FileConfiguration): ItemStack {
         val itemStack = ItemBuilder(material, 1).setName(ModernText.miniModernText(itemName))
-        val lore = fileConfiguration.getStringList("shop.gui.item_lore")
+        val lore = fileConfiguration.getStringList("menu.gui.item_lore")
 
         if (lore.isNotEmpty()) {
             val lores = lore.map {
@@ -30,9 +30,9 @@ class ItemFactory {
             }.toMutableList()
             itemStack.addLore(lores)
         }
-        if (fileConfiguration.contains("shop.items.${itemName}.options")) {
-            if (fileConfiguration.contains("shop.items.${itemName}.options.color")) {
-                val color: Color = Color.fromRGB(fileConfiguration.getInt("shop.items.${itemName}.options.color"))
+        if (fileConfiguration.contains("menu.items.${itemName}.options")) {
+            if (fileConfiguration.contains("menu.items.${itemName}.options.color")) {
+                val color: Color = Color.fromRGB(fileConfiguration.getInt("menu.items.${itemName}.options.color"))
                 itemStack.setPotion(true, color)
             }
         }

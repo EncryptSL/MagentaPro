@@ -29,14 +29,14 @@ class OresMilestonesGUI(private val magenta: Magenta) {
                 if (magenta.levelModel.getLevel(player.uniqueId).level < magenta.config.getInt("level.ores.${material.name}")) {
                     val lores = magenta.oresMenuConfig
                         .getConfig()
-                        .getStringList("menu.gui.item.locked-lore")
+                        .getStringList("menu.item.locked-lore")
                         .map { ModernText.miniModernText(it, Placeholder.parsed("level", requiredLevel.toString())) }
                         .toMutableList()
                     itemStack.addLore(lores)
                 } else {
                     val lores = magenta.oresMenuConfig
                         .getConfig()
-                        .getStringList("menu.gui.item.unlocked-lore")
+                        .getStringList("menu.item.unlocked-lore")
                         .map { ModernText.miniModernText(it) }
                         .toMutableList()
                     itemStack.addLore(lores)

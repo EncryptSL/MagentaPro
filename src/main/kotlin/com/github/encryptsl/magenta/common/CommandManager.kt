@@ -106,14 +106,14 @@ class CommandManager(private val magenta: Magenta) {
         }
         commandManager.parserRegistry().registerSuggestionProvider("shops") {_, _ ->
             CompletableFuture.completedFuture(
-                magenta.shopConfig.getConfig().getConfigurationSection("shop.categories")
+                magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(it.toString()) }!!
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("creditshops") {_, _ ->
             CompletableFuture.completedFuture(
-                magenta.creditShopConfig.getConfig().getConfigurationSection("shop.categories")
+                magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(it.toString()) }!!
             )
