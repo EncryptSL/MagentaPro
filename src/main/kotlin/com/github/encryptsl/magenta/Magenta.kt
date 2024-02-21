@@ -115,6 +115,7 @@ open class Magenta : JavaPlugin() {
             config.getString("database.username") ?: "root",
             config.getString("database.password") ?: "admin"
         )
+        DatabaseConnector(this).initGeoMaxMind()
     }
 
     override fun onEnable() {

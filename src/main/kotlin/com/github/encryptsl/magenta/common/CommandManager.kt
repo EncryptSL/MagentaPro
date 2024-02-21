@@ -179,6 +179,7 @@ class CommandManager(private val magenta: Magenta) {
             annotationParser.parse(VoteCmd(magenta))
             annotationParser.parse(VotesCmd(magenta))
             annotationParser.parse(WarpCmd(magenta))
+            annotationParser.parse(WhoisCmd(magenta))
         } catch (e : NoClassDefFoundError) {
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }

@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta.common.database
 
+import com.maxmind.geoip2.DatabaseReader
 import com.zaxxer.hikari.HikariDataSource
 
 interface DatabaseConnectorProvider {
@@ -10,6 +11,10 @@ interface DatabaseConnectorProvider {
      * @param pass - Password of database
      */
     fun initConnect(jdbcHost: String, user: String, pass: String)
+
+    fun initGeoMaxMind()
+
+    fun getGeoMaxMing(): DatabaseReader
 
     fun dataSource(): HikariDataSource
 }

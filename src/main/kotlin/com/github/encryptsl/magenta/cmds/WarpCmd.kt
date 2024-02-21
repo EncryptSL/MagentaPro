@@ -9,9 +9,11 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
+@CommandDescription("Provided by plugin MagentaPro")
 class WarpCmd(private val magenta: Magenta) {
 
     private val warpGUI: WarpGUI by lazy { WarpGUI(magenta) }

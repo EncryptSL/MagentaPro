@@ -45,13 +45,6 @@ class CommandHelper(private val magenta: Magenta) {
         user.set("socialspy", boolean)
     }
 
-    fun changeDisplayName(player: Player, displayName: String) {
-        val user = magenta.user.getUser(player.uniqueId)
-        user.set("displayname", displayName)
-        player.displayName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
-        player.playerListName(ModernText.miniModernText(user.getAccount().getString("displayname").toString()))
-    }
-
     fun allowFly(commandSender: CommandSender?, player: Player) {
         if (player.allowFlight) {
             player.allowFlight = false

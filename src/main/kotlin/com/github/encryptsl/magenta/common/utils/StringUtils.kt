@@ -24,5 +24,14 @@ class StringUtils(private val magenta: Magenta) {
         return message.replace("{player}", player.name).replace("%player%", player.name)
     }
 
+    fun censorIp(ipAdresa: String): String {
+        val oktety = ipAdresa.split(".")
+        if (oktety.size != 4) {
+            throw IllegalArgumentException("Not valid IP Address")
+        }
+        return "${oktety[0]}.${oktety[1]}.${oktety[2]}.XXX"
+    }
+
+
     fun colorize(value: String): String = ChatColor.translateAlternateColorCodes('&', value)
 }

@@ -18,6 +18,7 @@ libraries:
   - org.jetbrains.exposed:exposed-jdbc:0.46.0
   - org.jetbrains.exposed:exposed-kotlin-datetime:0.46.0
   - club.minnced:discord-webhooks:0.8.4
+  - com.maxmind.geoip2:geoip2:4.2.0
 
 description: ${description}
 
@@ -59,6 +60,7 @@ permissions:
       magenta.vanish.*: true
       magenta.votes.*: true
       magenta.warp.*: true
+      magenta.whois.*: true
       magenta.vip.expire.other: true
       magenta.signs.*: true
       magenta.restriction.bypass.*: true
@@ -79,6 +81,7 @@ permissions:
       magenta.shop.*: true
       magenta.social.spy: true
       magenta.vote.expire.other: true
+      magenta.whois.*: true
       magenta.chat.filter.bypass.*: true
   magenta.player:
     description: Permissions for player
@@ -393,6 +396,12 @@ permissions:
       magenta.move.warp: true
       magenta.rename.warp: true
       magenta.warp.list: true
+  magenta.whois.*:
+    description: Permissions for whois
+    default: false
+    children:
+      magenta.whois: true
+      magenta.whois.ip: true
   magenta.signs.*:
     default: false
     children:
