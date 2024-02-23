@@ -14,9 +14,9 @@ softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs]
 libraries:
   - com.zaxxer:HikariCP:5.1.0
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22
-  - org.jetbrains.exposed:exposed-core:0.46.0
-  - org.jetbrains.exposed:exposed-jdbc:0.46.0
-  - org.jetbrains.exposed:exposed-kotlin-datetime:0.46.0
+  - org.jetbrains.exposed:exposed-core:0.47.0
+  - org.jetbrains.exposed:exposed-jdbc:0.47.0
+  - org.jetbrains.exposed:exposed-kotlin-datetime:0.47.0
   - club.minnced:discord-webhooks:0.8.4
   - com.maxmind.geoip2:geoip2:4.2.0
 
@@ -295,7 +295,7 @@ permissions:
     children:
       magenta.repair.item: true
       magenta.repair.all: true
-      magenta.repair.other: true
+      magenta.repair.all.other: true
       magenta.repair.delay.exempt: true
   magenta.report.*:
     description: Permissions for report

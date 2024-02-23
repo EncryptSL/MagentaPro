@@ -22,9 +22,9 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly(kotlin("stdlib", "1.9.22"))
-    compileOnly("org.jetbrains.exposed:exposed-core:0.46.0")
-    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.46.0")
-    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.46.0")
+    compileOnly("org.jetbrains.exposed:exposed-core:0.47.0")
+    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.47.0")
+    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.47.0")
     compileOnly("com.zaxxer:HikariCP:5.1.0")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
     compileOnly("me.clip:placeholderapi:2.11.5")
