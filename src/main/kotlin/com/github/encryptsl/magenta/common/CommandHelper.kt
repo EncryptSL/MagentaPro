@@ -48,14 +48,15 @@ class CommandHelper(private val magenta: Magenta) {
     fun allowFly(commandSender: CommandSender?, player: Player) {
         if (player.allowFlight) {
             player.allowFlight = false
+            magenta.user.getUser(player.uniqueId).set("flying", false)
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated")))
             commandSender?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated.to"), TagResolver.resolver(
                 Placeholder.parsed("player", player.name))))
         } else {
             player.allowFlight = true
+            magenta.user.getUser(player.uniqueId).set("flying", true)
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated")))
             commandSender?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated.to"), TagResolver.resolver(Placeholder.parsed("player", player.name))))
-
         }
     }
 

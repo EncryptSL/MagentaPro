@@ -48,17 +48,18 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
             val entityName = event.mobType.internalName
             if (magenta.mmConfig.getConfig().contains("mythic_rewards.$entityName")) {
                 val positions = sortedByDamage()
-                positions.forEach { (t, u) ->
+
+                for (p in positions) {
                     for (message in magenta.mmConfig.getConfig().getStringList("mythic_rewards.$entityName.RewardMessage.message")) {
-                        Bukkit.getPlayer(t)?.sendMessage(ModernText.miniModernTextCenter(
-                                message
-                                    .replace("{top_player_1}", nameByRank(1))
-                                    .replace("{top_player_2}", nameByRank(2))
-                                    .replace("{top_player_3}", nameByRank(3))
-                                    .replace("{top_damage_1}", roundingDamage(1).toString())
-                                    .replace("{top_damage_2}", roundingDamage(2).toString())
-                                    .replace("{top_damage_3}", roundingDamage(3).toString())
-                                    .replace("{personal_score}", roundingPersonalDamage(u).toString())
+                        Bukkit.getPlayer(p.key)?.sendMessage(ModernText.miniModernTextCenter(
+                            message
+                                .replace("{top_player_1}", nameByRank(1))
+                                .replace("{top_player_2}", nameByRank(2))
+                                .replace("{top_player_3}", nameByRank(3))
+                                .replace("{top_damage_1}", roundingDamage(1).toString())
+                                .replace("{top_damage_2}", roundingDamage(2).toString())
+                                .replace("{top_damage_3}", roundingDamage(3).toString())
+                                .replace("{personal_score}", roundingPersonalDamage(p.value).toString())
                         ))
                     }
                 }

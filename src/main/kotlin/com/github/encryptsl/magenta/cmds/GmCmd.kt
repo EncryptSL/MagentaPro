@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -122,8 +121,7 @@ class GmCmd(private val magenta: Magenta) {
     }
 
     private fun setGameModeToTarget(player: Player, gameMode: GameMode) {
-        SchedulerMagenta.doSync(magenta) {
-            player.gameMode = gameMode
-        }
+        player.gameMode = gameMode
+        magenta.user.getUser(player.uniqueId).set("gamemode", gameMode.name)
     }
 }

@@ -7,7 +7,10 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.*
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
 import java.time.Duration
 
 @Suppress("UNUSED")
@@ -20,8 +23,8 @@ class RepairCmd(private val magenta: Magenta) {
     @Permission("magenta.repair.item")
     fun onRepair(player: Player) {
         val inventory = player.inventory
-        val delay = magenta.config.getLong("repair-cooldown")
         val user = magenta.user.getUser(player.uniqueId)
+        val delay = magenta.config.getLong("repair-cooldown")
 
         if (inventory.itemInMainHand.type.isEmpty || inventory.itemInMainHand.type.isAir || inventory.itemInMainHand.isEmpty)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.hand")))
@@ -37,60 +40,46 @@ class RepairCmd(private val magenta: Magenta) {
         commandHelper.repairItem(player)
     }
 
-    @ProxiedBy("fixall")
-    @Command("repair all [target]")
+    @Command("fixall|repair all")
     @Permission("magenta.repair.all")
-    fun onRepairAll(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player?) {
-        if (commandSender is Player) {
-            if (target == null) {
-                val inventory = commandSender.inventory
-                if (inventory.isEmpty)
-                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
+    fun onRepairAll(player: Player) {
+        val user = magenta.user.getUser(player.uniqueId)
+        val delay = magenta.config.getLong("repair-cooldown")
 
-                commandHelper.repairItems(commandSender)
-                commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
-                return
-            }
+        val inventory = player.inventory
+        if (inventory.isEmpty)
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
 
-            if (!target.hasPermission("magenta.repair.others"))
-                return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
+        val timeLeft = user.getRemainingCooldown("repair")
+        if (user.hasDelay("repair") && !player.hasPermission("magenta.repair.delay.exempt"))
+            return commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
-            val inventory = target.inventory
-            if (inventory.isEmpty)
-                return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
+        if (delay != 0L && delay != -1L || !player.hasPermission("magenta.repair.delay.exempt")) {
+            user.setDelay(Duration.ofSeconds(delay), "repair")
+        }
 
-            commandHelper.repairItems(target)
+        commandHelper.repairItems(player)
 
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
-            commandSender.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.repair.success.all.to"), TagResolver.resolver(
-                        Placeholder.parsed("player", target.name)
-                    )
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
+    }
+
+    @Command("fixall|repair all <player>")
+    @Permission("magenta.repair.all.other")
+    fun onRepairAllProxy(commandSender: CommandSender,  @Argument(value = "target", suggestions = "players") target: Player) {
+        val inventory = target.inventory
+        if (inventory.isEmpty)
+            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
+
+        commandHelper.repairItems(target)
+
+        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
+        commandSender.sendMessage(
+            ModernText.miniModernText(
+                magenta.localeConfig.getMessage("magenta.command.repair.success.all.to"), TagResolver.resolver(
+                    Placeholder.parsed("player", target.name)
                 )
             )
-
-        } else {
-            if (target != null) {
-                if (!target.hasPermission("magenta.repair.other"))
-                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("")))
-
-                val inventory = target.inventory
-                if (inventory.isEmpty)
-                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
-
-                commandHelper.repairItems(target)
-
-                target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
-                commandSender.sendMessage(
-                    ModernText.miniModernText(
-                        magenta.localeConfig.getMessage("magenta.command.repair.success.all.to"), TagResolver.resolver(
-                            Placeholder.parsed("player", target.name)
-                        )
-                    )
-                )
-            }
-        }
+        )
     }
 
 

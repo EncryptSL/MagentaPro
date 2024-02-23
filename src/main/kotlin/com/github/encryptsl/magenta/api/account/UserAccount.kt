@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.api.account
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
@@ -85,6 +86,14 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
 
     override fun save() {
         configUtil.save()
+    }
+
+    override fun getGameMode(): GameMode {
+        return GameMode.valueOf(getAccount().getString("gamemode") ?: "SURVIVAL")
+    }
+
+    override fun getFlying(): Boolean {
+        return getAccount().getBoolean("flying")
     }
 
     override fun isJailed(): Boolean {

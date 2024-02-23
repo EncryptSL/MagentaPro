@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta.api.account
 
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
@@ -21,6 +22,8 @@ interface Account {
     fun isSocialSpy(): Boolean
     fun isAfk(): Boolean
     fun isVanished(): Boolean
+    fun getGameMode(): GameMode
+    fun getFlying(): Boolean
     fun getOnlineJailedTime(): Long
     fun getRemainingJailTime(): Long
     fun getRemainingCooldown(type: String): Duration

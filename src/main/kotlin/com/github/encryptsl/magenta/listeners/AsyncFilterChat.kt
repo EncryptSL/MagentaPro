@@ -57,9 +57,4 @@ class AsyncFilterChat(private val magenta: Magenta) : Listener {
         if(websiteFilter.isDetected(player, phrase))
             return chatPunishManager.action(player, event, magenta.localeConfig.getMessage("magenta.filter.web_filter"), phrase, Violations.WEBSITE)
     }
-
-    private fun debug(player: Player, violations: Violations) {
-        player.sendMessage("Is Detected : ${violations.name}")
-    }
-
 }
