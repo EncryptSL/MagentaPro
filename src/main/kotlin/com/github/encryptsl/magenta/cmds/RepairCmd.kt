@@ -7,10 +7,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
 import java.time.Duration
 
 @Suppress("UNUSED")
@@ -40,7 +37,8 @@ class RepairCmd(private val magenta: Magenta) {
         commandHelper.repairItem(player)
     }
 
-    @Command("fixall|repair all")
+    @ProxiedBy("fixall")
+    @Command("repair all")
     @Permission("magenta.repair.all")
     fun onRepairAll(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
@@ -63,7 +61,8 @@ class RepairCmd(private val magenta: Magenta) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
     }
 
-    @Command("fixall|repair all <target>")
+    @ProxiedBy("fixall")
+    @Command("repair all <target>")
     @Permission("magenta.repair.all.other")
     fun onRepairAllProxy(commandSender: CommandSender,  @Argument(value = "target", suggestions = "players") target: Player) {
         val inventory = target.inventory

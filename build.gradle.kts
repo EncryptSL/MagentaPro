@@ -54,8 +54,8 @@ tasks {
         useJUnitPlatform()
     }
     shadowJar {
-        relocate("cloud.commandframework", "cloud-core")
         minimize {
+            relocate("org.incendo", "magenta.cloud-core")
             relocate("dev.triumphteam.gui", "com.github.encryptsl.magenta.libs.gui")
             relocate("solar.squeres", "com.github.encryptsl.libs.solar")
         }
