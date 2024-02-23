@@ -4,8 +4,10 @@ import org.apache.commons.lang3.time.DurationFormatUtils
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -41,6 +43,13 @@ fun formatFromSecondsTime(seconds: Long): String {
 fun datetime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
 
 fun now(): String = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+
+fun convertFromMillis(millis: Long): String {
+    val date = Date(millis)
+    val from = date.toInstant()
+    val localDateTime: LocalDateTime = from.atZone(ZoneId.systemDefault()).toLocalDateTime()
+    return DateTimeFormatter.ofPattern("MM-dd hh:mm yyyy").format(localDateTime)
+}
 
 fun convertInstant(instant: Instant): String {
     return DateTimeFormatter.ofPattern("MM-dd hh:mm yyyy").format(instant)

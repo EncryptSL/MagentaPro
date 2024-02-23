@@ -3,7 +3,7 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
-import com.github.encryptsl.magenta.common.extensions.convertInstant
+import com.github.encryptsl.magenta.common.extensions.convertFromMillis
 import com.github.encryptsl.magenta.common.utils.ModernText
 import com.maxmind.geoip2.DatabaseReader
 import com.maxmind.geoip2.record.Country
@@ -16,7 +16,6 @@ import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 import java.net.InetAddress
-import java.time.Instant
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by MagentaPro")
@@ -48,6 +47,10 @@ class WhoisCmd(private val magenta: Magenta) {
 
             sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.gamemode"), user, ip, target, country)
 
+            if (user.getFlying()) {
+                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.flying"), user, ip, target, country)
+            }
+
             sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastSeen"), user, ip, target, country)
             sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastLogin"), user, ip, target, country)
 
@@ -76,8 +79,8 @@ class WhoisCmd(private val magenta: Magenta) {
             Placeholder.parsed("gamemode", user.getGameMode().name),
             Placeholder.parsed("flying", user.getFlying().toString()),
             Placeholder.parsed("ip_address", ip),
-            Placeholder.parsed("last_seen", convertInstant(Instant.ofEpochMilli(player.lastSeen))),
-            Placeholder.parsed("last_login", convertInstant(Instant.ofEpochMilli(player.lastLogin))),
+            Placeholder.parsed("last_seen", convertFromMillis(player.lastSeen)),
+            Placeholder.parsed("last_login", convertFromMillis(player.lastLogin)),
             Placeholder.parsed("remaining_jail_time", user.getRemainingJailTime().toString()),
             Placeholder.parsed("is_afk", ((user.isAfk() || magenta.afk.isAfk(player.uniqueId)).toString())),
             Placeholder.parsed("is_socialspy", user.isSocialSpy().toString()),
