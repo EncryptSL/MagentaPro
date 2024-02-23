@@ -63,7 +63,7 @@ class RepairCmd(private val magenta: Magenta) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
     }
 
-    @Command("fixall|repair all <player>")
+    @Command("fixall|repair all <target>")
     @Permission("magenta.repair.all.other")
     fun onRepairAllProxy(commandSender: CommandSender,  @Argument(value = "target", suggestions = "players") target: Player) {
         val inventory = target.inventory
