@@ -48,7 +48,7 @@ fun convertFromMillis(millis: Long): String {
     val date = Date(millis)
     val from = date.toInstant()
     val localDateTime: LocalDateTime = from.atZone(ZoneId.systemDefault()).toLocalDateTime()
-    return DateTimeFormatter.ofPattern("MM-dd hh:mm yyyy").format(localDateTime)
+    return DateTimeFormatter.ofPattern("eeee, dd. MMMM yyyy HH:mm:ss", Locale.forLanguageTag("cs")).format(localDateTime)
 }
 
 fun convertInstant(instant: Instant): String {

@@ -23,7 +23,7 @@ class StringTest {
 
         val localDateTime: LocalDateTime = from.atZone(ZoneId.systemDefault()).toLocalDateTime()
 
-        val a = DateTimeFormatter.ofPattern("MM-dd hh:mm yyyy").format(localDateTime)
+        val a = DateTimeFormatter.ofPattern("eeee, dd. MMMM yyyy HH:mm:ss",  Locale.forLanguageTag("cs")).format(localDateTime)
         println(a)
     }
 
