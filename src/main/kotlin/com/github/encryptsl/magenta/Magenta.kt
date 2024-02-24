@@ -62,6 +62,7 @@ open class Magenta : JavaPlugin() {
     val randomConfig: RandomConfig by lazy { RandomConfig(this) }
     val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
     val creditShopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/shop.yml") }
+    val creditShopConfirmMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/confirm_menu.yml") }
     val oresMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/levels/ores.yml") }
     val homeMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/config.yml") }
     val homeEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/editor/home_editor.yml") }
@@ -90,6 +91,7 @@ open class Magenta : JavaPlugin() {
             .createFromResources("mythicmobs/config.yml", this)
             .createFromResources("menu/shop/shop.yml", this)
             .createFromResources("menu/creditshop/shop.yml", this)
+            .createFromResources("menu/creditshop/confirm_menu.yml", this)
             .createFromResources("menu/creditshop/categories/galaxy_box_keys.yml", this)
             .createFromResources("menu/shop/categories/blocks.yml", this)
             .createFromResources("menu/shop/categories/decoration.yml", this)

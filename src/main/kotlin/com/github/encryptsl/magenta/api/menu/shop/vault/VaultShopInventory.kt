@@ -5,13 +5,15 @@ import com.github.encryptsl.magenta.api.menu.shop.EconomyShopIntegration
 import com.github.encryptsl.magenta.api.menu.shop.ShopAction
 import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
 import com.github.encryptsl.magenta.api.menu.shop.TransactionType
+import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyDeposit
+import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyWithdraw
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VaultShopInventory(private val magenta: Magenta, private val vault: VaultHook) : ShopAction {
+class VaultShopInventory(private val magenta: Magenta) : ShopAction {
 
     private val economyShopIntegration: EconomyShopIntegration by lazy { EconomyShopIntegration(magenta) }
     override fun buy(
@@ -32,8 +34,10 @@ class VaultShopInventory(private val magenta: Magenta, private val vault: VaultH
 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
 
+        val transactions = EconomyWithdraw(player, fullPrice).transaction(VaultHook(magenta)) ?: return
+
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.BUY, vault.withdraw(player, fullPrice), "magenta.shop.success.buy", fullPrice, item, commands, isCommand)
+            TransactionType.BUY, transactions, "magenta.shop.success.buy", fullPrice, item, commands, isCommand)
     }
     override fun sell(
         shopPaymentInformation: ShopPaymentInformation,
@@ -50,9 +54,10 @@ class VaultShopInventory(private val magenta: Magenta, private val vault: VaultH
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.empty.no.item")))
 
         val fullPrice = ShopHelper.calcPrice(item.amount, price)
+        val transactions = EconomyDeposit(player, fullPrice).transaction(VaultHook(magenta)) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.SELL, vault.deposit(player, fullPrice), "magenta.shop.success.sell", fullPrice, item, null, true)
+            TransactionType.SELL, transactions, "magenta.shop.success.sell", fullPrice, item, null, true)
     }
 
 }

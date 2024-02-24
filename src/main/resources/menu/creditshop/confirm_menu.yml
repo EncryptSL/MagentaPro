@@ -1,0 +1,25 @@
+menu:
+  gui:
+    display: <dark_blue>Potvrzení nákupu <gray>(<item>)
+    categoryName: <gold>KREDIT SHOP - <yellow><category>
+    size: 3
+    button:
+      close:
+        item: BARRIER
+        action: back
+        name: <green>Zpět do menu
+        positions:
+          row: 6
+          col: 5
+  confirm_ok:
+    icon: "GREEN_GLASS_TABLE_PAIN"
+    name: "<green>POTVRDIT"
+    slot: 4
+    lore:
+      - "Potvrdit nákup"
+  confirm_no:
+    icon: "RED_GLASS_TABLE_PAIN"
+    name: "<red>ZRUŠIT"
+    slot: 5
+    lore:
+      - "Zrušit Nákup"

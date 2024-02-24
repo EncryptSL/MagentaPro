@@ -2,9 +2,11 @@ package com.github.encryptsl.magenta.common.hook.creditlite
 
 import com.github.encryptsl.credit.api.economy.CreditEconomy
 import com.github.encryptsl.magenta.Magenta
-import org.bukkit.entity.Player
+import com.github.encryptsl.magenta.api.menu.shop.economy.Economy
+import com.github.encryptsl.magenta.api.menu.shop.economy.MissingEconomyException
+import org.bukkit.OfflinePlayer
 
-class CreditLiteHook(private val magenta: Magenta) {
+class CreditLiteHook(private val magenta: Magenta) : Economy {
 
     fun setupCreditLite(): Boolean {
         return try {
@@ -15,32 +17,28 @@ class CreditLiteHook(private val magenta: Magenta) {
         }
     }
 
-    fun hasCredits(player: Player, amount: Double): Boolean {
+    override fun hasBalance(player: OfflinePlayer, value: Double): Boolean {
         if (!setupCreditLite())
-            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
+            throw MissingEconomyException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        return CreditEconomy.has(player, amount)
+        return CreditEconomy.has(player, value)
     }
 
-    fun getCredits(player: Player): Double {
+    override fun deposit(player: OfflinePlayer, value: Double) {
         if (!setupCreditLite())
-            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
+            throw MissingEconomyException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        return CreditEconomy.getBalance(player)
+        CreditEconomy.deposit(player, value)
     }
 
-    fun depositCredits(player: Player, amount: Double)
-    {
+    override fun withdraw(player: OfflinePlayer, value: Double) {
         if (!setupCreditLite())
-            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
+            throw MissingEconomyException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
 
-        CreditEconomy.deposit(player, amount)
+        CreditEconomy.withdraw(player, value)
     }
 
-    fun withdrawCredits(player: Player, amount: Double) {
-        if (!setupCreditLite())
-            throw CreditException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
-
-        CreditEconomy.withdraw(player, amount)
+    override fun getBalance(player: OfflinePlayer): Double {
+       return CreditEconomy.getBalance(player)
     }
 }

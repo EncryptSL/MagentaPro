@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.menu
 
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.components.util.GuiFiller
+import dev.triumphteam.gui.guis.BaseGui
 import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.Component
@@ -43,8 +44,8 @@ interface Menu {
     fun closeButton(
         player: Player,
         material: Material,
-        gui: PaginatedGui,
+        gui: BaseGui,
         fileConfiguration: FileConfiguration,
-        menuExtender: MenuExtender,
+        menuExtender: MenuExtender?,
     )
 }

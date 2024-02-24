@@ -4,7 +4,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.MenuExtender
 import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -17,9 +16,9 @@ import org.bukkit.entity.Player
 
 class CreditShop(private val magenta: Magenta) : MenuExtender {
 
-    private val creditLiteHook: CreditLiteHook by lazy { CreditLiteHook(magenta) }
-    private val creditShopInventory: CreditShopInventory by lazy { CreditShopInventory(magenta, creditLiteHook) }
+    private val creditShopInventory: CreditShopInventory by lazy { CreditShopInventory(magenta) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
+    private val confirmMenu: CreditShopConfirmMenu by lazy { CreditShopConfirmMenu(magenta) }
 
     override fun openMenu(player: Player) {
         val gui: Gui = menuUI.simpleGui(
@@ -159,7 +158,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
                         val color = shopCategory.getConfig().getInt("menu.items.$item.options.color")
                         val buyPrice = shopCategory.getConfig().getDouble("menu.items.$item.buy.price")
                         val quantity = shopCategory.getConfig().getInt("menu.items.$item.buy.quantity")
-                        val commands = shopCategory.getConfig().getStringList("menumenu.items.$item.commands")
+                        val commands = shopCategory.getConfig().getStringList("menu.items.$item.commands")
 
                         val isBuyAllowed = shopCategory.getConfig().contains("menu.items.$item.buy.price")
 
@@ -181,16 +180,18 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
                         guiItem.setAction { action ->
                             if (action.isLeftClick) {
-                                creditShopInventory.buyItem(
-                                    action,
-                                    guiItem.itemStack.displayName(),
-                                    buyPrice,
-                                    quantity,
-                                    commands,
-                                    "magenta.shop.success.buy",
-                                    isBuyAllowed
-                                )
-                                return@setAction
+                                if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required"))
+                                    creditShopInventory.buyItem(
+                                        action,
+                                        guiItem.itemStack.displayName(),
+                                        buyPrice,
+                                        quantity,
+                                        commands,
+                                        "magenta.shop.success.buy",
+                                        isBuyAllowed
+                                    )
+                                else
+                                    confirmMenu.openConfirmMenu(player, this, type, creditShopInventory, guiItem.itemStack.displayName(), buyPrice, quantity, commands, isBuyAllowed)
                             }
                         }
                         gui.setItem(slot, guiItem)

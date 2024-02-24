@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.MenuExtender
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
-import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -17,8 +16,7 @@ import org.bukkit.entity.Player
 
 class VaultShop(private val magenta: Magenta) : MenuExtender {
 
-    private val vault: VaultHook by lazy { VaultHook(magenta) }
-    private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta, vault) }
+    private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
 
     override fun openMenu(player: Player) {

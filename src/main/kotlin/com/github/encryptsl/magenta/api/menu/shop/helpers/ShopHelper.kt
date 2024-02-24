@@ -29,8 +29,8 @@ object ShopHelper {
     @JvmStatic
     fun reloadShopConfigs(magenta: Magenta) {
         val shopConfig = magenta.shopConfig.getConfig()
-        for (category in shopConfig.getConfigurationSection("shop.categories")?.getKeys(false)!!) {
-            val categoryConfig = UniversalConfig(magenta, "shop/categories/$category.yml")
+        for (category in shopConfig.getConfigurationSection("menu.categories")?.getKeys(false)!!) {
+            val categoryConfig = UniversalConfig(magenta, "menu/shop/categories/$category.yml")
             if (categoryConfig.fileExist()) {
                 categoryConfig.reload()
                 categoryConfig.save()
@@ -41,8 +41,8 @@ object ShopHelper {
         }
         
         val creditConfig = magenta.creditShopConfig.getConfig()
-        for (category in creditConfig.getConfigurationSection("shop.categories")?.getKeys(false)!!) {
-            val categoryConfig = UniversalConfig(magenta, "creditshop/categories/$category.yml")
+        for (category in creditConfig.getConfigurationSection("menu.categories")?.getKeys(false)!!) {
+            val categoryConfig = UniversalConfig(magenta, "menu/creditshop/categories/$category.yml")
             if (categoryConfig.fileExist()) {
                 categoryConfig.reload()
                 categoryConfig.save()

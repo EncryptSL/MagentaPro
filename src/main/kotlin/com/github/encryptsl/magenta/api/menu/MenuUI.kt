@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.components.util.GuiFiller
+import dev.triumphteam.gui.guis.BaseGui
 import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.GuiItem
 import dev.triumphteam.gui.guis.PaginatedGui
@@ -192,9 +193,9 @@ class MenuUI(private val magenta: Magenta) : Menu {
     override fun closeButton(
         player: Player,
         material: Material,
-        gui: PaginatedGui,
+        gui: BaseGui,
         fileConfiguration: FileConfiguration,
-        menuExtender: MenuExtender,
+        menuExtender: MenuExtender?,
     ) {
         if (fileConfiguration.contains("menu.gui.button.close")) {
             if (!fileConfiguration.contains("menu.gui.button.close.positions"))
@@ -211,7 +212,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
                     fileConfiguration.getInt("menu.gui.button.close.positions.col"),
                     ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
                         .asGuiItem {
-                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) menuExtender.openMenu(player) else gui.close(
+                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) menuExtender?.openMenu(player) else gui.close(
                                 player
                             )
                         })

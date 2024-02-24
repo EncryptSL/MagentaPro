@@ -46,6 +46,8 @@ class MagentaCmd(private val magenta: Magenta) {
         magenta.shopConfig.save()
         magenta.creditShopConfig.reload()
         magenta.creditShopConfig.save()
+        magenta.creditShopConfirmMenuConfig.reload()
+        magenta.creditShopConfirmMenuConfig.save()
         ShopHelper.reloadShopConfigs(magenta)
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
     }

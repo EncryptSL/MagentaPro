@@ -5,6 +5,7 @@ menu:
     size: 3
     fill:
       border: BLUE_STAINED_GLASS_PANE
+    confirm_required: true
     item_lore:
       - '<color:#004c9e>Cena <color:#037cff><price> kreditů'
       - '<color:#004c9e>Ty máš <color:#037cff><credits>'

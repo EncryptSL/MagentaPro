@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.menu.shop.credits
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.shop.EconomyShopIntegration
+import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyWithdraw
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -9,7 +10,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class CreditShopInventory(private val magenta: Magenta, private val creditLiteHook: CreditLiteHook) {
+class CreditShopInventory(private val magenta: Magenta) {
 
     private val economyShopIntegration = EconomyShopIntegration(magenta)
 
@@ -22,7 +23,9 @@ class CreditShopInventory(private val magenta: Magenta, private val creditLiteHo
         if (ShopHelper.isPlayerInventoryFull(player))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
 
-        economyShopIntegration.doCreditTransaction(player, creditLiteHook, message, product, price, quantity, commands)
+        val transactionErrors = EconomyWithdraw(player, price).transaction(CreditLiteHook(magenta)) ?: return
+
+        economyShopIntegration.doCreditTransaction(player, transactionErrors, message, product, price, quantity, commands)
     }
 
 
