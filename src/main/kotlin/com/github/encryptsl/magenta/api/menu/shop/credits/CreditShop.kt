@@ -11,7 +11,6 @@ import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
-import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
 class CreditShop(private val magenta: Magenta) : MenuExtender {
@@ -108,7 +107,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
         menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
         if (shopCategory.getConfig().contains("menu.custom-items")) {
-            customItems(player, categoryName, shopCategory.getConfig(), gui)
+            menuUI.customItems(player, categoryName, shopCategory.getConfig(), gui)
         }
 
         if (shopCategory.getConfig().contains("menu.items")) {
@@ -214,36 +213,6 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
                 this
             )
             menuUI.nextPage(player, material, shopConfig.getConfig(), "next", paginatedGui)
-        }
-    }
-
-    private fun customItems(player: Player, type: String, fileConfiguration: FileConfiguration, guiPaginatedGui: PaginatedGui) {
-        for (item in fileConfiguration.getConfigurationSection("menu.custom-items")?.getKeys(false)!!) {
-            val material = Material.getMaterial(fileConfiguration.getString("menu.custom-items.$item.icon").toString())
-            if (material != null) {
-                if (!fileConfiguration.contains("menu.custom-items.$item.name"))
-                    return player.sendMessage(
-                        ModernText.miniModernText(
-                            magenta.localeConfig.getMessage("magenta.menu.error.not.defined.name"),
-                            Placeholder.parsed("category", type)
-                        )
-                    )
-                if (!fileConfiguration.contains("menu.custom-items.$item.position.slot"))
-                    return player.sendMessage(
-                        ModernText.miniModernText(
-                            magenta.localeConfig.getMessage("magenta.menu.error.not.defined.slot"),
-                            Placeholder.parsed("category", type)
-                        )
-                    )
-                val itemName = fileConfiguration.getString("menu.custom-items.$item.name").toString()
-                val slot = fileConfiguration.getInt("menu.custom-items.$item.position.slot")
-                val glowing = fileConfiguration.getBoolean("menu.custom-items.$item.options.glowing")
-                val lore = fileConfiguration.getStringList("menu.custom-items.$item.lore")
-                val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem {
-                    return@asGuiItem
-                }
-                guiPaginatedGui.setItem(slot, guiItem)
-            }
         }
     }
 

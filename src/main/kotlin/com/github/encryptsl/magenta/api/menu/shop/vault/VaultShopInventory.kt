@@ -23,7 +23,6 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         inventory: InventoryClickEvent
     ) {
         val player = inventory.whoClicked as Player
-        val item = shopPaymentInformation.itemStack
         val price = shopPaymentInformation.price
 
         if (!shopPaymentInformation.isOperationAllowed)
@@ -32,12 +31,10 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         if (ShopHelper.isPlayerInventoryFull(player))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
 
-        val fullPrice = ShopHelper.calcPrice(item.amount, price)
-
-        val transactions = EconomyWithdraw(player, fullPrice).transaction(VaultHook(magenta)) ?: return
+        val transactions = EconomyWithdraw(player, price).transaction(VaultHook(magenta)) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.BUY, transactions, "magenta.shop.success.buy", fullPrice, item, commands, isCommand)
+            TransactionType.BUY, transactions, shopPaymentInformation,"magenta.shop.success.buy", commands, isCommand)
     }
     override fun sell(
         shopPaymentInformation: ShopPaymentInformation,
@@ -50,14 +47,13 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         if (!shopPaymentInformation.isOperationAllowed)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.sell.disabled")))
 
-        if (!player.inventory.contains(item.type))
+        if (!ShopHelper.hasPlayerRequiredItem(player, item))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.empty.no.item")))
 
-        val fullPrice = ShopHelper.calcPrice(item.amount, price)
-        val transactions = EconomyDeposit(player, fullPrice).transaction(VaultHook(magenta)) ?: return
+        val transactions = EconomyDeposit(player, price).transaction(VaultHook(magenta)) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.SELL, transactions, "magenta.shop.success.sell", fullPrice, item, null, true)
+            TransactionType.SELL, transactions, shopPaymentInformation,"magenta.shop.success.sell", null, true)
     }
 
 }

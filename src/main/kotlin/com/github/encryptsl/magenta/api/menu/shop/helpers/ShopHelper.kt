@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
+import org.bukkit.inventory.ItemStack
 
 object ShopHelper {
     @JvmStatic
@@ -11,10 +12,15 @@ object ShopHelper {
         return player.inventory.firstEmpty() == -1
     }
 
-    fun calcPrice(amount: Int, price: Double): Double {
-        return (amount.times(price))
+    @JvmStatic
+    fun hasPlayerRequiredItem(player: HumanEntity, item: ItemStack): Boolean {
+        return player.inventory.contains(item.type)
     }
 
+    @JvmStatic
+    fun calcPrice(amount: Int, price: Double) = (amount.times(price))
+
+    @JvmStatic
     fun giveRewards(commands: MutableList<String>, username: String, quantity: Int) {
         commands.forEach { command ->
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command

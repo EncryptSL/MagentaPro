@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.MenuExtender
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
+import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -123,7 +124,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                     guiItem.setAction { action ->
                         if (action.isShiftClick && action.isLeftClick && !isCommand) {
                             return@setAction vaultShopInventory.buy(
-                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 64, itemName), buyPrice, isBuyAllowed),
+                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 64, itemName), ShopHelper.calcPrice(64, buyPrice), isBuyAllowed),
                                 false,
                                 null,
                                 action
@@ -132,7 +133,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
                         if (action.isLeftClick) {
                             return@setAction vaultShopInventory.buy(
-                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, itemName), buyPrice, isBuyAllowed),
+                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, itemName), ShopHelper.calcPrice(1, buyPrice), isBuyAllowed),
                                 isCommand,
                                 commands,
                                 action
@@ -143,8 +144,9 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                         if (action.isShiftClick && action.isRightClick) {
                             for (i in 0..35) {
                                 if (player.inventory.getItem(i)?.type == material) {
+                                    val itemStack = player.inventory.getItem(i)
                                     return@setAction vaultShopInventory.sell(
-                                        ShopPaymentInformation(player.inventory.getItem(i)!!, sellPrice, isSellAllowed),
+                                        ShopPaymentInformation(itemStack!!, ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed),
                                         action
                                     )
                                 }
@@ -153,7 +155,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                         }
 
                         if (action.isRightClick) {
-                            return@setAction vaultShopInventory.sell(ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName), sellPrice, isSellAllowed), action)
+                            return@setAction vaultShopInventory.sell(ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName), ShopHelper.calcPrice(1, sellPrice), isSellAllowed), action)
                         }
                         action.isCancelled = true
                     }

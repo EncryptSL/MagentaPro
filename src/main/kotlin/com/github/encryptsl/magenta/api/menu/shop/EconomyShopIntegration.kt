@@ -12,33 +12,32 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 class EconomyShopIntegration(private val magenta: Magenta) {
     fun doVaultTransaction(
         player: Player,
         transactionType: TransactionType,
         transactionErrors: TransactionErrors,
+        shopPaymentInformation: ShopPaymentInformation,
         message: String,
-        price: Double,
-        item: ItemStack,
         commands: MutableList<String>?,
         isCommand: Boolean?
     ) {
-
         if (transactionErrors == TransactionErrors.ERROR_ENOUGH_BALANCE)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.money")))
 
         if (transactionErrors == TransactionErrors.SUCCESS) {
-                player.sendMessage(
-                    ModernText.miniModernText(
-                        magenta.localeConfig.getMessage(message), TagResolver.resolver(
-                            Placeholder.component("item", item.displayName()),
-                            Placeholder.parsed("quantity", item.amount.toString()),
-                            Placeholder.parsed("price", price.toString())
-                        )
+            val item = shopPaymentInformation.itemStack
+            val price = shopPaymentInformation.price
+            player.sendMessage(
+                ModernText.miniModernText(
+                    magenta.localeConfig.getMessage(message), TagResolver.resolver(
+                        Placeholder.component("item", item.displayName()),
+                        Placeholder.parsed("quantity", item.amount.toString()),
+                        Placeholder.parsed("price", price.toString())
                     )
                 )
+            )
 
             when (transactionType) {
                 TransactionType.SELL -> {
