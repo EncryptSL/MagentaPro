@@ -27,4 +27,13 @@ class StringTest {
         println(a)
     }
 
+    @Test
+    fun censoring_ip_test() {
+        val oktety = "157.81.248.78".split(".")
+        if (oktety.size != 4) {
+            throw IllegalArgumentException("Not valid IP Address")
+        }
+        println("${oktety[0]}.${oktety[1]}.XXX.xxx")
+    }
+
 }
