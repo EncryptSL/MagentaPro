@@ -22,7 +22,7 @@ class StringUtils(private val magenta: Magenta) {
         if (oktety.size != 4) {
             throw IllegalArgumentException("Not valid IP Address")
         }
-        return "${oktety[0]}.${oktety[1]}.${oktety[2]}.XXX"
+        return "${oktety[0]}.${oktety[1]}.${oktety[2]}.xxx"
     }
 
 
