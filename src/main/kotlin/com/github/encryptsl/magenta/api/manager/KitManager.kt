@@ -45,7 +45,7 @@ class KitManager(private val magenta: Magenta) {
 
                 val iterator: Iterator<Enchantment> = Enchantment.values().iterator()
 
-                iterator.forEach { enchantment ->
+                for (enchantment in iterator) {
                     val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}"
                     if (magenta.kitConfig.getKit().contains(enchant)) {
                         item.addEnchantment(
@@ -54,7 +54,6 @@ class KitManager(private val magenta: Magenta) {
                         )
                     }
                 }
-
                 inv.addItem(item.create())
             }
         }
@@ -67,22 +66,24 @@ class KitManager(private val magenta: Magenta) {
         val kitSection = magenta.kitConfig.getKit().createSection("kits.$kitName")
         kitSection.set("name", kitName)
         kitSection.set("delay", delay)
-        player.inventory.forEach { item ->
-            if (item != null) {
-                val itemMeta = item.itemMeta
-                val itemType = item.type
-                kitSection.set("items.${itemType.name.lowercase()}.amount", item.amount)
-                println(itemType.name)
-                if (item.enchantments.isNotEmpty()) {
-                    item.enchantments.forEach { enchant ->
-                        kitSection.set("items.${itemType.name.lowercase()}.enchants.${enchant.key.key().value()}", enchant.value)
-                    }
+        for (item in player.inventory) {
+            if (item == null) {continue}
+
+            val itemMeta = item.itemMeta
+            val itemType = item.type
+            kitSection.set("items.${itemType.name.lowercase()}.amount", item.amount)
+            if (item.enchantments.isNotEmpty()) {
+                for (enchant in item.enchantments) {
+                    kitSection.set("items.${itemType.name.lowercase()}.enchants.${enchant.key.key().value()}", enchant.value)
                 }
-                if (item.hasItemMeta()) {
-                    kitSection.set("items.${itemType.name.lowercase()}.meta.displayName",
-                        itemMeta.displayName()?.let { PlainTextComponentSerializer.plainText().serialize(it) })
-                    item.lore()?.forEach { a ->
-                        kitSection.set("items.${itemType.name.lowercase()}.meta.lore", PlainTextComponentSerializer.plainText().serialize(a))
+            }
+            if (item.hasItemMeta()) {
+                kitSection.set("items.${itemType.name.lowercase()}.meta.displayName",
+                    itemMeta.displayName()?.let { PlainTextComponentSerializer.plainText().serialize(it) })
+                val lores = item.lore()
+                if (lores != null) {
+                    for (lore in lores) {
+                        kitSection.set("items.${itemType.name.lowercase()}.meta.lore", PlainTextComponentSerializer.plainText().serialize(lore))
                     }
                 }
             }
@@ -118,8 +119,10 @@ class KitManager(private val magenta: Magenta) {
                     val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
                     item.addLore(lore)
                 }
-                for (enchantment in listOf<Enchantment>().iterator()) {
-                    val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}"
+                val iterator: Iterator<Enchantment> = Enchantment.values().iterator()
+
+                for (enchantment in iterator) {
+                    val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key.key().value()}"
                     if (magenta.kitConfig.getKit().contains(enchant)) {
                         item.addEnchantment(
                             enchantment,

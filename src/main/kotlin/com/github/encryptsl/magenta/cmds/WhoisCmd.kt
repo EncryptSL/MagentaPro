@@ -6,7 +6,6 @@ import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.extensions.convertFromMillis
 import com.github.encryptsl.magenta.common.utils.ModernText
 import com.maxmind.geoip2.DatabaseReader
-import com.maxmind.geoip2.record.Country
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
@@ -27,42 +26,35 @@ class WhoisCmd(private val magenta: Magenta) {
     @Permission("magenta.whois")
     fun onWhois(commandSender: CommandSender, @Argument(value = "target", suggestions = "offlinePlayers") target: OfflinePlayer) {
         val user = magenta.user.getUser(target.uniqueId)
-        val ip = user.getAccount().getString("ip-address").toString()
 
         try {
-            val country = maxmind.country(InetAddress.getByName(ip)).country
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.username"), user, ip, target, country)
-            if (commandSender.hasPermission("magenta.whois.ip")) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.geolocation"), user, ip, target, country)
-            } else {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.geolocation"), user, magenta.stringUtils.censorIp(
-                    ip
-                ), target, country)
-            }
+            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.username"), target, user)
+
+            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.geolocation"), target, user)
 
             if (target.isOnline || target.isConnected) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.health"), user, ip, target, country)
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.hunger"), user, ip, target, country)
+                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.health"), target, user)
+                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.hunger"), target, user)
             }
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.gamemode"), user, ip, target, country)
+            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.gamemode"), target, user)
 
             if (user.getFlying()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.flying"), user, ip, target, country)
+                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.flying"), target, user)
             }
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastSeen"), user, ip, target, country)
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastLogin"), user, ip, target, country)
+            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastSeen"), target, user)
+            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastLogin"), target, user)
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.votes"), user, ip, target, country)
+            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.votes"), target, user)
             if (magenta.afk.isAfk(target.uniqueId) || user.isAfk()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isAfk"), user, ip, target, country)
+                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isAfk"), target, user)
             }
             if (user.isSocialSpy()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isSocialSpy"), user, ip, target, country)
+                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isSocialSpy"), target, user)
             }
             if (user.isVanished()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isVanished"), user, ip, target, country)
+                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isVanished"), target, user)
             }
         } catch(e : Exception) {
             magenta.logger.severe(e.stackTraceToString())
@@ -70,7 +62,14 @@ class WhoisCmd(private val magenta: Magenta) {
         }
     }
 
-    private fun sendMessage(commandSender: CommandSender, message: String, user: UserAccount, ip: String, player: OfflinePlayer, country: Country) {
+    private fun sendMessage(commandSender: CommandSender, message: String, player: OfflinePlayer, user: UserAccount) {
+        val ip = user.getAccount().getString("ip-address").toString()
+        val country = maxmind.country(InetAddress.getByName(ip)).country
+
+        val playerIP = if (commandSender.hasPermission("magenta.whois.ip")) ip else magenta.stringUtils.censorIp(ip)
+
+        val isAFK = magenta.afk.isAfk(player.uniqueId) || user.isAfk()
+
         val tag =  TagResolver.resolver(
             Placeholder.parsed("username", player.name.toString()),
             Placeholder.parsed("uuid", player.uniqueId.toString()),
@@ -78,11 +77,11 @@ class WhoisCmd(private val magenta: Magenta) {
             Placeholder.parsed("hunger", (player.player?.foodLevel ?: 0).toString()),
             Placeholder.parsed("gamemode", user.getGameMode().name),
             Placeholder.parsed("flying", user.getFlying().toString()),
-            Placeholder.parsed("ip_address", ip),
+            Placeholder.parsed("ip_address", playerIP),
             Placeholder.parsed("last_seen", convertFromMillis(player.lastSeen)),
             Placeholder.parsed("last_login", convertFromMillis(player.lastLogin)),
             Placeholder.parsed("remaining_jail_time", user.getRemainingJailTime().toString()),
-            Placeholder.parsed("is_afk", ((user.isAfk() || magenta.afk.isAfk(player.uniqueId)).toString())),
+            Placeholder.parsed("is_afk", isAFK.toString()),
             Placeholder.parsed("is_socialspy", user.isSocialSpy().toString()),
             Placeholder.parsed("is_jailed", user.isJailed().toString()),
             Placeholder.parsed("is_vanished", user.isVanished().toString()),

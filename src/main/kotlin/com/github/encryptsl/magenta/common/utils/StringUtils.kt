@@ -6,15 +6,8 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 class StringUtils(private val magenta: Magenta) {
-
-    fun isNickBlacklisted(nickname: String) : Boolean
-        = inInList("nick-blacklist", replaceNickName(nickname))
-
     fun inInList(key: String, value: String): Boolean
         = magenta.config.getStringList(key).contains(value)
-
-    fun isNickInAllowedLength(nickname: String): Boolean
-        = replaceNickName(nickname).length <= magenta.config.getInt("max-nick-length")
 
     fun replaceNickName(nickname: String): String {
         return nickname.replace(Regex("<*[a-zA-Z0-9#:]*>"), "")

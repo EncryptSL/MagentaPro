@@ -19,9 +19,8 @@ class PlayerCommandPreprocessListener(private val magenta: Magenta) : Listener {
         val command = message.split(" ")[0].replace("/", "").lowercase()
         if (magenta.stringUtils.inInList("socialspy-commands", command) || magenta.stringUtils.inInList("socialspy-commands", "*")) {
             if (!player.hasPermission("magenta.social.spy.exempt")) {
-                Bukkit.getServer().onlinePlayers
-                    .filter { magenta.user.getUser(it.uniqueId).isSocialSpy() && it.hasPermission("magenta.social.spy") }
-                    .forEach { p ->
+                for (p in Bukkit.getOnlinePlayers()) {
+                    if (magenta.user.getUser(p.uniqueId).isSocialSpy() && player.hasPermission("magenta.social.spy")) {
                         p.sendMessage(
                             ModernText.miniModernText(
                                 magenta.config.getString("socialspy-format").toString(), TagResolver.resolver(
@@ -30,6 +29,7 @@ class PlayerCommandPreprocessListener(private val magenta: Magenta) : Listener {
                             )
                         )
                     }
+                }
             }
         }
     }
