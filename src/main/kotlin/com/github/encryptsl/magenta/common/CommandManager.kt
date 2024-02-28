@@ -156,6 +156,7 @@ class CommandManager(private val magenta: Magenta) {
             annotationParser.parse(GmCmd(magenta))
             annotationParser.parse(HatCmd(magenta))
             annotationParser.parse(HealCmd(magenta))
+            annotationParser.parse(HelpOpCmd(magenta))
             annotationParser.parse(HomeCmd(magenta))
             annotationParser.parse(IgnoreCmd(magenta))
             annotationParser.parse(InvseeCmd(magenta))

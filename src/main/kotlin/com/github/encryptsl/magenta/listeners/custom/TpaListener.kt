@@ -57,7 +57,8 @@ class TpaListener(private val magenta: Magenta) : Listener {
                         Placeholder.parsed(
                             "deny",
                             magenta.localeConfig.getMessage("magenta.command.tpa.success.request.component.deny")
-                        ),)
+                        )
+                    )
                 )
             )
     }

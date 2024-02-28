@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.vote.VoteMilestonesGUI
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -24,17 +23,18 @@ class VoteCmd(val magenta: Magenta) {
     fun onVote(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
 
-        val services: List<String> = magenta.config.getConfigurationSection("votifier.services")?.getKeys(false)
-            ?.filter { service -> !service.contains("default") } ?: return
-        services.forEach { service ->
+        val services: MutableSet<String> = magenta.config.getConfigurationSection("votifier.services")?.getKeys(false) ?: return
+
+        for (service in services) {
+            if(!service.contains("default")) {
+                continue
+            }
             val replace = VoteHelper.replaceService(service, "_", ".")
-            SchedulerMagenta.delayedTask(magenta, {
-                player.sendMessage(ModernText.miniModernText(magenta.config.getString("votifier.services.$service.link").toString(), TagResolver.resolver(
-                    Placeholder.parsed("hover", magenta.localeConfig.getMessage("magenta.command.vote.hover")),
-                    Placeholder.parsed("vote", (user.getVotesByService(replace)).toString()),
-                    Placeholder.parsed("username", player.name)
-                )))
-            }, 10)
+            player.sendMessage(ModernText.miniModernText(magenta.config.getString("votifier.services.$service.link").toString(), TagResolver.resolver(
+                Placeholder.parsed("hover", magenta.localeConfig.getMessage("magenta.command.vote.hover")),
+                Placeholder.parsed("vote", (user.getVotesByService(replace)).toString()),
+                Placeholder.parsed("username", player.name)
+            )))
         }
     }
 
@@ -65,7 +65,9 @@ class VoteCmd(val magenta: Magenta) {
         if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
             return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.voteparty.error")))
 
-        magenta.config.getStringList("votifier.voteparty.format").forEach { message ->
+        val format = magenta.config.getStringList("votifier.voteparty.format")
+
+        for (message in format) {
             commandSender.sendMessage(ModernText.miniModernText(message, TagResolver.resolver(
                 Placeholder.parsed("remaining_votes", startAt.minus(currentVotes).toString()),
                 Placeholder.parsed("current_votes", currentVotes.toString()),
