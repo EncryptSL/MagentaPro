@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
+import java.io.IOException
 
 class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvider {
     override fun initConnect(jdbcHost: String, user: String, pass: String) {
@@ -38,8 +39,12 @@ class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvide
     }
 
     override fun getGeoMaxMing(): DatabaseReader {
-        val file = File(magenta.dataFolder.path, "GeoLite2-Country.mmdb")
-        return DatabaseReader.Builder(file).build()
+        return try {
+            val file = File(magenta.dataFolder.path, "GeoLite2-Country.mmdb")
+            DatabaseReader.Builder(file).build()
+        } catch (e : IOException) {
+            throw Exception(e.message ?: e.localizedMessage)
+        }
     }
 
     override fun dataSource(): HikariDataSource {

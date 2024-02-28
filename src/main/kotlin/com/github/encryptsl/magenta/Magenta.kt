@@ -44,6 +44,7 @@ open class Magenta : JavaPlugin() {
     lateinit var paperContainerProvider: PaperContainerProvider
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
+    val database: DatabaseConnector by lazy { DatabaseConnector(this) }
     val user: User by lazy { User(this) }
     val vote: MagentaVoteAPI by lazy { MagentaVoteAPI(this) }
     val voteParty: MagentaVotePartyAPI by lazy { MagentaVotePartyAPI(VotePartyModel(this)) }
@@ -118,12 +119,12 @@ open class Magenta : JavaPlugin() {
             .createFromResources("menu/levels/ores.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
-        DatabaseConnector(this).initConnect(
+        database.initConnect(
             config.getString("database.host") ?: "jdbc:sqlite:plugins/MagentaPro/database.db",
             config.getString("database.username") ?: "root",
             config.getString("database.password") ?: "admin"
         )
-        DatabaseConnector(this).initGeoMaxMind()
+        database.initGeoMaxMind()
     }
 
     override fun onEnable() {

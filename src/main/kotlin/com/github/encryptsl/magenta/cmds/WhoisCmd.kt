@@ -2,10 +2,8 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
-import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.extensions.convertFromMillis
 import com.github.encryptsl.magenta.common.utils.ModernText
-import com.maxmind.geoip2.DatabaseReader
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
@@ -19,8 +17,6 @@ import java.net.InetAddress
 @Suppress("UNUSED")
 @CommandDescription("Provided by MagentaPro")
 class WhoisCmd(private val magenta: Magenta) {
-
-    private val maxmind: DatabaseReader = DatabaseConnector(magenta).getGeoMaxMing()
 
     @Command("whois|who <target>")
     @Permission("magenta.whois")
@@ -64,6 +60,7 @@ class WhoisCmd(private val magenta: Magenta) {
 
     private fun sendMessage(commandSender: CommandSender, message: String, player: OfflinePlayer, user: UserAccount) {
         val ip = user.getAccount().getString("ip-address").toString()
+        val maxmind = magenta.database.getGeoMaxMing()
         val country = maxmind.country(InetAddress.getByName(ip)).country
 
         val playerIP = if (commandSender.hasPermission("magenta.whois.ip")) ip else magenta.stringUtils.censorIp(ip)
