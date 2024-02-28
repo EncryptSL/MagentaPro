@@ -204,6 +204,7 @@ permissions:
       magenta.home: true
       magenta.sethome: true
       magenta.sethomeicon: true
+      magenta.move.home: true
       magenta.delhome: true
       magenta.renamehome: true
       magenta.home.list: true
@@ -216,6 +217,7 @@ permissions:
       magenta.home: true
       magenta.sethome: true
       magenta.delhome: true
+      magenta.move.home: true
       magenta.renamehome: true
       magenta.home.list: true
   magenta.ignore.*:

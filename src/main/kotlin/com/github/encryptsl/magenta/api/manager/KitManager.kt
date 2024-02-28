@@ -123,11 +123,11 @@ class KitManager(private val magenta: Magenta) {
 
     private fun applyEnchantment(kitName: String, item: ItemBuilder, material: Material) {
         val iterator: Iterator<Enchantment> = Registry.ENCHANTMENT.iterator()
-        for (enchantment in iterator) {
-            val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key.key().value()}"
+        while(iterator.hasNext()) {
+            val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${iterator.next().key.key().value()}"
             if (magenta.kitConfig.getConfig().contains(enchant)) {
                 item.addEnchantment(
-                    enchantment,
+                    iterator.next(),
                     magenta.kitConfig.getConfig().getInt(enchant)
                 )
             }

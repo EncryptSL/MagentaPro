@@ -32,16 +32,19 @@ class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvide
     }
 
     override fun initGeoMaxMind() {
-        if (File(magenta.dataFolder.path, "GeoLite2-Country.mmdb").exists()) return
+        if (File(magenta.dataFolder.path, "GeoLite2-Country.mmdb").exists())
+            return magenta.logger.info("GeoLite2-Country database was found !")
 
         magenta.saveResource("GeoLite2-Country.mmdb", false)
-        magenta.logger.info("GeoLite2-Country database was initialized !")
+        magenta.logger.info("GeoLite2-Country database was created !")
     }
 
     override fun getGeoMaxMing(): DatabaseReader {
-        return try {
+         try {
             val file = File(magenta.dataFolder.path, "GeoLite2-Country.mmdb")
-            DatabaseReader.Builder(file).build()
+            val db = DatabaseReader.Builder(file).build()
+            db?.close()
+            return db
         } catch (e : IOException) {
             throw Exception(e.message ?: e.localizedMessage)
         }

@@ -26,7 +26,7 @@ class WarpCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("delwarp <warp>")
+    @Command("delwarp|dwarp <warp>")
     @Permission("magenta.delwarp")
     fun onWarpDelete(player: Player, @Argument("warp", suggestions = "warps") warpName: String) {
         SchedulerMagenta.doSync(magenta) {
@@ -34,7 +34,7 @@ class WarpCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("movewarp <warp>")
+    @Command("movewarp|mwarp <warp>")
     @Permission("magenta.move.warp")
     fun onWarpMoveLocation(player: Player, @Argument("warp", suggestions = "warps") warpName: String) {
         SchedulerMagenta.doSync(magenta) {
@@ -42,7 +42,7 @@ class WarpCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("renamewarp <oldWarp> <newName>")
+    @Command("renamewarp|rwarp <oldWarp> <newName>")
     @Permission("magenta.rename.warp")
     fun onWarpRename(player: Player, @Argument("oldWarp", suggestions = "warps") fromWarp: String, @Argument("newName") toWarpName: String) {
         SchedulerMagenta.doSync(magenta) {
@@ -57,7 +57,7 @@ class WarpCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("warps")
+    @Command("warps|warplist")
     @Permission("magenta.warp.list")
     fun onWarps(commandSender: CommandSender) {
         if (commandSender is Player) {

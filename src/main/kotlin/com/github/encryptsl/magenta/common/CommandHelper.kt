@@ -40,6 +40,7 @@ class CommandHelper(private val magenta: Magenta) {
         for (it in players) {
             it.teleportAsync(sender.location)
         }
+        players.clear()
     }
 
     fun teleportOffline(sender: Player, target: OfflinePlayer) {

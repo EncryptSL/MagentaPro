@@ -1,10 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.home.HomeCreateEvent
-import com.github.encryptsl.magenta.api.events.home.HomeDeleteEvent
-import com.github.encryptsl.magenta.api.events.home.HomeRenameEvent
-import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
+import com.github.encryptsl.magenta.api.events.home.*
 import com.github.encryptsl.magenta.api.menu.home.HomeGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -38,7 +35,7 @@ class HomeCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("sethomeicon <home> <icon>")
+    @Command("sethomeicon|sethicon <home> <icon>")
     @Permission("magenta.sethomeicon")
     fun onSetHomeIcon(player: Player, @Argument(value = "home", suggestions = "homes") home: String, @Argument("icon", suggestions = "homeIcons") icon: String) {
         magenta.homeModel.setHomeIcon(player, home, icon)
@@ -50,7 +47,15 @@ class HomeCmd(private val magenta: Magenta) {
         ))
     }
 
-    @Command("delhome <home>")
+    @Command("movehome|mhome <home>")
+    @Permission("magenta.movehome")
+    fun onMoveHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
+        SchedulerMagenta.doSync(magenta) {
+            magenta.server.pluginManager.callEvent(HomeMoveLocationEvent(player, player.location, home))
+        }
+    }
+
+    @Command("delhome|dhome <home>")
     @Permission("magenta.delhome")
     fun onDeleteHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         SchedulerMagenta.doSync(magenta) {
@@ -58,7 +63,7 @@ class HomeCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("renamehome <oldName> <newName>")
+    @Command("renamehome|rhome <oldName> <newName>")
     @Permission("magenta.rename.home")
     fun onRenameHome(player: Player, @Argument(value = "oldName") oldName: String, @Argument(value = "newName") newName: String) {
         SchedulerMagenta.doSync(magenta) {
@@ -66,7 +71,7 @@ class HomeCmd(private val magenta: Magenta) {
         }
     }
 
-    @Command("homes")
+    @Command("homes|homelist")
     @Permission("magenta.home.list")
     fun onHomeList(player: Player) {
         homeMenuGUI.openHomeGUI(player)
