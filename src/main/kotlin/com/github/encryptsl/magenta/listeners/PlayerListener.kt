@@ -40,14 +40,15 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             if (user.isVanished())
                 event.joinMessage(null)
             else
-                event.joinMessage(ModernText.miniModernText(
-                    magenta.config.getString("custom-join-message").toString(), TagResolver.resolver(
-                        Placeholder.component("player", player.displayName())
-                    )
+                event.joinMessage(ModernText.miniModernText(magenta.config.getString("custom-join-message").toString(),
+                    TagResolver.resolver(Placeholder.component("player", player.displayName()))
                 ))
         }
 
         safeFly(player)
+        magenta.commandHelper.doVanish(player, user.isVanished())
+
+        magenta.earnBlocksProgress.putIfAbsent(player.uniqueId, user.getAccount().getInt("mined.blocks", 0))
 
         if (player.hasPlayedBefore()) {
             user.set("timestamps.login", System.currentTimeMillis())
@@ -102,6 +103,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 )
         }
 
+        user.set("mined.blocks", magenta.earnBlocksProgress[player.uniqueId] ?: 0)
         magenta.afk.clear(player.uniqueId)
         user.saveQuitData(player)
         user.saveLastLocation(player)

@@ -54,12 +54,10 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val block = event.block
         val material = block.type
-        val user = magenta.user.getUser(player.uniqueId)
         if (!magenta.stringUtils.inInList("jobs.whitelist_world", player.world.name)) return
         if (!magenta.stringUtils.inInList("jobs.miner.blocks", material.name)) return
 
-        user.set("mined.blocks", user.getAccount().getInt("mined.blocks", 0) + 1)
-        val currentProgress = user.getAccount().getInt("mined.blocks")
+        val currentProgress = magenta.earnBlocksProgress.computeIfPresent(player.uniqueId) {_, v -> v + 1} ?: 0
 
         player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.action_bar").toString(), TagResolver.resolver(
             Placeholder.parsed("current_progress", currentProgress.toString()),
@@ -71,8 +69,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("current_progress", currentProgress.toString()),
                 Placeholder.parsed("max_progress", magenta.config.getInt("jobs.miner.max_progress").toString()),
             )))
-
-            user.set("mined.blocks", 0)
+            magenta.earnBlocksProgress[player.uniqueId] = 0
             magenta.config.getStringList("jobs.miner.rewards").forEach {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(it, player))
             }
@@ -106,14 +103,13 @@ class BlockListener(private val magenta: Magenta) : Listener {
         if (!magenta.stringUtils.inInList("level.worlds", player.world.name)) return
 
         val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
-        if (requiredLevel > level) {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.mining.level.required"), TagResolver.resolver(
+        if (requiredLevel < level) return
+
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.mining.level.required"), TagResolver.resolver(
                 Placeholder.parsed("block", block.type.name),
                 Placeholder.parsed("level", level.toString()),
-                Placeholder.parsed("required_level", requiredLevel.toString())
-            )))
-            event.isCancelled = true
-        }
+                Placeholder.parsed("required_level", requiredLevel.toString()))))
+        event.isCancelled = true
     }
 
     @EventHandler

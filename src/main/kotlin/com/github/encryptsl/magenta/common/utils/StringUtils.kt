@@ -9,16 +9,12 @@ class StringUtils(private val magenta: Magenta) {
     fun inInList(key: String, value: String): Boolean
         = magenta.config.getStringList(key).contains(value)
 
-    fun replaceNickName(nickname: String): String {
-        return nickname.replace(Regex("<*[a-zA-Z0-9#:]*>"), "")
-    }
-
     fun magentaPlaceholders(message: String, player: Player): String {
         return message.replace("{player}", player.name).replace("%player%", player.name)
     }
 
-    fun censorIp(ipAdresa: String): String {
-        val oktety = ipAdresa.split(".")
+    fun censorIp(ipAddress: String): String {
+        val oktety = ipAddress.split(".")
         if (oktety.size != 4) {
             throw IllegalArgumentException("Not valid IP Address")
         }

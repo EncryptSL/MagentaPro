@@ -72,7 +72,7 @@ class CommandManager(private val magenta: Magenta) {
         }
         commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
             CompletableFuture.completedFuture(
-                magenta.kitConfig.getKit().getConfigurationSection("kits")?.getKeys(false)
+                magenta.kitConfig.getConfig().getConfigurationSection("kits")?.getKeys(false)
                     ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
                     ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!
             )

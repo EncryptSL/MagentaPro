@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -17,7 +16,6 @@ import java.time.Duration
 @CommandDescription("Provided by plugin MagentaPro")
 class HealCmd(private val magenta: Magenta) {
 
-    private val commandHelper: CommandHelper by lazy { CommandHelper(magenta) }
 
     @Command("heal")
     @Permission("magenta.heal")
@@ -28,7 +26,7 @@ class HealCmd(private val magenta: Magenta) {
         val timeLeft = user.getRemainingCooldown("heal")
 
         if (user.hasDelay("heal") && !player.hasPermission("magenta.heal.delay.exempt")) {
-            return commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
+            return magenta.commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
         }
 
         if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {

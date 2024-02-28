@@ -47,7 +47,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
         val it = recipients.iterator()
         while (it.hasNext()) {
             val u = magenta.user.getUser(it.next().uniqueId)
-            if (u.isPlayerIgnored(event.player.uniqueId)) {
+            if (u.isPlayerIgnored(player.uniqueId)) {
                 it.remove()
             }
         }

@@ -2,7 +2,9 @@ package com.github.encryptsl.magenta
 
 import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
-import com.github.encryptsl.magenta.api.config.*
+import com.github.encryptsl.magenta.api.config.CommandItemConfig
+import com.github.encryptsl.magenta.api.config.RandomConfig
+import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
@@ -13,6 +15,7 @@ import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
 import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
+import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
@@ -32,11 +35,11 @@ import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.time.measureTime
 
 open class Magenta : JavaPlugin() {
-
 
     lateinit var paperContainerProvider: PaperContainerProvider
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
@@ -55,9 +58,9 @@ open class Magenta : JavaPlugin() {
     val itemFactory: ItemFactory by lazy { ItemFactory() }
 
     val localeConfig: Locale by lazy { Locale(this) }
-    val kitConfig: KitConfig by lazy { KitConfig(this) }
+    val kitConfig: UniversalConfig by lazy { UniversalConfig(this, "kits.yml") }
     val jailConfig: UniversalConfig by lazy { UniversalConfig(this, "jails.yml") }
-    val mmConfig: MMConfig by lazy { MMConfig(this) }
+    val mmConfig: UniversalConfig by lazy { UniversalConfig(this, "mythicmobs/rewards.yml") }
     val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
     val randomConfig: RandomConfig by lazy { RandomConfig(this) }
     val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
@@ -69,10 +72,14 @@ open class Magenta : JavaPlugin() {
     val warpMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/config.yml") }
     val warpPlayerMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/owner_warps.yml") }
     val warpEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/editor/warp_editor.yml") }
-    val chatControl: ChatControlConfig by lazy { ChatControlConfig(this) }
+    val chatControl: UniversalConfig by lazy { UniversalConfig(this, "chatcontrol/filter.yml") }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
     val jailManager: JailManager by lazy { JailManager(jailConfig.getConfig()) }
+
+    val commandHelper: CommandHelper by lazy { CommandHelper(this) }
+
+    val earnBlocksProgress: HashMap<UUID, Int> = HashMap()
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }

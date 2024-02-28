@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -16,18 +15,14 @@ import org.incendo.cloud.annotations.Permission
 @CommandDescription("Provided by plugin MagentaPro")
 class VanishCmd(private val magenta: Magenta) {
 
-    private val commandHelper by lazy { CommandHelper(magenta) }
 
     @Command("vanish")
     @Permission("magenta.vanish")
     fun onVanish(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
 
-        magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
-            commandHelper.doVanish(players, player, user.isVanished())
-        }
-
-        val mode = commandHelper.isVanished(user.isVanished())
+        magenta.commandHelper.doVanish(player, user.isVanished())
+        val mode = magenta.commandHelper.isVanished(user.isVanished())
 
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
 
@@ -43,11 +38,9 @@ class VanishCmd(private val magenta: Magenta) {
     fun onVanishOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val user = magenta.user.getUser(target.uniqueId)
 
-        magenta.server.onlinePlayers.filter { p -> !p.hasPermission("magenta.vanish.exempt") }.forEach { players ->
-            commandHelper.doVanish(players, target, user.isVanished())
-        }
+        magenta.commandHelper.doVanish(target, user.isVanished())
 
-        val mode = commandHelper.isVanished(user.isVanished())
+        val mode = magenta.commandHelper.isVanished(user.isVanished())
 
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
 

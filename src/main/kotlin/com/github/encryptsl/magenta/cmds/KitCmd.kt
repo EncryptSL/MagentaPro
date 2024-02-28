@@ -23,7 +23,7 @@ class KitCmd(private val magenta: Magenta) {
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
 
         magenta.pluginManager.callEvent(
-            KitReceiveEvent(player, kit, magenta.kitConfig.getKit().getLong("kits.$kit.delay"), KitManager(magenta))
+            KitReceiveEvent(player, kit, magenta.kitConfig.getConfig().getLong("kits.$kit.delay"), KitManager(magenta))
         )
     }
 

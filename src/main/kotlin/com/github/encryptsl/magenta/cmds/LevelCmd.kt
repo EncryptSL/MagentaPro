@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -15,14 +14,13 @@ import org.incendo.cloud.annotations.*
 @CommandDescription("Provided by plugin MagentaPro")
 class LevelCmd(private val magenta: Magenta) {
 
-    private val commandHelper = CommandHelper(magenta)
 
     @Command("level")
     @Permission("magenta.level")
     fun onLevel(player: Player) {
         try {
             val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
-            commandHelper.showLevelProgress(player, level, experience)
+            magenta.commandHelper.showLevelProgress(player, level, experience)
         } catch (e : IllegalArgumentException) {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"),
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -44,7 +42,7 @@ class LevelCmd(private val magenta: Magenta) {
 
         try {
             val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(target.uniqueId)
-            commandHelper.showLevelProgress(commandSender, level, experience)
+            magenta.commandHelper.showLevelProgress(commandSender, level, experience)
         } catch (e : IllegalArgumentException) {
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"),
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)

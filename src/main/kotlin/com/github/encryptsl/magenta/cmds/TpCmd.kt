@@ -101,7 +101,7 @@ class TpCmd(private val magenta: Magenta) {
     fun onTeleportHere(player: Player, @Argument(value = "target") target: Player?) {
 
         if (target == null) {
-            commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
+            commandHelper.teleportAll(player, HashSet(Bukkit.getOnlinePlayers()))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.success")))
         }
 
@@ -116,13 +116,13 @@ class TpCmd(private val magenta: Magenta) {
     fun onTeleportAllHere(player: Player, @Argument("world", suggestions = "worlds") world: World?) {
 
         if (world != null) {
-            commandHelper.teleportAll(player, world.players)
+            commandHelper.teleportAll(player, HashSet(world.players))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.world.success"),
                 Placeholder.parsed("world", world.name)
             ))
         }
 
-        commandHelper.teleportAll(player, Bukkit.getOnlinePlayers())
+        commandHelper.teleportAll(player, HashSet(Bukkit.getOnlinePlayers()))
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpall.success")))
     }
 
