@@ -5,6 +5,7 @@ import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import java.time.Duration
+import java.util.*
 
 interface Account {
 
@@ -22,6 +23,7 @@ interface Account {
     fun isSocialSpy(): Boolean
     fun isAfk(): Boolean
     fun isVanished(): Boolean
+    fun isPlayerIgnored(uuid: UUID): Boolean
     fun getGameMode(): GameMode
     fun getFlying(): Boolean
     fun getOnlineJailedTime(): Long

@@ -11,6 +11,7 @@ import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -24,6 +25,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     fun chat(event: AsyncChatEvent) {
         val player = event.player
+        val recipients = HashSet(Bukkit.getOnlinePlayers())
         val user = magenta.user.getUser(player.uniqueId)
         val message = PlainTextComponentSerializer.plainText().serialize(event.message())
         mentionManager.mentionProcess(event)
@@ -41,6 +43,14 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
 
         val format = magenta.config.getString("chat.group-formats.${luckPermsHook.getGroup(player)}") ?: magenta.config.getString("chat.default-format").toString()
         val suggestCommand = magenta.config.getString("chat.suggestCommand") ?: ""
+
+        val it = recipients.iterator()
+        while (it.hasNext()) {
+            val u = magenta.user.getUser(it.next().uniqueId)
+            if (u.isPlayerIgnored(event.player.uniqueId)) {
+                it.remove()
+            }
+        }
 
         event.renderer { source, _, ms, _ ->
             val plainText = PlainTextComponentSerializer.plainText().serialize(ms)

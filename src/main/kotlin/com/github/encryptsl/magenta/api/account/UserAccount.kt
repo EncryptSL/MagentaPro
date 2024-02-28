@@ -112,6 +112,10 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
         return getAccount().getBoolean("vanished")
     }
 
+    override fun isPlayerIgnored(uuid: UUID): Boolean {
+        return getAccount().getStringList("ignore").contains(uuid.toString())
+    }
+
     override fun hasPunish(): Boolean {
         val onlineTime = plugin.config.getBoolean("online-jail-time")
 

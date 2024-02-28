@@ -24,7 +24,7 @@ class IgnoreCmd(private val magenta: Magenta) {
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.yourself")))
 
         val user = magenta.user.getUser(player.uniqueId)
-        if (user.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
+        if (user.isPlayerIgnored(target.uniqueId))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.exist"),
                 Placeholder.parsed("player", target.name.toString())
             ))
@@ -54,7 +54,7 @@ class IgnoreCmd(private val magenta: Magenta) {
     fun onUnIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         val user = magenta.user.getUser(player.uniqueId)
 
-        if (!user.getAccount().getStringList("ignore").contains(target.uniqueId.toString()))
+        if (!user.isPlayerIgnored(target.uniqueId))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.not.exist"),
                 Placeholder.parsed("player", target.name.toString()))
             )
