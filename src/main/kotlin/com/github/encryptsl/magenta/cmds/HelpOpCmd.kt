@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -18,6 +19,8 @@ import org.incendo.cloud.annotations.Permission
 @CommandDescription("Provided by plugin MagentaPro")
 class HelpOpCmd(private val magenta: Magenta) {
 
+    private val luckPermsHook: LuckPermsAPI by lazy { LuckPermsAPI() }
+
     @Command("helpop <message>")
     @Permission("magenta.helpop")
     fun onHelpOp(player: Player, @Argument(value = "message") @Greedy message: String) {
@@ -31,17 +34,28 @@ class HelpOpCmd(private val magenta: Magenta) {
     @Permission("magenta.helpop.staff.chat")
     fun onHelpOpRespond(
         commandSender: CommandSender,
-        @Argument(value = "target", suggestions = "players")
-        target: Player,
+        @Argument(value = "target", suggestions = "players") target: Player,
         @Argument(value = "message") @Greedy message: String
     ) {
+        if (commandSender is Player) {
+            if (commandSender.uniqueId == target.uniqueId) return
+            return sendChannelMessage(commandSender, target, message)
+        }
+
+        sendChannelMessage(commandSender, target, message)
+    }
+
+    private fun sendChannelMessage(commandSender: CommandSender, target: Player, message: String) {
         val component = chat(commandSender, target, message, "magenta.command.helpop.answer.chat")
         Bukkit.broadcast(component, "magenta.helpop.staff.chat")
         target.sendMessage(component)
     }
 
     private fun chat(from: CommandSender, to: Player?, message: String, locale: String): Component {
+        val group = if (from is Player) magenta.stringUtils.colorize(luckPermsHook.getPrefix(from)) else ""
+
        return ModernText.miniModernText(magenta.localeConfig.getMessage(locale), TagResolver.resolver(
+            Placeholder.component("group", Component.text(group)),
             Placeholder.parsed("from", from.name),
             Placeholder.parsed("to", to?.name ?: ""),
             Placeholder.parsed("message", message)))
