@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.22" apply true
+    kotlin("jvm") version "1.9.23" apply true
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -8,9 +8,6 @@ version = providers.gradleProperty("plugin_version").get()
 description = providers.gradleProperty("plugin_description").get()
 
 repositories {
-    flatDir {
-        dir("libs")
-    }
     mavenLocal()
     mavenCentral()
     maven("https://jitpack.io")
@@ -21,10 +18,10 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    compileOnly(kotlin("stdlib", "1.9.22"))
-    compileOnly("org.jetbrains.exposed:exposed-core:0.47.0")
-    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.47.0")
-    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.47.0")
+    compileOnly(kotlin("stdlib", "1.9.23"))
+    compileOnly("org.jetbrains.exposed:exposed-core:0.48.0")
+    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.48.0")
+    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.48.0")
     compileOnly("com.zaxxer:HikariCP:5.1.0")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
     compileOnly("me.clip:placeholderapi:2.11.5")

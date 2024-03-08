@@ -2,8 +2,6 @@ package com.github.encryptsl.magenta
 
 import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
-import com.github.encryptsl.magenta.api.config.CommandItemConfig
-import com.github.encryptsl.magenta.api.config.RandomConfig
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
@@ -17,6 +15,7 @@ import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
 import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.CommandManager
+import com.github.encryptsl.magenta.common.NewsQueueManager
 import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
@@ -62,8 +61,8 @@ open class Magenta : JavaPlugin() {
     val kitConfig: UniversalConfig by lazy { UniversalConfig(this, "kits.yml") }
     val jailConfig: UniversalConfig by lazy { UniversalConfig(this, "jails.yml") }
     val mmConfig: UniversalConfig by lazy { UniversalConfig(this, "mythicmobs/rewards.yml") }
-    val cItems: CommandItemConfig by lazy { CommandItemConfig(this) }
-    val randomConfig: RandomConfig by lazy { RandomConfig(this) }
+    val cItems: UniversalConfig by lazy { UniversalConfig(this, "citems.yml") }
+    val randomConfig: UniversalConfig by lazy { UniversalConfig(this, "random.yml") }
     val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
     val creditShopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/shop.yml") }
     val creditShopConfirmMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/confirm_menu.yml") }
@@ -78,6 +77,7 @@ open class Magenta : JavaPlugin() {
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
     val jailManager: JailManager by lazy { JailManager(jailConfig.getConfig()) }
 
+    val newsQueueManager: NewsQueueManager by lazy { NewsQueueManager(this) }
     val commandHelper: CommandHelper by lazy { CommandHelper(this) }
 
     val earnBlocksProgress: HashMap<UUID, Int> = HashMap()
@@ -132,6 +132,7 @@ open class Magenta : JavaPlugin() {
             isPaperServer()
             voteParty.createTable()
             commandManager.registerCommands()
+            newsQueueManager.loadQueue()
             registerTasks()
             handlerListener()
             hookRegistration()

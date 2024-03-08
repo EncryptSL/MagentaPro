@@ -33,6 +33,7 @@ class MagentaCmd(private val magenta: Magenta) {
             magenta.config.options().parseComments(true)
             magenta.reloadConfig()
             magenta.saveConfig()
+            magenta.newsQueueManager.reloadQueue()
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
         } catch (e : InvalidConfigurationException) {
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"), Placeholder.parsed("exception", e.message ?: e.localizedMessage)))

@@ -2,40 +2,46 @@ package com.github.encryptsl.magenta.common.tasks
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
+import java.util.*
 
 class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
     override fun run() {
        if (!magenta.config.contains("news")) return
        if (!magenta.config.contains("news.delay")) return
        if (magenta.server.onlinePlayers.isEmpty()) return
-       if (magenta.config.contains("news.random")) {
-            if (magenta.config.getBoolean("news.random")) {
-                val format = magenta.config.getString("news.format").toString()
-                val messages = magenta.config.getStringList("news.messages")
-                if (messages.isEmpty()) return
 
-                if (magenta.config.getBoolean("news.options.actionbar")) {
-                    magenta.server.onlinePlayers.forEach { player ->
-                        player.sendActionBar(
-                            ModernText.miniModernText(
-                                format,
-                                Placeholder.parsed("message", messages.random())
-                            )
-                        )
-                    }
-                }
+        if (magenta.newsQueueManager.news.isEmpty()) return
 
-                if (magenta.config.getBoolean("news.options.broadcast")) {
-                    Bukkit.broadcast(
-                        ModernText.miniModernText(
-                            format,
-                            Placeholder.parsed("message", messages.random())
-                        )
-                    )
-                }
-            }
-       }
+        val isRandomEnabled = magenta.config.getBoolean("news.random")
+        runSender(magenta.newsQueueManager.news, isRandomEnabled)
+    }
+
+    private fun runSender(messages: Queue<String>, isRandomEnabled: Boolean) {
+        val format = magenta.config.getString("news.format").toString()
+        if (isRandomEnabled) {
+            val randomMessage = messages.random()
+            sendMessage(format, randomMessage)
+        } else {
+            sendMessage(format, messages.peek())
+        }
+    }
+
+    private fun sendMessage(format: String, message: String) {
+        if (magenta.config.getBoolean("news.options.actionbar")) {
+            Audience.audience(Bukkit.getOnlinePlayers())
+                .sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", message)))
+            return
+        }
+
+        if (magenta.config.getBoolean("news.options.broadcast")) {
+            Audience.audience(Bukkit.getOnlinePlayers()).sendMessage(
+                ModernText.miniModernText(
+                format, Placeholder.parsed("message", message)
+            ))
+            return
+        }
     }
 }

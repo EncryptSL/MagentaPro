@@ -19,7 +19,7 @@ class CommandItemManager(private val magenta: Magenta) {
                 Placeholder.parsed("item", itemName)
             ))
 
-        magenta.cItems.createItem(itemName, sid)
+        magenta.cItems.set("citems.$itemName.sid", sid)
 
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.citem.success.created"), TagResolver.resolver(
             Placeholder.parsed("item", itemName),

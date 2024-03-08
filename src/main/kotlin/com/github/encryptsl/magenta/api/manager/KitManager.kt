@@ -70,8 +70,8 @@ class KitManager(private val magenta: Magenta) {
             if (item.hasItemMeta()) {
                 kitSection.set("items.${itemType.name.lowercase()}.meta.displayName",
                     itemMeta.displayName()?.let { PlainTextComponentSerializer.plainText().serialize(it) })
-                val lores = item.lore()
-                if (lores != null) {
+
+                item.lore()?.let { lores ->
                     for (lore in lores) {
                         kitSection.set("items.${itemType.name.lowercase()}.meta.lore", PlainTextComponentSerializer.plainText().serialize(lore))
                     }
@@ -85,8 +85,7 @@ class KitManager(private val magenta: Magenta) {
         if (!magenta.kitConfig.getConfig().contains("kits.$kitName"))
             throw KitNotFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist"))
 
-        magenta.kitConfig.getConfig().set("kits.$kitName", null)
-        magenta.kitConfig.save()
+        magenta.kitConfig.set("kits.$kitName", null)
     }
 
     fun listOfItems(commandSender: CommandSender, kitName: String) {
