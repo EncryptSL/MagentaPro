@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.account
 
+import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
-import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -14,7 +14,7 @@ import java.util.*
 
 class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account {
 
-    private val configUtil = ConfigUtil(plugin, "/players/$uuid.yml")
+    private val universalConfig = UniversalConfig(plugin, "/players/$uuid.yml")
 
     private val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI(plugin) }
 
@@ -73,19 +73,15 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     }
 
     override fun set(path: String, value: Any?) {
-        getAccount().set(path, value)
-        save()
+        universalConfig.set(path, value)
     }
 
     override fun set(path: String, list: MutableList<Any>) {
-        list.forEach { item ->
-            getAccount().set(path, item)
-        }
-        save()
+        universalConfig.set(path, list)
     }
 
     override fun save() {
-        configUtil.save()
+        universalConfig.save()
     }
 
     override fun getGameMode(): GameMode {
@@ -170,6 +166,6 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     }
 
     override fun getAccount(): FileConfiguration {
-        return configUtil.getConfig()
+        return universalConfig.getConfig()
     }
 }
