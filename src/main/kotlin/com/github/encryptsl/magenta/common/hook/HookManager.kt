@@ -21,84 +21,53 @@ class HookManager(private val magenta: Magenta) {
 
     fun hookMythicMobs() {
         if (isPluginInstalled("MythicMobs")) {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#  MythicMobs Found Hook Success  #")
-            magenta.logger.info("###################################")
+            magenta.logger.info("MythicMobs Found Hook Success")
             magenta.pluginManager.registerEvents(MythicMobsListener(magenta), magenta)
         } else {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#       MythicMobs not Found      #")
-            magenta.logger.info("#    please download mythicmobs   #")
-            magenta.logger.info("###################################")
+            magenta.logger.warning("MythicMobs not found, please download !")
         }
     }
 
     fun hookLuckPerms() {
         if (isPluginInstalled("LuckPerms") && LuckPermsAPI().setupLuckPerms()) {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#        LuckPerms registered     #")
-            magenta.logger.info("###################################")
+            magenta.logger.info("LuckPerms found hook success !")
         } else {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#        LuckPerms not Found      #")
-            magenta.logger.info("#     please download vault api   #")
-            magenta.logger.info("###################################")
+            magenta.logger.warning("LuckPerms not found please use vault plugin.")
         }
     }
 
     fun hookVault() {
         if (isPluginInstalled("Vault") && VaultHook(magenta).setupEconomy()) {
-            magenta.logger.info("###################################")
-            magenta.logger.info("# Vault registered like a service #")
-            magenta.logger.info("###################################")
+            magenta.logger.info("Vault found hook success !")
         } else {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#         Vault not Found         #")
-            magenta.logger.info("#     please download vault api   #")
-            magenta.logger.info("###################################")
+            magenta.logger.warning("Vault not found, please download !")
         }
     }
 
     fun hookCreditLite() {
         if (isPluginInstalled("CreditLite") && CreditLiteHook(magenta).setupCreditLite()) {
-            magenta.logger.info("###################################")
-            magenta.logger.info("# CreditLite registered like a service#")
-            magenta.logger.info("###################################")
+            magenta.logger.info("CreditLite found hook success !")
         } else {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#       CreditLite not Found      #")
-            magenta.logger.info("#     please download vault api   #")
-            magenta.logger.info("###################################")
+            magenta.logger.warning("CreditLite not found !")
         }
     }
 
     fun hookPAPI() {
         if (isPluginInstalled("PlaceholderAPI")) {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#       PlaceholderAPI Found      #")
-            magenta.logger.info("#     You can register service    #")
-            magenta.logger.info("###################################")
+            magenta.logger.info("PlaceholderAPI hook success !")
             MagentaPlaceholderAPI(magenta, "1.0.0").register()
 
         } else {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#    PlaceholderAPI Not Found     #")
-            magenta.logger.info("#   You can't register service    #")
-            magenta.logger.info("###################################")
+            magenta.logger.warning("PlaceholderAPI not found placeholders not working !")
         }
     }
 
     fun hookNuVotifier() {
         if (isPluginInstalled("Votifier")) {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#         NuVotifier Found        #")
-            magenta.logger.info("#     You can now use voting      #")
-            magenta.logger.info("###################################")
+            magenta.logger.info("NuVotifier found hook success !")
             magenta.pluginManager.registerEvents(VotifierListener(magenta), magenta)
         } else {
-            magenta.logger.info("###################################")
-            magenta.logger.info("#       NuVotifier not found      #")
-            magenta.logger.info("###################################")
+            magenta.logger.warning("NuVotifier not found, rewarding from voting not working now !")
         }
     }
 

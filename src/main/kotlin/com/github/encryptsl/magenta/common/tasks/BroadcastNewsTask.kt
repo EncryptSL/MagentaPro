@@ -9,11 +9,8 @@ import java.util.*
 
 class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
     override fun run() {
-       if (!magenta.config.contains("news")) return
-       if (!magenta.config.contains("news.delay")) return
-       if (magenta.server.onlinePlayers.isEmpty()) return
-
-        if (magenta.newsQueueManager.news.isEmpty()) return
+        if (!magenta.config.contains("news")) return
+        if (!magenta.config.contains("news.delay")) return
 
         val isRandomEnabled = magenta.config.getBoolean("news.random")
         runSender(magenta.newsQueueManager.news, isRandomEnabled)
@@ -25,7 +22,11 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
             val randomMessage = messages.random()
             sendMessage(format, randomMessage)
         } else {
-            sendMessage(format, messages.peek())
+            if (messages.isNotEmpty()) {
+                sendMessage(format, messages.poll())
+            } else {
+                magenta.newsQueueManager.loadQueue()
+            }
         }
     }
 
@@ -33,7 +34,6 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
         if (magenta.config.getBoolean("news.options.actionbar")) {
             Audience.audience(Bukkit.getOnlinePlayers())
                 .sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", message)))
-            return
         }
 
         if (magenta.config.getBoolean("news.options.broadcast")) {
@@ -41,7 +41,6 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
                 ModernText.miniModernText(
                 format, Placeholder.parsed("message", message)
             ))
-            return
         }
     }
 }
