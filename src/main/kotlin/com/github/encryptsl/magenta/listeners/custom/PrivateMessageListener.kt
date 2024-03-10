@@ -9,6 +9,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.Sound
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -45,25 +46,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
                 reply.put(receiver, commandSender)
             }
 
-            commandSender.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.msg.success.to"), TagResolver.resolver(
-                        Placeholder.parsed("player", receiver.name),
-                        Placeholder.parsed("message", message),
-                    )
-                )
-            )
-            PlayerBuilderAction
-                .player(receiver)
-                .sound(Sound.valueOf(magenta.config.getString("msg.sound").toString()),
-                    magenta.config.getString("msg.volume").toString().toFloat(),
-                    magenta.config.getString("pitch.volume").toString().toFloat()
-                ).message(ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.msg.success.from"), TagResolver.resolver(
-                        Placeholder.parsed("player", commandSender.name),
-                        Placeholder.parsed("message", message),
-                    )
-                ))
+            sendMessage(commandSender, receiver, message)
         }
     }
 
@@ -76,6 +59,26 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         if (receiver == null || Bukkit.getPlayer(receiver.uniqueId) == null)
             return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.reply.error.empty")))
 
+        val user = magenta.user.getUser(receiver.uniqueId)
+        if (commandSender is Player) {
+            val whisper = magenta.user.getUser(commandSender.uniqueId)
+
+            val userHaveBlockedSender = user.isPlayerIgnored(commandSender.uniqueId)
+            val whisperHaveBlockedTarget = whisper.isPlayerIgnored(receiver.uniqueId)
+
+            if (userHaveBlockedSender || whisperHaveBlockedTarget) {
+                commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error")))
+                event.isCancelled = true
+            }
+        }
+
+        if (!event.isCancelled) {
+            sendMessage(commandSender, receiver, message)
+        }
+
+    }
+
+    private fun sendMessage(commandSender: CommandSender, receiver: Player, message: String) {
         commandSender.sendMessage(
             ModernText.miniModernText(
                 magenta.localeConfig.getMessage("magenta.command.msg.success.to"), TagResolver.resolver(
@@ -84,12 +87,11 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
                 )
             )
         )
-
         PlayerBuilderAction
             .player(receiver)
             .sound(Sound.valueOf(magenta.config.getString("msg.sound").toString()),
                 magenta.config.getString("msg.volume").toString().toFloat(),
-                magenta.config.getString("pitch.volume").toString().toFloat()
+                magenta.config.getString("msg.pitch").toString().toFloat()
             ).message(ModernText.miniModernText(
                 magenta.localeConfig.getMessage("magenta.command.msg.success.from"), TagResolver.resolver(
                     Placeholder.parsed("player", commandSender.name),
