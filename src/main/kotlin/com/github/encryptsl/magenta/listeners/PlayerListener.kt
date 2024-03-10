@@ -48,7 +48,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         safeFly(player)
         magenta.commandHelper.doVanish(player, user.isVanished())
 
-        magenta.earnBlocksProgress.putIfAbsent(player.uniqueId, user.getAccount().getInt("mined.blocks", 0))
+        magenta.earnBlocksProgressManager.earnBlocksProgress.putIfAbsent(player.uniqueId, user.getAccount().getInt("mined.blocks", 0))
 
         if (player.hasPlayedBefore()) {
             user.set("timestamps.login", System.currentTimeMillis())
@@ -104,7 +104,8 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         }
 
         magenta.reply.invalidate(player)
-        user.set("mined.blocks", magenta.earnBlocksProgress[player.uniqueId] ?: 0)
+        user.set("mined.blocks", magenta.earnBlocksProgressManager.getValue(player.uniqueId))
+        magenta.earnBlocksProgressManager.remove(player.uniqueId)
         magenta.afk.clear(player.uniqueId)
         user.saveQuitData(player)
         user.saveLastLocation(player)

@@ -13,10 +13,7 @@ import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
 import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
-import com.github.encryptsl.magenta.common.CommandHelper
-import com.github.encryptsl.magenta.common.CommandManager
-import com.github.encryptsl.magenta.common.NewsQueueManager
-import com.github.encryptsl.magenta.common.TpaManager
+import com.github.encryptsl.magenta.common.*
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
@@ -37,7 +34,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
-import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.time.measureTime
 
@@ -81,9 +77,8 @@ open class Magenta : JavaPlugin() {
     val jailManager: JailManager by lazy { JailManager(jailConfig.getConfig()) }
 
     val newsQueueManager: NewsQueueManager by lazy { NewsQueueManager(this) }
+    val earnBlocksProgressManager: EarnBlocksProgressManager by lazy { EarnBlocksProgressManager(this) }
     val commandHelper: CommandHelper by lazy { CommandHelper(this) }
-
-    val earnBlocksProgress: WeakHashMap<UUID, Int> = WeakHashMap()
 
     val reply: Cache<Player, Player> = CacheBuilder.newBuilder().expireAfterWrite(Duration.ofMinutes(5)).build()
 
@@ -149,6 +144,7 @@ open class Magenta : JavaPlugin() {
 
     override fun onDisable() {
         logger.info("Plugin disabled")
+        earnBlocksProgressManager.saveMinedBlocks()
         afk.clear()
         reply.invalidateAll()
     }
