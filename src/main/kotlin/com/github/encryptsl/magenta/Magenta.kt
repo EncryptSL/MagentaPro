@@ -150,6 +150,7 @@ open class Magenta : JavaPlugin() {
     override fun onDisable() {
         logger.info("Plugin disabled")
         afk.clear()
+        reply.invalidateAll()
     }
 
     private fun isPaperServer() {
