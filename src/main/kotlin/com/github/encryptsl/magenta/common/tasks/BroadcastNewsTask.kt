@@ -11,6 +11,7 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
     override fun run() {
         if (!magenta.config.contains("news")) return
         if (!magenta.config.contains("news.delay")) return
+        if (magenta.newsQueueManager.isQueueEmpty()) return
 
         val isRandomEnabled = magenta.config.getBoolean("news.random")
         runSender(magenta.newsQueueManager.news, isRandomEnabled)
@@ -22,11 +23,9 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
             val randomMessage = messages.random()
             sendMessage(format, randomMessage)
         } else {
-            if (messages.isNotEmpty()) {
-                sendMessage(format, messages.poll())
-            } else {
-                magenta.newsQueueManager.loadQueue()
-            }
+            val poolMessage = messages.poll()
+            sendMessage(format, poolMessage)
+            magenta.newsQueueManager.enqueue(poolMessage)
         }
     }
 

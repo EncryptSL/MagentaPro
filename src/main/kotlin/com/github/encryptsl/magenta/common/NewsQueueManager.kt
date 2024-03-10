@@ -6,13 +6,19 @@ import java.util.*
 class NewsQueueManager(private val magenta: Magenta) {
     val news: Queue<String> = LinkedList()
 
+    fun isQueueEmpty()
+        = news.isEmpty()
+
     fun loadQueue() {
         val newsList = magenta.config.getStringList("news.messages")
         if (newsList.isEmpty()) return
-        news.addAll(newsList)
+        news.apply { addAll(newsList) }
 
         magenta.logger.info("News are loaded in count (${news.size})")
-        magenta.logger.info("News available $news")
+    }
+
+    fun enqueue(message: String) {
+        news.add(message)
     }
 
     fun reloadQueue() {
@@ -20,7 +26,7 @@ class NewsQueueManager(private val magenta: Magenta) {
 
         if (newsList.isEmpty()) return
 
-        if (news.isNotEmpty()) { news.clear() } else { news.addAll(newsList) }
+        if (news.isNotEmpty()) { news.clear() } else { news.apply { addAll(newsList) } }
     }
 
 }
