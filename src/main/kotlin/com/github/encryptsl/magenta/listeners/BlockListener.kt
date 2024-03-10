@@ -57,7 +57,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         if (!magenta.stringUtils.inInList("jobs.whitelist_world", player.world.name)) return
         if (!magenta.stringUtils.inInList("jobs.miner.blocks", material.name)) return
 
-        val currentProgress = magenta.earnBlocksProgress.computeIfPresent(player.uniqueId) {_, v -> v + 1} ?: 0
+        val currentProgress = magenta.earnBlocksProgressManager.updateProgress(player.uniqueId, 1)
 
         player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.action_bar").toString(), TagResolver.resolver(
             Placeholder.parsed("current_progress", currentProgress.toString()),
@@ -69,7 +69,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("current_progress", currentProgress.toString()),
                 Placeholder.parsed("max_progress", magenta.config.getInt("jobs.miner.max_progress").toString()),
             )))
-            magenta.earnBlocksProgress[player.uniqueId] = 0
+            magenta.earnBlocksProgressManager.earnBlocksProgress[player.uniqueId] = 0
             magenta.config.getStringList("jobs.miner.rewards").forEach {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(it, player))
             }

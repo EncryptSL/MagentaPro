@@ -9,6 +9,16 @@ class EarnBlocksProgressManager(private val magenta: Magenta) {
 
     fun getValue(uuid: UUID): Int = earnBlocksProgress.getOrDefault(uuid, 0)
 
+    fun syncInitData(uuid: UUID, value: Int) {
+        earnBlocksProgress.putIfAbsent(uuid, value)
+    }
+
+    fun updateProgress(uuid: UUID, value: Int): Int {
+        val progress = earnBlocksProgress.computeIfPresent(uuid) {_, v -> v + value} ?: 0
+
+        return progress
+    }
+
     fun saveMinedBlocks() {
         for (el in earnBlocksProgress) {
             val user = magenta.user.getUser(el.key)
@@ -21,7 +31,7 @@ class EarnBlocksProgressManager(private val magenta: Magenta) {
         earnBlocksProgress.remove(uuid)
     }
 
-    fun clear() {
+    private fun clear() {
         earnBlocksProgress.clear()
     }
 }
