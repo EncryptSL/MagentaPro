@@ -30,7 +30,10 @@ import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
+import com.google.common.cache.Cache
+import com.google.common.cache.CacheBuilder
 import io.papermc.paper.util.Tick
+import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
@@ -80,7 +83,9 @@ open class Magenta : JavaPlugin() {
     val newsQueueManager: NewsQueueManager by lazy { NewsQueueManager(this) }
     val commandHelper: CommandHelper by lazy { CommandHelper(this) }
 
-    val earnBlocksProgress: HashMap<UUID, Int> = HashMap()
+    val earnBlocksProgress: WeakHashMap<UUID, Int> = WeakHashMap()
+
+    val reply: Cache<Player, Player> = CacheBuilder.newBuilder().expireAfterWrite(Duration.ofMinutes(5)).build()
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }

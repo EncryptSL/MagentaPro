@@ -103,6 +103,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 )
         }
 
+        magenta.reply.invalidate(player)
         user.set("mined.blocks", magenta.earnBlocksProgress[player.uniqueId] ?: 0)
         magenta.afk.clear(player.uniqueId)
         user.saveQuitData(player)
