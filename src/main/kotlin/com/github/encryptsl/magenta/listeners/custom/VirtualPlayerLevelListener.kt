@@ -24,16 +24,14 @@ class VirtualPlayerLevelListener(private val magenta: Magenta) : Listener {
                     magenta.config.getString("level.effect.volume").toString().toFloat(),
                     magenta.config.getString("level.effect.pitch").toString().toFloat()
                 )
-                magenta.config.getStringList("level.format").forEach { line ->
-                    it.sendMessage(
-                        ModernText.miniModernTextCenter(
-                            line, TagResolver.resolver(
-                                Placeholder.parsed("level", level.toString()),
-                                Placeholder.parsed("current_exp", currentExp.toString()),
-                                Placeholder.parsed("exp_to_level", expToLevel.toString()),
-                            )
+                for (line in magenta.config.getStringList("level.format")) {
+                    it.sendMessage(ModernText.miniModernTextCenter(
+                        line, TagResolver.resolver(
+                            Placeholder.parsed("level", level.toString()),
+                            Placeholder.parsed("current_exp", currentExp.toString()),
+                            Placeholder.parsed("exp_to_level", expToLevel.toString()),
                         )
-                    )
+                    ))
                 }
             }
         magenta.virtualLevel.setExperience(offlinePlayer.uniqueId, 0)

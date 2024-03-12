@@ -116,7 +116,11 @@ level:
     sound: "UI_TOAST_CHALLENGE_COMPLETE"
     volume: 5.5f
     pitch: 1.2f
-  barSymbol: ⛆
+  progress_bar:
+    barSymbol: ⛆
+    total_bars: 20
+    completed_fields: "<green>"
+    not_completed_fields: "<gray>"
   format:
     - ""
     - "<gold><bold>LevelUp"

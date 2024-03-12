@@ -53,7 +53,7 @@ class LuckPermsAPI {
             throw Exception("LuckPerms Missing")
 
         val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
-        val prefix = metaData.prefix ?: ""
+        val prefix = metaData.prefix ?: "[DEFAULT]"
 
         return prefix
     }

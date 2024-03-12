@@ -10,11 +10,12 @@ import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.trimUUID
 import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -41,9 +42,10 @@ object VoteHelper {
                 broadcastActionBar(broadcastMessage, timer)
                 if (timer == 0) {
                     SchedulerMagenta.doSync(magenta) {
-                        giveRewards(Bukkit.getOnlinePlayers(), commands)
+                        val players = Bukkit.getOnlinePlayers()
+                        giveRewards(players, commands)
                         if (magenta.config.contains("votifier.voteparty.random")) {
-                            val player = Bukkit.getOnlinePlayers().random()
+                            val player = players.random()
                             giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
                             magenta.voteParty.partyFinished(player.name)
                             magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
@@ -64,10 +66,14 @@ object VoteHelper {
     }
 
     @JvmStatic
-    fun playSoundForAll(sound: Sound, volume: Float, pitch: Float) {
-        Bukkit.getOnlinePlayers().forEach { player ->
-            player.playSound(player, sound, volume, pitch)
-        }
+    fun playSoundForAll(type: String, volume: Float, pitch: Float) {
+        Audience.audience(Bukkit.getOnlinePlayers())
+            .playSound(
+                net.kyori.adventure.sound.Sound.sound().type(Key.key(type))
+                    .volume(volume)
+                    .pitch(pitch)
+                    .build()
+            )
     }
 
     @JvmStatic
@@ -80,9 +86,8 @@ object VoteHelper {
 
     @JvmStatic
     fun broadcastActionBar(string: String, countdown: Int) {
-        Bukkit.getOnlinePlayers().forEach { player: Player ->
-            player.sendActionBar(ModernText.miniModernText(string, Placeholder.parsed("delay", countdown.toString())))
-        }
+        Audience.audience(Bukkit.getOnlinePlayers())
+            .sendActionBar(ModernText.miniModernText(string, Placeholder.parsed("delay", countdown.toString())))
     }
 
     @JvmStatic
@@ -92,14 +97,14 @@ object VoteHelper {
 
     @JvmStatic
     fun giveRewards(players: Collection<Player>, commands: MutableList<String>) {
-        players.forEach {
+        for (it in players) {
             giveRewards(commands, it.name)
             Bukkit.getPluginManager().callEvent(VotePartyEvent(it, Bukkit.getOnlinePlayers().size, datetime()))
         }
     }
     @JvmStatic
     fun giveRewards(commands: MutableList<String>, username: String) {
-        commands.forEach { command ->
+        for (command in commands) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", username).replace("%player%", username))
         }
     }

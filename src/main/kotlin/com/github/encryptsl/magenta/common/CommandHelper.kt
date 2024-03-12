@@ -114,10 +114,10 @@ class CommandHelper(private val magenta: Magenta) {
         val progressBar = LevelFormula.getProgressBar(
             currentExp,
             needToLevelUp,
-            20,
-            magenta.config.getString("level.barSymbol").toString(),
-            "<green>",
-            "<gray>"
+            magenta.config.getInt("level.progress_bar.total_bars", 20),
+            magenta.config.getString("level.progress_bar.barSymbol").toString(),
+            magenta.config.getString("level.progress_bar.completed_fields", "<green>").toString(),
+            magenta.config.getString("level.progress_bar.not_completed_fields", "<gray>").toString(),
         )
 
         commandSender.sendMessage(

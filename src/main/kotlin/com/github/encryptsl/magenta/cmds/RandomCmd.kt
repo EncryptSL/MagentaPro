@@ -71,7 +71,7 @@ class RandomCmd(private val magenta: Magenta) {
         val tags: List<String> = magenta.randomConfig.getConfig().getStringList("tags.$type")
         val randomTag = tags.random()
         if (!target.hasPermission(randomTag)) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user ${target.name} permission set $randomTag")
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target))
             target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.tag.success.player"),
                 Placeholder.parsed("category", type)
             ))
@@ -79,7 +79,7 @@ class RandomCmd(private val magenta: Magenta) {
         }
         magenta.logger.info("Hráč ${target.name} již $randomTag oprávnění vlastní proto mu byl nabídnut jiný tag !")
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-            magenta.stringUtils.magentaPlaceholders("lp user %player% permission set ${tags.random()}", target)
+            magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target)
         )
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.tag.success.player"),
             Placeholder.parsed("category", type)
