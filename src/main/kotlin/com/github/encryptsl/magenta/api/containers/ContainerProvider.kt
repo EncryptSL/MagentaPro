@@ -11,8 +11,4 @@ interface ContainerProvider {
     fun openStonecutter(player: Player): InventoryView?
     fun openSmithingTable(player: Player): InventoryView?
     fun openLoom(player: Player): InventoryView?
-
-
-
-
 }

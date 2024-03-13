@@ -25,13 +25,13 @@ class FeedbackCmd(private val magenta: Magenta) {
     ) {
         player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.feedback.success")))
 
-        magenta.serverFeedback.client.send(magenta.serverFeedback.addEmbed {
+        magenta.serverFeedback.addEmbed {
             setTitle(WebhookEmbed.EmbedTitle("Zpětná vazba (#${magenta.random})", null))
             setColor(0x437ade)
             setDescription("Zpětná vazba od hráče ${player.name}")
             setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
             addField(WebhookEmbed.EmbedField(false, "Zpráva", message))
             setFooter(WebhookEmbed.EmbedFooter("Vytvořeno ${now()}", null))
-        })
+        }?.let { magenta.serverFeedback.client.send(it) }
     }
 }

@@ -18,7 +18,6 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
     private val economyShopIntegration: EconomyShopIntegration by lazy { EconomyShopIntegration(magenta) }
     override fun buy(
         shopPaymentInformation: ShopPaymentInformation,
-        isCommand: Boolean,
         commands: MutableList<String>?,
         inventory: InventoryClickEvent
     ) {
@@ -34,7 +33,7 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         val transactions = EconomyWithdraw(player, price).transaction(VaultHook(magenta)) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.BUY, transactions, shopPaymentInformation,"magenta.shop.success.buy", commands, isCommand)
+            TransactionType.BUY, transactions, shopPaymentInformation,"magenta.shop.success.buy", commands)
     }
     override fun sell(
         shopPaymentInformation: ShopPaymentInformation,
@@ -53,7 +52,7 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         val transactions = EconomyDeposit(player, price).transaction(VaultHook(magenta)) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.SELL, transactions, shopPaymentInformation,"magenta.shop.success.sell", null, true)
+            TransactionType.SELL, transactions, shopPaymentInformation,"magenta.shop.success.sell", null)
     }
 
 }

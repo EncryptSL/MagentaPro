@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.manager
+package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.chat.PlayerMentionEvent
@@ -10,7 +10,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
-import org.bukkit.Sound
 
 class MentionManager(private val magenta: Magenta) {
 
@@ -21,7 +20,7 @@ class MentionManager(private val magenta: Magenta) {
             val split = message.split(" ")
             for (m in split) {
                 if (m.contains(magenta.config.getString("mentions.variable").toString())) {
-                    val sound: Sound = Sound.valueOf(magenta.config.getString("mentions.sound").toString())
+                    val sound: String = magenta.config.getString("mentions.sound").toString()
                     val volume = magenta.config.getString("mentions.volume").toString().toFloat()
                     val pitch = magenta.config.getString("mentions.pitch").toString().toFloat()
                     val mentionedMessage = magenta.localeConfig.getMessage("magenta.player.mentioned")

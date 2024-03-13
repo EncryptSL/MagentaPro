@@ -108,8 +108,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
                     val isBuyAllowed = shopCategory.getConfig().contains("menu.items.${item}.buy.price")
                     val isSellAllowed = shopCategory.getConfig().contains("menu.items.${item}.sell.price")
-                    val isCommand = shopCategory.getConfig().contains("menu.items.${item}.buy.commands")
-                    val commands = shopCategory.getConfig().getStringList("menu.items.${item}.commands")
+                    val commands = shopCategory.getConfig().getStringList("menu.items.${item}.buy.commands")
 
                     val guiItem = ItemBuilder.from(
                         magenta.itemFactory.shopItem(
@@ -122,40 +121,46 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                     ).asGuiItem()
 
                     guiItem.setAction { action ->
-                        if (action.isShiftClick && action.isLeftClick && !isCommand) {
+                        // BUY BY STACK = 64
+                        if (action.isShiftClick && action.isLeftClick) {
                             return@setAction vaultShopInventory.buy(
-                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 64, itemName), ShopHelper.calcPrice(64, buyPrice), isBuyAllowed),
-                                false,
-                                null,
-                                action
-                            )
+                                ShopPaymentInformation(
+                                    magenta.itemFactory.shopItem(material, 64, itemName),
+                                    ShopHelper.calcPrice(64, buyPrice),
+                                    isBuyAllowed
+                                ), null, action)
                         }
 
+                        // BUY BY ONE ITEM = 1
                         if (action.isLeftClick) {
                             return@setAction vaultShopInventory.buy(
-                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, itemName), ShopHelper.calcPrice(1, buyPrice), isBuyAllowed),
-                                isCommand,
-                                commands,
-                                action
-                            )
+                                ShopPaymentInformation(
+                                    magenta.itemFactory.shopItem(material, itemName),
+                                    ShopHelper.calcPrice(1, buyPrice), isBuyAllowed
+                                ), commands, action)
                         }
 
-
+                        // SELL BY STACK = 64
                         if (action.isShiftClick && action.isRightClick) {
                             for (i in 0..35) {
                                 if (player.inventory.getItem(i)?.type == material) {
                                     val itemStack = player.inventory.getItem(i)
                                     return@setAction vaultShopInventory.sell(
-                                        ShopPaymentInformation(itemStack!!, ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed),
-                                        action
-                                    )
+                                        ShopPaymentInformation(
+                                            itemStack!!,
+                                            ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed
+                                        ), action)
                                 }
                             }
                             return@setAction
                         }
 
+                        // SELL BY ONE ITEM = 1
                         if (action.isRightClick) {
-                            return@setAction vaultShopInventory.sell(ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName), ShopHelper.calcPrice(1, sellPrice), isSellAllowed), action)
+                            return@setAction vaultShopInventory.sell(
+                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName),
+                                    ShopHelper.calcPrice(1, sellPrice), isSellAllowed)
+                                , action)
                         }
                         action.isCancelled = true
                     }

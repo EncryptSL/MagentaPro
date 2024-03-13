@@ -21,12 +21,12 @@ class BlockListener(private val magenta: Magenta) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreakJail(event: BlockBreakEvent) {
         val player = event.player
-        if (magenta.user.getUser(player.uniqueId).isJailed()) {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
-                Placeholder.parsed("action", "ničit bloky")
-            )))
-            event.isCancelled = true
-        }
+        if (!magenta.user.getUser(player.uniqueId).isJailed()) return
+
+        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
+            Placeholder.parsed("action", "ničit bloky")
+        )))
+        event.isCancelled = true
     }
 
     @EventHandler
@@ -37,16 +37,16 @@ class BlockListener(private val magenta: Magenta) : Listener {
 
         if (!magenta.config.getBoolean("silky.enabled")) return
 
-        if (block.type == Material.SPAWNER) {
-            val itemInHand = player.inventory.itemInMainHand
-            val tools = silkyTools.contains(itemInHand.type.name)
-            if (!tools && !itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) return
+        if (block.type != Material.SPAWNER) return
 
-            if (!player.hasPermission("magenta.silky.spawner"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.silky.spawner.error.permissions")))
+        val itemInHand = player.inventory.itemInMainHand
+        val tools = silkyTools.contains(itemInHand.type.name)
+        if (!tools && !itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) return
 
-            BlockUtils.dropSpawner(block)
-        }
+        if (!player.hasPermission("magenta.silky.spawner"))
+            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.silky.spawner.error.permissions")))
+
+        BlockUtils.dropSpawner(block)
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -70,7 +70,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("max_progress", magenta.config.getInt("jobs.miner.max_progress").toString()),
             )))
             magenta.earnBlocksProgressManager.earnBlocksProgress[player.uniqueId] = 0
-            magenta.config.getStringList("jobs.miner.rewards").forEach {
+            for (it in magenta.config.getStringList("jobs.miner.rewards")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(it, player))
             }
         }
@@ -81,11 +81,18 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val block = event.block
 
-        if (block.type.name.endsWith("_SIGN")) {
-            val sign: Sign = block.state as Sign
-            if (sign.getSide(Side.FRONT).line(0).contains(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp"))) && !player.hasPermission("magenta.sign.warp.break")) {
-                event.isCancelled = true
-            }
+        if (!block.type.name.endsWith("_SIGN")) return
+
+        val sign: Sign = block.state as Sign
+
+        val hasPlayerPermission = player.hasPermission("magenta.sign.warp.break")
+
+        val isLineSame = sign.getSide(Side.FRONT)
+            .line(0)
+            .contains(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp")))
+
+        if (isLineSame && !hasPlayerPermission) {
+            event.isCancelled = true
         }
     }
 
@@ -121,6 +128,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("action", "pokládat bloky")
             )))
             event.isCancelled = true
+            return
         }
 
         BlockUtils.updateSpawner(event.block, player)

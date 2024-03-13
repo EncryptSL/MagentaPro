@@ -1,8 +1,7 @@
-package com.github.encryptsl.magenta.api.manager
+package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.ItemBuilder
-import com.github.encryptsl.magenta.api.exceptions.KitNotFoundException
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -24,28 +23,22 @@ class KitManager(private val magenta: Magenta) {
             throw KitNotFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist"))
 
         for (material in Material.entries) {
-            if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) {
-                val amount: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"))
-                val item = ItemBuilder(material, amount)
-                if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.displayName")) {
-                    item.setName(
-                        ModernText.miniModernText(
-                            magenta.kitConfig.getConfig()
-                                .getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName").toString()
-                        )
-                    )
-                }
-                if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore")) {
-                    val loreItems: List<String> = magenta.kitConfig.getConfig()
-                        .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore")
+            if (!magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) continue
 
-                    val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
-                    item.addLore(lore)
-                }
-                applyEnchantment(kitName, item, material)
+            val amount: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"))
+            val item = ItemBuilder(material, amount)
+            item.setName(ModernText.miniModernText(magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName", material.name).toString()))
 
-                inv.addItem(item.create())
+            if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore")) {
+                val loreItems: List<String> = magenta.kitConfig.getConfig()
+                    .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore")
+
+                val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
+                item.addLore(lore)
             }
+
+            applyEnchantment(kitName, item, material)
+            inv.addItem(item.create())
         }
     }
 
@@ -57,23 +50,25 @@ class KitManager(private val magenta: Magenta) {
         kitSection.set("name", kitName)
         kitSection.set("delay", delay)
         for (item in player.inventory) {
-            if (item == null) {continue}
+            if (item == null) continue
+            if (!item.enchantments.isNotEmpty()) continue
 
             val itemMeta = item.itemMeta
             val itemType = item.type
             kitSection.set("items.${itemType.name.lowercase()}.amount", item.amount)
-            if (item.enchantments.isNotEmpty()) {
-                for (enchant in item.enchantments) {
-                    kitSection.set("items.${itemType.name.lowercase()}.enchants.${enchant.key.key().value()}", enchant.value)
-                }
+            for (enchant in item.enchantments) {
+                kitSection.set("items.${itemType.name.lowercase()}.enchants.${enchant.key.key().value()}", enchant.value)
             }
+
             if (item.hasItemMeta()) {
                 kitSection.set("items.${itemType.name.lowercase()}.meta.displayName",
                     itemMeta.displayName()?.let { PlainTextComponentSerializer.plainText().serialize(it) })
-
                 item.lore()?.let { lores ->
                     for (lore in lores) {
-                        kitSection.set("items.${itemType.name.lowercase()}.meta.lore", PlainTextComponentSerializer.plainText().serialize(lore))
+                        kitSection.set(
+                            "items.${itemType.name.lowercase()}.meta.lore",
+                            PlainTextComponentSerializer.plainText().serialize(lore)
+                        )
                     }
                 }
             }
@@ -132,4 +127,6 @@ class KitManager(private val magenta: Magenta) {
             }
         }
     }
+
+    class KitNotFoundException(message: String) : Exception(message)
 }

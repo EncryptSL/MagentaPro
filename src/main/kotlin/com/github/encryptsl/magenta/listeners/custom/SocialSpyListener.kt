@@ -29,7 +29,6 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("value", true.toString())
             ))
         }
-
     }
 
     @EventHandler

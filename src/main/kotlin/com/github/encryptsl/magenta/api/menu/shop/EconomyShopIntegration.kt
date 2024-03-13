@@ -4,9 +4,8 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.shop.CreditShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopSellEvent
-import com.github.encryptsl.magenta.api.menu.shop.economy.TransactionErrors
+import com.github.encryptsl.magenta.api.menu.shop.economy.TransactionProcess
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -17,16 +16,15 @@ class EconomyShopIntegration(private val magenta: Magenta) {
     fun doVaultTransaction(
         player: Player,
         transactionType: TransactionType,
-        transactionErrors: TransactionErrors,
+        transactionProcess: TransactionProcess,
         shopPaymentInformation: ShopPaymentInformation,
         message: String,
         commands: MutableList<String>?,
-        isCommand: Boolean?
     ) {
-        if (transactionErrors == TransactionErrors.ERROR_ENOUGH_BALANCE)
+        if (transactionProcess == TransactionProcess.ERROR_ENOUGH_BALANCE)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.money")))
 
-        if (transactionErrors == TransactionErrors.SUCCESS) {
+        if (transactionProcess == TransactionProcess.SUCCESS) {
             val item = shopPaymentInformation.itemStack
             val price = shopPaymentInformation.price
             player.sendMessage(
@@ -41,32 +39,26 @@ class EconomyShopIntegration(private val magenta: Magenta) {
 
             when (transactionType) {
                 TransactionType.SELL -> {
-                    SchedulerMagenta.doSync(magenta) {
-                        magenta.pluginManager.callEvent(ShopSellEvent(player, item.type.name, price.toInt(), item.amount))
-                    }
+                    magenta.pluginManager.callEvent(ShopSellEvent(player, item.type.name, price.toInt(), item.amount))
                     player.inventory.removeItem(item)
                 }
                 TransactionType.BUY -> {
-                    SchedulerMagenta.doSync(magenta) {
-                        magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, price.toInt(), item.amount))
-                    }
-                    if (isCommand == false && commands.isNullOrEmpty())
+                    magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, price.toInt(), item.amount))
+                    if (commands.isNullOrEmpty())
                         player.inventory.addItem(item)
                     else
-                        commands?.let { ShopHelper.giveRewards(it, player.name, item.amount) }
+                        commands.let { ShopHelper.giveRewards(it, player.name, item.amount) }
                 }
             }
         }
     }
 
-    fun doCreditTransaction(player: Player, transactionErrors: TransactionErrors, message: String, product: Component, price: Double, quantity: Int, commands: MutableList<String>) {
-        if (transactionErrors == TransactionErrors.ERROR_ENOUGH_BALANCE)
+    fun doCreditTransaction(player: Player, transactionProcess: TransactionProcess, message: String, product: Component, price: Double, quantity: Int, commands: MutableList<String>) {
+        if (transactionProcess == TransactionProcess.ERROR_ENOUGH_BALANCE)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.credit")))
 
-        if (transactionErrors == TransactionErrors.SUCCESS) {
-            SchedulerMagenta.doSync(magenta) {
-                magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
-            }
+        if (transactionProcess == TransactionProcess.SUCCESS) {
+            magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
             player.sendMessage(
                 ModernText.miniModernText(
                     magenta.localeConfig.getMessage(message), TagResolver.resolver(

@@ -10,7 +10,6 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.util.Tick
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import java.time.Duration
@@ -45,7 +44,7 @@ class TpaListener(private val magenta: Magenta) : Listener {
         }, Tick.tick().fromDuration(Duration.ofSeconds(magenta.config.getLong("tpa-accept-cancellation"))).toLong())
         PlayerBuilderAction
             .player(target)
-            .sound(Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
+            .sound("block.note_block.pling", 1.5F, 1.5F)
             .message(
                 ModernText.miniModernText(
                     magenta.localeConfig.getMessage("magenta.command.tpa.success.request"), TagResolver.resolver(

@@ -38,7 +38,7 @@ class TpaManager(private val magenta: Magenta) {
                             Placeholder.parsed("player", target.name)
                         )
                     )
-                ).sound(Sound.BLOCK_NOTE_BLOCK_PLING, 1.5F, 1.5F)
+                ).sound("block.note_block.pling", 1.5F, 1.5F)
             target.teleport(player)
             request.remove(player.uniqueId)
         }
@@ -66,7 +66,7 @@ class TpaManager(private val magenta: Magenta) {
                     ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.expired.to"),
                         Placeholder.parsed("player", Bukkit.getOfflinePlayer(UUID.fromString(request[player.uniqueId].toString())).name.toString())
                     )
-                ).sound(Sound.BLOCK_NOTE_BLOCK_BASS, 1.5F, 1.5F)
+                ).sound("block.note_block.bass", 1.5F, 1.5F)
             request.remove(player.uniqueId)
         }
     }

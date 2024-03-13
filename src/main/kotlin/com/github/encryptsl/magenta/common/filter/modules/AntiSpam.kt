@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common.filter.modules
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.utils.CensorAPI
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
 import org.bukkit.entity.Player
@@ -21,7 +20,7 @@ class AntiSpam(val magenta: Magenta) {
         SpamCache.spam.asMap().computeIfPresent(player.uniqueId) { _, _ -> phrase }
 
         return SpamCache.spam.getIfPresent(player.uniqueId)?.let {
-            CensorAPI.checkSimilarity(phrase,
+            magenta.stringUtils.checkSimilarity(phrase,
                 it, magenta.chatControl.getConfig().getInt("filters.antispam.similarity"))
         } ?: false
     }

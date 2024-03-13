@@ -26,9 +26,9 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onAsyncLogin(event: AsyncPlayerPreLoginEvent) {
-        val player = event.uniqueId
+        val uuid = event.uniqueId
         if (event.loginResult != AsyncPlayerPreLoginEvent.Result.ALLOWED) return
-        magenta.virtualLevel.createAccount(LevelEntity(event.name, player.toString(), 1, 0))
+        magenta.virtualLevel.createAccount(LevelEntity(event.name, uuid.toString(), 1, 0))
     }
 
     @EventHandler
@@ -103,7 +103,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 )
         }
 
-        magenta.reply.invalidate(player)
+        magenta.playerCacheManager.reply.invalidate(player)
         user.set("mined.blocks", magenta.earnBlocksProgressManager.getValue(player.uniqueId))
         magenta.earnBlocksProgressManager.remove(player.uniqueId)
         magenta.afk.clear(player.uniqueId)
@@ -155,18 +155,20 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             if (event.action.isRightClick) {
                 val itemInHand = player.inventory.itemInMainHand
                 val itemMeta = itemInHand.itemMeta
-                magenta.cItems.getConfig().getConfigurationSection("citems")?.getKeys(false)?.forEach {
-                    if (itemMeta.hasDisplayName()) {
+                val cItems = magenta.cItems.getConfig().getConfigurationSection("citems")?.getKeys(false) ?: return
+
+                if (itemMeta.hasDisplayName()) {
+                    for (it in cItems) {
                         val sid = magenta.cItems.getConfig().getString("citems.$it.sid").toString()
                         val item = magenta.cItems.getConfig().getString("citems.$it.name").toString().replace("<sid>", sid)
-                        if (itemMeta.displayName() == ModernText.miniModernText(item)) {
-                            val command = magenta.cItems.getConfig().getString("citems.$it.command").toString()
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(command, player))
-                            if (itemInHand.amount > 1) {
-                                itemInHand.amount -= 1
-                            } else {
-                                player.inventory.remove(itemInHand)
-                            }
+                        if (itemMeta.displayName() != ModernText.miniModernText(item)) break
+
+                        val command = magenta.cItems.getConfig().getString("citems.$it.command").toString()
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(command, player))
+                        if (itemInHand.amount > 1) {
+                            itemInHand.amount -= 1
+                        } else {
+                            player.inventory.remove(itemInHand)
                         }
                     }
                 }
@@ -182,9 +184,8 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
         if (!block.type.name.endsWith("_SIGN")) return
 
-            val sign: Sign = block.state as Sign
-
-            val side = sign.getSide(Side.FRONT)
+        val sign: Sign = block.state as Sign
+        val side = sign.getSide(Side.FRONT)
 
         if (!side.line(0).toString().contains(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp")).toString()))
             return

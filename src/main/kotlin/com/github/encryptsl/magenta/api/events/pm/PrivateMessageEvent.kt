@@ -1,13 +1,13 @@
 package com.github.encryptsl.magenta.api.events.pm
 
-import com.google.common.cache.Cache
+import com.github.encryptsl.magenta.common.PlayerCacheManager
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PrivateMessageEvent(val commandSender: CommandSender, val receiver: Player, val message: String, val reply: Cache<Player, Player>) : Event(), Cancellable {
+class PrivateMessageEvent(val commandSender: CommandSender, val receiver: Player, val message: String, val playerCacheManager: PlayerCacheManager) : Event(), Cancellable {
     private var isCancelled: Boolean = false
     override fun getHandlers(): HandlerList
             = handlerList

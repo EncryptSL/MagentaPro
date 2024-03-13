@@ -41,17 +41,15 @@ class ChatPunishManager(private val magenta: Magenta) {
             }
         }
         if (actionList.contains("notify")) {
-            try {
-                magenta.serverFeedback.client.send(magenta.serverFeedback.addEmbed {
-                    setAuthor(WebhookEmbed.EmbedAuthor("Chat Filter 1.0.0 - Varování", null, null))
-                    setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
-                    setDescription("Se pokusil napsat něco co je zakázáno !")
-                    addField(WebhookEmbed.EmbedField(true, "Detekován Hráč", player.name))
-                    addField(WebhookEmbed.EmbedField(true, "Modul", violations.name))
-                    addField(WebhookEmbed.EmbedField(false, "Napsal", messageFromChat))
-                    setFooter(WebhookEmbed.EmbedFooter("Detekováno ${now()}", null))
-                })
-            } catch (_: IllegalArgumentException) { }
+            magenta.serverFeedback.addEmbed {
+                setAuthor(WebhookEmbed.EmbedAuthor("Chat Filter 1.0.0 - Varování", null, null))
+                setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
+                setDescription("Se pokusil napsat něco co je zakázáno !")
+                addField(WebhookEmbed.EmbedField(true, "Detekován Hráč", player.name))
+                addField(WebhookEmbed.EmbedField(true, "Modul", violations.name))
+                addField(WebhookEmbed.EmbedField(false, "Napsal", messageFromChat))
+                setFooter(WebhookEmbed.EmbedFooter("Detekováno ${now()}", null))
+            }?.let { magenta.serverFeedback.client.send(it) }
             Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.admin.notify"), TagResolver.resolver(
                 Placeholder.parsed("player", player.name),
                 Placeholder.parsed("flagged", violations.name),

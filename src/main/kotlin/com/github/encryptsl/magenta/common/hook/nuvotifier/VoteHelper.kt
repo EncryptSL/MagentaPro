@@ -49,12 +49,12 @@ object VoteHelper {
                             giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
                             magenta.voteParty.partyFinished(player.name)
                             magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
-                            magenta.notification.client.send(magenta.notification.addEmbed {
+                            magenta.notification.addEmbed {
                                 setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
                                 setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
                                 setColor(0xa730c2)
                                 addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
-                            })
+                            }?.let { magenta.notification.client.send(it) }
                         }
                     }
                     broadcast(endPartyMessage)

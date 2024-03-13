@@ -26,12 +26,11 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun doVanish(player: Player, isVanished: Boolean) {
         for (players in Bukkit.getOnlinePlayers()) {
-            if (!player.hasPermission("magenta.vanish.exempt")) {
-                if (isVanished)
-                    players.showPlayer(magenta, player)
-                else
-                    players.hidePlayer(magenta, player)
-            }
+            if (player.hasPermission("magenta.vanish.exempt")) continue
+            if (isVanished)
+                players.showPlayer(magenta, player)
+            else
+                players.hidePlayer(magenta, player)
         }
     }
 

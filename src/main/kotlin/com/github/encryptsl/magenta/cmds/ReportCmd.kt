@@ -40,7 +40,7 @@ class ReportCmd(private val magenta: Magenta) {
             Placeholder.parsed("category", category.name)
         )))
 
-        magenta.serverFeedback.client.send(magenta.serverFeedback.addEmbed {
+        magenta.serverFeedback.addEmbed {
             setTitle(WebhookEmbed.EmbedTitle("Nahlášen hráč ${target.name.toString()} (#${magenta.random})", null))
             setColor(0xde4343)
             setDescription(category.message)
@@ -49,7 +49,7 @@ class ReportCmd(private val magenta: Magenta) {
             addField(WebhookEmbed.EmbedField(true, "Důvod", category.name))
             addField(WebhookEmbed.EmbedField(false, "Zpráva", message))
             setFooter(WebhookEmbed.EmbedFooter("Byl nahlášen ${now()}", null))
-        })
+        }?.let { magenta.serverFeedback.client.send(it) }
     }
 
 }

@@ -27,9 +27,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
                     Placeholder.parsed("kit", kitName),
                     Placeholder.parsed("delay", kitDelay.toString())
                 )))
-        } catch (e : Exception) {
-            player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
-        }
+        } catch (e : Exception) { player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 
     @EventHandler
@@ -40,9 +38,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
         try {
             magenta.kitManager.deleteKit(kitName)
             commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.deleted"), Placeholder.parsed("kit", kitName)))
-        } catch (e : Exception) {
-            commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
-        }
+        } catch (e : Exception) { commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 
     @EventHandler
@@ -61,9 +57,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))
-        } catch (e : Exception) {
-            commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
-        }
+        } catch (e : Exception) { commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 
     @EventHandler
@@ -115,9 +109,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
             player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(
                 Placeholder.parsed("kit", kitName)
             )))
-        } catch (e : Exception) {
-            player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage))
-        }
+        } catch (e : Exception) { player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 
 }

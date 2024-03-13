@@ -35,5 +35,5 @@ menu:
       icon: "EXPERIENCE_BOTTLE"
       buy:
         price: 5000
-      commands:
-        - "experience add %player% 30 levels"
+        commands:
+         - "experience add %player% 30 levels"

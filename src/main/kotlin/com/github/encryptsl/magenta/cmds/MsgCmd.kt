@@ -27,13 +27,13 @@ class MsgCmd(private val magenta: Magenta) {
         @Argument(value = "player", suggestions = "players") target: Player,
         @Argument(value = "message") @Greedy message: String
     ) {
-        PrivateMessageEvent(commandSender, target, message, magenta.reply).callEvent()
+        PrivateMessageEvent(commandSender, target, message, magenta.playerCacheManager).callEvent()
     }
 
     @Command("reply|r <message>")
     @Permission("magenta.msg")
     fun onFastReplyMsg(commandSender: CommandSender, @Argument("message") @Greedy message: String) {
-        val receiverUUID = magenta.reply.getIfPresent(commandSender)
+        val receiverUUID = magenta.playerCacheManager.reply.getIfPresent(commandSender)
 
         FastReplyMessageEvent(commandSender, receiverUUID, message).callEvent()
     }

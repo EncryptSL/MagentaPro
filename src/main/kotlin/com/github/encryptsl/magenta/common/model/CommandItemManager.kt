@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.common
+package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.ItemBuilder

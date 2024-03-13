@@ -18,24 +18,26 @@ class EntityAttackListener(private val magenta: Magenta) : Listener {
         val entity = event.entity
         if (entity is Player) {
             val player = entity.player ?: return
-            if (event.cause  == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-                if (magenta.user.getUser(player.uniqueId).isJailed())
-                    event.isCancelled = true
-            }
+            if (event.cause  != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
+            if (!magenta.user.getUser(player.uniqueId).isJailed()) return
+
+            event.isCancelled = true
         }
         if (entity is Mob) {
-            if (event.damager is Player) {
-                val player = event.damager as Player
-                if (event.cause  == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-                    if (magenta.user.getUser(player.uniqueId).isJailed()) {
-                        player.sendMessage(
-                            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
-                            Placeholder.parsed("action", "útočit")
-                        )))
-                        event.isCancelled = true
-                    }
-                }
-            }
+            if (event.damager !is Player) return
+            if (event.cause  != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
+
+            val player = event.damager as Player
+
+            if (!magenta.user.getUser(player.uniqueId).isJailed()) return
+
+            player.sendMessage(ModernText.miniModernText(
+                    magenta.localeConfig.getMessage("magenta.command.jail.error.event"),
+                    TagResolver.resolver(
+                        Placeholder.parsed("action", "útočit")
+                    )
+            ))
+            event.isCancelled = true
         }
     }
 

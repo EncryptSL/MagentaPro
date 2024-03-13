@@ -77,7 +77,7 @@ class VotifierListener(private val magenta: Magenta) : Listener {
     private fun processDefaultReward(serviceName: String, player: OfflinePlayer, timestamp: Long) {
         if (magenta.config.contains("votifier.services.default")) {
             if (magenta.config.contains("votifier.services.default.rewards")) {
-                this.addVote(player, serviceName, timestamp)
+                addVote(player, serviceName, timestamp)
                 VoteHelper.broadcast(
                     magenta.localeConfig.getMessage("magenta.votifier.broadcast"),
                     player.name.toString(),
@@ -97,34 +97,34 @@ class VotifierListener(private val magenta: Magenta) : Listener {
     private fun processCumulativeVote(serviceName: String, player: OfflinePlayer) {
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
 
-        if (magenta.config.contains("votifier.cumulative.${playerVotes}")) {
-            if (magenta.config.contains("votifier.cumulative.${playerVotes}.broadcast")) {
-                VoteHelper.broadcast(magenta.config.getString("votifier.cumulative.$playerVotes}.broadcast").toString(),
-                    player.name.toString(), serviceName
-                )
-            }
-            val rewards: MutableList<String> = magenta.config.getStringList("votifier.cumulative.${playerVotes}.rewards")
-            if (!player.isOnline)
-                return VoteHelper.saveOfflineReward(magenta, player, rewards)
+        if (!magenta.config.contains("votifier.cumulative.${playerVotes}")) return
 
-            VoteHelper.giveRewards(rewards, player.name.toString())
+        if (magenta.config.contains("votifier.cumulative.${playerVotes}.broadcast")) {
+            VoteHelper.broadcast(magenta.config.getString("votifier.cumulative.$playerVotes}.broadcast").toString(),
+                player.name.toString(), serviceName
+            )
         }
+        val rewards: MutableList<String> = magenta.config.getStringList("votifier.cumulative.${playerVotes}.rewards")
+        if (!player.isOnline)
+            return VoteHelper.saveOfflineReward(magenta, player, rewards)
+
+        VoteHelper.giveRewards(rewards, player.name.toString())
     }
 
     private fun checkVoteParty(player: OfflinePlayer) {
-        if (magenta.config.contains("votifier.voteparty.rewards")) {
-            if (magenta.voteParty.getVoteParty().currentVotes == magenta.config.getInt("votifier.voteparty.start_at")) {
-                val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
-                magenta.pluginManager.callEvent(VotePartyPlayerStartedEvent(player.name.toString()))
-                VoteHelper.startVoteParty(
-                    magenta,
-                    magenta.localeConfig.getMessage("magenta.votifier.voteparty.broadcast"),
-                    magenta.localeConfig.getMessage("magenta.votifier.voteparty.success"),
-                    rewards,
-                    magenta.config.getInt("votifier.voteparty.countdown"),
-                )
-            }
-        }
+        if (!magenta.config.contains("votifier.voteparty.rewards")) return
+
+        if (magenta.voteParty.getVoteParty().currentVotes != magenta.config.getInt("votifier.voteparty.start_at")) return
+
+        val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
+        magenta.pluginManager.callEvent(VotePartyPlayerStartedEvent(player.name.toString()))
+        VoteHelper.startVoteParty(
+            magenta,
+            magenta.localeConfig.getMessage("magenta.votifier.voteparty.broadcast"),
+            magenta.localeConfig.getMessage("magenta.votifier.voteparty.success"),
+            rewards,
+            magenta.config.getInt("votifier.voteparty.countdown")
+        )
     }
 
     private fun addVote(p: OfflinePlayer, serviceName: String, timestamp: Long) {

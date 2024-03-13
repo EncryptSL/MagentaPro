@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.manager
+package com.github.encryptsl.magenta.common.model
 
 import org.bukkit.Bukkit
 import org.bukkit.Location

@@ -21,10 +21,10 @@ class JailPardonListener(private val magenta: Magenta) : Listener {
 
         if (!user.isJailed() && !user.hasPunish()) return
 
-        if (player != null) {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.unjailed")))
-            magenta.pluginManager.callEvent(JailTeleportEvent(player, user.getLastLocation()))
-        }
+        player?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.unjailed")))
+
+        player?.let { magenta.pluginManager.callEvent(JailTeleportEvent(player, user.getLastLocation())) }
+
         Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.unjailed.to"), TagResolver.resolver(
                     Placeholder.parsed("player", target.name.toString())
                 )

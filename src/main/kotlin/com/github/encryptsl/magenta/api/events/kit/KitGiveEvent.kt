@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta.api.events.kit
 
-import com.github.encryptsl.magenta.api.manager.KitManager
+import com.github.encryptsl.magenta.common.model.KitManager
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable

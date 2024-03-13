@@ -7,19 +7,24 @@ import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
 import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
-import com.github.encryptsl.magenta.api.manager.JailManager
-import com.github.encryptsl.magenta.api.manager.KitManager
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
 import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
-import com.github.encryptsl.magenta.common.*
+import com.github.encryptsl.magenta.common.CommandHelper
+import com.github.encryptsl.magenta.common.CommandManager
+import com.github.encryptsl.magenta.common.PlayerCacheManager
+import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.hook.HookManager
+import com.github.encryptsl.magenta.common.model.EarnBlocksProgressManager
+import com.github.encryptsl.magenta.common.model.JailManager
+import com.github.encryptsl.magenta.common.model.KitManager
+import com.github.encryptsl.magenta.common.model.NewsQueueManager
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.tasks.LevelUpTask
@@ -27,10 +32,7 @@ import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
-import com.google.common.cache.Cache
-import com.google.common.cache.CacheBuilder
 import io.papermc.paper.util.Tick
-import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
@@ -80,7 +82,7 @@ open class Magenta : JavaPlugin() {
     val earnBlocksProgressManager: EarnBlocksProgressManager by lazy { EarnBlocksProgressManager(this) }
     val commandHelper: CommandHelper by lazy { CommandHelper(this) }
 
-    val reply: Cache<Player, Player> = CacheBuilder.newBuilder().expireAfterWrite(Duration.ofMinutes(5)).build()
+    val playerCacheManager by lazy { PlayerCacheManager() }
 
     private val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
@@ -146,7 +148,7 @@ open class Magenta : JavaPlugin() {
         logger.info("Plugin disabled")
         earnBlocksProgressManager.saveMinedBlocks()
         afk.clear()
-        reply.invalidateAll()
+        playerCacheManager.reply.invalidateAll()
     }
 
     private fun isPaperServer() {

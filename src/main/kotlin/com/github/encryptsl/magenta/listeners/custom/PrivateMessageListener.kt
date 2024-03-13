@@ -8,7 +8,6 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
-import org.bukkit.Sound
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -21,18 +20,22 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         val commandSender = event.commandSender
         val receiver = event.receiver
         val message = event.message
-        val reply = event.reply
+        val cacheManager = event.playerCacheManager
 
         if (commandSender.name == receiver.name)
             return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error.yourself")))
 
-        val user = magenta.user.getUser(receiver.uniqueId)
+        val receiverUser = magenta.user.getUser(receiver.uniqueId)
 
         if (commandSender is Player) {
             val whisper = magenta.user.getUser(commandSender.uniqueId)
 
-            val userHaveBlockedSender = user.isPlayerIgnored(commandSender.uniqueId)
+            val userHaveBlockedSender = receiverUser.isPlayerIgnored(commandSender.uniqueId)
             val whisperHaveBlockedTarget = whisper.isPlayerIgnored(receiver.uniqueId)
+
+            if (receiverUser.isVanished() && !commandSender.hasPermission("magenta.vanish.exempt")) {
+                event.isCancelled = true
+            }
 
             if (userHaveBlockedSender || whisperHaveBlockedTarget) {
                 commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error")))
@@ -42,8 +45,8 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
 
         if (!event.isCancelled) {
             if (commandSender is Player) {
-                reply.put(commandSender, receiver)
-                reply.put(receiver, commandSender)
+                cacheManager.reply.put(commandSender, receiver)
+                cacheManager.reply.put(receiver, commandSender)
             }
 
             sendMessage(commandSender, receiver, message)
@@ -89,7 +92,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         )
         PlayerBuilderAction
             .player(receiver)
-            .sound(Sound.valueOf(magenta.config.getString("msg.sound").toString()),
+            .sound(magenta.config.getString("msg.sound").toString(),
                 magenta.config.getString("msg.volume").toString().toFloat(),
                 magenta.config.getString("msg.pitch").toString().toFloat()
             ).message(ModernText.miniModernText(

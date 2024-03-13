@@ -26,9 +26,7 @@ class VoteCmd(val magenta: Magenta) {
         val services: MutableSet<String> = magenta.config.getConfigurationSection("votifier.services")?.getKeys(false) ?: return
 
         for (service in services) {
-            if(!service.contains("default")) {
-                continue
-            }
+            if(!service.contains("default")) { continue }
             val replace = VoteHelper.replaceService(service, "_", ".")
             player.sendMessage(ModernText.miniModernText(magenta.config.getString("votifier.services.$service.link").toString(), TagResolver.resolver(
                 Placeholder.parsed("hover", magenta.localeConfig.getMessage("magenta.command.vote.hover")),
