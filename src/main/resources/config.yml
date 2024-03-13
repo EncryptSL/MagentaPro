@@ -113,7 +113,7 @@ change-world-message: true
 #    pitch: 1.2f
 level:
   effect:
-    sound: "UI_TOAST_CHALLENGE_COMPLETE"
+    sound: "ui.toast_challenger.complete"
     volume: 5.5f
     pitch: 1.2f
   progress_bar:
@@ -164,7 +164,7 @@ msg:
 # Minecraft sounds list - https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
 # You can set your sound what, can be hearing when player
 # send message to another player.
-  sound: 'BLOCK_NOTE_BLOCK_PLING'
+  sound: 'block.note_block.pling'
 
 # You can set your own volume of sound
 # this value is accept float.
@@ -281,7 +281,7 @@ jobs:
   whitelist_world:
     - mineworld
   miner:
-    max_progress: 100
+    max_progress: 1000
     action_bar: '<yellow>Progress: <gold><current_progress>/<max_progress>'
     earn_bar: '<gray>+ <green>408 $'
     rewards:
@@ -314,7 +314,7 @@ votifier:
 # Minecraft sounds list - https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
 # You can set your sound what, can be hearing when player
 # send message to another player.
-  sound: 'BLOCK_NOTE_BLOCK_PLING'
+  sound: 'block.note_block.pling'
 
 # You can set your own volume of sound
 # this value is accept float.
