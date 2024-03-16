@@ -29,14 +29,7 @@ newbies:
 #########################################################
 prefix: "<gray>(<light_purple><bold>MAGENTAPRO</bold><gray>)"
 
-# The maximum length allowed in nicknames. The nickname prefix is not included in this.
-max-nick-length: 15
-
-# A list of phrases that cannot be used in nicknames. You can include regular expressions here.
-# Users with magenta.nick.blacklist.bypass will be able to bypass this filter.
-nick-blacklist:
-#- Notch
-#- '^Dinnerbone'
+maxmind-url: "https://git.io/GeoLite2-Country.mmdb"
 
 # A list of users who can't be reported or ignored !
 exempt-blacklist: ["EncryptSL", "a_patress_o", "WZarek775"]

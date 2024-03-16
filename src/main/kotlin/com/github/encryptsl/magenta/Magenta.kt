@@ -122,11 +122,11 @@ open class Magenta : JavaPlugin() {
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         database.initConnect(
-            config.getString("database.host") ?: "jdbc:sqlite:plugins/MagentaPro/database.db",
-            config.getString("database.username") ?: "root",
-            config.getString("database.password") ?: "admin"
+            config.getString("database.host", "jdbc:sqlite:plugins/MagentaPro/database.db").toString(),
+            config.getString("database.username", "root").toString(),
+            config.getString("database.password", "admin").toString()
         )
-        database.initGeoMaxMind()
+        database.initGeoMaxMind(config.getString("maxmind-url").toString())
     }
 
     override fun onEnable() {

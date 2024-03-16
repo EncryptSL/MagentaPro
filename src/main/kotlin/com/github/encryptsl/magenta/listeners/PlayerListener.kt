@@ -52,6 +52,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
         if (player.hasPlayedBefore()) {
             user.set("timestamps.login", System.currentTimeMillis())
+            user.set("ip-address", player.address.address.hostAddress)
 
             FileUtil.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
                 player.sendMessage(ModernText.miniModernTextCenter(text, TagResolver.resolver(

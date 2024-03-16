@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common.database
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.tables.*
+import com.github.encryptsl.magenta.common.download.BinaryFileDownloader
 import com.maxmind.geoip2.DatabaseReader
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
@@ -31,21 +32,20 @@ class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvide
         }
     }
 
-    override fun initGeoMaxMind() {
-        if (File(magenta.dataFolder.path, "GeoLite2-Country.mmdb").exists())
-            return magenta.logger.info("GeoLite2-Country database was found !")
-
-        magenta.saveResource("GeoLite2-Country.mmdb", false)
-        magenta.logger.info("GeoLite2-Country database was created !")
+    override fun initGeoMaxMind(url: String) {
+        BinaryFileDownloader(magenta).downloadFile(url,"${magenta.dataFolder}", "GeoLite2-Country.mmdb") { e ->
+            magenta.logger.info("${e.name} database was found !")
+        }
     }
 
     override fun getGeoMaxMing(): DatabaseReader {
+        var db: DatabaseReader? = null
          try {
             val file = File(magenta.dataFolder.path, "GeoLite2-Country.mmdb")
-            val db = DatabaseReader.Builder(file).build()
-            db?.close()
+             db = DatabaseReader.Builder(file).build()
             return db
         } catch (e : IOException) {
+            db?.close()
             throw Exception(e.message ?: e.localizedMessage)
         }
     }

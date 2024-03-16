@@ -85,7 +85,7 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     }
 
     override fun getGameMode(): GameMode {
-        return GameMode.valueOf(getAccount().getString("gamemode") ?: "SURVIVAL")
+        return GameMode.valueOf(getAccount().getString("gamemode", "SURVIVAL").toString())
     }
 
     override fun getFlying(): Boolean {

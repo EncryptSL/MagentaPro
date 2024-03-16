@@ -12,7 +12,7 @@ interface DatabaseConnectorProvider {
      */
     fun initConnect(jdbcHost: String, user: String, pass: String)
 
-    fun initGeoMaxMind()
+    fun initGeoMaxMind(url: String)
 
     fun getGeoMaxMing(): DatabaseReader
 

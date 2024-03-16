@@ -39,8 +39,8 @@ class WhoisCmd(private val magenta: Magenta) {
                 sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.flying"), target, user)
             }
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastSeen"), target, user)
             sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastLogin"), target, user)
+            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastSeen"), target, user)
 
             sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.votes"), target, user)
             if (magenta.afk.isAfk(target.uniqueId) || user.isAfk()) {
