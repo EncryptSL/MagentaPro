@@ -14,10 +14,15 @@ class UniversalConfig(val plugin: Plugin, type: String) {
         return configUtil.file.isFile
     }
 
-    fun set(path: String, value: Any?) {
-        SchedulerMagenta.doAsync(plugin) {
+    fun set(path: String, value: Any?, sync: Boolean) {
+        if (sync) {
             getConfig().set(path, value)
             save()
+        } else {
+            SchedulerMagenta.doAsync(plugin) {
+                getConfig().set(path, value)
+                save()
+            }
         }
     }
 

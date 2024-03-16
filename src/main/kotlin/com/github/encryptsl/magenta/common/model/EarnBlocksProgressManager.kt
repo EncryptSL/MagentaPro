@@ -22,7 +22,7 @@ class EarnBlocksProgressManager(private val magenta: Magenta) {
     fun saveMinedBlocks() {
         for (el in earnBlocksProgress) {
             val user = magenta.user.getUser(el.key)
-            user.set("mined.blocks", el.value)
+            user.set("mined.blocks", el.value, true)
         }
         clear()
     }

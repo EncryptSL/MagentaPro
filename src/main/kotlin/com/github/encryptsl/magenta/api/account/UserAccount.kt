@@ -72,8 +72,8 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
         set("timestamps.$type", 0)
     }
 
-    override fun set(path: String, value: Any?) {
-        universalConfig.set(path, value)
+    override fun set(path: String, value: Any?, sync: Boolean) {
+        universalConfig.set(path, value, sync)
     }
 
     override fun set(path: String, list: MutableList<Any>) {
