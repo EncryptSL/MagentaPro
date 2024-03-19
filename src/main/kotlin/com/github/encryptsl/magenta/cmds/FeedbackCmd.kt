@@ -2,9 +2,8 @@ package com.github.encryptsl.magenta.cmds
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.now
-import com.github.encryptsl.magenta.common.extensions.trimUUID
+import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
@@ -29,7 +28,7 @@ class FeedbackCmd(private val magenta: Magenta) {
             setTitle(WebhookEmbed.EmbedTitle("Zpětná vazba (#${magenta.random})", null))
             setColor(0x437ade)
             setDescription("Zpětná vazba od hráče ${player.name}")
-            setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
+            setThumbnailUrl(player.uniqueId.toMinotarAvatar())
             addField(WebhookEmbed.EmbedField(false, "Zpráva", message))
             setFooter(WebhookEmbed.EmbedFooter("Vytvořeno ${now()}", null))
         }?.let { magenta.serverFeedback.client.send(it) }

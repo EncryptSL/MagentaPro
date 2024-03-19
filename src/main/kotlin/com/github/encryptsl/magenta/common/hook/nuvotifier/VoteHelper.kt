@@ -6,9 +6,8 @@ import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
-import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.datetime
-import com.github.encryptsl.magenta.common.extensions.trimUUID
+import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
@@ -51,7 +50,7 @@ object VoteHelper {
                             magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
                             magenta.notification.addEmbed {
                                 setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
-                                setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
+                                setThumbnailUrl(player.uniqueId.toMinotarAvatar())
                                 setColor(0xa730c2)
                                 addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
                             }?.let { magenta.notification.client.send(it) }

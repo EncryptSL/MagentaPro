@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common.extensions
 
 import java.util.*
 
-fun Char.compactCensoring(count: Int): String = this.toString().repeat(count)
+private const val AVATAR = "https://visage.surgeplay.com/bust/%s.png?,shadow&y=-40"
 
-fun trimUUID(uuid: UUID) = uuid.toString().replace("-", "")
+fun UUID.trimUUID() = this.toString().replace("-","")
+fun UUID.toMinotarAvatar() = AVATAR.format(this.trimUUID())

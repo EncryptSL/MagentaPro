@@ -3,9 +3,8 @@ package com.github.encryptsl.magenta.cmds
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
-import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.now
-import com.github.encryptsl.magenta.common.extensions.trimUUID
+import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -44,7 +43,7 @@ class ReportCmd(private val magenta: Magenta) {
             setTitle(WebhookEmbed.EmbedTitle("Nahlášen hráč ${target.name.toString()} (#${magenta.random})", null))
             setColor(0xde4343)
             setDescription(category.message)
-            setThumbnailUrl(avatar.format(trimUUID(target.uniqueId)))
+            setThumbnailUrl(target.uniqueId.toMinotarAvatar())
             addField(WebhookEmbed.EmbedField(true, "Nahlásil", player.name))
             addField(WebhookEmbed.EmbedField(true, "Důvod", category.name))
             addField(WebhookEmbed.EmbedField(false, "Zpráva", message))

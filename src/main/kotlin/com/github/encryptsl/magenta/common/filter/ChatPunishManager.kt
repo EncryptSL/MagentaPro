@@ -4,9 +4,8 @@ import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.enums.Violations
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
-import com.github.encryptsl.magenta.common.extensions.avatar
 import com.github.encryptsl.magenta.common.extensions.now
-import com.github.encryptsl.magenta.common.extensions.trimUUID
+import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -43,7 +42,7 @@ class ChatPunishManager(private val magenta: Magenta) {
         if (actionList.contains("notify")) {
             magenta.serverFeedback.addEmbed {
                 setAuthor(WebhookEmbed.EmbedAuthor("Chat Filter 1.0.0 - Varování", null, null))
-                setThumbnailUrl(avatar.format(trimUUID(player.uniqueId)))
+                setThumbnailUrl(player.uniqueId.toMinotarAvatar())
                 setDescription("Se pokusil napsat něco co je zakázáno !")
                 addField(WebhookEmbed.EmbedField(true, "Detekován Hráč", player.name))
                 addField(WebhookEmbed.EmbedField(true, "Modul", violations.name))
