@@ -9,15 +9,16 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED", "UNUSED_PARAMETER")
-@CommandDescription("Provided by plugin MagentaPro")
 class AfkCmd(private val magenta: Magenta) {
     @Command("afk")
     @Permission("magenta.afk")
+    @CommandDescription("This command set you afk")
     fun onAfk(player: Player) {
         magenta.afk.isAfk(player.uniqueId)
     }
     @Command("afk <player>")
     @Permission("magenta.afk.other")
+    @CommandDescription("This command set another player afk.")
     fun onAfkOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         magenta.afk.isAfk(target.uniqueId)
     }

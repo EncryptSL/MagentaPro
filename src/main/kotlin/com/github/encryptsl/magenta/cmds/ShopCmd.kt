@@ -10,7 +10,6 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class ShopCmd(magenta: Magenta) {
 
     private val vaultShop = VaultShop(magenta)
@@ -18,24 +17,28 @@ class ShopCmd(magenta: Magenta) {
 
     @Command("shop")
     @Permission("magenta.shop")
+    @CommandDescription("This command open shop gui")
     fun onShop(player: Player) {
         vaultShop.openMenu(player)
     }
 
     @Command("shop open <type>")
     @Permission("magenta.shop.open")
+    @CommandDescription("This command open shop category gui")
     fun onShopOpen(player: Player, @Argument(value = "type", suggestions = "shops") type: String) {
         vaultShop.openCategory(player, type)
     }
 
     @Command("creditshop|cshop")
     @Permission("magenta.credit.shop")
+    @CommandDescription("This command open credit shop")
     fun onCreditShop(player: Player) {
         creditShop.openMenu(player)
     }
 
     @Command("creditshop|cshop open <type>")
     @Permission("magenta.credit.shop.open")
+    @CommandDescription("This command open credit shop category")
     fun onOpenCreditShop(player: Player, @Argument(value = "type", suggestions = "creditshops") type: String) {
         creditShop.openCategory(player, type)
     }

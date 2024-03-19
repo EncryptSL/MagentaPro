@@ -11,10 +11,10 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class BroadcastCmd(private val magenta: Magenta) {
     @Command("broadcast|oznameni <message>")
     @Permission("magenta.broadcast")
+    @CommandDescription("This command send broadcast message to every one.")
     fun onBroadcast(commandSender: CommandSender, @Greedy @Argument(value = "message") message: String) {
         commandSender.server.broadcast(
             ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.broadcast"),

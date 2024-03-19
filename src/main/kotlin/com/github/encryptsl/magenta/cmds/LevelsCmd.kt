@@ -14,6 +14,7 @@ class LevelsCmd(private val magenta: Magenta) {
 
     @Command("levels add <player> <amount> level")
     @Permission("magenta.levels.add.level")
+    @CommandDescription("This command add to other player levels")
     fun onLevelAdd(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
@@ -45,6 +46,7 @@ class LevelsCmd(private val magenta: Magenta) {
 
     @Command("levels set <player> <amount> level")
     @Permission("magenta.levels.set.level")
+    @CommandDescription("This command set to other player levels")
     fun onLevelSet(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
@@ -76,6 +78,7 @@ class LevelsCmd(private val magenta: Magenta) {
 
     @Command("levels add <player> <amount> points")
     @Permission("magenta.levels.experience.add")
+    @CommandDescription("This command add to other player points")
     fun onLevelPointsAdd(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
@@ -113,6 +116,7 @@ class LevelsCmd(private val magenta: Magenta) {
 
     @Command("levels set <player> <amount> points")
     @Permission("magenta.levels.set.experience")
+    @CommandDescription("This command set to other player points")
     fun onLevelPointsSet(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,

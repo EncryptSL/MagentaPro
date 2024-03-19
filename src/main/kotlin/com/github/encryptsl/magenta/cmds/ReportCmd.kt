@@ -16,13 +16,13 @@ import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin EncryptSL")
 class ReportCmd(private val magenta: Magenta) {
 
     private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @Command("report <player> <category> [message]")
     @Permission("magenta.report")
+    @CommandDescription("This command send report to administrators")
     fun onReport(
         player: Player,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,

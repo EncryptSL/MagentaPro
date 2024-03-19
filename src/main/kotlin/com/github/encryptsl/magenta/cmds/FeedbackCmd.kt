@@ -14,11 +14,11 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class FeedbackCmd(private val magenta: Magenta) {
 
     @Command("feedback <message>")
     @Permission("magenta.feedback")
+    @CommandDescription("This command send feedback message to admins")
     fun onReport(
         player: Player,
         @Argument(value = "message") @Greedy message: String

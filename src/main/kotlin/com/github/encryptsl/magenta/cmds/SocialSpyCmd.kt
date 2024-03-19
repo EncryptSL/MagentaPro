@@ -11,17 +11,18 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provived by plugin MagentaPro")
 class SocialSpyCmd(private val magenta: Magenta) {
 
     @Command("socialspy|spy")
     @Permission("magenta.social.spy")
+    @CommandDescription("This command enable you social spy")
     fun onToggleSocialSpy(player: Player) {
         magenta.pluginManager.callEvent(SpyToggleByPlayerEvent(player))
     }
 
     @Command("socialspy|spy <player>")
     @Permission("magenta.social.spy.other")
+    @CommandDescription("This command enable to other player social spy")
     fun onToggleSocialSpyOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         magenta.pluginManager.callEvent(SpyToggleByAdminEvent(commandSender, target))
     }

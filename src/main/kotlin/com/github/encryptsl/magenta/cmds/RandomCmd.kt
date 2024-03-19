@@ -19,6 +19,7 @@ class RandomCmd(private val magenta: Magenta) {
 
     @Command("random world tickets <player> [amount]")
     @Permission("magenta.random.world.tickets")
+    @CommandDescription("This command give random world ticket to player")
     fun onRandomTickets(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "players") target: Player,
@@ -41,6 +42,7 @@ class RandomCmd(private val magenta: Magenta) {
 
     @Command("random crates key <player> [amount]")
     @Permission("magenta.random.crates.key")
+    @CommandDescription("This command give random crate key to player")
     fun onRandomCratesKey(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "players") target: Player,
@@ -63,6 +65,7 @@ class RandomCmd(private val magenta: Magenta) {
 
     @Command("random tag <type> <player>")
     @Permission("magenta.random.tag")
+    @CommandDescription("This command give random tag to player")
     fun onRandomTag(
         commandSender: CommandSender,
         @Argument(value = "type", suggestions = "tags") type: String,

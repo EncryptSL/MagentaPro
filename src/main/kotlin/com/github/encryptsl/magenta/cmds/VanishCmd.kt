@@ -12,12 +12,12 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class VanishCmd(private val magenta: Magenta) {
 
 
     @Command("vanish")
     @Permission("magenta.vanish")
+    @CommandDescription("This command enable or disable you vanish")
     fun onVanish(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
 
@@ -35,6 +35,7 @@ class VanishCmd(private val magenta: Magenta) {
 
     @Command("vanish <player>")
     @Permission("magenta.vanish.other")
+    @CommandDescription("This command enable or disable to other player vanish")
     fun onVanishOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val user = magenta.user.getUser(target.uniqueId)
 

@@ -10,19 +10,20 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class FlyCmd(private val magenta: Magenta) {
 
     private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @Command("fly")
     @Permission("magenta.fly")
+    @CommandDescription("This command enable or disable your flying")
     fun onFlySelf(player: Player) {
         magenta.commandHelper.allowFly(null, player)
     }
 
     @Command("fly <target>")
     @Permission("magenta.fly.other")
+    @CommandDescription("This command enable or disable other player flying")
     fun onFlyTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player) {
 
         if (target.hasPermission("magenta.fly.modify.exempt")) return

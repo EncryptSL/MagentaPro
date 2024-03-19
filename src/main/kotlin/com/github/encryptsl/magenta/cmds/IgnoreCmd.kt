@@ -12,13 +12,13 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class IgnoreCmd(private val magenta: Magenta) {
 
     private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @Command("ignore <player>")
     @Permission("magenta.ignore")
+    @CommandDescription("This command start ignore player in chat and pm")
     fun onIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         if (player.uniqueId == target.uniqueId)
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.ignore.error.yourself")))
@@ -51,6 +51,7 @@ class IgnoreCmd(private val magenta: Magenta) {
 
     @Command("unignore <player>")
     @Permission("magenta.unignore")
+    @CommandDescription("This command remove player from your ignored list")
     fun onUnIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         val user = magenta.user.getUser(player.uniqueId)
 

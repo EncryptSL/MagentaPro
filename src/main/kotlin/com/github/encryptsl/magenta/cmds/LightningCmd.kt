@@ -8,10 +8,10 @@ import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class LightningCmd(private val magenta: Magenta) {
     @Command("lightning|thor <player>")
     @Permission("magenta.lightning")
+    @CommandDescription("This command create lightning effect with dmg or without to player")
     fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Flag(value = "damage", aliases = ["d"]) damage: Boolean) {
         if (damage) target.world.strikeLightning(target.location) else target.world.strikeLightningEffect(target.location)
 

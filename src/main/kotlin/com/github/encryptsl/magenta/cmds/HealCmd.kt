@@ -13,12 +13,12 @@ import org.incendo.cloud.annotations.Permission
 import java.time.Duration
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class HealCmd(private val magenta: Magenta) {
 
 
     @Command("heal")
     @Permission("magenta.heal")
+    @CommandDescription("This command heal yourself")
     fun onHeal(player: Player) {
         val delay = magenta.config.getLong("heal-cooldown")
         val user = magenta.user.getUser(player.uniqueId)
@@ -40,6 +40,7 @@ class HealCmd(private val magenta: Magenta) {
 
     @Command("heal <player>")
     @Permission("magenta.heal.other")
+    @CommandDescription("This command heal other player")
     fun onHeal(commandSender: CommandSender, @Argument(value="player", suggestions = "players") target: Player) {
         target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
         target.health = 20.0

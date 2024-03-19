@@ -11,12 +11,12 @@ import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class LevelCmd(private val magenta: Magenta) {
 
 
     @Command("level")
     @Permission("magenta.level")
+    @CommandDescription("This command send your level progress")
     fun onLevel(player: Player) {
         try {
             val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
@@ -31,6 +31,7 @@ class LevelCmd(private val magenta: Magenta) {
 
     @Command("level <player>")
     @Permission("magenta.level.other")
+    @CommandDescription("This command send other player level progress")
     fun onLevelOther(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
@@ -54,6 +55,7 @@ class LevelCmd(private val magenta: Magenta) {
     @ProxiedBy("toplevels")
     @Command("leveltop")
     @Permission("magenta.level.top")
+    @CommandDescription("This command send top players in levels")
     fun onLevelTop(commandSender: CommandSender) {
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.top.header")))
         magenta.virtualLevel.getLevels(10).toList().sortedByDescending { a -> a.second }.positionIndexed { k, v ->

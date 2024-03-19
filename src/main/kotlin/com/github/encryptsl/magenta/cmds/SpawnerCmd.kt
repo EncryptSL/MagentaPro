@@ -19,11 +19,11 @@ import org.incendo.cloud.annotations.Permission
 
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class SpawnerCmd(private val magenta: Magenta) {
 
     @Command("spawner set <type>")
     @Permission("magenta.spawner.set")
+    @CommandDescription("This command set type spawner where you look at")
     fun onSpawnerSet(player: Player, @Argument(value = "type", suggestions = "mobs") entity: EntityType) {
         val block = player.getTargetBlock(null, 10)
 
@@ -38,6 +38,7 @@ class SpawnerCmd(private val magenta: Magenta) {
 
     @Command("spawner give <type> <amount> <player>")
     @Permission("magenta.spawner.give")
+    @CommandDescription("This command give type spawner")
     fun onSpawnerGive(
         commandSender: CommandSender,
         @Argument(value = "type", suggestions = "mobs") entity: EntityType,

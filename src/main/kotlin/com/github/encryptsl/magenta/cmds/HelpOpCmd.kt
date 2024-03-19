@@ -23,6 +23,7 @@ class HelpOpCmd(private val magenta: Magenta) {
 
     @Command("helpop <message>")
     @Permission("magenta.helpop")
+    @CommandDescription("This command send help message to online administrators")
     fun onHelpOp(player: Player, @Argument(value = "message") @Greedy message: String) {
         val component = chat(player, null, message, "magenta.command.helpop.chat")
 
@@ -32,6 +33,7 @@ class HelpOpCmd(private val magenta: Magenta) {
 
     @Command("helpanswer|hanswer <target> <message>")
     @Permission("magenta.helpop.staff.chat")
+    @CommandDescription("This command send answer to player")
     fun onHelpOpRespond(
         commandSender: CommandSender,
         @Argument(value = "target", suggestions = "players") target: Player,

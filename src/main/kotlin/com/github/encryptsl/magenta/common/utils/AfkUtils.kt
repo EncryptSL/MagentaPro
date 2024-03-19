@@ -16,16 +16,6 @@ class AfkUtils(private val magenta: Magenta) {
     private fun setTime(uuid: UUID, time: Long) {
         lastActivity[uuid] = time
     }
-
-    fun toggleAfk(uuid: UUID) {
-        if (isAfk(uuid)) {
-            setTime(uuid)
-            forceAfk(uuid, false)
-        } else {
-            setTime(uuid, -1L)
-            forceAfk(uuid, true)
-        }
-    }
     private fun forceAfk(uuid: UUID, boolean: Boolean) {
         val user = magenta.user.getUser(uuid)
         user.set("afk", boolean)
@@ -39,16 +29,26 @@ class AfkUtils(private val magenta: Magenta) {
         lastActivity.clear()
     }
 
-    fun isAfk(uuid: UUID): Boolean {
+    fun isAfk(uuid: UUID, forceAfk: Boolean = false): Boolean {
         val user = magenta.user.getUser(uuid)
         val millis = Duration.ofMinutes(magenta.config.getLong("auto-afk")).toMillis()
 
         val lastActivity: Long? = lastActivity[uuid]
 
-        if (lastActivity != null && System.currentTimeMillis() - lastActivity >= millis || lastActivity == -1L) {
-            forceAfk(uuid, true)
+        if (forceAfk) {
+            if (lastActivity != null && System.currentTimeMillis() - lastActivity >= millis || lastActivity == -1L) {
+                forceAfk(uuid, true)
+            } else {
+                forceAfk(uuid, false)
+            }
         } else {
-            forceAfk(uuid, false)
+            if (user.isAfk()) {
+                forceAfk(uuid, false)
+                setTime(uuid)
+            } else {
+                setTime(uuid, -1L)
+                forceAfk(uuid, true)
+            }
         }
         return user.isAfk()
     }

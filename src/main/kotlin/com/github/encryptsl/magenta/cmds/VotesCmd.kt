@@ -19,6 +19,7 @@ class VotesCmd(private val magenta: Magenta) {
 
     @Command("votes add <service> <player> <amount>")
     @Permission("magenta.votes.add")
+    @CommandDescription("This command add vote to service where player voted")
     fun onVotesAdd(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
@@ -42,6 +43,7 @@ class VotesCmd(private val magenta: Magenta) {
 
     @Command("votes set <service> <player> <amount>")
     @Permission("magenta.votes.set")
+    @CommandDescription("This command set vote to service where player voted")
     fun onVotesSet(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
@@ -65,6 +67,7 @@ class VotesCmd(private val magenta: Magenta) {
 
     @Command("votes reset player <player>")
     @Permission("magenta.votes.reset.player")
+    @CommandDescription("This command reset player votes")
     fun onVotesReset(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
@@ -86,6 +89,7 @@ class VotesCmd(private val magenta: Magenta) {
 
     @Command("votes reset all")
     @Permission("magenta.votes.reset.all")
+    @CommandDescription("This command reset all votes to zero")
     fun onVotesResetAll(
         commandSender: CommandSender
     ) {
@@ -95,6 +99,7 @@ class VotesCmd(private val magenta: Magenta) {
     }
     @Command("votes remove vote <service> <player> <amount>")
     @Permission("magenta.votes.remove")
+    @CommandDescription("This command remove vote from service where player vote")
     fun onVotesRemove(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
@@ -119,6 +124,7 @@ class VotesCmd(private val magenta: Magenta) {
 
     @Command("votes remove all")
     @Permission("magenta.votes.remove.all")
+    @CommandDescription("This command remove all vote data")
     fun onVotesDeleteAll(commandSender: CommandSender) {
         magenta.vote.deleteAll()
         commandSender.sendMessage(

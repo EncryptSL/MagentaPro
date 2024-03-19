@@ -14,13 +14,13 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class HomeCmd(private val magenta: Magenta) {
 
     private val homeMenuGUI: HomeGUI by lazy { HomeGUI(magenta) }
 
     @Command("home <home>")
     @Permission("magenta.home")
+    @CommandDescription("This command teleport you into your home")
     fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         SchedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
@@ -29,6 +29,7 @@ class HomeCmd(private val magenta: Magenta) {
 
     @Command("sethome <home>")
     @Permission("magenta.sethome")
+    @CommandDescription("This command create your home where you stand.")
     fun onSetHome(player: Player, @Argument(value = "home") home: String) {
         SchedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
@@ -37,6 +38,7 @@ class HomeCmd(private val magenta: Magenta) {
 
     @Command("sethomeicon|sethicon <home> <icon>")
     @Permission("magenta.sethomeicon")
+    @CommandDescription("This command set home icon visible in your gui homelist")
     fun onSetHomeIcon(player: Player, @Argument(value = "home", suggestions = "homes") home: String, @Argument("icon", suggestions = "homeIcons") icon: String) {
         magenta.homeModel.setHomeIcon(player, home, icon)
 
@@ -49,6 +51,7 @@ class HomeCmd(private val magenta: Magenta) {
 
     @Command("movehome|mhome <home>")
     @Permission("magenta.movehome")
+    @CommandDescription("This command move your home to location where you stand.")
     fun onMoveHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         SchedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeMoveLocationEvent(player, player.location, home))
@@ -57,6 +60,7 @@ class HomeCmd(private val magenta: Magenta) {
 
     @Command("delhome|dhome <home>")
     @Permission("magenta.delhome")
+    @CommandDescription("This command delete your home.")
     fun onDeleteHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
         SchedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
@@ -65,6 +69,7 @@ class HomeCmd(private val magenta: Magenta) {
 
     @Command("renamehome|rhome <oldName> <newName>")
     @Permission("magenta.rename.home")
+    @CommandDescription("This command rename your home.")
     fun onRenameHome(player: Player, @Argument(value = "oldName") oldName: String, @Argument(value = "newName") newName: String) {
         SchedulerMagenta.doSync(magenta) {
             magenta.server.pluginManager.callEvent(HomeRenameEvent(player, oldName, newName))
@@ -73,6 +78,7 @@ class HomeCmd(private val magenta: Magenta) {
 
     @Command("homes|homelist")
     @Permission("magenta.home.list")
+    @CommandDescription("This command open gui list or chat list.")
     fun onHomeList(player: Player) {
         homeMenuGUI.openHomeGUI(player)
     }

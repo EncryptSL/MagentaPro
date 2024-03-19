@@ -13,13 +13,13 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class CommandItemsCmd(magenta: Magenta) {
 
     private val itemCommandItemManager = CommandItemManager(magenta)
 
     @Command("commanditem|ci create <item>")
     @Permission("magenta.citem.create")
+    @CommandDescription("This command create activation item.")
     fun onCommandItemCreate(
         commandSender: CommandSender,
         @Argument(value = "item") itemName: String
@@ -29,6 +29,7 @@ class CommandItemsCmd(magenta: Magenta) {
 
     @Command("commanditem|ci setName <item> <name>")
     @Permission("magenta.citem.set.name")
+    @CommandDescription("This command set to activation item name.")
     fun onCommandItemSetName(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -39,6 +40,7 @@ class CommandItemsCmd(magenta: Magenta) {
 
     @Command("commanditem|ci setMaterial <item> <material>")
     @Permission("magenta.citem.set.material")
+    @CommandDescription("This command set to activation item material.")
     fun onCommandItemSetName(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -49,6 +51,7 @@ class CommandItemsCmd(magenta: Magenta) {
 
     @Command("commanditem|ci setlore <item> <lore>")
     @Permission("magenta.citem.set.lore")
+    @CommandDescription("This command set to activation item lore.")
     fun onCommandItemSetLore(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -60,6 +63,7 @@ class CommandItemsCmd(magenta: Magenta) {
 
     @Command("commanditem|ci setcommand <item> <command>")
     @Permission("magenta.citem.set.command")
+    @CommandDescription("This command set to activation item commands.")
     fun onCommandItemSetCommand(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,
@@ -70,6 +74,7 @@ class CommandItemsCmd(magenta: Magenta) {
 
     @Command("commanditem|ci give <item> <amount> <player>")
     @Permission("magenta.citem.give")
+    @CommandDescription("This command give activation item.")
     fun onCommandItemGive(
         commandSender: CommandSender,
         @Argument(value = "item", suggestions = "citems") itemName: String,

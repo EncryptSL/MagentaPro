@@ -20,25 +20,27 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class TpCmd(private val magenta: Magenta) {
 
     private val commandHelper = CommandHelper(magenta)
 
     @Command("tpa <target>")
     @Permission("magenta.tpa")
+    @CommandDescription("This command send teleport request to player")
     fun onTpa(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
         magenta.pluginManager.callEvent(TpaRequestEvent(player, target))
     }
 
     @Command("tpaccept")
     @Permission("magenta.tpaccept")
+    @CommandDescription("This command accept teleport request from player")
     fun onTpaAccept(player: Player) {
         magenta.pluginManager.callEvent(TpaAcceptEvent(player))
     }
 
     @Command("tpadeny")
     @Permission("magenta.tpadeny")
+    @CommandDescription("This command cancel teleport request")
     fun onTpaDeny(player: Player) {
         magenta.pluginManager.callEvent(TpaDenyEvent(player))
     }
@@ -46,6 +48,7 @@ class TpCmd(private val magenta: Magenta) {
 
     @Command("tp <player>")
     @Permission("magenta.tp")
+    @CommandDescription("This command teleport you to other player")
     fun onTeleport(player: Player, @Argument(value = "player", suggestions = "players") target: Player) {
         val account = magenta.user.getUser(target.uniqueId)
         if (!account.getAccount().getBoolean("teleportenabled") && !player.hasPermission("magenta.tp.exempt"))
@@ -65,6 +68,7 @@ class TpCmd(private val magenta: Magenta) {
 
     @Command("tp <player> <target>")
     @Permission("magenta.tp.other")
+    @CommandDescription("This command teleport player to player")
     fun onTeleportConsole(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
         val targetAccount = magenta.user.getUser(target.uniqueId)
         if (!targetAccount.getAccount().getBoolean("teleportenabled") && !commandSender.hasPermission("magenta.tp.exempt"))
@@ -88,6 +92,7 @@ class TpCmd(private val magenta: Magenta) {
 
     @Command("tpo <target>")
     @Permission("magenta.tpo")
+    @CommandDescription("This command teleport you to other player logout location")
     fun onTeleportOfflineLocation(player: Player, @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer) {
         commandHelper.teleportOffline(player, offlinePlayer)
 
@@ -98,6 +103,7 @@ class TpCmd(private val magenta: Magenta) {
 
     @Command("tphere [target]")
     @Permission("magenta.tphere")
+    @CommandDescription("This command teleport player to you")
     fun onTeleportHere(player: Player, @Argument(value = "target") target: Player?) {
 
         if (target == null) {
@@ -113,6 +119,7 @@ class TpCmd(private val magenta: Magenta) {
 
     @Command("tpall [world]")
     @Permission("magenta.tpall")
+    @CommandDescription("This command teleport player from other or current world to you")
     fun onTeleportAllHere(player: Player, @Argument("world", suggestions = "worlds") world: World?) {
 
         if (world != null) {

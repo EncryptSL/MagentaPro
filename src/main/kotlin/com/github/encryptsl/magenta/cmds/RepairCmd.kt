@@ -14,6 +14,7 @@ import java.time.Duration
 class RepairCmd(private val magenta: Magenta) {
     @Command("repair")
     @Permission("magenta.repair.item")
+    @CommandDescription("This command repair item in your hand")
     fun onRepair(player: Player) {
         val inventory = player.inventory
         val user = magenta.user.getUser(player.uniqueId)
@@ -36,6 +37,7 @@ class RepairCmd(private val magenta: Magenta) {
     @ProxiedBy("fixall")
     @Command("repair all")
     @Permission("magenta.repair.all")
+    @CommandDescription("This command repair all your items in inventory")
     fun onRepairAll(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
         val delay = magenta.config.getLong("repair-cooldown")
@@ -60,6 +62,7 @@ class RepairCmd(private val magenta: Magenta) {
     @ProxiedBy("fixall")
     @Command("repair all <target>")
     @Permission("magenta.repair.all.other")
+    @CommandDescription("This command repair others player all items in inventory")
     fun onRepairAllProxy(commandSender: CommandSender,  @Argument(value = "target", suggestions = "players") target: Player) {
         val inventory = target.inventory
         if (inventory.isEmpty)

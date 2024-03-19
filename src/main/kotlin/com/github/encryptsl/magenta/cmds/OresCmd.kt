@@ -8,11 +8,11 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class OresCmd(private val magenta: Magenta) {
     private val oresGUI: OresMilestonesGUI by lazy { OresMilestonesGUI(magenta) }
     @Command("ores")
     @Permission("magenta.ores.progress")
+    @CommandDescription("This command open gui with your ores level mining progress")
     fun onOresProgress(player: Player) {
         oresGUI.openMilestonesOresGUI(player)
     }

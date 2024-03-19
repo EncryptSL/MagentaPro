@@ -9,12 +9,12 @@ import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class MsgCmd(private val magenta: Magenta) {
 
     @ProxiedBy("whisper")
     @Command("pm|tell <player> <message>")
     @Permission("magenta.msg")
+    @CommandDescription("This command send to other player private message")
     fun onMsgProxy(player: Player,
                    @Argument(value = "player", suggestions = "players") target: Player,
                    @Argument(value = "message") @Greedy message: String) {
@@ -23,6 +23,7 @@ class MsgCmd(private val magenta: Magenta) {
 
     @Command("msg|w <player> <message>")
     @Permission("magenta.msg")
+    @CommandDescription("This command send to other player private message")
     fun onMsg(commandSender: CommandSender,
         @Argument(value = "player", suggestions = "players") target: Player,
         @Argument(value = "message") @Greedy message: String
@@ -32,6 +33,7 @@ class MsgCmd(private val magenta: Magenta) {
 
     @Command("reply|r <message>")
     @Permission("magenta.msg")
+    @CommandDescription("This command send fast reply to current conversation")
     fun onFastReplyMsg(commandSender: CommandSender, @Argument("message") @Greedy message: String) {
         val receiverUUID = magenta.playerCacheManager.reply.getIfPresent(commandSender)
 

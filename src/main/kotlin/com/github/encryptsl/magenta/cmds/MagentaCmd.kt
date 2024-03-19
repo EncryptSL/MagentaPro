@@ -14,7 +14,6 @@ import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
 @Command("magenta|mg")
-@CommandDescription("Provided by plugin MagentaPro")
 class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.help")
@@ -45,6 +44,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload shop")
+    @CommandDescription("This command reload shop configs")
     fun onReloadShopConfig(commandSender: CommandSender) {
         magenta.shopConfig.reload()
         magenta.shopConfig.save()
@@ -58,6 +58,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload homegui")
+    @CommandDescription("This command reload home configs")
     fun onReloadHomeGUI(commandSender: CommandSender) {
         magenta.homeMenuConfig.reload()
         magenta.homeMenuConfig.save()
@@ -68,6 +69,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload warpgui")
+    @CommandDescription("This command reload warp gui configs")
     fun onReloadWarpGUI(commandSender: CommandSender) {
         magenta.warpMenuConfig.reload()
         magenta.warpMenuConfig.save()
@@ -80,6 +82,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload oregui")
+    @CommandDescription("This command reload ores gui config")
     fun onReloadLevelOreGUI(commandSender: CommandSender) {
         magenta.oresMenuConfig.reload()
         magenta.oresMenuConfig.save()
@@ -88,6 +91,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload mythicrewards")
+    @CommandDescription("This command reload config with mythic rewards")
     fun onReloadMythicRewards(commandSender: CommandSender) {
         magenta.mmConfig.reload()
         magenta.mmConfig.save()
@@ -96,6 +100,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload randomconfig")
+    @CommandDescription("This command reload config with rewards")
     fun onReloadRandomConfig(commandSender: CommandSender) {
         magenta.randomConfig.reload()
         magenta.randomConfig.save()
@@ -104,6 +109,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload citems")
+    @CommandDescription("This command reload activation config")
     fun onReloadActivationItems(commandSender: CommandSender) {
         magenta.cItems.reload()
         magenta.cItems.save()
@@ -112,6 +118,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload locale")
+    @CommandDescription("This command reload locale config")
     fun onReloadLocale(commandSender: CommandSender) {
         magenta.localeConfig.loadLocale("locale/cs_cz.properties")
         commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.magenta.success.reload")))
@@ -119,6 +126,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload kits")
+    @CommandDescription("This command reload kit config")
     fun onReloadKits(commandSender: CommandSender) {
         magenta.kitConfig.reload()
         magenta.kitConfig.save()
@@ -127,6 +135,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload jails")
+    @CommandDescription("This command reload jail config")
     fun onReloadJails(commandSender: CommandSender) {
         magenta.jailConfig.reload()
         magenta.jailConfig.save()
@@ -135,6 +144,7 @@ class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.reload")
     @Command("reload chatcontrol")
+    @CommandDescription("This command reload chat control config")
     fun onReloadChatControl(commandSender: CommandSender) {
         magenta.chatControl.reload()
         magenta.chatControl.save()

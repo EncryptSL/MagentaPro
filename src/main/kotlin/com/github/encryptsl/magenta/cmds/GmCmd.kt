@@ -15,13 +15,13 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class GmCmd(private val magenta: Magenta) {
 
     private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
 
     @Command("gamemode|gm <mode>")
     @Permission("magenta.gamemode")
+    @CommandDescription("This command switch your gamemode")
     fun onGameModeSelf(player: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
         if (!player.hasPermission("magenta.gamemodes.${gameMode.name.lowercase()}"))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
@@ -34,12 +34,14 @@ class GmCmd(private val magenta: Magenta) {
 
     @Command("gamemode|gm <mode> <target>")
     @Permission("magenta.gamemode.other")
+    @CommandDescription("This command switch gamemode to other player")
     fun onGameModeTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
         setGameModeProxy(commandSender, target, gameMode)
     }
 
     @Command("gma")
     @Permission("magenta.gamemode")
+    @CommandDescription("This command switch your gamemode on adventure")
     fun onGameModeSelfAdventure(player: Player) {
         val gamemode = GameMode.ADVENTURE
 
@@ -54,6 +56,7 @@ class GmCmd(private val magenta: Magenta) {
 
     @Command("gmc")
     @Permission("magenta.gamemode")
+    @CommandDescription("This command switch your gamemode on creative")
     fun onGameModeSelfCreative(player: Player) {
         val gamemode = GameMode.CREATIVE
 
@@ -68,6 +71,7 @@ class GmCmd(private val magenta: Magenta) {
 
     @Command("gmsp")
     @Permission("magenta.gamemode")
+    @CommandDescription("This command switch your gamemode on spectator")
     fun onGameModeSelfSpectator(player: Player) {
         val gamemode = GameMode.SPECTATOR
 
@@ -82,6 +86,7 @@ class GmCmd(private val magenta: Magenta) {
 
     @Command("gms")
     @Permission("magenta.gamemode")
+    @CommandDescription("This command switch your gamemode on survival")
     fun onGameModeSelfSurvival(player: Player) {
         val gamemode = GameMode.SURVIVAL
 

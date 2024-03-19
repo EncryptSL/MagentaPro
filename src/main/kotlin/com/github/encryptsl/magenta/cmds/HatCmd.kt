@@ -10,11 +10,11 @@ import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
 @Suppress("UNUSED")
-@CommandDescription("Provided by plugin MagentaPro")
 class HatCmd(private val magenta: Magenta) {
 
     @Command("hat")
     @Permission("magenta.hat")
+    @CommandDescription("This command set item from hand to head")
     fun onHat(player: Player) {
         val inventory = player.inventory
         val itemInMainHand = inventory.itemInMainHand

@@ -23,6 +23,7 @@ class VipCmd(private val magenta: Magenta) {
 
     @Command("vipexpire")
     @Permission("magenta.vip.expire")
+    @CommandDescription("This command send information about your vip expiration")
     fun onVIPExpire(player: Player) {
         try {
             val time = luckPermsAPI.getExpireGroup(player, group)
@@ -39,6 +40,7 @@ class VipCmd(private val magenta: Magenta) {
 
     @Command("vipexpire <player>")
     @Permission("magenta.vip.expire.other")
+    @CommandDescription("This command send information about other player vip expiration")
     fun onVIPExpireOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         try {
             val time = luckPermsAPI.getExpireGroup(target, group)

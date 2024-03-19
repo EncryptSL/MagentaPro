@@ -20,6 +20,7 @@ class VoteCmd(val magenta: Magenta) {
 
     @Command("vote")
     @Permission("magenta.vote")
+    @CommandDescription("This command send vote links and your votes")
     fun onVote(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
 
@@ -38,12 +39,14 @@ class VoteCmd(val magenta: Magenta) {
 
     @Command("vote milestones")
     @Permission("magenta.vote.milestones")
+    @CommandDescription("This command open vote milestones")
     fun onVoteMilestones(player: Player) {
         voteMilestonesGUI.openVoteMilestonesGui(player)
     }
 
     @Command("vote claim rewards")
     @Permission("magenta.vote.claim.rewards")
+    @CommandDescription("This command claim your rewards from voting")
     fun onVoteClaimRewards(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
         if (!user.getAccount().contains("votifier.rewards"))
@@ -56,6 +59,7 @@ class VoteCmd(val magenta: Magenta) {
 
     @Command("voteparty|vparty")
     @Permission("magenta.voteparty")
+    @CommandDescription("This command send information about vote party")
     fun onVoteParty(commandSender: CommandSender) {
         val (currentVotes, lastParty, lastWinner) = magenta.voteParty.getVoteParty()
         val startAt = magenta.config.getInt("votifier.voteparty.start_at")
