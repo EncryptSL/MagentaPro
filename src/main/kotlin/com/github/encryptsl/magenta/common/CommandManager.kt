@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.cmds.*
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -14,12 +15,16 @@ import org.incendo.cloud.SenderMapper
 import org.incendo.cloud.annotations.AnnotationParser
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities
 import org.incendo.cloud.execution.ExecutionCoordinator
+import org.incendo.cloud.minecraft.extras.AudienceProvider
+import org.incendo.cloud.minecraft.extras.MinecraftHelp
 import org.incendo.cloud.paper.PaperCommandManager
 import org.incendo.cloud.suggestion.Suggestion
 import java.util.concurrent.CompletableFuture
 
 
 class CommandManager(private val magenta: Magenta) {
+
+    var help: MinecraftHelp<CommandSender>? = null
 
     private fun createCommandManager(): PaperCommandManager<CommandSender> {
         val executionCoordinatorFunction = ExecutionCoordinator.builder<CommandSender>().build()
@@ -46,38 +51,60 @@ class CommandManager(private val magenta: Magenta) {
         )
     }
 
+    private fun helpManager(commandManager: PaperCommandManager<CommandSender>) {
+        this.help = MinecraftHelp.builder<CommandSender>()
+                .commandManager(commandManager)
+                .audienceProvider(AudienceProvider.nativeAudience())
+                .commandPrefix("/magenta help")
+                .colors(
+                    MinecraftHelp.helpColors(
+                        NamedTextColor.GREEN,
+                        NamedTextColor.GOLD,
+                        NamedTextColor.YELLOW,
+                        NamedTextColor.GRAY,
+                        NamedTextColor.WHITE
+                    )
+                ).build()
+    }
+
     private fun registerSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
+        commandManager.parserRegistry().registerSuggestionProvider("help_queries") { sender, _ ->
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
+                createCommandManager().createHelpHandler().queryRootIndex(sender.sender()).entries().map { Suggestion.simple(it.syntax())}
+            )
+        }
         commandManager.parserRegistry().registerSuggestionProvider("gamemodes") {sender, _ ->
-            CompletableFuture.completedFuture(
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
                 GameMode.entries
                     .filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }
-                    .map { Suggestion.simple(it.name) }
+                    .map { Suggestion.simple(it.name)
+                }
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("players") { _, _ ->
-            CompletableFuture.completedFuture(Bukkit.getOnlinePlayers()
+            return@registerSuggestionProvider CompletableFuture.completedFuture(Bukkit.getOnlinePlayers()
                 .map { Suggestion.simple(it.name) }
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("offlinePlayers") { _, _ ->
-            CompletableFuture.completedFuture(Bukkit.getOfflinePlayers()
+            return@registerSuggestionProvider CompletableFuture.completedFuture(Bukkit.getOfflinePlayers()
                 .map { Suggestion.simple(it.name.toString()) }
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("citems") {_, _ ->
-            CompletableFuture.completedFuture(magenta.cItems.getConfig().getConfigurationSection("citems")
+            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.cItems.getConfig().getConfigurationSection("citems")
                 ?.getKeys(false)
                 ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!)
         }
         commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
-            CompletableFuture.completedFuture(
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.kitConfig.getConfig().getConfigurationSection("kits")?.getKeys(false)
                     ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
                     ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("jails") { _, _ ->
-            CompletableFuture.completedFuture(
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.jailConfig.getConfig().getConfigurationSection("jails")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(it.toString()) }!!
@@ -88,50 +115,56 @@ class CommandManager(private val magenta: Magenta) {
             return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player).map { s -> Suggestion.simple(s.homeName) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
-            CompletableFuture.completedFuture(magenta.warpModel.getWarps().map { s -> Suggestion.simple(s.warpName) })
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(magenta.warpModel.getWarps().map { s -> Suggestion.simple(s.warpName) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("tags") {_, _ ->
-            CompletableFuture.completedFuture(
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.randomConfig.getConfig().getConfigurationSection("tags")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(it.toString()) }!!
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
-            CompletableFuture.completedFuture(Material.entries.map { Suggestion.simple(it.name) })
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(Material.entries.map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
-            CompletableFuture.completedFuture(EntityType.entries.map { Suggestion.simple(it.name) })
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(EntityType.entries.map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("shops") {_, _ ->
-            CompletableFuture.completedFuture(
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(it.toString()) }!!
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("creditshops") {_, _ ->
-            CompletableFuture.completedFuture(
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(it.toString()) }!!
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("services") {_, _ ->
-            CompletableFuture.completedFuture(
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.config.getConfigurationSection("votifier.services")
                     ?.getKeys(false)
                     ?.mapNotNull { Suggestion.simple(VoteHelper.replaceService(it.toString(), "_", ".")) }!!
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
-            CompletableFuture.completedFuture(ReportCategories.entries.map { Suggestion.simple(it.name) })
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(ReportCategories.entries.map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("worlds") {_, _ ->
-            CompletableFuture.completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("homeIcons") {_, _ ->
-            CompletableFuture.completedFuture(magenta.homeEditorConfig.getConfig().getStringList("menu.icons")
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(magenta.homeEditorConfig.getConfig().getStringList("menu.icons")
                 .map { Suggestion.simple(it) }
             )
         }
@@ -141,45 +174,50 @@ class CommandManager(private val magenta: Magenta) {
         try {
             magenta.logger.info("Registering commands with Cloud Command Framework !")
             val commandManager = createCommandManager()
+            helpManager(commandManager)
+
             registerSuggestionProviders(commandManager)
             val annotationParser = createAnnotationParser(commandManager)
 
-            annotationParser.parse(AfkCmd(magenta))
-            annotationParser.parse(BackCmd(magenta))
-            annotationParser.parse(BroadcastCmd(magenta))
-            annotationParser.parse(CommandItemsCmd(magenta))
-            annotationParser.parse(ContainersCmd(magenta))
-            annotationParser.parse(EnderChestCmd(magenta))
-            annotationParser.parse(FeedbackCmd(magenta))
-            annotationParser.parse(FlyCmd(magenta))
-            annotationParser.parse(GmCmd(magenta))
-            annotationParser.parse(HatCmd(magenta))
-            annotationParser.parse(HealCmd(magenta))
-            annotationParser.parse(HelpOpCmd(magenta))
-            annotationParser.parse(HomeCmd(magenta))
-            annotationParser.parse(IgnoreCmd(magenta))
-            annotationParser.parse(InvseeCmd(magenta))
-            annotationParser.parse(JailCmd(magenta))
-            annotationParser.parse(KitCmd(magenta))
-            annotationParser.parse(LevelCmd(magenta))
-            annotationParser.parse(LevelsCmd(magenta))
-            annotationParser.parse(LightningCmd(magenta))
-            annotationParser.parse(MagentaCmd(magenta))
-            annotationParser.parse(OresCmd(magenta))
-            annotationParser.parse(RandomCmd(magenta))
-            annotationParser.parse(MsgCmd(magenta))
-            annotationParser.parse(RepairCmd(magenta))
-            annotationParser.parse(ReportCmd(magenta))
-            annotationParser.parse(ShopCmd(magenta))
-            annotationParser.parse(SocialSpyCmd(magenta))
-            annotationParser.parse(SpawnerCmd(magenta))
-            annotationParser.parse(TpCmd(magenta))
-            annotationParser.parse(VanishCmd(magenta))
-            annotationParser.parse(VipCmd(magenta))
-            annotationParser.parse(VoteCmd(magenta))
-            annotationParser.parse(VotesCmd(magenta))
-            annotationParser.parse(WarpCmd(magenta))
-            annotationParser.parse(WhoisCmd(magenta))
+            val list = listOf(
+                AfkCmd(magenta),
+                BackCmd(magenta),
+                BroadcastCmd(magenta),
+                CommandItemsCmd(magenta),
+                ContainersCmd(magenta),
+                EnderChestCmd(magenta),
+                FeedbackCmd(magenta),
+                FlyCmd(magenta),
+                GmCmd(magenta),
+                HatCmd(magenta),
+                HealCmd(magenta),
+                HelpOpCmd(magenta),
+                HomeCmd(magenta),
+                IgnoreCmd(magenta),
+                InvseeCmd(magenta),
+                JailCmd(magenta),
+                KitCmd(magenta),
+                LevelCmd(magenta),
+                LevelsCmd(magenta),
+                LightningCmd(magenta),
+                MagentaCmd(magenta),
+                OresCmd(magenta),
+                RandomCmd(magenta),
+                MsgCmd(magenta),
+                RepairCmd(magenta),
+                ReportCmd(magenta),
+                ShopCmd(magenta),
+                SocialSpyCmd(magenta),
+                SpawnerCmd(magenta),
+                TpCmd(magenta),
+                VanishCmd(magenta),
+                VipCmd(magenta),
+                VoteCmd(magenta),
+                VotesCmd(magenta),
+                WarpCmd(magenta),
+                WhoisCmd(magenta)
+            )
+            for (command in list) { annotationParser.parse(command) }
         } catch (e : NoClassDefFoundError) {
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }

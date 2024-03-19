@@ -6,24 +6,27 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.InvalidConfigurationException
+import org.incendo.cloud.annotation.specifier.Greedy
+import org.incendo.cloud.annotations.Argument
 import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
 
-@Suppress("UnstableApiUsage", "UNUSED")
+@Suppress("UNUSED")
 @Command("magenta|mg")
 @CommandDescription("Provided by plugin MagentaPro")
 class MagentaCmd(private val magenta: Magenta) {
 
     @Permission("magenta.plugin.help")
-    @Command("help")
-    fun onHelp(commandSender: CommandSender) {
-        commandSender.sendMessage(ModernText.miniModernText("<blue>―――――"))
-        commandSender.sendMessage(ModernText.miniModernText("<blue>| <color:#4C76FB>Plugin: <yellow>${magenta.pluginMeta.displayName}"))
-        commandSender.sendMessage(ModernText.miniModernText("<blue>| <color:#4C76FB>Version: <color:#4C62A5>${magenta.pluginMeta.version}"))
-        commandSender.sendMessage(ModernText.miniModernText("<blue>| <color:#4C76FB>Author: <color:#B4C5FB>${magenta.pluginMeta.authors}"))
-        commandSender.sendMessage(ModernText.miniModernText("<blue>| <color:#4C76FB>Website: <color:#89A4F7>${magenta.pluginMeta.website}"))
-        commandSender.sendMessage(ModernText.miniModernText("<blue>―――――"))
+    @Command("help [query]")
+    fun onHelp(
+        commandSender: CommandSender,
+        @Argument(value = "query", suggestions = "help_queries") @Greedy query: String?
+    ) {
+
+        val getQuery = query ?: ""
+
+        magenta.commandManager.help?.queryCommands(getQuery, commandSender)
     }
 
     @Permission("magenta.plugin.reload")

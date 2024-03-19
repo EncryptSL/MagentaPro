@@ -84,7 +84,7 @@ open class Magenta : JavaPlugin() {
 
     val playerCacheManager by lazy { PlayerCacheManager() }
 
-    private val commandManager: CommandManager by lazy { CommandManager(this) }
+    val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     private val hookManger: HookManager by lazy { HookManager(this) }
 
