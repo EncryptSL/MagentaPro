@@ -29,13 +29,13 @@ class AfkUtils(private val magenta: Magenta) {
         lastActivity.clear()
     }
 
-    fun isAfk(uuid: UUID, forceAfk: Boolean = false): Boolean {
+    fun isAfk(uuid: UUID, isForcedAfk: Boolean = false): Boolean {
         val user = magenta.user.getUser(uuid)
         val millis = Duration.ofMinutes(magenta.config.getLong("auto-afk")).toMillis()
 
         val lastActivity: Long? = lastActivity[uuid]
 
-        if (forceAfk) {
+        if (!isForcedAfk) {
             if (lastActivity != null && System.currentTimeMillis() - lastActivity >= millis || lastActivity == -1L) {
                 forceAfk(uuid, true)
             } else {
