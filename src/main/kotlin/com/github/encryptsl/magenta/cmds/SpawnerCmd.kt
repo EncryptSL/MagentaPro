@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -12,14 +13,25 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BlockStateMeta
 import org.incendo.cloud.annotation.specifier.Range
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 
 @Suppress("UNUSED")
-class SpawnerCmd(private val magenta: Magenta) {
+class SpawnerCmd(private val magenta: Magenta) : AnnotationFeatures {
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(EntityType.entries.map { Suggestion.simple(it.name) })
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("spawner set <type>")
     @Permission("magenta.spawner.set")

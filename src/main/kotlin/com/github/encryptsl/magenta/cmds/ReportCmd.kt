@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
@@ -10,14 +11,29 @@ import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
-class ReportCmd(private val magenta: Magenta) {
+class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(ReportCategories.entries.map { Suggestion.simple(it.name) })
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("report <player> <category> [message]")
     @Permission("magenta.report")

@@ -2,18 +2,24 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
 
 @Suppress("UNUSED")
-class BackCmd(private val magenta: Magenta) {
+class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        annotationParser.parse(this)
+    }
 
     @Command("back")
     @Permission("magenta.back")

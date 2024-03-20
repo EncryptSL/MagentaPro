@@ -1,15 +1,24 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.pm.FastReplyMessageEvent
 import com.github.encryptsl.magenta.api.events.pm.PrivateMessageEvent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
 
 @Suppress("UNUSED")
-class MsgCmd(private val magenta: Magenta) {
+class MsgCmd(private val magenta: Magenta) : AnnotationFeatures {
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        annotationParser.parse(this)
+    }
 
     @ProxiedBy("whisper")
     @Command("pm|tell <player> <message>")

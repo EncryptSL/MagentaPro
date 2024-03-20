@@ -2,19 +2,34 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.kit.*
 import com.github.encryptsl.magenta.common.model.KitManager
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
-class KitCmd(private val magenta: Magenta) {
+class KitCmd(private val magenta: Magenta) : AnnotationFeatures {
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
+                magenta.kitConfig.getConfig().getConfigurationSection("kits")?.getKeys(false)
+                    ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
+                    ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!
+            )
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("kit <kit>")
     @Permission("magenta.kit")

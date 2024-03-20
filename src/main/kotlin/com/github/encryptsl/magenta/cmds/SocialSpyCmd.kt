@@ -1,17 +1,23 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByAdminEvent
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByPlayerEvent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
 
 @Suppress("UNUSED")
-class SocialSpyCmd(private val magenta: Magenta) {
+class SocialSpyCmd(private val magenta: Magenta) : AnnotationFeatures {
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        annotationParser.parse(this)
+    }
 
     @Command("socialspy|spy")
     @Permission("magenta.social.spy")

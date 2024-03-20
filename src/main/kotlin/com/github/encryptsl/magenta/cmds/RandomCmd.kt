@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -8,14 +9,28 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Range
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
-class RandomCmd(private val magenta: Magenta) {
+class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("tags") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
+                magenta.randomConfig.getConfig().getConfigurationSection("tags")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+            )
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("random world tickets <player> [amount]")
     @Permission("magenta.random.world.tickets")

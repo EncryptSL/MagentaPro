@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
@@ -10,16 +11,21 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
-class HelpOpCmd(private val magenta: Magenta) {
+class HelpOpCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private val luckPermsHook: LuckPermsAPI by lazy { LuckPermsAPI() }
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        annotationParser.parse(this)
+    }
 
     @Command("helpop <message>")
     @Permission("magenta.helpop")

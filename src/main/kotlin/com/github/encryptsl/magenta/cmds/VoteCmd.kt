@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.menu.vote.VoteMilestonesGUI
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -8,15 +9,24 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.incendo.cloud.annotations.AnnotationParser
 import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.paper.PaperCommandManager
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
-class VoteCmd(val magenta: Magenta) {
+class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
 
     private val voteMilestonesGUI: VoteMilestonesGUI by lazy { VoteMilestonesGUI(magenta) }
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        annotationParser.parse(this)
+    }
 
     @Command("vote")
     @Permission("magenta.vote")

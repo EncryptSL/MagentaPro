@@ -1,21 +1,37 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
+import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import kotlinx.datetime.Instant
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
-class VotesCmd(private val magenta: Magenta) {
+class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("services") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
+                magenta.config.getConfigurationSection("votifier.services")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(VoteHelper.replaceService(it.toString(), "_", ".")) }!!
+            )
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("votes add <service> <player> <amount>")
     @Permission("magenta.votes.add")

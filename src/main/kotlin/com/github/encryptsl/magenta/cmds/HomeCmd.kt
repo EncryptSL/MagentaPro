@@ -1,22 +1,41 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.home.*
 import com.github.encryptsl.magenta.api.menu.home.HomeGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
-class HomeCmd(private val magenta: Magenta) {
+class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private val homeMenuGUI: HomeGUI by lazy { HomeGUI(magenta) }
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
+            val player = sender.sender() as Player
+            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player).map { s -> Suggestion.simple(s.homeName) })
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("homeIcons") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(magenta.homeEditorConfig.getConfig().getStringList("menu.icons")
+                    .map { Suggestion.simple(it) }
+                )
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("home <home>")
     @Permission("magenta.home")

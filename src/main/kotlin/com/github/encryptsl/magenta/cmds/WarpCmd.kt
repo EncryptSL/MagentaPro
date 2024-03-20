@@ -2,20 +2,32 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.warp.*
 import com.github.encryptsl.magenta.api.menu.warp.WarpGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
-class WarpCmd(private val magenta: Magenta) {
+class WarpCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private val warpGUI: WarpGUI by lazy { WarpGUI(magenta) }
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(magenta.warpModel.getWarps().map { s -> Suggestion.simple(s.warpName) })
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("setwarp <warp>")
     @CommandDescription("This command create your warp on location")

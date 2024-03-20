@@ -1,21 +1,34 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.model.CommandItemManager
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotation.specifier.Range
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
-class CommandItemsCmd(magenta: Magenta) {
+class CommandItemsCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private val itemCommandItemManager = CommandItemManager(magenta)
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("citems") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.cItems.getConfig().getConfigurationSection("citems")
+                ?.getKeys(false)
+                ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!)
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("commanditem|ci create <item>")
     @Permission("magenta.citem.create")

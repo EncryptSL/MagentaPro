@@ -1,19 +1,42 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
 import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.Argument
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
+import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.suggestion.Suggestion
+import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")
-class ShopCmd(magenta: Magenta) {
+class ShopCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private val vaultShop = VaultShop(magenta)
     private val creditShop = CreditShop(magenta)
+
+    override fun registerFeatures(
+        annotationParser: AnnotationParser<CommandSender>,
+        commandManager: PaperCommandManager<CommandSender>
+    ) {
+        commandManager.parserRegistry().registerSuggestionProvider("shops") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
+                magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+            )
+        }
+        commandManager.parserRegistry().registerSuggestionProvider("creditshops") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture.completedFuture(
+                magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")
+                    ?.getKeys(false)
+                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+            )
+        }
+        annotationParser.parse(this)
+    }
 
     @Command("shop")
     @Permission("magenta.shop")

@@ -1,21 +1,18 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.cmds.*
-import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
+import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
-import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Player
 import org.incendo.cloud.SenderMapper
 import org.incendo.cloud.annotations.AnnotationParser
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities
 import org.incendo.cloud.execution.ExecutionCoordinator
 import org.incendo.cloud.minecraft.extras.AudienceProvider
+import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler
 import org.incendo.cloud.minecraft.extras.MinecraftHelp
 import org.incendo.cloud.paper.PaperCommandManager
 import org.incendo.cloud.suggestion.Suggestion
@@ -67,18 +64,19 @@ class CommandManager(private val magenta: Magenta) {
                 ).build()
     }
 
-    private fun registerSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
+    private fun registerMinecraftExceptionHandler(commandManager: PaperCommandManager<CommandSender>) {
+        MinecraftExceptionHandler.createNative<CommandSender>()
+            .defaultHandlers()
+            .decorator { component ->
+                ModernText.miniModernText(magenta.config.getString("magenta.prefix", "<red>[<bold>!</bold>]").toString()).append(component)
+            }
+            .registerTo(commandManager)
+    }
+
+    private fun registerGlobalSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
         commandManager.parserRegistry().registerSuggestionProvider("help_queries") { sender, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 createCommandManager().createHelpHandler().queryRootIndex(sender.sender()).entries().map { Suggestion.simple(it.syntax())}
-            )
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("gamemodes") {sender, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(
-                GameMode.entries
-                    .filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }
-                    .map { Suggestion.simple(it.name)
-                }
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("players") { _, _ ->
@@ -91,82 +89,13 @@ class CommandManager(private val magenta: Magenta) {
                 .map { Suggestion.simple(it.name.toString()) }
             )
         }
-        commandManager.parserRegistry().registerSuggestionProvider("citems") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.cItems.getConfig().getConfigurationSection("citems")
-                ?.getKeys(false)
-                ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!)
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(
-                magenta.kitConfig.getConfig().getConfigurationSection("kits")?.getKeys(false)
-                    ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
-                    ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!
-            )
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("jails") { _, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(
-                magenta.jailConfig.getConfig().getConfigurationSection("jails")
-                    ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
-            )
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
-            val player = sender.sender() as Player
-            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player).map { s -> Suggestion.simple(s.homeName) })
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture
-                .completedFuture(magenta.warpModel.getWarps().map { s -> Suggestion.simple(s.warpName) })
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("tags") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(
-                magenta.randomConfig.getConfig().getConfigurationSection("tags")
-                    ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
-            )
-        }
         commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
                 .completedFuture(Material.entries.map { Suggestion.simple(it.name) })
         }
-        commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture
-                .completedFuture(EntityType.entries.map { Suggestion.simple(it.name) })
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("shops") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(
-                magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")
-                    ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
-            )
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("creditshops") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(
-                magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")
-                    ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
-            )
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("services") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(
-                magenta.config.getConfigurationSection("votifier.services")
-                    ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(VoteHelper.replaceService(it.toString(), "_", ".")) }!!
-            )
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture
-                .completedFuture(ReportCategories.entries.map { Suggestion.simple(it.name) })
-        }
         commandManager.parserRegistry().registerSuggestionProvider("worlds") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
                 .completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
-        }
-        commandManager.parserRegistry().registerSuggestionProvider("homeIcons") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture
-                .completedFuture(magenta.homeEditorConfig.getConfig().getStringList("menu.icons")
-                .map { Suggestion.simple(it) }
-            )
         }
     }
 
@@ -174,9 +103,10 @@ class CommandManager(private val magenta: Magenta) {
         try {
             magenta.logger.info("Registering commands with Cloud Command Framework !")
             val commandManager = createCommandManager()
+            registerMinecraftExceptionHandler(commandManager)
             helpManager(commandManager)
 
-            registerSuggestionProviders(commandManager)
+            registerGlobalSuggestionProviders(commandManager)
             val annotationParser = createAnnotationParser(commandManager)
 
             val list = listOf(
@@ -217,7 +147,7 @@ class CommandManager(private val magenta: Magenta) {
                 WarpCmd(magenta),
                 WhoisCmd(magenta)
             )
-            for (command in list) { annotationParser.parse(command) }
+            for (command in list) { command.registerFeatures(annotationParser, commandManager) }
         } catch (e : NoClassDefFoundError) {
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }
