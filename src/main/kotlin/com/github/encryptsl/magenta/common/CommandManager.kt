@@ -68,7 +68,9 @@ class CommandManager(private val magenta: Magenta) {
         MinecraftExceptionHandler.createNative<CommandSender>()
             .defaultHandlers()
             .decorator { component ->
-                ModernText.miniModernText(magenta.config.getString("magenta.prefix", "<red>[<bold>!</bold>]").toString()).append(component)
+                ModernText.miniModernText(magenta.config.getString("prefix", "<red>[<bold>!</bold>]").toString())
+                    .appendSpace()
+                    .append(component)
             }
             .registerTo(commandManager)
     }
