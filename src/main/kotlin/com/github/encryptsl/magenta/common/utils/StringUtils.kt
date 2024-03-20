@@ -2,7 +2,10 @@
 package com.github.encryptsl.magenta.common.utils
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.extensions.expressionCalculation
 import org.bukkit.ChatColor
+import org.bukkit.OfflinePlayer
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import kotlin.math.max
 import kotlin.math.min
@@ -14,6 +17,12 @@ class StringUtils(private val magenta: Magenta) {
     fun magentaPlaceholders(message: String, player: Player): String {
         return message.replace("{player}", player.name).replace("%player%", player.name)
     }
+
+    fun arithmeticExpression(player: OfflinePlayer, config: FileConfiguration, path: String, value: Int = 0)
+        = expressionCalculation(config.getString(path).toString()
+            .replace("{level}", magenta.levelModel.getLevel(player.uniqueId).toString())
+            .replace("{money}", magenta.vaultHook.getBalance(player).toString()))
+            .replace("{value}", value.toString())
 
     fun censorIp(ipAddress: String): String {
         val oktety = ipAddress.split(".")

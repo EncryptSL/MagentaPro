@@ -67,10 +67,11 @@ class VotifierListener(private val magenta: Magenta) : Listener {
             )
 
             val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.$serviceName.rewards")
+            val expressionFormula = magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula")
             if (!player.isOnline)
-                return VoteHelper.saveOfflineReward(magenta, player, rewards)
+                return VoteHelper.saveOfflineReward(magenta, player, rewards, expressionFormula)
 
-            VoteHelper.giveRewards(rewards, player.name.toString())
+            VoteHelper.giveRewards(rewards, player.name.toString(), expressionFormula)
         }
     }
 
@@ -84,11 +85,12 @@ class VotifierListener(private val magenta: Magenta) : Listener {
                     serviceName
                 )
                 val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.default.rewards")
+                val expressionFormula = magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula")
 
                 if (!player.isOnline)
-                    return VoteHelper.saveOfflineReward(magenta, player, rewards)
+                    return VoteHelper.saveOfflineReward(magenta, player, rewards, expressionFormula)
 
-                VoteHelper.giveRewards(rewards, player.name.toString())
+                VoteHelper.giveRewards(rewards, player.name.toString(), expressionFormula)
                 magenta.logger.severe("Service for vote $serviceName not set in config.yml")
             }
         }
@@ -105,10 +107,12 @@ class VotifierListener(private val magenta: Magenta) : Listener {
             )
         }
         val rewards: MutableList<String> = magenta.config.getStringList("votifier.cumulative.${playerVotes}.rewards")
-        if (!player.isOnline)
-            return VoteHelper.saveOfflineReward(magenta, player, rewards)
+        val expressionFormula = magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula")
 
-        VoteHelper.giveRewards(rewards, player.name.toString())
+        if (!player.isOnline)
+            return VoteHelper.saveOfflineReward(magenta, player, rewards, expressionFormula)
+
+        VoteHelper.giveRewards(rewards, player.name.toString(), expressionFormula)
     }
 
     private fun checkVoteParty(player: OfflinePlayer) {

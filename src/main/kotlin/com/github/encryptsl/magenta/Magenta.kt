@@ -21,6 +21,7 @@ import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.hook.HookManager
+import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.model.EarnBlocksProgressManager
 import com.github.encryptsl.magenta.common.model.JailManager
 import com.github.encryptsl.magenta.common.model.KitManager
@@ -37,7 +38,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.time.measureTime
+import kotlin.system.measureTimeMillis
 
 open class Magenta : JavaPlugin() {
 
@@ -83,6 +84,7 @@ open class Magenta : JavaPlugin() {
     val commandHelper: CommandHelper by lazy { CommandHelper(this) }
 
     val playerCacheManager by lazy { PlayerCacheManager() }
+    val vaultHook by lazy { VaultHook(this) }
 
     val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
@@ -130,7 +132,7 @@ open class Magenta : JavaPlugin() {
     }
 
     override fun onEnable() {
-        val time = measureTime {
+        val time = measureTimeMillis {
             isPaperServer()
             voteParty.createTable()
             commandManager.registerCommands()
@@ -139,7 +141,7 @@ open class Magenta : JavaPlugin() {
             handlerListener()
             hookRegistration()
         }
-        logger.info("Plugin enabled in time ${time.inWholeSeconds}")
+        logger.info("Plugin enabled in time $time ms")
     }
 
 
@@ -202,14 +204,14 @@ open class Magenta : JavaPlugin() {
             WarpListeners(this)
         )
 
-        val time = measureTime {
+        val time = measureTimeMillis {
             if (list.isEmpty()) {
                 logger.info("Registering list of listeners is empty !")
             }
             for (e in list) {pluginManager.registerEvents(e, this)}
         }
 
-        logger.info("Bukkit listeners registered (${list.size}) in time ${time.inWholeSeconds}")
+        logger.info("Bukkit listeners registered (${list.size}) in time $time ms")
         list.removeAll(list.toSet())
     }
 }

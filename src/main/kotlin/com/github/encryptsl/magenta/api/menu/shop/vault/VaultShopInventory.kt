@@ -8,7 +8,6 @@ import com.github.encryptsl.magenta.api.menu.shop.TransactionType
 import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyDeposit
 import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyWithdraw
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
-import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -30,7 +29,7 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         if (ShopHelper.isPlayerInventoryFull(player))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
 
-        val transactions = EconomyWithdraw(player, price).transaction(VaultHook(magenta)) ?: return
+        val transactions = EconomyWithdraw(player, price).transaction(magenta.vaultHook) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
             TransactionType.BUY, transactions, shopPaymentInformation,"magenta.shop.success.buy", commands)
@@ -49,7 +48,7 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         if (!ShopHelper.hasPlayerRequiredItem(player, item))
             return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.empty.no.item")))
 
-        val transactions = EconomyDeposit(player, price).transaction(VaultHook(magenta)) ?: return
+        val transactions = EconomyDeposit(player, price).transaction(magenta.vaultHook) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
             TransactionType.SELL, transactions, shopPaymentInformation,"magenta.shop.success.sell", null)

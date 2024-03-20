@@ -22,7 +22,13 @@ import org.bukkit.scheduler.BukkitRunnable
 object VoteHelper {
 
     @JvmStatic
-    fun saveOfflineReward(magenta: Magenta, offlinePlayer: OfflinePlayer, rewards: MutableList<String>) {
+    fun saveOfflineReward(magenta: Magenta, offlinePlayer: OfflinePlayer, rewards: MutableList<String>, expressionFormula: String = "") {
+        rewards.replaceAll { s -> s
+            .replace("{player}", offlinePlayer.name.toString())
+            .replace("%player%", offlinePlayer.name.toString())
+            .replace("{expression_reward}", expressionFormula)
+        }
+
         val userAccount = UserAccount(magenta, offlinePlayer.uniqueId)
         userAccount.set("votifier.rewards", rewards)
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
@@ -102,9 +108,15 @@ object VoteHelper {
         }
     }
     @JvmStatic
-    fun giveRewards(commands: MutableList<String>, username: String) {
+    fun giveRewards(commands: MutableList<String>, username: String, expressionFormula: String = "") {
+        commands.replaceAll { s -> s
+            .replace("{player}", username)
+            .replace("%player%", username)
+            .replace("{expression_reward}", expressionFormula)
+        }
+
         for (command in commands) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", username).replace("%player%", username))
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
         }
     }
 

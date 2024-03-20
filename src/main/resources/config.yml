@@ -318,7 +318,11 @@ votifier:
 # this value is accept float.
   pitch: 10.5F
 
-# In services you can set page where you have your server connected with votifier plugin.
+# Expression rewarding is arithmetic calculation
+# If you need enable expression-rewarding you must add {expression_reward}
+  expression-formula: '{money} * ({level} / 2) + {value}'
+
+# In services, you can set page where you have your server connected with votifier plugin.
 # services are represented by key services.$your_service, is name of responded from page.
 # services:
 #    default:
@@ -355,17 +359,17 @@ votifier:
 # supported is only command and placeholder {player} and in broadcast <player> with minimessage format.
   cumulative:
     '10':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 10 hlasů a proto dostal 500 $!</color>'
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 10 hlasů proto dostal bonusovou odměnu !</color>'
       rewards:
         - 'eco add {player} 500'
         - 'crazycrates give physical votecrate 1 {player}'
     '30':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 30 hlasů a proto dostal 1500 $ a 1x votebox klíč !</color>'
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 30 hlasů proto dostal bonusovou odměnu !</color>'
       rewards:
         - 'eco add {player} 1500'
         - 'crazycrates give physical votecrate 1 {player}'
     '50':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 50 hlasů a proto dostal 3500 $ a 2x votebox klíč !</color>'
+      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 50 hlasů proto dostal bonusovou odměnu !</color>'
       rewards:
         - 'eco add {player} 3500'
         - 'crazycrates give physical votecrate 2 {player}'
@@ -405,7 +409,7 @@ votifier:
           - '<yellow>Pro splnění milníku potřebuješ <green><required_votes><yellow> hlasů.'
           - ''
           - '<gray>Odměny'
-          - '<green>+ $500$'
+          - '<green>+ <expression_reward>$'
           - '<yellow>+ 1x Klíč k Vote Crate'
       milestone_30:
         item: 'EXPERIENCE_BOTTLE'
@@ -419,7 +423,7 @@ votifier:
           - '<yellow>Pro splnění milníku potřebuješ <green><required_votes><yellow> hlasů.'
           - ''
           - '<gray>Odměny'
-          - '<green>+ $1500$'
+          - '<green>+ <expression_reward>$'
           - '<yellow>+ 1x Klíč k Vote Crate'
       milestone_50:
         item: 'EXPERIENCE_BOTTLE'
@@ -433,7 +437,7 @@ votifier:
           - '<yellow>Pro splnění milníku potřebuješ <green><required_votes><yellow> hlasů.'
           - ''
           - '<gray>Odměny'
-          - '<green>+ $3500$'
+          - '<green>+ <expression_reward>$'
           - '<yellow>+ 2x Klíč k Vote Crate'
 
 #########################################################
