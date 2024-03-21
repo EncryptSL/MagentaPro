@@ -18,8 +18,8 @@ class SignListener(private val magenta: Magenta) : Listener {
                 event.block.breakNaturally()
                 return
             }
-            event.line(0, ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp")))
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp.success.created")))
+            event.line(0, magenta.localeConfig.translation("magenta.sign.warp"))
+            player.sendMessage(magenta.localeConfig.translation("magenta.sign.warp.success.created"))
         }
     }
 }

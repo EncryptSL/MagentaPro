@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -21,7 +20,7 @@ class PortalListener(private val magenta: Magenta) : Listener {
 
             if (!magenta.stringUtils.inInList("portal.blacklist", reason.name)) return
 
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.portal.error")))
+            player.sendMessage(magenta.localeConfig.translation("magenta.portal.error"))
             event.isCancelled = true
         }
     }

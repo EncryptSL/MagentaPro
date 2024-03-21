@@ -40,16 +40,15 @@ class JailInfoListener(private val magenta: Magenta) : Listener {
                     .replace("<z>", jailSection.getString("$s.location.z").toString())
                 )
         }
-        commandSender.sendMessage(
-            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.list"), TagResolver.resolver(
-                Placeholder.component("jails", ModernText.miniModernText(list))
-            )))
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.list",
+            Placeholder.component("jails", ModernText.miniModernText(list))
+        ))
     }
 
     private fun jailInfo(commandSender: CommandSender, jailName: String) {
         val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails") ?: return
         if (!jailSection.contains(jailName))
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.error.not.exist")))
+            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.not.exist"))
 
 
         magenta.config.getStringList("jail-info-format").forEach { s ->

@@ -35,9 +35,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
         }
 
         if (user.isJailed()) {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
-                Placeholder.parsed("action", "psát")
-            )))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "psát")))
             event.isCancelled = true
         }
 

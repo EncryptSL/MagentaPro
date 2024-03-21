@@ -4,7 +4,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.extensions.convertFromMillis
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
@@ -61,7 +60,7 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
             }
         } catch(e : Exception) {
             magenta.logger.severe(e.stackTraceToString())
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"), Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
         }
     }
 
@@ -94,7 +93,7 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
             Placeholder.parsed("country", country.name)
         )
 
-        commandSender.sendMessage(ModernText.miniModernText(message, tag))
+        commandSender.sendMessage(magenta.localeConfig.translation(message, tag))
     }
 
 }

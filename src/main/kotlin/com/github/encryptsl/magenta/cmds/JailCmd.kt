@@ -4,7 +4,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.jail.*
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
@@ -78,18 +77,18 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         if (commandSender is Player) {
             if (target == null) {
-                commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
+                commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport",
                     Placeholder.parsed("jail", jailName)
-                )))
+                ))
 
                 magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
                 return
             }
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
+            target.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport",
                 Placeholder.parsed("jail", jailName)
-            )))
+            ))
 
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport.to"), TagResolver.resolver(
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport.to", TagResolver.resolver(
                 Placeholder.parsed("jail", jailName),
                 Placeholder.parsed("player", target.name)
             )))
@@ -98,11 +97,9 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
         } else {
             if (target == null) return
 
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport"), TagResolver.resolver(
-                Placeholder.parsed("jail", jailName)
-            )))
+            target.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport", Placeholder.parsed("jail", jailName)))
 
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.teleport.to"), TagResolver.resolver(
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport.to", TagResolver.resolver(
                 Placeholder.parsed("jail", jailName),
                 Placeholder.parsed("player", target.name)
             )))

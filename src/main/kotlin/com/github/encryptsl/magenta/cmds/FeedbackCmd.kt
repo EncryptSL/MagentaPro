@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
-import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
@@ -29,7 +28,7 @@ class FeedbackCmd(private val magenta: Magenta) : AnnotationFeatures {
         player: Player,
         @Argument(value = "message") @Greedy message: String
     ) {
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.feedback.success")))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.feedback.success"))
 
         magenta.serverFeedback.addEmbed {
             setTitle(WebhookEmbed.EmbedTitle("Zpětná vazba (#${magenta.random})", null))

@@ -3,7 +3,6 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.GameMode
@@ -36,11 +35,11 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command switch your gamemode")
     fun onGameModeSelf(player: Player, @Argument(value = "mode", suggestions = "gamemodes") gameMode: GameMode) {
         if (!player.hasPermission("magenta.gamemodes.${gameMode.name.lowercase()}"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode.error.not.permission",
                 Placeholder.parsed("gamemode", gameMode.name)
-            )))
+            ))
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode", Placeholder.parsed("gamemode", gameMode.name)))
         setGameModeToTarget(player, gameMode)
     }
 
@@ -58,10 +57,10 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
         val gamemode = GameMode.ADVENTURE
 
         if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode.error.not.permission",
                 Placeholder.parsed("gamemode", gamemode.name)
-            )))
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+            ))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode", Placeholder.parsed("gamemode", gamemode.name)))
 
         setGameModeToTarget(player, gamemode)
     }
@@ -73,10 +72,10 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
         val gamemode = GameMode.CREATIVE
 
         if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode.error.not.permission",
                 Placeholder.parsed("gamemode", gamemode.name)
-            )))
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+            ))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode", Placeholder.parsed("gamemode", gamemode.name)))
 
         setGameModeToTarget(player, gamemode)
     }
@@ -88,10 +87,10 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
         val gamemode = GameMode.SPECTATOR
 
         if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode.error.not.permission",
                 Placeholder.parsed("gamemode", gamemode.name)
-            )))
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+            ))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode", Placeholder.parsed("gamemode", gamemode.name)))
 
         setGameModeToTarget(player, gamemode)
     }
@@ -103,10 +102,10 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
         val gamemode = GameMode.SURVIVAL
 
         if (!player.hasPermission("magenta.gamemodes.${gamemode.name.lowercase()}"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.error.not.permission"), TagResolver.resolver(
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode.error.not.permission",
                 Placeholder.parsed("gamemode", gamemode.name)
-            )))
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gamemode.name))))
+            ))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode", Placeholder.parsed("gamemode", gamemode.name)))
 
         setGameModeToTarget(player, gamemode)
     }
@@ -130,8 +129,8 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     private fun sendMessages(commandSender: CommandSender, player: Player, gameMode: GameMode) {
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode"), TagResolver.resolver(Placeholder.parsed("gamemode", gameMode.name))))
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.gamemode.to"), TagResolver.resolver(
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode", Placeholder.parsed("gamemode", gameMode.name)))
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.gamemode.to", TagResolver.resolver(
             Placeholder.parsed("player", player.name),
             Placeholder.parsed("gamemode", gameMode.name)
         )))

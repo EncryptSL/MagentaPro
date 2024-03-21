@@ -3,7 +3,6 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
@@ -31,7 +30,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
             val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
             magenta.commandHelper.showLevelProgress(player, level, experience)
         } catch (e : IllegalArgumentException) {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"),
+            player.sendMessage(magenta.localeConfig.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
             ))
             magenta.logger.severe(e.message ?: e.localizedMessage)
@@ -46,7 +45,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
     ) {
         if (!magenta.virtualLevel.hasAccount(target.uniqueId))
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.error.not.account"),
+            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.level.error.not.account",
                 Placeholder.parsed("player", target.name.toString())
             ))
 
@@ -54,7 +53,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
             val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(target.uniqueId)
             magenta.commandHelper.showLevelProgress(commandSender, level, experience)
         } catch (e : IllegalArgumentException) {
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.exception"),
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
             ))
             magenta.logger.severe(e.message ?: e.localizedMessage)
@@ -66,15 +65,15 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.level.top")
     @CommandDescription("This command send top players in levels")
     fun onLevelTop(commandSender: CommandSender) {
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.top.header")))
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.level.top.header"))
         magenta.virtualLevel.getLevels(10).toList().sortedByDescending { a -> a.second }.positionIndexed { k, v ->
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.top"), TagResolver.resolver(
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.level.top", TagResolver.resolver(
                 Placeholder.parsed("position", k.toString()),
                 Placeholder.parsed("player", v.first),
                 Placeholder.parsed("level", v.second.toString()),
             )))
         }
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.level.top.footer")))
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.level.top.footer"))
     }
 
 }

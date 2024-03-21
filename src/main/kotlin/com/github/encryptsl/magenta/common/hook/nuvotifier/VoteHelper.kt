@@ -3,14 +3,15 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
+import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -36,15 +37,17 @@ object VoteHelper {
     @JvmStatic
     fun startVoteParty(
         magenta: Magenta,
-        broadcastMessage: String,
-        endPartyMessage: String,
         commands: MutableList<String>,
         countdown: Int
     ) {
         object : BukkitRunnable() {
             var timer = countdown
             override fun run() {
-                broadcastActionBar(broadcastMessage, timer)
+                broadcastActionBar(
+                    magenta.localeConfig.translation("magenta.votifier.voteparty.broadcast",
+                        Placeholder.parsed("delay", timer.toString())
+                    )
+                )
                 if (timer == 0) {
                     SchedulerMagenta.doSync(magenta) {
                         val players = Bukkit.getOnlinePlayers()
@@ -62,7 +65,7 @@ object VoteHelper {
                             }?.let { magenta.notification.client.send(it) }
                         }
                     }
-                    broadcast(endPartyMessage)
+                    broadcast(magenta.localeConfig.translation("magenta.votifier.voteparty.success"))
                     cancel()
                 }
                 timer--
@@ -82,22 +85,22 @@ object VoteHelper {
     }
 
     @JvmStatic
-    fun broadcast(string: String, username: String, serviceName: String) {
-        Bukkit.broadcast(ModernText.miniModernText(string, TagResolver.resolver(
+    fun broadcast(locale: Locale, key: String, username: String, serviceName: String) {
+        Bukkit.broadcast(locale.translation(key, TagResolver.resolver(
             Placeholder.parsed("player", username),
             Placeholder.parsed("service", replaceService(serviceName, "_", "."))
         )))
     }
 
     @JvmStatic
-    fun broadcastActionBar(string: String, countdown: Int) {
+    fun broadcastActionBar(component: Component) {
         Audience.audience(Bukkit.getOnlinePlayers())
-            .sendActionBar(ModernText.miniModernText(string, Placeholder.parsed("delay", countdown.toString())))
+            .sendActionBar(component)
     }
 
     @JvmStatic
-    fun broadcast(string: String) {
-        Bukkit.broadcast(ModernText.miniModernText(string))
+    fun broadcast(component: Component) {
+        Bukkit.broadcast(component)
     }
 
     @JvmStatic

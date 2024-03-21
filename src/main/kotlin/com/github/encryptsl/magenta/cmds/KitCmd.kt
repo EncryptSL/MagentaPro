@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.kit.*
 import com.github.encryptsl.magenta.common.model.KitManager
-import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.*
@@ -36,7 +35,7 @@ class KitCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command give you kit")
     fun onKit(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
         if (!player.hasPermission("magenta.kits.$kit") && !player.hasPermission("magenta.kits.*"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.permission")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.kit.error.not.permission"))
 
         magenta.pluginManager.callEvent(
             KitReceiveEvent(player, kit, magenta.kitConfig.getConfig().getLong("kits.$kit.delay"), KitManager(magenta))

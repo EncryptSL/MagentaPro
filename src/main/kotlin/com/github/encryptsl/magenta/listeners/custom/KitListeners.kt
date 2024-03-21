@@ -22,11 +22,10 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         try {
             kitManager.createKit(player, kitName, kitDelay)
-            player.sendMessage(
-                ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.created"), TagResolver.resolver(
-                    Placeholder.parsed("kit", kitName),
-                    Placeholder.parsed("delay", kitDelay.toString())
-                )))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.created", TagResolver.resolver(
+                Placeholder.parsed("kit", kitName),
+                Placeholder.parsed("delay", kitDelay.toString())
+            )))
         } catch (e : Exception) { player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 
@@ -37,7 +36,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         try {
             magenta.kitManager.deleteKit(kitName)
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.deleted"), Placeholder.parsed("kit", kitName)))
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.deleted", Placeholder.parsed("kit", kitName)))
         } catch (e : Exception) { commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 
@@ -50,10 +49,8 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         try {
             kitManager.giveKit(target, kitName)
-            target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(
-                Placeholder.parsed("kit", kitName)
-            )))
-            commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.to"), TagResolver.resolver(
+            target.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.given.to", TagResolver.resolver(
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))
@@ -72,15 +69,14 @@ class KitListeners(private val magenta: Magenta) : Listener {
                 val list = section.getKeys(false).joinToString { s ->
                     magenta.localeConfig.getMessage("magenta.command.kit.success.list.component").replace("<kit>", s)
                 }
-                commandSender.sendMessage(
-                    ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.list"), TagResolver.resolver(
-                        Placeholder.component("kits", ModernText.miniModernText(list))
-                    )))
+                commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.list",
+                    Placeholder.component("kits", ModernText.miniModernText(list))
+                ))
             }
             InfoType.INFO -> {
                 val kitName = event.kitName ?: return
                 if (magenta.kitConfig.getConfig().getConfigurationSection("kits.$kitName") == null)
-                    return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist")))
+                    return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.error.not.exist"))
                 commandSender.sendMessage(ModernText.miniModernText("<yellow>Jméno Kitu $kitName"))
                 commandSender.sendMessage(ModernText.miniModernText("<yellow>Delay ${magenta.kitConfig.getConfig().getString("kits.$kitName.delay")}"))
                 magenta.kitManager.listOfItems(commandSender, kitName)
@@ -106,9 +102,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
                 user.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
             }
             kitManager.giveKit(player, kitName)
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.kit.success.given.self"), TagResolver.resolver(
-                Placeholder.parsed("kit", kitName)
-            )))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
         } catch (e : Exception) { player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 

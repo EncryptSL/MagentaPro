@@ -28,12 +28,8 @@ class ChatPunishManager(private val magenta: Magenta) {
             val score = flagging[player.uniqueId] ?: 0
             if (score >= 2) {
                 SchedulerMagenta.doSync(magenta) {
-                    player.kick(
-                        ModernText.miniModernText(
-                            magenta.localeConfig.getMessage("magenta.filter.action.kick"), TagResolver.resolver(
-                                Placeholder.parsed("reason", violations.name)
-                            )
-                        )
+                    player.kick(magenta.localeConfig.translation("magenta.filter.action.kick",
+                        Placeholder.parsed("reason", violations.name))
                     )
                     flagging.remove(player.uniqueId)
                 }
@@ -49,7 +45,7 @@ class ChatPunishManager(private val magenta: Magenta) {
                 addField(WebhookEmbed.EmbedField(false, "Napsal", messageFromChat))
                 setFooter(WebhookEmbed.EmbedFooter("Detekováno ${now()}", null))
             }?.let { magenta.serverFeedback.client.send(it) }
-            Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.filter.admin.notify"), TagResolver.resolver(
+            Bukkit.broadcast(magenta.localeConfig.translation("magenta.filter.admin.notify", TagResolver.resolver(
                 Placeholder.parsed("player", player.name),
                 Placeholder.parsed("flagged", violations.name),
                 Placeholder.parsed("msg", messageFromChat))),

@@ -4,7 +4,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.pm.FastReplyMessageEvent
 import com.github.encryptsl.magenta.api.events.pm.PrivateMessageEvent
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -23,7 +22,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         val cacheManager = event.playerCacheManager
 
         if (commandSender.name == receiver.name)
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error.yourself")))
+            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.msg.error.yourself"))
 
         val receiverUser = magenta.user.getUser(receiver.uniqueId)
 
@@ -38,7 +37,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
             }
 
             if (userHaveBlockedSender || whisperHaveBlockedTarget) {
-                commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error")))
+                commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.msg.error"))
                 event.isCancelled = true
             }
         }
@@ -60,7 +59,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         val message = event.message
 
         if (receiver == null || Bukkit.getPlayer(receiver.uniqueId) == null)
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.reply.error.empty")))
+            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.reply.error.empty"))
 
         val user = magenta.user.getUser(receiver.uniqueId)
         if (commandSender is Player) {
@@ -70,7 +69,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
             val whisperHaveBlockedTarget = whisper.isPlayerIgnored(receiver.uniqueId)
 
             if (userHaveBlockedSender || whisperHaveBlockedTarget) {
-                commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.msg.error")))
+                commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.msg.error"))
                 event.isCancelled = true
             }
         }
@@ -82,25 +81,19 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
     }
 
     private fun sendMessage(commandSender: CommandSender, receiver: Player, message: String) {
-        commandSender.sendMessage(
-            ModernText.miniModernText(
-                magenta.localeConfig.getMessage("magenta.command.msg.success.to"), TagResolver.resolver(
-                    Placeholder.parsed("player", receiver.name),
-                    Placeholder.parsed("message", message),
-                )
-            )
-        )
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.msg.success.to", TagResolver.resolver(
+            Placeholder.parsed("player", receiver.name),
+            Placeholder.parsed("message", message)
+        )))
         PlayerBuilderAction
             .player(receiver)
             .sound(magenta.config.getString("msg.sound").toString(),
                 magenta.config.getString("msg.volume").toString().toFloat(),
                 magenta.config.getString("msg.pitch").toString().toFloat()
-            ).message(ModernText.miniModernText(
-                magenta.localeConfig.getMessage("magenta.command.msg.success.from"), TagResolver.resolver(
-                    Placeholder.parsed("player", commandSender.name),
-                    Placeholder.parsed("message", message),
-                )
-            ))
+            ).message(magenta.localeConfig.translation("magenta.command.msg.success.from", TagResolver.resolver(
+                Placeholder.parsed("player", commandSender.name),
+                Placeholder.parsed("message", message)
+            )))
     }
 
 }

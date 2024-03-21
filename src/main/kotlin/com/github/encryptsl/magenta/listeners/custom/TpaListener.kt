@@ -6,7 +6,6 @@ import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
-import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.util.Tick
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -34,10 +33,10 @@ class TpaListener(private val magenta: Magenta) : Listener {
         val target = event.target
 
         if (sender.uniqueId == target.uniqueId)
-            return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.yourself")))
+            return sender.sendMessage(magenta.localeConfig.translation("magenta.command.tpa.error.request.yourself"))
 
         if (!magenta.tpaManager.createRequest(sender, target))
-            return sender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.tpa.error.request.exist")))
+            return sender.sendMessage(magenta.localeConfig.translation("magenta.command.tpa.error.request.exist"))
 
         SchedulerMagenta.delayedTask(magenta, {
             magenta.tpaManager.killRequest(sender)
@@ -45,20 +44,10 @@ class TpaListener(private val magenta: Magenta) : Listener {
         PlayerBuilderAction
             .player(target)
             .sound("block.note_block.pling", 1.5F, 1.5F)
-            .message(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.tpa.success.request"), TagResolver.resolver(
-                        Placeholder.component("player", sender.displayName()),
-                        Placeholder.parsed(
-                            "accept",
-                            magenta.localeConfig.getMessage("magenta.command.tpa.success.request.component.accept")
-                        ),
-                        Placeholder.parsed(
-                            "deny",
-                            magenta.localeConfig.getMessage("magenta.command.tpa.success.request.component.deny")
-                        )
-                    )
-                )
-            )
+            .message(magenta.localeConfig.translation("magenta.command.tpa.success.request", TagResolver.resolver(
+                Placeholder.component("player", sender.displayName()),
+                Placeholder.component("accept", magenta.localeConfig.translation("magenta.command.tpa.success.request.component.accept")),
+                Placeholder.component("deny", magenta.localeConfig.translation("magenta.command.tpa.success.request.component.deny"))
+            )))
     }
 }

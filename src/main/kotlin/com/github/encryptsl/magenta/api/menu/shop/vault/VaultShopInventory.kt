@@ -8,7 +8,6 @@ import com.github.encryptsl.magenta.api.menu.shop.TransactionType
 import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyDeposit
 import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyWithdraw
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
-import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
@@ -24,10 +23,10 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         val price = shopPaymentInformation.price
 
         if (!shopPaymentInformation.isOperationAllowed)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.buy.disabled")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.buy.disabled"))
 
         if (ShopHelper.isPlayerInventoryFull(player))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.inventory.full")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.inventory.full"))
 
         val transactions = EconomyWithdraw(player, price).transaction(magenta.vaultHook) ?: return
 
@@ -43,10 +42,10 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         val price = shopPaymentInformation.price
 
         if (!shopPaymentInformation.isOperationAllowed)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.sell.disabled")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.sell.disabled"))
 
         if (!ShopHelper.hasPlayerRequiredItem(player, item))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.empty.no.item")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.empty.no.item"))
 
         val transactions = EconomyDeposit(player, price).transaction(magenta.vaultHook) ?: return
 

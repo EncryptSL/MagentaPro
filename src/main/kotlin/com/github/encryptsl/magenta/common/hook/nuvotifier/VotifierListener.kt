@@ -60,11 +60,7 @@ class VotifierListener(private val magenta: Magenta) : Listener {
     private fun processVote(serviceName: String, player: OfflinePlayer, timestamp: Long) {
         if (magenta.config.contains("votifier.services.$serviceName.rewards")) {
             this.addVote(player, serviceName, timestamp)
-            VoteHelper.broadcast(
-                magenta.localeConfig.getMessage("magenta.votifier.broadcast"),
-                player.name.toString(),
-                serviceName
-            )
+            VoteHelper.broadcast(magenta.localeConfig, "magenta.votifier.broadcast", player.name.toString(), serviceName)
 
             val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.$serviceName.rewards")
             val expressionFormula = magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula")
@@ -79,11 +75,7 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         if (magenta.config.contains("votifier.services.default")) {
             if (magenta.config.contains("votifier.services.default.rewards")) {
                 addVote(player, serviceName, timestamp)
-                VoteHelper.broadcast(
-                    magenta.localeConfig.getMessage("magenta.votifier.broadcast"),
-                    player.name.toString(),
-                    serviceName
-                )
+                VoteHelper.broadcast(magenta.localeConfig, "magenta.votifier.broadcast", player.name.toString(), serviceName)
                 val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.default.rewards")
                 val expressionFormula = magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula")
 
@@ -102,9 +94,7 @@ class VotifierListener(private val magenta: Magenta) : Listener {
         if (!magenta.config.contains("votifier.cumulative.${playerVotes}")) return
 
         if (magenta.config.contains("votifier.cumulative.${playerVotes}.broadcast")) {
-            VoteHelper.broadcast(magenta.config.getString("votifier.cumulative.$playerVotes}.broadcast").toString(),
-                player.name.toString(), serviceName
-            )
+            VoteHelper.broadcast(magenta.localeConfig, "votifier.cumulative.$playerVotes}.broadcast", player.name.toString(), serviceName)
         }
         val rewards: MutableList<String> = magenta.config.getStringList("votifier.cumulative.${playerVotes}.rewards")
         val expressionFormula = magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula")
@@ -122,13 +112,7 @@ class VotifierListener(private val magenta: Magenta) : Listener {
 
         val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
         magenta.pluginManager.callEvent(VotePartyPlayerStartedEvent(player.name.toString()))
-        VoteHelper.startVoteParty(
-            magenta,
-            magenta.localeConfig.getMessage("magenta.votifier.voteparty.broadcast"),
-            magenta.localeConfig.getMessage("magenta.votifier.voteparty.success"),
-            rewards,
-            magenta.config.getInt("votifier.voteparty.countdown")
-        )
+        VoteHelper.startVoteParty(magenta, rewards, magenta.config.getInt("votifier.voteparty.countdown"))
     }
 
     private fun addVote(p: OfflinePlayer, serviceName: String, timestamp: Long) {

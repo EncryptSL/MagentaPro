@@ -3,7 +3,6 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -27,7 +26,7 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onBack(player: Player) {
         val userAccount = UserAccount(magenta, player.uniqueId)
         player.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success")))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))
     }
 
     @Command("back <player>")
@@ -37,8 +36,8 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
         val userAccount = UserAccount(magenta, target.uniqueId)
 
         target.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success")))
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.back.success.to"),
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.back.success.to",
             Placeholder.parsed("player", target.name)
         ))
     }

@@ -40,7 +40,7 @@ class SpawnerCmd(private val magenta: Magenta) : AnnotationFeatures {
         val block = player.getTargetBlock(null, 10)
 
         if (block.type != Material.SPAWNER)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.error.not.spawner")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.spawner.error.not.spawner"))
 
         val creatureSpawner: CreatureSpawner = block.state as CreatureSpawner
         creatureSpawner.spawnedType = entity
@@ -71,12 +71,12 @@ class SpawnerCmd(private val magenta: Magenta) : AnnotationFeatures {
         spawner.setItemMeta(spawnerMeta)
         target.inventory.addItem(spawner)
 
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.success.given"), TagResolver.resolver(
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.spawner.success.given", TagResolver.resolver(
             Placeholder.parsed("type", entity.name),
             Placeholder.parsed("amount", amount.toString())
         )))
 
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.spawner.success.given.to"), TagResolver.resolver(
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.spawner.success.given.to", TagResolver.resolver(
             Placeholder.parsed("type", entity.name),
             Placeholder.parsed("amount", amount.toString()),
             Placeholder.parsed("player", target.name)

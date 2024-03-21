@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
@@ -29,7 +28,7 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
         magenta.commandHelper.doVanish(player, user.isVanished())
         val mode = magenta.commandHelper.isVanished(user.isVanished())
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
 
         if (user.isVanished()) {
             user.set("vanished", false)
@@ -48,9 +47,9 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         val mode = magenta.commandHelper.isVanished(user.isVanished())
 
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish"), Placeholder.parsed("mode", mode)))
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
 
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vanish.success.vanish.to"), TagResolver.resolver(
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.vanish.success.vanish.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("mode", mode)
         )))

@@ -6,7 +6,6 @@ import com.github.encryptsl.magenta.api.events.shop.ShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopSellEvent
 import com.github.encryptsl.magenta.api.menu.shop.economy.TransactionProcess
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -22,20 +21,16 @@ class EconomyShopIntegration(private val magenta: Magenta) {
         commands: MutableList<String>?,
     ) {
         if (transactionProcess == TransactionProcess.ERROR_ENOUGH_BALANCE)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.money")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.not.enough.money"))
 
         if (transactionProcess == TransactionProcess.SUCCESS) {
             val item = shopPaymentInformation.itemStack
             val price = shopPaymentInformation.price
-            player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage(message), TagResolver.resolver(
-                        Placeholder.component("item", item.displayName()),
-                        Placeholder.parsed("quantity", item.amount.toString()),
-                        Placeholder.parsed("price", price.toString())
-                    )
-                )
-            )
+            player.sendMessage(magenta.localeConfig.translation(message, TagResolver.resolver(
+                Placeholder.component("item", item.displayName()),
+                Placeholder.parsed("quantity", item.amount.toString()),
+                Placeholder.parsed("price", price.toString())
+            )))
 
             when (transactionType) {
                 TransactionType.SELL -> {
@@ -55,19 +50,15 @@ class EconomyShopIntegration(private val magenta: Magenta) {
 
     fun doCreditTransaction(player: Player, transactionProcess: TransactionProcess, message: String, product: Component, price: Double, quantity: Int, commands: MutableList<String>) {
         if (transactionProcess == TransactionProcess.ERROR_ENOUGH_BALANCE)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.shop.error.not.enough.credit")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.not.enough.credit"))
 
         if (transactionProcess == TransactionProcess.SUCCESS) {
             magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
-            player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage(message), TagResolver.resolver(
-                        Placeholder.component("item", product),
-                        Placeholder.parsed("quantity", quantity.toString()),
-                        Placeholder.parsed("price", price.toString())
-                    )
-                )
-            )
+            player.sendMessage(magenta.localeConfig.translation(message, TagResolver.resolver(
+                Placeholder.component("item", product),
+                Placeholder.parsed("quantity", quantity.toString()),
+                Placeholder.parsed("price", price.toString())
+            )))
             ShopHelper.giveRewards(commands, player.name, quantity)
         }
     }

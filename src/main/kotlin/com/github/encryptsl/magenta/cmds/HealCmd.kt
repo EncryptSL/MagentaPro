@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
@@ -38,7 +37,7 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
             user.setDelay(Duration.ofSeconds(delay), "heal")
         }
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.heal"))
         player.health = 20.0
         player.foodLevel = 20
     }
@@ -47,10 +46,10 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.heal.other")
     @CommandDescription("This command heal other player")
     fun onHeal(commandSender: CommandSender, @Argument(value="player", suggestions = "players") target: Player) {
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal")))
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.heal"))
         target.health = 20.0
         target.foodLevel = 20
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.heal.to"), TagResolver.resolver(
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.heal.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name)
         )))
     }

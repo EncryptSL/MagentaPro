@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
@@ -31,7 +30,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
         val delay = magenta.config.getLong("repair-cooldown")
 
         if (inventory.itemInMainHand.type.isEmpty || inventory.itemInMainHand.type.isAir || inventory.itemInMainHand.isEmpty)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.hand")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.repair.error.empty.hand"))
 
         val timeLeft = user.getRemainingCooldown("repair")
         if (user.hasDelay("repair") && !player.hasPermission("magenta.repair.delay.exempt"))
@@ -54,7 +53,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         val inventory = player.inventory
         if (inventory.isEmpty)
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.repair.error.empty.inventory"))
 
         val timeLeft = user.getRemainingCooldown("repair")
         if (user.hasDelay("repair") && !player.hasPermission("magenta.repair.delay.exempt"))
@@ -66,7 +65,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         magenta.commandHelper.repairItems(player)
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.repair.success.all"))
     }
 
     @ProxiedBy("fixall")
@@ -76,14 +75,13 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onRepairAllProxy(commandSender: CommandSender,  @Argument(value = "target", suggestions = "players") target: Player) {
         val inventory = target.inventory
         if (inventory.isEmpty)
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.error.empty.inventory")))
+            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.repair.error.empty.inventory"))
 
         magenta.commandHelper.repairItems(target)
 
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.all")))
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.repair.success.all"))
         commandSender.sendMessage(
-            ModernText.miniModernText(
-                magenta.localeConfig.getMessage("magenta.command.repair.success.all.to"), TagResolver.resolver(
+                magenta.localeConfig.translation("magenta.command.repair.success.all.to", TagResolver.resolver(
                     Placeholder.parsed("player", target.name)
                 )
             )

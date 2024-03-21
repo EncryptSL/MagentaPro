@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.api.config.locale
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.utils.ModernText
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -11,12 +13,18 @@ class Locale(private val magenta: Magenta) {
 
     private val properties = Properties()
 
+    fun translation(translationKey: String)
+        = ModernText.miniModernText(getMessage(translationKey))
+
+    fun translation(translationKey: String, tagResolver: TagResolver)
+        = ModernText.miniModernText(getMessage(translationKey), tagResolver)
+
     fun getMessage(key: String): String {
-        val prefix = magenta.config.getString("prefix")
+        val prefix = magenta.config.getString("prefix", "").toString()
         val properties = properties.getProperty(key)
             ?: properties.getProperty("magenta.missing.translation", "Missing Translation $key").replace("<key>", key)
 
-        return properties.replace("<prefix>", prefix ?: "")
+        return properties.replace("<prefix>", prefix)
     }
 
     fun loadLocale(configName: String) {

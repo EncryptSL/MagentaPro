@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.level.LevelFormula
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -17,8 +16,7 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun delayMessage(sender: Player, message: String, duration: Duration) {
         sender.sendMessage(
-            ModernText.miniModernText(
-                magenta.localeConfig.getMessage(message),
+                magenta.localeConfig.translation(message,
                 Placeholder.parsed("delay", duration.toSeconds().toString())
             )
         )
@@ -57,23 +55,18 @@ class CommandHelper(private val magenta: Magenta) {
         if (player.allowFlight) {
             player.allowFlight = false
             magenta.user.getUser(player.uniqueId).set("flying", false)
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated")))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.fly.success.deactivated"))
             commandSender?.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.fly.success.deactivated.to"), TagResolver.resolver(
-                        Placeholder.parsed("player", player.name)
-                    )
+                magenta.localeConfig.translation("magenta.command.fly.success.deactivated.to",
+                    Placeholder.parsed("player", player.name)
                 )
             )
         } else {
             player.allowFlight = true
             magenta.user.getUser(player.uniqueId).set("flying", true)
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.fly.success.activated")))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.fly.success.activated"))
             commandSender?.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.fly.success.activated.to"),
-                    TagResolver.resolver(Placeholder.parsed("player", player.name))
-                )
+                magenta.localeConfig.translation("magenta.command.fly.success.activated.to", Placeholder.parsed("player", player.name))
             )
         }
     }
@@ -88,7 +81,7 @@ class CommandHelper(private val magenta: Magenta) {
             item.setItemMeta(itemMeta)
             player.updateInventory()
         }
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.repair.success.item")))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.repair.success.item"))
     }
 
     fun repairItems(player: Player) {
@@ -120,23 +113,19 @@ class CommandHelper(private val magenta: Magenta) {
         )
 
         commandSender.sendMessage(
-            ModernText.miniModernText(
-                magenta.localeConfig.getMessage("magenta.command.level.success.your.level"),
+                magenta.localeConfig.translation("magenta.command.level.success.your.level",
                 Placeholder.parsed("level", level.toString())
             )
         )
         commandSender.sendMessage(
-            ModernText.miniModernText(
-                magenta.localeConfig.getMessage("magenta.command.level.success.score"), TagResolver.resolver(
+            magenta.localeConfig.translation("magenta.command.level.success.score", TagResolver.resolver(
                     Placeholder.parsed("current_exp", currentExp.toString()),
                     Placeholder.parsed("exp_to_up", needToLevelUp.toString()),
-                    Placeholder.parsed("percentage_progress", percentageProgress.toString()),
-                )
+                    Placeholder.parsed("percentage_progress", percentageProgress.toString())
             )
-        )
+        ))
         commandSender.sendMessage(
-            ModernText.miniModernText(
-                magenta.localeConfig.getMessage("magenta.command.level.success.progressbar"),
+            magenta.localeConfig.translation("magenta.command.level.success.progressbar",
                 Placeholder.parsed("progress_bar", progressBar)
             )
         )

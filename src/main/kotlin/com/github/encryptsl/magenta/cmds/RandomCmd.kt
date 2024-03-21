@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -46,10 +45,10 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
 
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.world.ticket.success.player"),
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.random.world.ticket.success.player",
             Placeholder.parsed("amount", amount.toString())
         ))
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.world.ticket.success.to"), TagResolver.resolver(
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.random.world.ticket.success.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("amount", amount.toString())
         )))
@@ -69,10 +68,10 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
 
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.crates.key.success.player"),
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.random.crates.key.success.player",
             Placeholder.parsed("amount", amount.toString())
         ))
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.crates.key.success.to"), TagResolver.resolver(
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.random.crates.key.success.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("amount", amount.toString())
         )))
@@ -90,7 +89,7 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         val randomTag = tags.random()
         if (!target.hasPermission(randomTag)) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target))
-            return target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.tag.success.player"),
+            return target.sendMessage(magenta.localeConfig.translation("magenta.command.random.tag.success.player",
                 Placeholder.parsed("category", type)
             ))
         }
@@ -99,10 +98,10 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target)
         )
-        target.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.tag.success.player"),
+        target.sendMessage(magenta.localeConfig.translation("magenta.command.random.tag.success.player",
             Placeholder.parsed("category", type)
         ))
-        commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.random.tag.success.to"), TagResolver.resolver(
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.random.tag.success.to", TagResolver.resolver(
             Placeholder.parsed("category", type),
             Placeholder.parsed("tag", randomTag)
         )))

@@ -38,7 +38,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.time.Duration
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 open class Magenta : JavaPlugin() {
 
@@ -132,7 +132,7 @@ open class Magenta : JavaPlugin() {
     }
 
     override fun onEnable() {
-        val time = measureTimeMillis {
+        val time = measureTime {
             isPaperServer()
             voteParty.createTable()
             commandManager.registerCommands()
@@ -141,7 +141,7 @@ open class Magenta : JavaPlugin() {
             handlerListener()
             hookRegistration()
         }
-        logger.info("Plugin enabled in time $time ms")
+        logger.info("Plugin enabled in time ${time.inWholeSeconds}")
     }
 
 
@@ -204,14 +204,14 @@ open class Magenta : JavaPlugin() {
             WarpListeners(this)
         )
 
-        val time = measureTimeMillis {
+        val time = measureTime {
             if (list.isEmpty()) {
                 logger.info("Registering list of listeners is empty !")
             }
             for (e in list) {pluginManager.registerEvents(e, this)}
         }
 
-        logger.info("Bukkit listeners registered (${list.size}) in time $time ms")
+        logger.info("Bukkit listeners registered (${list.size}) in time ${time.inWholeSeconds}")
         list.removeAll(list.toSet())
     }
 }

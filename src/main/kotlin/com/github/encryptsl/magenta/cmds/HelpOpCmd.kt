@@ -3,7 +3,6 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -62,7 +61,7 @@ class HelpOpCmd(private val magenta: Magenta) : AnnotationFeatures {
     private fun chat(from: CommandSender, to: Player?, message: String, locale: String): Component {
         val group = if (from is Player) magenta.stringUtils.colorize(luckPermsHook.getPrefix(from)) else ""
 
-       return ModernText.miniModernText(magenta.localeConfig.getMessage(locale), TagResolver.resolver(
+       return magenta.localeConfig.translation(locale, TagResolver.resolver(
             Placeholder.component("group", Component.text(group)),
             Placeholder.parsed("from", from.name),
             Placeholder.parsed("to", to?.name ?: ""),

@@ -2,9 +2,7 @@ package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailCreateEvent
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -17,13 +15,9 @@ class JailCreateListener(private val magenta: Magenta) : Listener {
         val location = event.location
 
         if (magenta.jailConfig.getConfig().getConfigurationSection(jailName) != null)
-            return player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.jail.error.exist"), TagResolver.resolver(
-                        Placeholder.parsed("jail", jailName)
-                    )
-                )
-            )
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.exist",
+                Placeholder.parsed("jail", jailName)
+            ))
 
         magenta.jailConfig.getConfig().set("jails.$jailName.location.world", location.world.name)
         magenta.jailConfig.getConfig().set("jails.$jailName.location.x", location.x)
@@ -34,9 +28,7 @@ class JailCreateListener(private val magenta: Magenta) : Listener {
         magenta.jailConfig.save()
         magenta.jailConfig.reload()
 
-        return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.created"), TagResolver.resolver(
-            Placeholder.parsed("jail", jailName)
-        )))
+        return player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.created", Placeholder.parsed("jail", jailName)))
     }
 
 }

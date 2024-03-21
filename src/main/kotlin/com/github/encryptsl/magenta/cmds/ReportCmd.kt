@@ -7,7 +7,6 @@ import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
@@ -45,12 +44,12 @@ class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "message") @Default("Zpráva není specifikovaná.") @Greedy message: String
     ) {
         if (player.name.equals(target.name, ignoreCase = true))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.yourself")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.report.error.yourself"))
 
         if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()) || luckPermsAPI.hasPermission(target, "magenta.report.exempt"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.error.exempt")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.report.error.exempt"))
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.report.success"), TagResolver.resolver(
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.report.success", TagResolver.resolver(
             Placeholder.parsed("player", target.name.toString()),
             Placeholder.parsed("category", category.name)
         )))

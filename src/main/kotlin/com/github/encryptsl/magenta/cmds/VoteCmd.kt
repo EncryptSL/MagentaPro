@@ -40,7 +40,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
             if(service.contains("default")) continue
             val replace = VoteHelper.replaceService(service, "_", ".")
             player.sendMessage(ModernText.miniModernText(magenta.config.getString("votifier.services.$service.link").toString(), TagResolver.resolver(
-                Placeholder.parsed("hover", magenta.localeConfig.getMessage("magenta.command.vote.hover")),
+                Placeholder.component("hover", magenta.localeConfig.translation("magenta.command.vote.hover")),
                 Placeholder.parsed("vote", (user.getVotesByService(replace)).toString()),
                 Placeholder.parsed("username", player.name)
             )))
@@ -60,10 +60,10 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
     fun onVoteClaimRewards(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
         if (!user.getAccount().contains("votifier.rewards"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.error.not.reward")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.command.vote.error.not.reward"))
 
         VoteHelper.giveRewards(user.getVotifierRewards(), player.name)
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.success.claim.rewards")))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.vote.success.claim.rewards"))
         user.set("votifier.rewards", null)
     }
 
@@ -75,7 +75,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         val startAt = magenta.config.getInt("votifier.voteparty.start_at")
 
         if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
-            return commandSender.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.voteparty.error")))
+            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.voteparty.error"))
 
         val format = magenta.config.getStringList("votifier.voteparty.format")
 

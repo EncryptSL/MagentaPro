@@ -4,7 +4,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailEvent
 import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -28,22 +27,18 @@ class JailListener(private val magenta: Magenta) : Listener {
         if (luckPerms.hasPermission(target,"magenta.jail.exempt")) return
 
         if (magenta.jailConfig.getConfig().getConfigurationSection("jails.$jailName") == null)
-            return commandManager.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.jail.error.exist"), TagResolver.resolver(
-                        Placeholder.parsed("jail", jailName)
-                    )
-                )
-            )
+            return commandManager.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.exist",
+                Placeholder.parsed("jail", jailName)
+            ))
 
         if (user.isJailed())
-            return commandManager.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.jailed"), TagResolver.resolver(
+            return commandManager.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.jailed",
                 Placeholder.parsed("player", target.name.toString())
-            )))
+            ))
 
         if (target.player != null) {
             val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails.$jailName") ?: return
-            target.player?.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.jailed")))
+            target.player?.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.jailed"))
 
             magenta.pluginManager.callEvent(JailTeleportEvent(target.player!!, Location(
                 Bukkit.getWorld(jailSection.getString("location.world").toString()),
@@ -56,7 +51,7 @@ class JailListener(private val magenta: Magenta) : Listener {
         }
 
 
-        Bukkit.broadcast(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.jailed.to"), TagResolver.resolver(
+        Bukkit.broadcast(magenta.localeConfig.translation("magenta.command.jail.success.jailed.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name ?: target.uniqueId.toString()),
             Placeholder.parsed("reason", reason.toString()),
         )))

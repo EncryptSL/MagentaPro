@@ -39,22 +39,19 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             if (material != null) {
                 if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el")) {
                     if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.name"))
-                        return player.sendMessage(
-                            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.not.defined.name"),
-                                Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
-                            ))
+                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                            Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
+                        ))
 
                     if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.slot"))
-                        return player.sendMessage(
-                            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.not.defined.slot"),
+                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
                                 Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
-                            ))
+                        ))
 
                     if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.icon"))
-                        return player.sendMessage(
-                            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.not.defined.icon"),
+                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
                                 Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
-                            ))
+                        ))
 
                     val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
 
@@ -95,16 +92,12 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             clicked = false
             clearIcons(gui)
             magenta.warpModel.moveWarp(player, warpName, player.location)
-            player.sendMessage(
-                ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.moved"),
-                    TagResolver.resolver(
-                        Placeholder.parsed("warp", warpName),
-                        Placeholder.parsed("x", player.location.x.toInt().toString()),
-                        Placeholder.parsed("y", player.location.y.toInt().toString()),
-                        Placeholder.parsed("z", player.location.z.toInt().toString())
-                    )
-                )
-            )
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.moved", TagResolver.resolver(
+                Placeholder.parsed("warp", warpName),
+                Placeholder.parsed("x", player.location.x.toInt().toString()),
+                Placeholder.parsed("y", player.location.y.toInt().toString()),
+                Placeholder.parsed("z", player.location.z.toInt().toString())
+            )))
         }
     }
 
@@ -140,15 +133,10 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         ).asGuiItem { action ->
             magenta.warpModel.setWarpIcon(player, warpName, m.name)
             if (action.isLeftClick) {
-                player.sendMessage(
-                    ModernText.miniModernText(
-                        magenta.localeConfig.getMessage("magenta.command.warp.success.change.icon"),
-                        TagResolver.resolver(
-                            Placeholder.parsed("warp", warpName),
-                            Placeholder.parsed("icon", m.name)
-                        )
-                    )
-                )
+                player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.change.icon", TagResolver.resolver(
+                    Placeholder.parsed("warp", warpName),
+                    Placeholder.parsed("icon", m.name)
+                )))
             }
         })
     }
@@ -158,9 +146,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             clicked = false
             magenta.homeModel.deleteHome(player, warpName)
             gui.close(player)
-            player.sendMessage(
-                ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.warp.success.deleted"),
-                TagResolver.resolver(Placeholder.parsed("home", warpName))))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.deleted", Placeholder.parsed("home", warpName)))
         }
     }
 

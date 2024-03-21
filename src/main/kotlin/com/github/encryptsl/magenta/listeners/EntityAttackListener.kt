@@ -1,9 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -31,12 +29,7 @@ class EntityAttackListener(private val magenta: Magenta) : Listener {
 
             if (!magenta.user.getUser(player.uniqueId).isJailed()) return
 
-            player.sendMessage(ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.jail.error.event"),
-                    TagResolver.resolver(
-                        Placeholder.parsed("action", "útočit")
-                    )
-            ))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "útočit")))
             event.isCancelled = true
         }
     }

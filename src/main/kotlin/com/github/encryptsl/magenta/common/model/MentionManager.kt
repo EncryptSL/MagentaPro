@@ -6,10 +6,11 @@ import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 
 class MentionManager(private val magenta: Magenta) {
 
@@ -23,7 +24,6 @@ class MentionManager(private val magenta: Magenta) {
                     val sound: String = magenta.config.getString("mentions.sound").toString()
                     val volume = magenta.config.getString("mentions.volume").toString().toFloat()
                     val pitch = magenta.config.getString("mentions.pitch").toString().toFloat()
-                    val mentionedMessage = magenta.localeConfig.getMessage("magenta.player.mentioned")
 
                     SchedulerMagenta.doAsync(magenta) {
                         Bukkit.getPlayer(m.replace("@", ""))?.let {
@@ -36,12 +36,7 @@ class MentionManager(private val magenta: Magenta) {
                         Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), ""))
 
                     mentioned?.let {
-                        PlayerBuilderAction.player(it).sound(sound, volume, pitch).message(
-                            ModernText.miniModernText(mentionedMessage, TagResolver.resolver(
-                                    Placeholder.parsed("player", player.name)
-                                )
-                            )
-                        )
+                        PlayerBuilderAction.player(it).sound(sound, volume, pitch).message(mentionedPlayer(player, "magenta.player.mentioned"))
                         chatEvent.message(
                             ModernText.miniModernText(
                                 message.replace(
@@ -52,15 +47,9 @@ class MentionManager(private val magenta: Magenta) {
                         )
                     }
                     if (m.contains("@everyone")) {
-                        Bukkit.getServer().onlinePlayers.forEach { a ->
-                            //if (player == a) return
-                            a.sendMessage(
-                                ModernText.miniModernText(mentionedMessage, TagResolver.resolver(
-                                        Placeholder.parsed("player", a.name)
-                                    )
-                                )
-                            )
-                            a.playSound(a, sound, volume, pitch)
+                        for (p in Bukkit.getOnlinePlayers()) {
+                            p.sendMessage(mentionedPlayer(p, "magenta.player.mentioned"))
+                            p.playSound(p, sound, volume, pitch)
                         }
                         chatEvent.message(
                             ModernText.miniModernText(
@@ -74,5 +63,9 @@ class MentionManager(private val magenta: Magenta) {
                 }
             }
         }
+    }
+
+    private fun mentionedPlayer(player: Player, key: String): Component {
+        return magenta.localeConfig.translation(key, Placeholder.parsed("player", player.name))
     }
 }

@@ -63,7 +63,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 )))
             }
             if (user.getAccount().contains("votifier.rewards")) {
-                player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.vote.success.exist.rewards.to.claim")))
+                player.sendMessage(magenta.localeConfig.translation("magenta.command.vote.success.exist.rewards.to.claim"))
             }
             return
         }
@@ -188,7 +188,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         val sign: Sign = block.state as Sign
         val side = sign.getSide(Side.FRONT)
 
-        if (!side.line(0).toString().contains(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp")).toString()))
+        if (!side.line(0).toString().contains(magenta.localeConfig.translation("magenta.sign.warp").toString()))
             return
 
         if (!sign.isWaxed) {
@@ -199,12 +199,12 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
         if (convertedWarpName.isBlank() || convertedWarpName.isEmpty()) {
             block.breakNaturally()
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp.error.name.empty")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.sign.warp.error.name.empty"))
         }
 
         if (!magenta.warpModel.getWarpExist(convertedWarpName)) {
             block.breakNaturally()
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp.error.not.exist"), Placeholder.component("warp", side.line(1))))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.sign.warp.error.not.exist", Placeholder.component("warp", side.line(1))))
         }
 
         player.teleport(magenta.warpModel.toLocation(convertedWarpName))
@@ -218,8 +218,8 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         if (!magenta.config.getBoolean("change-world-message")) return
 
         player.sendMessage(
-            ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.player.change.world"), TagResolver.resolver(
-            Placeholder.parsed("world", player.world.name)
-        )))
+            magenta.localeConfig.translation("magenta.player.change.world",
+                Placeholder.parsed("world", player.world.name))
+        )
     }
 }

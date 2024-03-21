@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.home.*
 import com.github.encryptsl.magenta.api.menu.home.HomeGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
@@ -61,7 +60,7 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onSetHomeIcon(player: Player, @Argument(value = "home", suggestions = "homes") home: String, @Argument("icon", suggestions = "homeIcons") icon: String) {
         magenta.homeModel.setHomeIcon(player, home, icon)
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.home.success.change.icon"),
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.change.icon",
             TagResolver.resolver(
                 Placeholder.parsed("home", home),
                 Placeholder.parsed("icon", icon))

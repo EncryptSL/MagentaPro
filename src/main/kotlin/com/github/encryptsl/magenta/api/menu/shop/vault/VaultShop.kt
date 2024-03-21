@@ -31,17 +31,17 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 ?.getKeys(false)!!) {
 
                 if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
-                    return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.not.defined.name"),
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
                         Placeholder.parsed("category", category)
                     ))
 
                 if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
-                    return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.not.defined.slot"),
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
                         Placeholder.parsed("category", category)
                     ))
 
                 if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
-                    return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.not.defined.icon"),
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
                         Placeholder.parsed("category", category)
                     ))
 
@@ -69,22 +69,18 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
         val shopCategory = UniversalConfig(magenta, "menu/shop/categories/$type.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.shop.error.category.not.exist"),
-                    Placeholder.parsed("category", type)
-                )
+                magenta.localeConfig.translation("magenta.command.shop.error.category.not.exist",
+                    Placeholder.parsed("category", type))
             )
 
         if (!player.hasPermission("magenta.shop.category.$type") || !player.hasPermission("magenta.shop.category.*"))
             return player.sendMessage(
-                ModernText.miniModernText(
-                    magenta.localeConfig.getMessage("magenta.command.shop.error.category.permission"),
+                magenta.localeConfig.translation("magenta.command.shop.error.category.permission",
                     Placeholder.parsed("category", type)
-                )
-            )
+            ))
 
         if (!shopCategory.getConfig().contains("menu.items"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.not.defined.items"),
+            return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.items",
                 Placeholder.parsed("category", type)
             ))
 

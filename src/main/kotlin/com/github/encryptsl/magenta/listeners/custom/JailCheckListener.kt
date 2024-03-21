@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
-import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -16,7 +15,7 @@ class JailCheckListener(private val magenta: Magenta) : Listener {
         if (user.isJailed()) {
             val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails") ?: return
             val randomJail = jailSection.getKeys(false).random()
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.success.jailed")))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.jailed"))
 
             player.teleport(magenta.jailManager.getJailLocation(randomJail))
 

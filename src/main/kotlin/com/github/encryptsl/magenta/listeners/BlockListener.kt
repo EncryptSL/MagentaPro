@@ -23,9 +23,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val player = event.player
         if (!magenta.user.getUser(player.uniqueId).isJailed()) return
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
-            Placeholder.parsed("action", "ničit bloky")
-        )))
+        player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "ničit bloky")))
         event.isCancelled = true
     }
 
@@ -44,7 +42,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         if (!tools && !itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) return
 
         if (!player.hasPermission("magenta.silky.spawner"))
-            return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.silky.spawner.error.permissions")))
+            return player.sendMessage(magenta.localeConfig.translation("magenta.silky.spawner.error.permissions"))
 
         BlockUtils.dropSpawner(block)
     }
@@ -89,7 +87,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
 
         val isLineSame = sign.getSide(Side.FRONT)
             .line(0)
-            .contains(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.sign.warp")))
+            .contains(magenta.localeConfig.translation("magenta.sign.warp"))
 
         if (isLineSame && !hasPlayerPermission) {
             event.isCancelled = true
@@ -112,10 +110,11 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
         if (requiredLevel < level) return
 
-        player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.mining.level.required"), TagResolver.resolver(
-                Placeholder.parsed("block", block.type.name),
-                Placeholder.parsed("level", level.toString()),
-                Placeholder.parsed("required_level", requiredLevel.toString()))))
+        player.sendMessage(magenta.localeConfig.translation("magenta.mining.level.required", TagResolver.resolver(
+            Placeholder.parsed("block", block.type.name),
+            Placeholder.parsed("level", level.toString()),
+            Placeholder.parsed("required_level", requiredLevel.toString()))
+        ))
         event.isCancelled = true
     }
 
@@ -124,9 +123,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val player = event.player
 
         if (magenta.user.getUser(player.uniqueId).isJailed()) {
-            player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.command.jail.error.event"), TagResolver.resolver(
-                Placeholder.parsed("action", "pokládat bloky")
-            )))
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "pokládat bloky")))
             event.isCancelled = true
             return
         }

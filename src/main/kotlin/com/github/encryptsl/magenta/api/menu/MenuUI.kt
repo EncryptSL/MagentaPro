@@ -145,13 +145,13 @@ class MenuUI(private val magenta: Magenta) : Menu {
     ) {
         if (fileConfiguration.contains("menu.gui.button.$btnType")) {
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions")))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions"))
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.row"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row")))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row"))
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.col"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col")))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col"))
 
             if (fileConfiguration.getString("menu.gui.button.$btnType.item").equals(material.name, true)) {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
@@ -172,13 +172,13 @@ class MenuUI(private val magenta: Magenta) : Menu {
     ) {
         if (fileConfiguration.contains("menu.gui.button.$btnType")) {
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions"), Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.row"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row"), Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.col"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col"), Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (fileConfiguration.getString("menu.gui.button.$btnType.item").equals(material.name, true)) {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
@@ -199,13 +199,13 @@ class MenuUI(private val magenta: Magenta) : Menu {
     ) {
         if (fileConfiguration.contains("menu.gui.button.close")) {
             if (!fileConfiguration.contains("menu.gui.button.close.positions"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions"), Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (!fileConfiguration.contains("menu.gui.button.close.positions.row"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.row"), Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
-                return player.sendMessage(ModernText.miniModernText(magenta.localeConfig.getMessage("magenta.menu.error.button.missing.positions.col"), Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.close.positions.row"),
@@ -235,19 +235,13 @@ class MenuUI(private val magenta: Magenta) : Menu {
             val material = Material.getMaterial(fileConfiguration.getString("menu.custom-items.$item.icon").toString())
             if (material != null) {
                 if (!fileConfiguration.contains("menu.custom-items.$item.name"))
-                    return player.sendMessage(
-                        ModernText.miniModernText(
-                            magenta.localeConfig.getMessage("magenta.menu.error.not.defined.name"),
-                            Placeholder.parsed("category", type)
-                        )
-                    )
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                        Placeholder.parsed("category", type)
+                    ))
                 if (!fileConfiguration.contains("menu.custom-items.$item.position.slot"))
-                    return player.sendMessage(
-                        ModernText.miniModernText(
-                            magenta.localeConfig.getMessage("magenta.menu.error.not.defined.slot"),
-                            Placeholder.parsed("category", type)
-                        )
-                    )
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
+                        Placeholder.parsed("category", type)
+                    ))
                 val itemName = fileConfiguration.getString("menu.custom-items.$item.name").toString()
                 val slot = fileConfiguration.getInt("menu.custom-items.$item.position.slot")
                 val glowing = fileConfiguration.getBoolean("menu.custom-items.$item.options.glowing")
