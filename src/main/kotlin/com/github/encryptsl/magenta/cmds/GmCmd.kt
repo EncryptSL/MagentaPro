@@ -28,6 +28,7 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
                 GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { Suggestion.simple(it.name) }
             )
         }
+        annotationParser.parse(this)
     }
 
     @Command("gamemode|gm <mode>")
