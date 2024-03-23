@@ -32,7 +32,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) {
                         .map { ModernText.miniModernText(it, TagResolver.resolver(
                             Placeholder.parsed("required_votes", requiredVotes.toString()),
                             Placeholder.parsed("expression_reward",
-                                magenta.stringUtils.arithmeticExpression(player, magenta.config, "expression-formula",
+                                magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula",
                                     magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes", 0)
                                 )
                             )))
@@ -55,7 +55,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) {
     }
 
     private fun controlButtons(player: Player, fileConfiguration: FileConfiguration, gui: PaginatedGui) {
-        for (material in Material.values()) {
+        for (material in Material.entries) {
             previousPage(fileConfiguration, material, gui)
             closeButton(player, fileConfiguration, material, gui)
             nextPage(fileConfiguration, material, gui)

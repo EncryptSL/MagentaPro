@@ -156,7 +156,12 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
     }
 
-
-
-
+    @Permission("magenta.plugin.reload")
+    @Command("reload oraxen")
+    @CommandDescription("This command reload chat control config")
+    fun onReloadOraxenConfig(commandSender: CommandSender) {
+        magenta.oraxenControl.reload()
+        magenta.oraxenControl.save()
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+    }
 }

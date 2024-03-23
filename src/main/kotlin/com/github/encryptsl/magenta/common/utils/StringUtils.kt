@@ -18,11 +18,16 @@ class StringUtils(private val magenta: Magenta) {
         return message.replace("{player}", player.name).replace("%player%", player.name)
     }
 
-    fun arithmeticExpression(player: OfflinePlayer, config: FileConfiguration, path: String, value: Int = 0)
-        = expressionCalculation(config.getString(path).toString()
-            .replace("{level}", magenta.levelModel.getLevel(player.uniqueId).toString())
-            .replace("{money}", magenta.vaultHook.getBalance(player).toString()))
+    fun arithmeticExpression(player: OfflinePlayer, config: FileConfiguration, path: String, value: Int = 0): String {
+        val expressFormula = config.getString(path).toString()
+            .replace("{level}", magenta.levelModel.getLevel(player.uniqueId).level.toString())
+            .replace("{exp}", magenta.levelModel.getLevel(player.uniqueId).experience.toString())
+            .replace("{votes}", magenta.vote.getPlayerVote(player.uniqueId).toString())
+            .replace("{money}", magenta.vaultHook.getBalance(player).toString())
             .replace("{value}", value.toString())
+
+        return expressionCalculation(expressFormula)
+    }
 
     fun censorIp(ipAddress: String): String {
         val oktety = ipAddress.split(".")

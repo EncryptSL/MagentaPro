@@ -1,0 +1,6 @@
+oraxen:
+  items:
+    galaxy_pickaxe:
+      enabled: true
+      whitelisted-worlds:
+        - mineworld

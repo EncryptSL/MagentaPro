@@ -21,13 +21,13 @@ class AfkCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.afk")
     @CommandDescription("This command set you afk")
     fun onAfk(player: Player) {
-        magenta.afk.isAfk(player.uniqueId)
+        magenta.afk.isAfk(player.uniqueId, true)
     }
     @Command("afk <player>")
     @Permission("magenta.afk.other")
     @CommandDescription("This command set another player afk.")
     fun onAfkOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        magenta.afk.isAfk(target.uniqueId)
+        magenta.afk.isAfk(target.uniqueId, true)
     }
 
 }

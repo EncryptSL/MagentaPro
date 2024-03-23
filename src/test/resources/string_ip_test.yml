@@ -1,1 +1,2 @@
 ip-address: 8.8.8.8
+expression-formula: '{money} + ({level} / 2) * {value}'

@@ -75,6 +75,7 @@ open class Magenta : JavaPlugin() {
     val warpPlayerMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/owner_warps.yml") }
     val warpEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/editor/warp_editor.yml") }
     val chatControl: UniversalConfig by lazy { UniversalConfig(this, "chatcontrol/filter.yml") }
+    val oraxenControl: UniversalConfig by lazy { UniversalConfig(this, "oraxen/config.yml") }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
     val jailManager: JailManager by lazy { JailManager(jailConfig.getConfig()) }
@@ -100,6 +101,7 @@ open class Magenta : JavaPlugin() {
             .createFromResources("motd.txt", this)
             .createFromResources("citems.yml", this)
             .createFromResources("random.yml", this)
+            .createFromResources("oraxen/config.yml", this)
             .createFromResources("mythicmobs/config.yml", this)
             .createFromResources("menu/shop/shop.yml", this)
             .createFromResources("menu/creditshop/shop.yml", this)
@@ -165,6 +167,7 @@ open class Magenta : JavaPlugin() {
 
     private fun hookRegistration() {
         hookManger.hookLuckPerms()
+        hookManger.hookOraxen()
         hookManger.hookMythicMobs()
         hookManger.hookVault()
         hookManger.hookCreditLite()

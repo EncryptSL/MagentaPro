@@ -1,4 +1,5 @@
 
+import com.github.encryptsl.magenta.common.extensions.evaluate
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -9,6 +10,16 @@ import java.util.*
 class StringTest {
 
     private val config = ConfigUtil(this.javaClass.getResource("string_ip_test.yml").path)
+
+    @Test
+    fun expressionFormulaTest() {
+        println(config.getConfig().getString("expression-formula", null))
+
+        val i = config.getConfig().getString("expression-formula").toString()
+            .replace("{level}", "1")
+            .replace("{money}", "500").replace("{value}", "30")
+        println(evaluate(i).toInt().toString())
+    }
 
     @Test
     fun stringTest() {

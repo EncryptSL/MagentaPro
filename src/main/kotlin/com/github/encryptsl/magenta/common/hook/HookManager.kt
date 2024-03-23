@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobsListener
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
+import com.github.encryptsl.magenta.common.hook.oraxen.OraxenListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 
@@ -24,7 +25,16 @@ class HookManager(private val magenta: Magenta) {
             magenta.logger.info("MythicMobs Found Hook Success")
             magenta.pluginManager.registerEvents(MythicMobsListener(magenta), magenta)
         } else {
-            magenta.logger.warning("MythicMobs not found, please download !")
+            magenta.logger.warning("MythicMobs not found, you can't use damage rewarding !")
+        }
+    }
+
+    fun hookOraxen() {
+        if (isPluginInstalled("Oraxen")) {
+            magenta.logger.info("Oraxen found, now you can allow or ban item in worlds.")
+            magenta.pluginManager.registerEvents(OraxenListener(magenta), magenta)
+        } else {
+            magenta.logger.warning("Oraxen not found, you can't allow or ban item in worlds !")
         }
     }
 
@@ -48,7 +58,7 @@ class HookManager(private val magenta: Magenta) {
         if (isPluginInstalled("CreditLite") && CreditLiteHook(magenta).setupCreditLite()) {
             magenta.logger.info("CreditLite found hook success !")
         } else {
-            magenta.logger.warning("CreditLite not found !")
+            magenta.logger.warning("CreditLite not found, you can't use credit economy !")
         }
     }
 

@@ -10,7 +10,7 @@ website: https://encryptsl.github.io/
 
 load: POSTWORLD
 depend: [LuckPerms]
-softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs]
+softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs, Oraxen]
 libraries:
   - com.zaxxer:HikariCP:5.1.0
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23

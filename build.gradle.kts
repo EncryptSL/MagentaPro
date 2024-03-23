@@ -14,6 +14,7 @@ repositories {
     maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    maven("https://repo.oraxen.com/releases")
 }
 
 dependencies {
@@ -31,9 +32,7 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
-    implementation("com.github.Keelar:ExprK:-SNAPSHOT") {
-        exclude("org.jetbrains.kotlin")
-    }
+    compileOnly("io.th0rgal:oraxen:1.171.0")
     implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.7")
     implementation("org.incendo:cloud-paper:2.0.0-beta.2")
