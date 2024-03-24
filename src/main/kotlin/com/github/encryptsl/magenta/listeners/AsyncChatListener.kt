@@ -10,7 +10,6 @@ import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -27,7 +26,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val recipients = HashSet(Bukkit.getOnlinePlayers())
         val user = magenta.user.getUser(player.uniqueId)
-        val message = PlainTextComponentSerializer.plainText().serialize(event.message())
+        val message = ModernText.convertComponentToText(event.message())
         mentionManager.mentionProcess(event)
 
         if (message.contains("[item]")) {
@@ -39,8 +38,6 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
             event.isCancelled = true
         }
 
-        val format = magenta.config.getString("chat.group-formats.${luckPermsHook.getGroup(player)}") ?: magenta.config.getString("chat.default-format").toString()
-        val suggestCommand = magenta.config.getString("chat.suggestCommand") ?: ""
 
         val it = recipients.iterator()
         while (it.hasNext()) {
@@ -50,8 +47,11 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
             }
         }
 
+        val format = magenta.config.getString("chat.group-formats.${luckPermsHook.getGroup(player)}") ?: magenta.config.getString("chat.default-format").toString()
+        val suggestCommand = magenta.config.getString("chat.suggestCommand", "/tell $player ").toString()
+
         event.renderer { source, _, ms, _ ->
-            val plainText = PlainTextComponentSerializer.plainText().serialize(ms)
+            val plainText = ModernText.convertComponentToText(ms)
             ModernText.miniModernText(format,
                 TagResolver.resolver(
                     Placeholder.parsed("world", source.world.name),

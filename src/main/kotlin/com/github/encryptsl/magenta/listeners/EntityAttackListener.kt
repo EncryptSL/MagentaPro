@@ -18,6 +18,7 @@ class EntityAttackListener(private val magenta: Magenta) : Listener {
             val player = entity.player ?: return
             if (event.cause  != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
             if (!magenta.user.getUser(player.uniqueId).isJailed()) return
+            if (!magenta.user.getUser(player.uniqueId).isAfk()) return
 
             event.isCancelled = true
         }
@@ -28,6 +29,7 @@ class EntityAttackListener(private val magenta: Magenta) : Listener {
             val player = event.damager as Player
 
             if (!magenta.user.getUser(player.uniqueId).isJailed()) return
+            if (!magenta.user.getUser(player.uniqueId).isAfk()) return
 
             player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "útočit")))
             event.isCancelled = true

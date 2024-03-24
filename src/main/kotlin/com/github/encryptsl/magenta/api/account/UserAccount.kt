@@ -41,6 +41,7 @@ class UserAccount(private val plugin: Plugin, private val uuid: UUID) : Account 
     }
 
     override fun saveLastLocation(player: Player) {
+        if (isJailed() || hasPunish()) return
         getAccount().set("lastlocation.world-name", player.world.name)
         getAccount().set("lastlocation.x", player.location.x)
         getAccount().set("lastlocation.y", player.location.y)

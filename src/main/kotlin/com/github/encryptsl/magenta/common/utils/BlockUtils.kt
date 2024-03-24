@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.common.utils
 
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.CreatureSpawner
@@ -10,14 +9,14 @@ import org.bukkit.inventory.ItemStack
 
 object BlockUtils {
 
-    fun dropSpawner(block: Block)
+    fun dropSpawner(block: Block, spawnerName: String)
     {
         val spawnerItem = ItemStack(Material.SPAWNER)
         val spawnerMeta = spawnerItem.itemMeta
 
         val spawner: CreatureSpawner = block.state as CreatureSpawner
         val entityType = spawner.spawnedType ?: return
-        spawnerMeta.displayName(ModernText.miniModernText("<red>SPAWNER <yellow>${entityType.name}"))
+        spawnerMeta.displayName(ModernText.miniModernText(spawnerName.replace("<entity>", entityType.name)))
         spawnerItem.setItemMeta(spawnerMeta)
 
         block.world.dropItemNaturally(block.location, spawnerItem)
@@ -28,8 +27,9 @@ object BlockUtils {
 
         if (itemInHand.type == Material.SPAWNER && itemInHand.hasItemMeta()) {
             val spawnerItemMeta = itemInHand.itemMeta
-            if (spawnerItemMeta.hasDisplayName()) {
-                val itemName = PlainTextComponentSerializer.plainText().serialize(spawnerItemMeta.displayName()!!)
+            val spawnerName = spawnerItemMeta.displayName()
+            if (spawnerItemMeta.hasDisplayName() && spawnerName != null) {
+                val itemName = ModernText.convertComponentToText(spawnerName)
                 val entityName = itemName.split(" ")
                 val entityType = EntityType.valueOf(entityName[1])
 

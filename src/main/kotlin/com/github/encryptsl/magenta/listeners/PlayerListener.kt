@@ -116,7 +116,6 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     fun onPlayerTeleport(event: PlayerTeleportEvent) {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
-        if (user.isJailed()) return
         user.saveLastLocation(player)
     }
 
@@ -150,19 +149,23 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     @EventHandler
     fun onPlayerInteraction(event: PlayerInteractEvent) {
         val player = event.player
+        val inventory = player.inventory
+        val itemInHand = inventory.itemInMainHand
         magenta.afk.setTime(player.uniqueId)
 
-        if (player.inventory.itemInMainHand.hasItemMeta()) {
+        if (itemInHand.hasItemMeta()) {
             if (event.action.isRightClick) {
-                val itemInHand = player.inventory.itemInMainHand
                 val itemMeta = itemInHand.itemMeta
+                val displayName = itemMeta.displayName()
                 val cItems = magenta.cItems.getConfig().getConfigurationSection("citems")?.getKeys(false) ?: return
 
-                if (itemMeta.hasDisplayName()) {
+                if (itemMeta.hasDisplayName() && displayName != null) {
                     for (it in cItems) {
                         val sid = magenta.cItems.getConfig().getString("citems.$it.sid").toString()
                         val item = magenta.cItems.getConfig().getString("citems.$it.name").toString().replace("<sid>", sid)
-                        if (itemMeta.displayName() != ModernText.miniModernText(item)) break
+                        val itemName = ModernText.convertComponentToText(displayName)
+                        val activationItemName = ModernText.convertComponentToText(ModernText.miniModernText(item))
+                        if (itemName != activationItemName) continue
 
                         val command = magenta.cItems.getConfig().getString("citems.$it.command").toString()
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(command, player))

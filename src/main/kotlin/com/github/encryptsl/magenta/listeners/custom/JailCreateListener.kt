@@ -19,12 +19,15 @@ class JailCreateListener(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("jail", jailName)
             ))
 
-        magenta.jailConfig.getConfig().set("jails.$jailName.location.world", location.world.name)
-        magenta.jailConfig.getConfig().set("jails.$jailName.location.x", location.x)
-        magenta.jailConfig.getConfig().set("jails.$jailName.location.y", location.y)
-        magenta.jailConfig.getConfig().set("jails.$jailName.location.z", location.z)
-        magenta.jailConfig.getConfig().set("jails.$jailName.location.yaw", location.yaw)
-        magenta.jailConfig.getConfig().set("jails.$jailName.location.pitch", location.pitch)
+
+        val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails") ?: return
+
+        jailSection.set("$jailName.location.world", location.world.name)
+        jailSection.set("$jailName.location.x", location.x)
+        jailSection.set("$jailName.location.y", location.y)
+        jailSection.set("$jailName.location.z", location.z)
+        jailSection.set("$jailName.location.yaw", location.yaw)
+        jailSection.set("$jailName.location.pitch", location.yaw)
         magenta.jailConfig.save()
         magenta.jailConfig.reload()
 

@@ -20,6 +20,7 @@ class EarnBlocksProgressManager(private val magenta: Magenta) {
     }
 
     fun saveMinedBlocks() {
+        if (earnBlocksProgress.isEmpty()) return
         for (el in earnBlocksProgress) {
             val user = magenta.user.getUser(el.key)
             user.set("mined.blocks", el.value, true)

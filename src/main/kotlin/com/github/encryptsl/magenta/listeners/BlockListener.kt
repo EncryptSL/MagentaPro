@@ -31,9 +31,9 @@ class BlockListener(private val magenta: Magenta) : Listener {
     fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
         val block = event.block
-        val silkyTools = magenta.config.getStringList("silky.tools")
+        val silkyTools = magenta.config.getStringList("silky_spawners.tools")
 
-        if (!magenta.config.getBoolean("silky.enabled")) return
+        if (!magenta.config.getBoolean("silky_spawners.enabled")) return
 
         if (block.type != Material.SPAWNER) return
 
@@ -44,7 +44,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         if (!player.hasPermission("magenta.silky.spawner"))
             return player.sendMessage(magenta.localeConfig.translation("magenta.silky.spawner.error.permissions"))
 
-        BlockUtils.dropSpawner(block)
+        BlockUtils.dropSpawner(block, magenta.config.getString("silky_spawners.spawner_name").toString())
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

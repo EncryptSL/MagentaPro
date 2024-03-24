@@ -255,9 +255,9 @@ warps:
 #                     SILKY SPAWNER                      #
 #             Configuration for Silky Spawner            #
 # ########################################################
-silky:
+silky_spawners:
   enabled: true
-  enchant: SILK_TOUCH
+  spawner_name: "<red>SPAWNER <yellow><spawner>"
   tools:
     - GOLD_PICKAXE
     - IRON_PICKAXE
