@@ -57,6 +57,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
                         com.github.encryptsl.magenta.api.ItemBuilder(material, 1).setName(ModernText.miniModernText(name)).setGlowing(glowing).create()
                     ).asGuiItem { action ->
                         if (action.isRightClick || action.isLeftClick) {
+                            menuUI.playClickSound(player, magenta.creditShopConfig.getConfig())
                             openCategory(player, category)
                         }
                         action.isCancelled = true
@@ -152,7 +153,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
                         guiItem.setAction { action ->
                             if (action.isLeftClick) {
-                                if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required"))
+                                if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required")) {
                                     creditShopInventory.buyItem(
                                         action,
                                         guiItem.itemStack.displayName(),
@@ -162,8 +163,10 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
                                         "magenta.shop.success.buy",
                                         isBuyAllowed
                                     )
-                                else
+                                } else {
                                     confirmMenu.openConfirmMenu(player, this, type, creditShopInventory, guiItem.itemStack.displayName(), buyPrice, quantity, commands, isBuyAllowed)
+                                }
+                                menuUI.playClickSound(player, magenta.creditShopConfig.getConfig())
                             }
                         }
                         gui.setItem(slot, guiItem)

@@ -2,8 +2,11 @@ package com.github.encryptsl.magenta.api.menu.shop.helpers
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.UniversalConfig
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 object ShopHelper {
@@ -19,6 +22,16 @@ object ShopHelper {
 
     @JvmStatic
     fun calcPrice(amount: Int, price: Double) = (amount.times(price))
+
+    @JvmStatic
+    fun playSound(player: Player, type: String, volume: Float, pitch: Float) {
+        player.playSound(Sound.sound().type(Key.key(type)).volume(volume).pitch(pitch).build())
+    }
+
+    @JvmStatic
+    fun playSound(player: HumanEntity, type: String, volume: Float, pitch: Float) {
+        player.playSound(Sound.sound().type(Key.key(type)).volume(volume).pitch(pitch).build())
+    }
 
     @JvmStatic
     fun giveRewards(commands: MutableList<String>, username: String, quantity: Int) {

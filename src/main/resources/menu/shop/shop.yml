@@ -4,6 +4,8 @@ menu:
     categoryName: <dark_gray> SHOP - <yellow><category>
     fill:
       border: BLUE_STAINED_GLASS_PANE
+    click-sounds:
+      ui: "ui.button.click"
     item_lore:
       - <color:#004c9e>Nákup <color:#037cff><price>
       - <color:#004c9e>Prodej <color:#037cff><sell>

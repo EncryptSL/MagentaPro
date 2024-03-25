@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.menu
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -13,6 +14,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 
 class MenuUI(private val magenta: Magenta) : Menu {
@@ -134,6 +136,11 @@ class MenuUI(private val magenta: Magenta) : Menu {
             )
             return
         }
+    }
+
+    override fun playClickSound(player: HumanEntity, fileConfiguration: FileConfiguration) {
+        val type = fileConfiguration.getString("menu.gui.click-sounds.ui").toString()
+        ShopHelper.playSound(player, type, 5f, 1f)
     }
 
     override fun previousPage(

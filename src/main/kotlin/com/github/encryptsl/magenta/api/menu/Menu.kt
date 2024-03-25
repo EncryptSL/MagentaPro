@@ -8,6 +8,7 @@ import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 
 interface Menu {
@@ -24,6 +25,8 @@ interface Menu {
     fun fillFull(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
 
     fun fillSide(guiFiller: GuiFiller, fileConfiguration: FileConfiguration)
+
+    fun playClickSound(player: HumanEntity, fileConfiguration: FileConfiguration)
 
     fun previousPage(
         player: Player,
