@@ -11,6 +11,7 @@ import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 
 class CreditShop(private val magenta: Magenta) : MenuExtender {
@@ -19,7 +20,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val confirmMenu: CreditShopConfirmMenu by lazy { CreditShopConfirmMenu(magenta, menuUI) }
 
-    override fun openMenu(player: Player) {
+    override fun openMenu(player: HumanEntity) {
         val gui: Gui = menuUI.simpleGui(
             magenta.creditShopConfig.getConfig().getString("menu.gui.display").toString(),
             magenta.creditShopConfig.getConfig().getInt("menu.gui.size", 6),
@@ -67,7 +68,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
     }
 
 
-    fun openCategory(player: Player, category: String) {
+    fun openCategory(player: HumanEntity, category: String) {
         val shopCategory = UniversalConfig(magenta, "menu/creditshop/categories/$category.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
@@ -133,7 +134,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
             val guiItem = ItemBuilder.from(
                 magenta.itemFactory.creditShopItem(
-                    player,
+                    player as Player,
                     material,
                     itemName,
                     quantity,
@@ -150,9 +151,10 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
             guiItem.setAction { action ->
                 if (action.isLeftClick) {
                     if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required")) {
-                        menuUI.playClickSound(player, shopCategory.getConfig())
+                        menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
                         return@setAction creditShopInventory.buyItem(action, shopCategory.getConfig(), item, guiItem.itemStack.displayName(), isBuyAllowed)
                     }
+                    menuUI.playClickSound(action.whoClicked, magenta.creditShopConfirmMenuConfig.getConfig())
                     return@setAction confirmMenu.openConfirmMenu(
                         player = player,
                         item = item,
@@ -172,9 +174,9 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
         gui.open(player)
     }
 
-    private fun controlButtons(player: Player, menuUI: MenuUI, shopConfig: UniversalConfig, paginatedGui: PaginatedGui) {
+    private fun controlButtons(player: HumanEntity, menuUI: MenuUI, shopConfig: UniversalConfig, paginatedGui: PaginatedGui) {
         for (material in Material.entries) {
-            menuUI.nextPage(player, material, shopConfig.getConfig(), "previous", paginatedGui)
+            menuUI.previousPage(player, material, shopConfig.getConfig(), "previous", paginatedGui)
             menuUI.closeButton(
                 player,
                 material,

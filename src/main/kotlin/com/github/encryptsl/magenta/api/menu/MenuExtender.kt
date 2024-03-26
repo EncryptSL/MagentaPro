@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.menu
 
-import org.bukkit.entity.Player
+import org.bukkit.entity.HumanEntity
 
 interface MenuExtender {
-    fun openMenu(player: Player)
+    fun openMenu(player: HumanEntity)
 }

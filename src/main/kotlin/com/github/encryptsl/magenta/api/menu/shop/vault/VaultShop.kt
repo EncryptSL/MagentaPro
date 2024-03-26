@@ -13,14 +13,14 @@ import dev.triumphteam.gui.guis.Gui
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
-import org.bukkit.entity.Player
+import org.bukkit.entity.HumanEntity
 
 class VaultShop(private val magenta: Magenta) : MenuExtender {
 
     private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
 
-    override fun openMenu(player: Player) {
+    override fun openMenu(player: HumanEntity) {
         val gui: Gui = menuUI.simpleGui(magenta.shopConfig.getConfig().getString("menu.gui.display").toString(),
             magenta.shopConfig.getConfig().getInt("menu.gui.size", 6), GuiType.CHEST)
 
@@ -51,8 +51,8 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 magenta.itemFactory.shopItem(material, name)
             ).asGuiItem { action ->
                 if (action.isRightClick || action.isLeftClick) {
-                    menuUI.playClickSound(player, magenta.shopConfig.getConfig())
-                    return@asGuiItem openCategory(player, category)
+                    menuUI.playClickSound(action.whoClicked, magenta.shopConfig.getConfig())
+                    return@asGuiItem openCategory(action.whoClicked, category)
                 }
                 action.isCancelled = true
             }
@@ -62,7 +62,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
         gui.open(player)
     }
 
-    fun openCategory(player: Player, type: String) {
+    fun openCategory(player: HumanEntity, type: String) {
         val shopCategory = UniversalConfig(magenta, "menu/shop/categories/$type.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
@@ -168,7 +168,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
         gui.open(player)
     }
 
-    private fun controlButtons(player: Player, menuUI: MenuUI, shopCategory: UniversalConfig, gui: PaginatedGui) {
+    private fun controlButtons(player: HumanEntity, menuUI: MenuUI, shopCategory: UniversalConfig, gui: PaginatedGui) {
         for (material in Material.entries) {
             menuUI.previousPage(player, material, shopCategory.getConfig(), "previous", gui)
             menuUI.closeButton(

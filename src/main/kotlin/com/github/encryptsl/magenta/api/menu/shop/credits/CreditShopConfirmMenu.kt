@@ -10,12 +10,12 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.Player
+import org.bukkit.entity.HumanEntity
 
 class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: MenuUI) {
 
     fun openConfirmMenu(
-        player: Player,
+        player: HumanEntity,
         item: String,
         category: String,
         categoryConfig: FileConfiguration,
@@ -30,7 +30,6 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
             GuiType.CHEST
         )
         menuUI.useAllFillers(gui.filler, magenta.creditShopConfirmMenuConfig.getConfig())
-        menuUI.playClickSound(player, magenta.creditShopConfirmMenuConfig.getConfig())
 
         confirmPay(player, item, category, gui, creditShop, categoryConfig, creditShopInventory, displayName, isBuyAllowed)
         cancelPay(player, category, gui, creditShop)
@@ -40,7 +39,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
     }
 
     private fun confirmPay(
-        player: Player,
+        player: HumanEntity,
         item: String,
         category: String,
         gui: Gui,
@@ -83,7 +82,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         }
     }
 
-    private fun cancelPay(player: Player, category: String, gui: Gui, creditShop: CreditShop) {
+    private fun cancelPay(player: HumanEntity, category: String, gui: Gui, creditShop: CreditShop) {
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no")) {
             val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()) ?: return
 
@@ -114,7 +113,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         }
     }
 
-    private fun close(player: Player, gui: Gui, fileConfiguration: FileConfiguration) {
+    private fun close(player: HumanEntity, gui: Gui, fileConfiguration: FileConfiguration) {
         for (material in Material.entries) {
             menuUI.playClickSound(player, magenta.creditShopConfig.getConfig())
             menuUI.closeButton(player, material, gui, fileConfiguration, null)

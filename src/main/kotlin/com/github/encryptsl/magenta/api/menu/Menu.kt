@@ -9,7 +9,6 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 
 interface Menu {
 
@@ -29,7 +28,7 @@ interface Menu {
     fun playClickSound(player: HumanEntity, fileConfiguration: FileConfiguration)
 
     fun previousPage(
-        player: Player,
+        player: HumanEntity,
         material: Material,
         fileConfiguration: FileConfiguration,
         btnType: String,
@@ -37,7 +36,7 @@ interface Menu {
     )
 
     fun nextPage(
-        player: Player,
+        player: HumanEntity,
         material: Material,
         fileConfiguration: FileConfiguration,
         btnType: String,
@@ -45,7 +44,7 @@ interface Menu {
     )
 
     fun closeButton(
-        player: Player,
+        player: HumanEntity,
         material: Material,
         gui: BaseGui,
         fileConfiguration: FileConfiguration,

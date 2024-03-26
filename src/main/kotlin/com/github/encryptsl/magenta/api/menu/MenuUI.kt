@@ -15,7 +15,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 
 class MenuUI(private val magenta: Magenta) : Menu {
 
@@ -144,7 +143,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
     }
 
     override fun previousPage(
-        player: Player,
+        player: HumanEntity,
         material: Material,
         fileConfiguration: FileConfiguration,
         btnType: String,
@@ -174,7 +173,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
     }
 
     override fun nextPage(
-        player: Player,
+        player: HumanEntity,
         material: Material,
         fileConfiguration: FileConfiguration,
         btnType: String,
@@ -204,7 +203,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
     }
 
     override fun closeButton(
-        player: Player,
+        player: HumanEntity,
         material: Material,
         gui: BaseGui,
         fileConfiguration: FileConfiguration,
@@ -245,7 +244,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
         }
     }
 
-    fun customItems(player: Player, type: String, fileConfiguration: FileConfiguration, gui: BaseGui) {
+    fun customItems(player: HumanEntity, type: String, fileConfiguration: FileConfiguration, gui: BaseGui) {
         for (item in fileConfiguration.getConfigurationSection("menu.custom-items")?.getKeys(false)!!) {
             val material = Material.getMaterial(fileConfiguration.getString("menu.custom-items.$item.icon").toString())
             if (material != null) {
