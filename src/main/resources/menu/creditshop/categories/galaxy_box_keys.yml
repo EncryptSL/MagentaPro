@@ -3,6 +3,8 @@ menu:
     size: 6
     fill:
       bottom: BLUE_STAINED_GLASS_PANE
+    click-sounds:
+      ui: "ui.button.click"
     button:
       previous:
         item: GREEN_CONCRETE

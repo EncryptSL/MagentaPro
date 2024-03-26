@@ -73,32 +73,30 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
     private fun actionCustomButtons(player: Player, config: FileConfiguration, gui: PaginatedGui) {
 
         for (el in config.getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
-            val material = Material.getMaterial(config.getString("menu.items.buttons.${el}.icon").toString())
-            if (material != null) {
-                if (config.contains("menu.items.buttons.$el")) {
-                    if (!config.contains("menu.items.buttons.$el.name"))
-                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
-                                Placeholder.parsed("category", config.name)
-                            ))
+            val material = Material.getMaterial(config.getString("menu.items.buttons.${el}.icon").toString()) ?: continue
+            if (config.contains("menu.items.buttons.$el")) {
+                if (!config.contains("menu.items.buttons.$el.name"))
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                        Placeholder.parsed("category", config.name)
+                    ))
 
-                    val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+                val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
 
-                    itemStack.setName(ModernText.miniModernText(config.getString("menu.items.buttons.${el}.name").toString()))
+                itemStack.setName(ModernText.miniModernText(config.getString("menu.items.buttons.${el}.name").toString()))
 
-                    val lores = config
-                        .getStringList("menu.items.buttons.$el.lore")
-                        .map { ModernText.miniModernText(it) }
-                        .toMutableList()
+                val lores = config
+                    .getStringList("menu.items.buttons.$el.lore")
+                    .map { ModernText.miniModernText(it) }
+                    .toMutableList()
 
-                    itemStack.addLore(lores)
+                itemStack.addLore(lores)
 
-                    val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
-                        if (action.isLeftClick) {
-                            openOwnerWarps(player, config, el)
-                        }
+                val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
+                    if (action.isLeftClick) {
+                        openOwnerWarps(player, config, el)
                     }
-                    gui.setItem(config.getInt("menu.items.buttons.$el.positions.row"), config.getInt("menu.items.buttons.$el.positions.col"), actionItems)
                 }
+                gui.setItem(config.getInt("menu.items.buttons.$el.positions.row"), config.getInt("menu.items.buttons.$el.positions.col"), actionItems)
             }
         }
     }

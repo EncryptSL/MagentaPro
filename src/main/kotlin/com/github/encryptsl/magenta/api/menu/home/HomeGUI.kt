@@ -24,14 +24,14 @@ class HomeGUI(private val magenta: Magenta) {
 
         menuUI.useAllFillers(gui.filler, magenta.homeMenuConfig.getConfig())
 
-        magenta.homeModel.getHomesByOwner(player).forEach { home ->
-
+        for (home in magenta.homeModel.getHomesByOwner(player)) {
             val material = Material.getMaterial(home.homeIcon) ?: Material.OAK_DOOR
 
             val itemHomeBuilder = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
 
             if (magenta.homeMenuConfig.getConfig().contains("menu.home-info.display")) {
-                itemHomeBuilder.setName(ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.home-info.display").toString(),
+                itemHomeBuilder.setName(
+                    ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.home-info.display").toString(),
                     Placeholder.parsed("home", home.homeName)
                 ))
             }
@@ -52,7 +52,7 @@ class HomeGUI(private val magenta: Magenta) {
                 itemHomeBuilder.addLore(lores)
             }
 
-            val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem {action ->
+            val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem { action ->
                 if (action.isLeftClick) {
                     magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.homeName, magenta.config.getLong("teleport-cooldown")))
                     return@asGuiItem

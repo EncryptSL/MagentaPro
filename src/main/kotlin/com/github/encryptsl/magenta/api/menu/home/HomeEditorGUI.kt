@@ -34,48 +34,45 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         menu.useAllFillers(gui.filler, magenta.homeEditorConfig.getConfig())
 
         for (el in magenta.homeEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
-            val material = Material.getMaterial(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString())
+            val material = Material.getMaterial(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()) ?: continue
+            if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el")) continue
 
-            if (material != null) {
-                if (magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el")) {
-                    if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.name"))
-                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+            if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.name"))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
                             Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
-                        ))
+                ))
 
-                    if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.slot"))
-                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
-                            Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
-                        ))
+            if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.slot"))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
+                    Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
+                ))
 
-                    if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.icon"))
-                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
-                            Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
-                        ))
+            if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.icon"))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
+                    Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
+                ))
 
-                    val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+            val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
 
-                    itemStack.setName(ModernText.miniModernText(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString()))
+            itemStack.setName(ModernText.miniModernText(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString()))
 
-                    val lores = magenta.warpEditorConfig
-                        .getConfig()
-                        .getStringList("menu.items.buttons.$el.lore")
-                        .map { ModernText.miniModernText(it) }
-                        .toMutableList()
+            val lores = magenta.warpEditorConfig
+                .getConfig()
+                .getStringList("menu.items.buttons.$el.lore")
+                .map { ModernText.miniModernText(it) }
+                .toMutableList()
 
-                    itemStack.addLore(lores)
+            itemStack.addLore(lores)
 
-                    val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
-                        if (action.isLeftClick) {
-                            backToMenu(player, magenta.homeEditorConfig.getConfig(), el)
-                            setLocation(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
-                            setNewIcon(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
-                            deleteHome(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
-                        }
-                    }
-                    gui.setItem(magenta.homeEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)
+            val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
+                if (action.isLeftClick) {
+                    backToMenu(player, magenta.homeEditorConfig.getConfig(), el)
+                    setLocation(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
+                    setNewIcon(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
+                    deleteHome(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
                 }
             }
+            gui.setItem(magenta.homeEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)
             gui.open(player)
         }
     }

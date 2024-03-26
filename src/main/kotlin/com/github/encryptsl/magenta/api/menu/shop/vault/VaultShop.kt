@@ -26,42 +26,38 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
         menuUI.useAllFillers(gui.filler, magenta.shopConfig.getConfig())
 
-        for (material in Material.entries) {
-            for (category in magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")
-                ?.getKeys(false)!!) {
+        for (category in magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
+            val material = Material.getMaterial(
+                magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
+            ) ?: continue
 
-                if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
-                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
-                        Placeholder.parsed("category", category)
-                    ))
+            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                    Placeholder.parsed("category", category)
+                ))
 
-                if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
-                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
-                        Placeholder.parsed("category", category)
-                    ))
+            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
+                    Placeholder.parsed("category", category)
+                ))
 
-                if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
-                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
-                        Placeholder.parsed("category", category)
-                    ))
+            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
+                    Placeholder.parsed("category", category)
+                ))
 
-                if (magenta.shopConfig.getConfig().getString("menu.categories.$category.icon")
-                        .equals(material.name, ignoreCase = true)
-                ) {
-                    val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
-                    val item = ItemBuilder.from(
-                        magenta.itemFactory.shopItem(material, name)
-                    ).asGuiItem { action ->
-                        if (action.isRightClick || action.isLeftClick) {
-                            menuUI.playClickSound(player, magenta.shopConfig.getConfig())
-                            openCategory(player, category)
-                        }
-                        action.isCancelled = true
-                    }
-
-                    gui.setItem(magenta.shopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
+            val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
+            val item = ItemBuilder.from(
+                magenta.itemFactory.shopItem(material, name)
+            ).asGuiItem { action ->
+                if (action.isRightClick || action.isLeftClick) {
+                    menuUI.playClickSound(player, magenta.shopConfig.getConfig())
+                    return@asGuiItem openCategory(player, category)
                 }
+                action.isCancelled = true
             }
+
+            gui.setItem(magenta.shopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
         }
         gui.open(player)
     }
@@ -96,78 +92,77 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
         menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
         for (item in shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false)!!) {
-            val material = Material.getMaterial(shopCategory.getConfig().getString("menu.items.${item}.icon").toString())
-            if (material != null) {
-                if (shopCategory.getConfig().contains("menu.items.$item")) {
-                    val itemName = shopCategory.getConfig().getString("menu.items.${item}.name") ?: material.name
-                    val buyPrice = shopCategory.getConfig().getDouble("menu.items.${item}.buy.price")
-                    val sellPrice = shopCategory.getConfig().getDouble("menu.items.${item}.sell.price")
+            if (!shopCategory.getConfig().contains("menu.items.$item")) continue
+            val material = Material.getMaterial(
+                shopCategory.getConfig().getString("menu.items.${item}.icon").toString()
+            ) ?: continue
+            val itemName = shopCategory.getConfig().getString("menu.items.${item}.name") ?: material.name
+            val buyPrice = shopCategory.getConfig().getDouble("menu.items.${item}.buy.price")
+            val sellPrice = shopCategory.getConfig().getDouble("menu.items.${item}.sell.price")
 
-                    val isBuyAllowed = shopCategory.getConfig().contains("menu.items.${item}.buy.price")
-                    val isSellAllowed = shopCategory.getConfig().contains("menu.items.${item}.sell.price")
-                    val commands = shopCategory.getConfig().getStringList("menu.items.${item}.buy.commands")
+            val isBuyAllowed = shopCategory.getConfig().contains("menu.items.${item}.buy.price")
+            val isSellAllowed = shopCategory.getConfig().contains("menu.items.${item}.sell.price")
+            val commands = shopCategory.getConfig().getStringList("menu.items.${item}.buy.commands")
 
-                    val guiItem = ItemBuilder.from(
-                        magenta.itemFactory.shopItem(
-                            itemName,
-                            material,
-                            buyPrice,
-                            sellPrice,
-                            magenta.shopConfig.getConfig()
-                        )
-                    ).asGuiItem()
+            val guiItem = ItemBuilder.from(
+                magenta.itemFactory.shopItem(
+                    itemName,
+                    material,
+                    buyPrice,
+                    sellPrice,
+                    magenta.shopConfig.getConfig()
+                )
+            ).asGuiItem()
 
-                    guiItem.setAction { action ->
-                        // BUY BY STACK = 64
-                        if (action.isShiftClick && action.isLeftClick) {
-                            menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
-                            return@setAction vaultShopInventory.buy(
-                                ShopPaymentInformation(
-                                    magenta.itemFactory.shopItem(material, 64, itemName),
-                                    ShopHelper.calcPrice(64, buyPrice),
-                                    isBuyAllowed
-                                ), null, action)
-                        }
-
-                        // BUY BY ONE ITEM = 1
-                        if (action.isLeftClick) {
-                            menuUI.playClickSound(action.whoClicked, magenta.shopConfig.getConfig())
-                            return@setAction vaultShopInventory.buy(
-                                ShopPaymentInformation(
-                                    magenta.itemFactory.shopItem(material, itemName),
-                                    ShopHelper.calcPrice(1, buyPrice), isBuyAllowed
-                                ), commands, action)
-                        }
-
-                        // SELL BY STACK = 64
-                        if (action.isShiftClick && action.isRightClick) {
-                            menuUI.playClickSound(action.whoClicked, magenta.shopConfig.getConfig())
-                            for (i in 0..35) {
-                                if (player.inventory.getItem(i)?.type == material) {
-                                    val itemStack = player.inventory.getItem(i)
-                                    return@setAction vaultShopInventory.sell(
-                                        ShopPaymentInformation(
-                                            itemStack!!,
-                                            ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed
-                                        ), action)
-                                }
-                            }
-                            return@setAction
-                        }
-
-                        // SELL BY ONE ITEM = 1
-                        if (action.isRightClick) {
-                            menuUI.playClickSound(action.whoClicked, magenta.shopConfig.getConfig())
-                            return@setAction vaultShopInventory.sell(
-                                ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName),
-                                    ShopHelper.calcPrice(1, sellPrice), isSellAllowed)
-                                , action)
-                        }
-                        action.isCancelled = true
-                    }
-                    gui.addItem(guiItem)
+            guiItem.setAction { action ->
+                // BUY BY STACK = 64
+                if (action.isShiftClick && action.isLeftClick) {
+                    menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
+                    return@setAction vaultShopInventory.buy(
+                        ShopPaymentInformation(
+                            magenta.itemFactory.shopItem(material, 64, itemName),
+                            ShopHelper.calcPrice(64, buyPrice),
+                            isBuyAllowed
+                        ), null, action)
                 }
+
+                // BUY BY ONE ITEM = 1
+                if (action.isLeftClick) {
+                    menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
+                    return@setAction vaultShopInventory.buy(
+                        ShopPaymentInformation(
+                            magenta.itemFactory.shopItem(material, itemName),
+                            ShopHelper.calcPrice(1, buyPrice), isBuyAllowed
+                        ), commands, action)
+                }
+
+                // SELL BY STACK = 64
+                if (action.isShiftClick && action.isRightClick) {
+                    menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
+                    for (i in 0..35) {
+                        if (player.inventory.getItem(i)?.type == material) {
+                            val itemStack = player.inventory.getItem(i)
+                            return@setAction vaultShopInventory.sell(
+                                ShopPaymentInformation(
+                                    itemStack!!,
+                                    ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed
+                                ), action)
+                        }
+                    }
+                    return@setAction
+                }
+
+                // SELL BY ONE ITEM = 1
+                if (action.isRightClick) {
+                    menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
+                    return@setAction vaultShopInventory.sell(
+                        ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName),
+                            ShopHelper.calcPrice(1, sellPrice), isSellAllowed)
+                        , action)
+                }
+                action.isCancelled = true
             }
+            gui.addItem(guiItem)
         }
         controlButtons(player, menuUI, shopCategory, gui)
         gui.open(player)

@@ -21,33 +21,31 @@ class VoteMilestonesGUI(private val magenta: Magenta) {
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
         val gui = menuUI.paginatedGui(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.gui.title") ?: player.name), 6)
 
-        if (magenta.config.contains("votifier.milestones-gui.items")) {
-            for (item in magenta.config.getConfigurationSection("votifier.milestones-gui.items")?.getKeys(false)!!) {
-                val material = Material.getMaterial(magenta.config.getString("votifier.milestones-gui.items.$item.item").toString())
-                if (material != null) {
-                    val itemStack = ItemBuilder(material, 1).setName(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.items.$item.name").toString()))
-                    val requiredVotes = magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes").minus(playerVotes)
-                    val unlockedLores = magenta.config.getStringList("votifier.milestones-gui.items.$item.unlocked-lore").map { ModernText.miniModernText(it) }.toMutableList()
-                    val lockedLores = magenta.config.getStringList("votifier.milestones-gui.items.$item.locked-lore")
-                        .map { ModernText.miniModernText(it, TagResolver.resolver(
-                            Placeholder.parsed("required_votes", requiredVotes.toString()),
-                            Placeholder.parsed("expression_reward",
-                                magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula",
-                                    magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes", 0)
-                                )
-                            )))
-                        }.toMutableList()
+        if (!magenta.config.contains("votifier.milestones-gui.items")) return
 
-                    if (magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes") > playerVotes) {
-                        itemStack.addLore(lockedLores)
-                    } else {
-                        itemStack.addLore(unlockedLores)
-                        itemStack.setGlowing(true)
-                    }
-                    val guiItem = dev.triumphteam.gui.builder.item.ItemBuilder.from(itemStack.create()).asGuiItem()
-                    gui.addItem(guiItem)
-                }
+        for (item in magenta.config.getConfigurationSection("votifier.milestones-gui.items")?.getKeys(false)!!) {
+            val material = Material.getMaterial(magenta.config.getString("votifier.milestones-gui.items.$item.item").toString()) ?: continue
+            val itemStack = ItemBuilder(material, 1).setName(ModernText.miniModernText(magenta.config.getString("votifier.milestones-gui.items.$item.name").toString()))
+            val requiredVotes = magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes").minus(playerVotes)
+            val unlockedLores = magenta.config.getStringList("votifier.milestones-gui.items.$item.unlocked-lore").map { ModernText.miniModernText(it) }.toMutableList()
+            val lockedLores = magenta.config.getStringList("votifier.milestones-gui.items.$item.locked-lore")
+                .map { ModernText.miniModernText(it, TagResolver.resolver(
+                    Placeholder.parsed("required_votes", requiredVotes.toString()),
+                    Placeholder.parsed("expression_reward",
+                        magenta.stringUtils.arithmeticExpression(player, magenta.config, "votifier.expression-formula",
+                            magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes", 0)
+                        )
+                    )))
+                }.toMutableList()
+
+            if (magenta.config.getInt("votifier.milestones-gui.items.$item.required_votes") > playerVotes) {
+                itemStack.addLore(lockedLores)
+            } else {
+                itemStack.addLore(unlockedLores)
+                itemStack.setGlowing(true)
             }
+            val guiItem = dev.triumphteam.gui.builder.item.ItemBuilder.from(itemStack.create()).asGuiItem()
+            gui.addItem(guiItem)
         }
 
         controlButtons(player, magenta.config, gui)

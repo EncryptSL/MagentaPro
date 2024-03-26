@@ -3,6 +3,8 @@ menu:
     display: <dark_blue>Potvrzení nákupu <gray>(<item>)
     categoryName: <gold>KREDIT SHOP - <yellow><category>
     size: 3
+    click-sounds:
+      ui: "ui.button.click"
     button:
       close:
         item: BARRIER

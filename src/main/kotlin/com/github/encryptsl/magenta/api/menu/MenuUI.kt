@@ -139,7 +139,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
     }
 
     override fun playClickSound(player: HumanEntity, fileConfiguration: FileConfiguration) {
-        val type = fileConfiguration.getString("menu.gui.click-sounds.ui").toString()
+        val type = fileConfiguration.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
         ShopHelper.playSound(player, type, 5f, 1f)
     }
 
@@ -164,7 +164,10 @@ class MenuUI(private val magenta: Magenta) : Menu {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
                     fileConfiguration.getInt("menu.gui.button.$btnType.positions.col"),
                     ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.$btnType.name").toString()))
-                        .asGuiItem { gui.previous() }
+                        .asGuiItem {
+                            gui.previous()
+                            playClickSound(player, fileConfiguration)
+                        }
                 )
             }
         }
@@ -191,7 +194,10 @@ class MenuUI(private val magenta: Magenta) : Menu {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
                     fileConfiguration.getInt("menu.gui.button.$btnType.positions.col"),
                     ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.$btnType.name").toString()))
-                        .asGuiItem { gui.next() }
+                        .asGuiItem {
+                            gui.next()
+                            playClickSound(player, fileConfiguration)
+                        }
                 )
             }
         }
@@ -219,10 +225,12 @@ class MenuUI(private val magenta: Magenta) : Menu {
                     fileConfiguration.getInt("menu.gui.button.close.positions.col"),
                     ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
                         .asGuiItem {
-                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) menuExtender?.openMenu(player) else gui.close(
-                                player
-                            )
-                        })
+                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true)
+                                menuExtender?.openMenu(player)
+                            else gui.close(player)
+                            playClickSound(player, fileConfiguration)
+                        }
+                )
             }
         }
     }

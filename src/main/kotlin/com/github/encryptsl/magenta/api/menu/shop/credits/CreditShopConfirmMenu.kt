@@ -12,26 +12,44 @@ import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
-class CreditShopConfirmMenu(private val magenta: Magenta) {
-    private val menuUI: MenuUI by lazy { MenuUI(magenta) }
+class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: MenuUI) {
 
-    fun openConfirmMenu(player: Player, creditShop: CreditShop, type: String, creditShopInventory: CreditShopInventory, product: Component, price: Double, quantity: Int, commands: MutableList<String>, isBuyAllowed: Boolean) {
+    fun openConfirmMenu(
+        player: Player,
+        item: String,
+        category: String,
+        categoryConfig: FileConfiguration,
+        creditShopInventory: CreditShopInventory,
+        displayName: Component,
+        creditShop: CreditShop,
+        isBuyAllowed: Boolean = false
+    ) {
         val gui: Gui = menuUI.simpleGui(
-            ModernText.miniModernText(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.gui.display").toString(), Placeholder.component("item", product)),
+            ModernText.miniModernText(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.gui.display").toString(), Placeholder.component("item", displayName)),
             magenta.creditShopConfirmMenuConfig.getConfig().getInt("menu.gui.size", 6),
             GuiType.CHEST
         )
-
         menuUI.useAllFillers(gui.filler, magenta.creditShopConfirmMenuConfig.getConfig())
+        menuUI.playClickSound(player, magenta.creditShopConfirmMenuConfig.getConfig())
 
-        confirmPay(player, type, gui, creditShop, creditShopInventory, product, price, quantity, commands, isBuyAllowed)
-        cancelPay(player, type, gui, creditShop)
+        confirmPay(player, item, category, gui, creditShop, categoryConfig, creditShopInventory, displayName, isBuyAllowed)
+        cancelPay(player, category, gui, creditShop)
         close(player, gui, magenta.creditShopConfirmMenuConfig.getConfig())
 
         gui.open(player)
     }
 
-    private fun confirmPay(player: Player, type: String, gui: Gui, creditShop: CreditShop, creditShopInventory: CreditShopInventory, product: Component, price: Double, quantity: Int, commands: MutableList<String>, isBuyAllowed: Boolean) {
+    private fun confirmPay(
+        player: Player,
+        item: String,
+        category: String,
+        gui: Gui,
+        creditShop: CreditShop,
+        config: FileConfiguration,
+        creditShopInventory: CreditShopInventory,
+        displayName: Component,
+        isBuyAllowed: Boolean
+    ) {
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok")) {
             val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.icon").toString()) ?: return
 
@@ -56,15 +74,16 @@ class CreditShopConfirmMenu(private val magenta: Magenta) {
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
                     menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
-                    creditShopInventory.buyItem(action, product, price, quantity, commands, "magenta.shop.success.buy", isBuyAllowed)
-                    creditShop.openCategory(player, type)
+                    creditShopInventory.buyItem(action, config, item, displayName, isBuyAllowed)
+                    creditShop.openCategory(player, category)
+                    return@asGuiItem
                 }
             }
             gui.setItem(slot, guiItem)
         }
     }
 
-    private fun cancelPay(player: Player, type: String, gui: Gui, creditShop: CreditShop) {
+    private fun cancelPay(player: Player, category: String, gui: Gui, creditShop: CreditShop) {
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no")) {
             val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()) ?: return
 
@@ -88,7 +107,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta) {
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
                     menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
-                    creditShop.openCategory(player, type)
+                    creditShop.openCategory(player, category)
                 }
             }
             gui.setItem(slot, guiItem)

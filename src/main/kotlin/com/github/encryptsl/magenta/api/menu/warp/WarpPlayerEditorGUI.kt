@@ -35,46 +35,44 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         menu.useAllFillers(gui.filler, magenta.warpEditorConfig.getConfig())
 
         for (el in magenta.warpEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
-            val material = Material.getMaterial(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString())
-            if (material != null) {
-                if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el")) {
-                    if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.name"))
-                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
-                            Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
-                        ))
+            val material = Material.getMaterial(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()) ?: continue
+            if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el")) {
+                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.name"))
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                        Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
+                    ))
 
-                    if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.slot"))
-                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
-                                Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
-                        ))
+                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.slot"))
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
+                        Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
+                    ))
 
-                    if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.icon"))
-                        return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
-                                Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
-                        ))
+                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.$el.icon"))
+                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
+                        Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
+                    ))
 
-                    val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+                val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
 
-                    itemStack.setName(ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString()))
+                itemStack.setName(ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString()))
 
-                    val lores = magenta.warpEditorConfig
-                        .getConfig()
-                        .getStringList("menu.items.buttons.$el.lore")
-                        .map { ModernText.miniModernText(it) }
-                        .toMutableList()
+                val lores = magenta.warpEditorConfig
+                    .getConfig()
+                    .getStringList("menu.items.buttons.$el.lore")
+                    .map { ModernText.miniModernText(it) }
+                    .toMutableList()
 
-                    itemStack.addLore(lores)
+                itemStack.addLore(lores)
 
-                    val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
-                        if (action.isLeftClick) {
-                            backToMenu(player, magenta.warpEditorConfig.getConfig(), el)
-                            setLocation(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
-                            setNewIcon(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
-                            deleteHome(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
-                        }
+                val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
+                    if (action.isLeftClick) {
+                        backToMenu(player, magenta.warpEditorConfig.getConfig(), el)
+                        setLocation(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
+                        setNewIcon(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
+                        deleteHome(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
                     }
-                    gui.setItem(magenta.warpEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)
                 }
+                gui.setItem(magenta.warpEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)
             }
         }
         gui.open(player)

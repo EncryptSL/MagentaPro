@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyWith
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import net.kyori.adventure.text.Component
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
@@ -13,7 +14,7 @@ class CreditShopInventory(private val magenta: Magenta) {
 
     private val economyShopIntegration = EconomyShopIntegration(magenta)
 
-    fun buyItem(inventory: InventoryClickEvent, product: Component, price: Double, quantity: Int, commands: MutableList<String>, message: String, isBuyAllowed: Boolean) {
+    fun buyItem(inventory: InventoryClickEvent, config: FileConfiguration, item: String, displayName: Component, isBuyAllowed: Boolean) {
         val player = inventory.whoClicked as Player
 
         if (!isBuyAllowed)
@@ -22,9 +23,13 @@ class CreditShopInventory(private val magenta: Magenta) {
         if (ShopHelper.isPlayerInventoryFull(player))
             return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.inventory.full"))
 
+        val price = config.getDouble("menu.items.$item.buy.price")
+        val quantity = config.getInt("menu.items.$item.buy.quantity")
+        val commands = config.getStringList("menu.items.$item.commands")
+
         val transactionErrors = EconomyWithdraw(player, price).transaction(CreditLiteHook(magenta)) ?: return
 
-        economyShopIntegration.doCreditTransaction(player, transactionErrors, message, product, price, quantity, commands)
+        economyShopIntegration.doCreditTransaction(player, transactionErrors, "magenta.shop.success.buy", displayName, price, quantity, commands)
     }
 
 
