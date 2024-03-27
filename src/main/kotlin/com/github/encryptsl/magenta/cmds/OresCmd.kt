@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.api.menu.ores.OresMilestonesGUI
+import com.github.encryptsl.magenta.api.menu.milestones.OresMilestonesGUI
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.AnnotationParser
@@ -26,6 +26,6 @@ class OresCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.ores.progress")
     @CommandDescription("This command open gui with your ores level mining progress")
     fun onOresProgress(player: Player) {
-        oresGUI.openMilestonesOresGUI(player)
+        oresGUI.openMenu(player)
     }
 }
