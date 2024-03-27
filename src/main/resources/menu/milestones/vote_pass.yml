@@ -1,0 +1,66 @@
+menu:
+  gui:
+    display: '<gray>Hlasovací Milníky'
+    button:
+      previous:
+        item: GREEN_CONCRETE
+        name: <gray>Zpět
+        positions:
+          row: 6
+          col: 4
+      close:
+        item: RED_CONCRETE
+        action: back
+        name: <green>Zpět do měnu
+        positions:
+          row: 6
+          col: 5
+      next:
+        item: ORANGE_CONCRETE
+        name: <gray>Další
+        positions:
+          row: 6
+          col: 6
+  items:
+    milestone_10:
+      item: 'EXPERIENCE_BOTTLE'
+      name: '<gold>Milník <white>#1'
+      required_votes: 10
+      unlocked-lore:
+        - '<gray>Informace'
+        - '<gray>Stav: <green>Milník byl dokončen !'
+      locked-lore:
+        - '<gray>Informace'
+        - '<yellow>Pro splnění milníku potřebuješ <green><required_votes><yellow> hlasů.'
+        - ''
+        - '<gray>Odměny'
+        - '<green>+ <expression_reward>$'
+        - '<yellow>+ 1x Klíč k Vote Crate'
+    milestone_30:
+      item: 'EXPERIENCE_BOTTLE'
+      name: '<gold>Milník <white>#2'
+      required_votes: 30
+      unlocked-lore:
+        - '<gray>Informace'
+        - '<gray>Stav: <green>Milník byl dokončen !'
+      locked-lore:
+        - '<gray>Informace'
+        - '<yellow>Pro splnění milníku potřebuješ <green><required_votes><yellow> hlasů.'
+        - ''
+        - '<gray>Odměny'
+        - '<green>+ <expression_reward>$'
+        - '<yellow>+ 1x Klíč k Vote Crate'
+    milestone_50:
+      item: 'EXPERIENCE_BOTTLE'
+      name: '<gold>Milník <white>#3'
+      required_votes: 50
+      unlocked-lore:
+        - '<gray>Informace'
+        - '<gray>Stav: <green>Milník byl dokončen !'
+      locked-lore:
+        - '<gray>Informace'
+        - '<yellow>Pro splnění milníku potřebuješ <green><required_votes><yellow> hlasů.'
+        - ''
+        - '<gray>Odměny'
+        - '<green>+ <expression_reward>$'
+        - '<yellow>+ 2x Klíč k Vote Crate'
