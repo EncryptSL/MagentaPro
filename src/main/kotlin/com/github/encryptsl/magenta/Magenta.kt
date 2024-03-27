@@ -68,7 +68,8 @@ open class Magenta : JavaPlugin() {
     val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
     val creditShopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/shop.yml") }
     val creditShopConfirmMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/confirm_menu.yml") }
-    val oresMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/levels/ores.yml") }
+    val milestonesOres: UniversalConfig by lazy { UniversalConfig(this, "menu/milestones/ores.yml") }
+    val milestonesVotePass: UniversalConfig by lazy { UniversalConfig(this, "menu/milestones/vote_pass.yml") }
     val homeMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/config.yml") }
     val homeEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/editor/home_editor.yml") }
     val warpMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/config.yml") }
@@ -122,7 +123,8 @@ open class Magenta : JavaPlugin() {
             .createFromResources("menu/warp/config.yml", this)
             .createFromResources("menu/warp/owner_warps.yml", this)
             .createFromResources("menu/warp/editor/warp_editor.yml", this)
-            .createFromResources("menu/levels/ores.yml", this)
+            .createFromResources("menu/milestones/ores.yml", this)
+            .createFromResources("menu/milestones/vote_pass.yml", this)
             .create("jails.yml")
         localeConfig.loadLocale("locale/cs_cz.properties")
         database.initConnect(
@@ -171,6 +173,7 @@ open class Magenta : JavaPlugin() {
         hookManger.hookMythicMobs()
         hookManger.hookVault()
         hookManger.hookCreditLite()
+        hookManger.hookMiniPlaceholders()
         hookManger.hookPAPI()
         hookManger.hookNuVotifier()
     }
