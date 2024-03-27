@@ -62,13 +62,21 @@ class HookManager(private val magenta: Magenta) {
         }
     }
 
+    fun hookMiniPlaceholders() {
+        if (isPluginInstalled("MiniPlaceholders")) {
+            magenta.logger.info("MiniPlaceholders found, placeholders are registered !")
+        } else {
+            magenta.logger.warning("Warning plugin MiniPlaceholders not found !")
+            magenta.logger.warning("Keep in mind without MiniPlaceholders, you can't use MagentaPro MiniPlaceholders.")
+        }
+    }
     fun hookPAPI() {
         if (isPluginInstalled("PlaceholderAPI")) {
-            magenta.logger.info("PlaceholderAPI hook success !")
+            magenta.logger.info("PlaceholderAPI found, placeholders are registered !")
             MagentaPlaceholderAPI(magenta, "1.0.0").register()
-
         } else {
-            magenta.logger.warning("PlaceholderAPI not found placeholders not working !")
+            magenta.logger.warning("Warning plugin PlaceholderAPI not found !")
+            magenta.logger.warning("Keep in mind without PlaceholderAPI, you can't use MagentaPro PAPI Placeholders.")
         }
     }
 

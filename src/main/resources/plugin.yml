@@ -10,7 +10,7 @@ website: https://encryptsl.github.io/
 
 load: POSTWORLD
 depend: [LuckPerms]
-softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs, Oraxen]
+softdepend: [Votifier, PlaceholderAPI, Vault, CreditLite, MythicMobs, Oraxen, MiniPlaceholders]
 libraries:
   - com.zaxxer:HikariCP:5.1.0
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23
@@ -288,7 +288,6 @@ permissions:
     description: Permissions for random items
     default: false
     children:
-      magenta.random.crates.key: true
       magenta.random.world.tickets: true
       magenta.random.tag: true
   magenta.repair.*:
