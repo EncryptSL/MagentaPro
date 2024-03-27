@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.api.menu.milestones.VoteMilestonesGUI
+import com.github.encryptsl.magenta.api.menu.modules.milestones.VoteMilestonesGUI
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder

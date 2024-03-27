@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
+import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.InvalidConfigurationException
@@ -86,11 +86,13 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     @Permission("magenta.plugin.reload")
-    @Command("reload oregui")
-    @CommandDescription("This command reload ores gui config")
-    fun onReloadLevelOreGUI(commandSender: CommandSender) {
-        magenta.oresMenuConfig.reload()
-        magenta.oresMenuConfig.save()
+    @Command("reload milestones")
+    @CommandDescription("This command reload milestones guis")
+    fun onReloadMilestones(commandSender: CommandSender) {
+        magenta.milestonesVotePass.reload()
+        magenta.milestonesVotePass.save()
+        magenta.milestonesOres.reload()
+        magenta.milestonesOres.save()
         commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
     }
 

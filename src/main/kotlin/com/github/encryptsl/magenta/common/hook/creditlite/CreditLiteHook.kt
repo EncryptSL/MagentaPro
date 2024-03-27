@@ -2,8 +2,8 @@ package com.github.encryptsl.magenta.common.hook.creditlite
 
 import com.github.encryptsl.credit.api.economy.CreditEconomy
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.shop.economy.Economy
-import com.github.encryptsl.magenta.api.menu.shop.economy.MissingEconomyException
+import com.github.encryptsl.magenta.api.menu.modules.shop.economy.Economy
+import com.github.encryptsl.magenta.api.menu.modules.shop.economy.MissingEconomyException
 import org.bukkit.OfflinePlayer
 
 class CreditLiteHook(private val magenta: Magenta) : Economy {

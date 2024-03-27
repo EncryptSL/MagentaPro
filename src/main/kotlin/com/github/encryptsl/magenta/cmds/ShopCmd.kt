@@ -2,8 +2,8 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
-import com.github.encryptsl.magenta.api.menu.shop.credits.CreditShop
-import com.github.encryptsl.magenta.api.menu.shop.vault.VaultShop
+import com.github.encryptsl.magenta.api.menu.modules.shop.credits.CreditShop
+import com.github.encryptsl.magenta.api.menu.modules.shop.vault.VaultShop
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.*
@@ -65,5 +65,4 @@ class ShopCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onOpenCreditShop(player: Player, @Argument(value = "type", suggestions = "creditshops") type: String) {
         creditShop.openCategory(player, type)
     }
-
 }
