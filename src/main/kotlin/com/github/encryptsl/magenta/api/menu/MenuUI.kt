@@ -180,7 +180,7 @@ class MenuUI(private val magenta: Magenta) : Menu {
         btnType: String,
         gui: PaginatedGui
     ) {
-        if (gui.pagesNum < 1) return
+        if (gui.pagesNum < 1 && 1 == gui.pagesNum) return
         if (fileConfiguration.contains("menu.gui.button.$btnType")) {
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
                 return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
