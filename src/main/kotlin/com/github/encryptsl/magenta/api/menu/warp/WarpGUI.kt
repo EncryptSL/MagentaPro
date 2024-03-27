@@ -11,14 +11,14 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.Player
+import org.bukkit.entity.HumanEntity
 
 class WarpGUI(private val magenta: Magenta) : MenuExtender {
 
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val warpPlayerGUI: WarpPlayerGUI by lazy { WarpPlayerGUI(magenta, this, WarpPlayerEditorGUI(magenta)) }
 
-    override fun openMenu(player: Player) {
+    override fun openMenu(player: HumanEntity) {
         val gui = menuUI.paginatedGui(
             ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.gui.display").toString(), Placeholder.parsed("count", magenta.warpModel.getWarps().count().toString())),
             magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
@@ -57,6 +57,7 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
 
             val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
+                    menuUI.playClickSound(action.whoClicked, magenta.warpMenuConfig.getConfig())
                     player.teleport(magenta.warpModel.toLocation(warp.warpName))
                     return@asGuiItem
                 }
@@ -70,7 +71,7 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
         gui.open(player)
     }
 
-    private fun actionCustomButtons(player: Player, config: FileConfiguration, gui: PaginatedGui) {
+    private fun actionCustomButtons(player: HumanEntity, config: FileConfiguration, gui: PaginatedGui) {
 
         for (el in config.getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
             val material = Material.getMaterial(config.getString("menu.items.buttons.${el}.icon").toString()) ?: continue
@@ -93,6 +94,7 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
 
                 val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                     if (action.isLeftClick) {
+                        menuUI.playClickSound(action.whoClicked, config)
                         openOwnerWarps(player, config, el)
                     }
                 }
@@ -101,13 +103,13 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
         }
     }
 
-    private fun openOwnerWarps(player: Player, fileConfiguration: FileConfiguration, el: String) {
+    private fun openOwnerWarps(player: HumanEntity, fileConfiguration: FileConfiguration, el: String) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("OPEN_MENU", true)) {
             warpPlayerGUI.openMenu(player)
         }
     }
 
-    private fun controlButtons(player: Player, menuUI: MenuUI, config: UniversalConfig, gui: PaginatedGui) {
+    private fun controlButtons(player: HumanEntity, menuUI: MenuUI, config: UniversalConfig, gui: PaginatedGui) {
         for (material in Material.entries) {
             menuUI.previousPage(player, material, config.getConfig(), "previous", gui)
             menuUI.closeButton(

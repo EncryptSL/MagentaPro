@@ -7,15 +7,15 @@ import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import net.kyori.adventure.text.Component
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
 
 class CreditShopInventory(private val magenta: Magenta) {
 
     private val economyShopIntegration = EconomyShopIntegration(magenta)
 
-    fun buyItem(inventory: InventoryClickEvent, config: FileConfiguration, item: String, displayName: Component, isBuyAllowed: Boolean) {
-        val player = inventory.whoClicked as Player
+    fun buyItem(humanEntity: HumanEntity, config: FileConfiguration, item: String, displayName: Component, isBuyAllowed: Boolean) {
+        val player = humanEntity as Player
 
         if (!isBuyAllowed)
             return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.buy.disabled"))

@@ -29,7 +29,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.blocked",
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
-        if (magenta.homeModel.getHomeExist(player, homeName))
+        if (magenta.homeModel.getHomeExist(player.uniqueId, homeName))
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.exist", Placeholder.parsed("home", homeName)))
 
         if (!magenta.homeModel.canSetHome(player))
@@ -50,10 +50,10 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.blocked",
                 Placeholder.parsed("world", player.location.world.name)))
 
-        if (!magenta.homeModel.getHomeExist(player, homeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
 
-        magenta.homeModel.deleteHome(player, homeName)
+        magenta.homeModel.deleteHome(player.uniqueId, homeName)
         player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.deleted", Placeholder.parsed("home", homeName)))
     }
 
@@ -64,7 +64,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
 
         when(infoType) {
             InfoType.LIST -> {
-                val list = magenta.homeModel.getHomesByOwner(player).joinToString { s ->
+                val list = magenta.homeModel.getHomesByOwner(player.uniqueId).joinToString { s ->
                     magenta.localeConfig.getMessage("magenta.command.home.success.list.component")
                         .replace("<home>", s.homeName)
                         .replace("info", magenta.config.getString("home-info-format").toString()
@@ -81,7 +81,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             }
             InfoType.INFO -> {
                 val homeName = event.homeName ?: return
-                if (!magenta.homeModel.getHomeExist(player, homeName))
+                if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
                     return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.not.exist",
                         Placeholder.parsed("home", homeName))
                     )
@@ -112,10 +112,10 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.blocked",
                 Placeholder.parsed("world", player.location.world.name)))
 
-        if (!magenta.homeModel.getHomeExist(player, homeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
 
-        magenta.homeModel.moveHome(player, homeName, location)
+        magenta.homeModel.moveHome(player.uniqueId, homeName, location)
         player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.moved", TagResolver.resolver(
             Placeholder.parsed("home", homeName),
             Placeholder.parsed("x", location.x.toInt().toString()),
@@ -137,11 +137,11 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.blocked",
                 Placeholder.parsed("world", location.world.name)))
 
-        if (!magenta.homeModel.getHomeExist(player, oldHomeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, oldHomeName))
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.not.exist",
                 Placeholder.parsed("home", oldHomeName)))
 
-        magenta.homeModel.renameHome(player, oldHomeName, newHomeName)
+        magenta.homeModel.renameHome(player.uniqueId, oldHomeName, newHomeName)
         player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.renamed", TagResolver.resolver(
             Placeholder.parsed("new_home", newHomeName),
             Placeholder.parsed("old_home", oldHomeName)
@@ -161,7 +161,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.blocked",
                 Placeholder.parsed("world", location.world.name)))
 
-        if (!magenta.homeModel.getHomeExist(player, homeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
             return player.sendMessage(magenta.localeConfig.translation("magenta.command.home.error.not.exist",
                 Placeholder.parsed("home", homeName)))
 

@@ -24,7 +24,7 @@ class HomeGUI(private val magenta: Magenta) {
 
         menuUI.useAllFillers(gui.filler, magenta.homeMenuConfig.getConfig())
 
-        for (home in magenta.homeModel.getHomesByOwner(player)) {
+        for (home in magenta.homeModel.getHomesByOwner(player.uniqueId)) {
             val material = Material.getMaterial(home.homeIcon) ?: Material.OAK_DOOR
 
             val itemHomeBuilder = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
@@ -58,6 +58,7 @@ class HomeGUI(private val magenta: Magenta) {
                     return@asGuiItem
                 }
                 if (action.isRightClick) {
+                    menuUI.playClickSound(player, magenta.homeEditorConfig.getConfig())
                     homeEditorGUI.openHomeEditorGUI(player, home.homeName)
                 }
             }

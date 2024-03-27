@@ -10,22 +10,22 @@ import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
-import org.bukkit.entity.Player
+import org.bukkit.entity.HumanEntity
 
 class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, private val playerEditorGUI: WarpPlayerEditorGUI) : MenuExtender {
 
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
-    override fun openMenu(player: Player) {
+    override fun openMenu(player: HumanEntity) {
         val gui = menuUI.paginatedGui(
             ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.gui.display").toString(),
-                Placeholder.parsed("count", magenta.warpModel.getWarpsByOwner(player).count().toString())
+                Placeholder.parsed("count", magenta.warpModel.getWarpsByOwner(player.uniqueId).count().toString())
             ),
             magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
         )
 
         menuUI.useAllFillers(gui.filler, magenta.warpPlayerMenuConfig.getConfig())
 
-        magenta.warpModel.getWarpsByOwner(player).forEach { warp ->
+        magenta.warpModel.getWarpsByOwner(player.uniqueId).forEach { warp ->
 
             val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
 
@@ -57,12 +57,14 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
 
             val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem { action ->
                 if (action.isLeftClick) {
+                    menuUI.playClickSound(action.whoClicked, magenta.warpPlayerMenuConfig.getConfig())
                     player.teleport(magenta.warpModel.toLocation(warp.warpName))
                     return@asGuiItem
                 }
 
                 if (action.isRightClick) {
-                    playerEditorGUI.openWarpPlayerEditor(player, warp.warpName)
+                    menuUI.playClickSound(action.whoClicked, magenta.warpPlayerMenuConfig.getConfig())
+                    playerEditorGUI.openWarpPlayerEditor(action.whoClicked, warp.warpName)
                 }
             }
             gui.addItem(item)
@@ -73,7 +75,7 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
         gui.open(player)
     }
 
-    private fun controlButtons(player: Player, menuUI: MenuUI, config: UniversalConfig, gui: PaginatedGui) {
+    private fun controlButtons(player: HumanEntity, menuUI: MenuUI, config: UniversalConfig, gui: PaginatedGui) {
         for (material in Material.entries) {
             menuUI.previousPage(player, material, config.getConfig(), "previous", gui)
             menuUI.closeButton(

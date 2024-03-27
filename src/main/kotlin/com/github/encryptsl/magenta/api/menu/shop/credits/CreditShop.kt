@@ -57,8 +57,8 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
             item.setAction { action ->
                 if (action.isRightClick || action.isLeftClick) {
-                    menuUI.playClickSound(player, magenta.creditShopConfig.getConfig())
-                    openCategory(player, category)
+                    menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
+                    return@setAction openCategory(action.whoClicked, category)
                 }
                 action.isCancelled = true
             }
@@ -151,12 +151,12 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
             guiItem.setAction { action ->
                 if (action.isLeftClick) {
                     if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required")) {
-                        menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
-                        return@setAction creditShopInventory.buyItem(action, shopCategory.getConfig(), item, guiItem.itemStack.displayName(), isBuyAllowed)
+                        menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
+                        return@setAction creditShopInventory.buyItem(action.whoClicked, shopCategory.getConfig(), item, guiItem.itemStack.displayName(), isBuyAllowed)
                     }
-                    menuUI.playClickSound(action.whoClicked, magenta.creditShopConfirmMenuConfig.getConfig())
+                    menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
                     return@setAction confirmMenu.openConfirmMenu(
-                        player = player,
+                        player = action.whoClicked,
                         item = item,
                         category = category,
                         categoryConfig = shopCategory.getConfig(),

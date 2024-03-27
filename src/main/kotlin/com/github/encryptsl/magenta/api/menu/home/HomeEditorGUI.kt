@@ -11,6 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 
 class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) {
@@ -70,6 +71,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                     setLocation(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
                     setNewIcon(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
                     deleteHome(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
+                    menu.playClickSound(player, magenta.homeEditorConfig.getConfig())
                 }
             }
             gui.setItem(magenta.homeEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)
@@ -88,7 +90,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_HOME", true)) {
             clicked =false
             clearIcons(gui)
-            magenta.homeModel.moveHome(player, homeName, player.location)
+            magenta.homeModel.moveHome(player.uniqueId, homeName, player.location)
             player.sendMessage(
                magenta.localeConfig.translation("magenta.command.home.success.moved",
                     TagResolver.resolver(
@@ -102,7 +104,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         }
     }
 
-    private fun setNewIcon(player: Player, homeName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
+    private fun setNewIcon(player: HumanEntity, homeName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         val itemName = fileConfiguration.getString("menu.icon.name")
 
         val icons: List<Material> = fileConfiguration.getStringList("menu.icons").filter { m -> Material.getMaterial(m)?.name != null }.map { Material.getMaterial(it)!! }
@@ -122,7 +124,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         }
     }
 
-    private fun setIcon(player: Player, homeName: String, gui: Gui, itemName: String, m: Material, lore: MutableList<Component>) {
+    private fun setIcon(player: HumanEntity, homeName: String, gui: Gui, itemName: String, m: Material, lore: MutableList<Component>) {
         gui.addItem(ItemBuilder.from(
             com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
                 .setName(ModernText.miniModernText(itemName,
@@ -131,7 +133,8 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                 .create()
         ).asGuiItem { action ->
             if (action.isLeftClick) {
-                magenta.homeModel.setHomeIcon(player, homeName, m.name)
+                menu.playClickSound(player, magenta.homeEditorConfig.getConfig())
+                magenta.homeModel.setHomeIcon(player.uniqueId, homeName, m.name)
                 player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.change.icon", TagResolver.resolver(
                     Placeholder.parsed("home", homeName),
                     Placeholder.parsed("icon", m.name)
@@ -140,10 +143,10 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         })
     }
 
-    private fun deleteHome(player: Player, homeName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
+    private fun deleteHome(player: HumanEntity, homeName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("DELETE_HOME", true)) {
             clicked = false
-            magenta.homeModel.deleteHome(player, homeName)
+            magenta.homeModel.deleteHome(player.uniqueId, homeName)
             gui.close(player)
             player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.deleted", Placeholder.parsed("home", homeName)))
         }

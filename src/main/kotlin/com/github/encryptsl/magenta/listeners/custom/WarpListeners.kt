@@ -40,7 +40,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         if (player.hasPermission("magenta.warp.delete.other"))
             magenta.warpModel.deleteWarp(warpName)
         else
-            magenta.warpModel.deleteWarp(player, warpName)
+            magenta.warpModel.deleteWarp(player.uniqueId, warpName)
 
         player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
     }
@@ -104,7 +104,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         if (player.hasPermission("magenta.move.warp.other"))
             magenta.warpModel.moveWarp(warpName, location)
         else
-            magenta.warpModel.moveWarp(player, warpName, location)
+            magenta.warpModel.moveWarp(player.uniqueId, warpName, location)
 
         player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.moved", TagResolver.resolver(
             Placeholder.parsed("warp", warpName),
@@ -128,7 +128,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         if (player.hasPermission("magenta.rename.warp.other"))
             magenta.warpModel.renameWarp(fromWarpName, toWarpName)
         else
-            magenta.warpModel.renameWarp(player, fromWarpName, toWarpName)
+            magenta.warpModel.renameWarp(player.uniqueId, fromWarpName, toWarpName)
 
         player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.renamed", TagResolver.resolver(
             Placeholder.parsed("from_warp", fromWarpName),

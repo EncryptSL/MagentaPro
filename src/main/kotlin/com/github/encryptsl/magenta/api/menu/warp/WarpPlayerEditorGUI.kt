@@ -11,7 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.Player
+import org.bukkit.entity.HumanEntity
 
 class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
@@ -22,7 +22,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
     private var clicked = false
 
-    fun openWarpPlayerEditor(player: Player, warpName: String) {
+    fun openWarpPlayerEditor(player: HumanEntity, warpName: String) {
         val gui = menu.simpleGui(
             ModernText.miniModernText(
                 magenta.warpEditorConfig.getConfig().getString("menu.gui.display").toString(),
@@ -70,6 +70,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                         setLocation(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
                         setNewIcon(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
                         deleteHome(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
+                        menu.playClickSound(action.whoClicked, magenta.warpEditorConfig.getConfig())
                     }
                 }
                 gui.setItem(magenta.warpEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)
@@ -78,18 +79,18 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         gui.open(player)
     }
 
-    private fun backToMenu(player: Player, fileConfiguration: FileConfiguration, el: String) {
+    private fun backToMenu(player: HumanEntity, fileConfiguration: FileConfiguration, el: String) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("BACK_TO_MENU", true)) {
             clicked = false
             warpPlayerGUI.openMenu(player)
         }
     }
 
-    private fun setLocation(player: Player, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
+    private fun setLocation(player: HumanEntity, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_WARP", true)) {
             clicked = false
             clearIcons(gui)
-            magenta.warpModel.moveWarp(player, warpName, player.location)
+            magenta.warpModel.moveWarp(player.uniqueId, warpName, player.location)
             player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.moved", TagResolver.resolver(
                 Placeholder.parsed("warp", warpName),
                 Placeholder.parsed("x", player.location.x.toInt().toString()),
@@ -99,14 +100,14 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         }
     }
 
-    private fun setNewIcon(player: Player, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
+    private fun setNewIcon(player: HumanEntity, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_ICON", true)) {
             loadIcons(player, gui, warpName, fileConfiguration)
             gui.update()
         }
     }
 
-    private fun loadIcons(player: Player, gui: Gui, warpName: String, fileConfiguration: FileConfiguration) {
+    private fun loadIcons(player: HumanEntity, gui: Gui, warpName: String, fileConfiguration: FileConfiguration) {
         val icons: List<Material> = fileConfiguration.getStringList("menu.icons").filter { s -> Material.getMaterial(s)?.name == s }.map { Material.getMaterial(it)!! }
         val itemName = fileConfiguration.getString("menu.icon.name")
 
@@ -120,7 +121,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         }
     }
 
-    private fun setIcon(player: Player, warpName: String, itemName: String, gui: Gui, m: Material, lore: MutableList<Component>) {
+    private fun setIcon(player: HumanEntity, warpName: String, itemName: String, gui: Gui, m: Material, lore: MutableList<Component>) {
         gui.addItem(ItemBuilder.from(
             com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
                 .setName(
@@ -129,7 +130,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                 ).addLore(lore)
                 .create()
         ).asGuiItem { action ->
-            magenta.warpModel.setWarpIcon(player, warpName, m.name)
+            magenta.warpModel.setWarpIcon(player.uniqueId, warpName, m.name)
             if (action.isLeftClick) {
                 player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.change.icon", TagResolver.resolver(
                     Placeholder.parsed("warp", warpName),
@@ -139,10 +140,10 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         })
     }
 
-    private fun deleteHome(player: Player, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
+    private fun deleteHome(player: HumanEntity, warpName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("DELETE_HOME", true)) {
             clicked = false
-            magenta.homeModel.deleteHome(player, warpName)
+            magenta.homeModel.deleteHome(player.uniqueId, warpName)
             gui.close(player)
             player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.deleted", Placeholder.parsed("home", warpName)))
         }

@@ -25,7 +25,7 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
             val player = sender.sender() as Player
-            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player).map { s -> Suggestion.simple(s.homeName) })
+            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player.uniqueId).map { s -> Suggestion.simple(s.homeName) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("homeIcons") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
@@ -58,7 +58,7 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.sethomeicon")
     @CommandDescription("This command set home icon visible in your gui homelist")
     fun onSetHomeIcon(player: Player, @Argument(value = "home", suggestions = "homes") home: String, @Argument("icon", suggestions = "homeIcons") icon: String) {
-        magenta.homeModel.setHomeIcon(player, home, icon)
+        magenta.homeModel.setHomeIcon(player.uniqueId, home, icon)
 
         player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.change.icon",
             TagResolver.resolver(

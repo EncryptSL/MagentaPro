@@ -61,6 +61,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) {
     }
 
     private fun previousPage(fileConfiguration: FileConfiguration, material: Material, gui: PaginatedGui) {
+        if (gui.pagesNum == 1) return
         if (fileConfiguration.getString("votifier.milestones-gui.gui.button.previous.item").equals(material.name, true)) {
             gui.setItem(fileConfiguration.getInt("votifier.milestones-gui.gui.button.previous.positions.row"),
                 fileConfiguration.getInt("votifier.milestones-gui.gui.button.previous.positions.col"),
@@ -71,6 +72,8 @@ class VoteMilestonesGUI(private val magenta: Magenta) {
     }
 
     private fun nextPage(fileConfiguration: FileConfiguration, material: Material, gui: PaginatedGui) {
+        if (gui.pagesNum < 1) return
+
         if (fileConfiguration.getString("votifier.milestones-gui.gui.button.next.item").equals(material.name, true)) {
             gui.setItem(fileConfiguration.getInt("votifier.milestones-gui.gui.button.next.positions.row"),
                 fileConfiguration.getInt("votifier.milestones-gui.gui.button.next.positions.col"),

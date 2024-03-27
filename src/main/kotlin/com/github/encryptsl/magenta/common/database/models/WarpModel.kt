@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.UUID
 
 class WarpModel(private val plugin: Plugin) : WarpSQL {
     override fun creteWarp(player: Player, location: Location, warpName: String) {
@@ -38,9 +39,9 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         }
     }
 
-    override fun deleteWarp(player: Player, warpName: String) {
+    override fun deleteWarp(uuid: UUID, warpName: String) {
         SchedulerMagenta.doAsync(plugin) {
-            transaction { WarpTable.deleteWhere { (uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) } }
+            transaction { WarpTable.deleteWhere { (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName) } }
         }
     }
 
@@ -57,9 +58,9 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         }
     }
 
-    override fun moveWarp(player: Player, warpName: String, location: Location) {
+    override fun moveWarp(uuid: UUID, warpName: String, location: Location) {
         SchedulerMagenta.doAsync(plugin) {
-            transaction { WarpTable.update( { (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName) }) {
+            transaction { WarpTable.update( { (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
                 it[y] = location.y.toInt()
@@ -80,20 +81,20 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         }
     }
 
-    override fun renameWarp(player: Player, oldWarpName: String, newWarpName: String) {
+    override fun renameWarp(uuid: UUID, oldWarpName: String, newWarpName: String) {
         SchedulerMagenta.doAsync(plugin) {
             transaction {
-                WarpTable.update({ (WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq oldWarpName) }) {
+                WarpTable.update({ (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq oldWarpName) }) {
                     it[warpName] = newWarpName
                 }
             }
         }
     }
 
-    override fun setWarpIcon(player: Player, warpName: String, icon: String) {
+    override fun setWarpIcon(uuid: UUID, warpName: String, icon: String) {
         SchedulerMagenta.doAsync(plugin) {
             transaction {
-                WarpTable.update({(WarpTable.uuid eq player.uniqueId.toString()) and (WarpTable.warpName eq warpName)}) {
+                WarpTable.update({(WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName)}) {
                     it[warpIcon] = icon
                 }
             }
@@ -133,8 +134,8 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
             rowResult.y.toDouble(), rowResult.z.toDouble(), rowResult.yaw, rowResult.pitch)
     }
 
-    override fun getWarpsByOwner(player: Player): List<WarpEntity> {
-        return transaction { WarpTable.selectAll().where(WarpTable.uuid eq player.uniqueId.toString()).mapNotNull { rowResultToWarpEntity(it) } }
+    override fun getWarpsByOwner(uuid: UUID): List<WarpEntity> {
+        return transaction { WarpTable.selectAll().where(WarpTable.uuid eq uuid.toString()).mapNotNull { rowResultToWarpEntity(it) } }
     }
 
     override fun getWarps(): List<WarpEntity> {

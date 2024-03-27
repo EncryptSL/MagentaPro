@@ -73,7 +73,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
                     menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
-                    creditShopInventory.buyItem(action, config, item, displayName, isBuyAllowed)
+                    creditShopInventory.buyItem(action.whoClicked, config, item, displayName, isBuyAllowed)
                     creditShop.openCategory(player, category)
                     return@asGuiItem
                 }
@@ -105,8 +105,8 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
-                    menuUI.playClickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
-                    creditShop.openCategory(player, category)
+                    menuUI.playClickSound(action.whoClicked, magenta.creditShopConfirmMenuConfig.getConfig())
+                    return@asGuiItem creditShop.openCategory(player, category)
                 }
             }
             gui.setItem(slot, guiItem)
@@ -115,7 +115,6 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
     private fun close(player: HumanEntity, gui: Gui, fileConfiguration: FileConfiguration) {
         for (material in Material.entries) {
-            menuUI.playClickSound(player, magenta.creditShopConfig.getConfig())
             menuUI.closeButton(player, material, gui, fileConfiguration, null)
         }
     }

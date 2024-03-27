@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 
 class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun createHome(player: Player, location: Location, home: String) {
@@ -31,15 +32,15 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
         }
     }
 
-    override fun deleteHome(player: Player, home: String) {
+    override fun deleteHome(uuid: UUID, home: String) {
         SchedulerMagenta.doAsync(plugin) {
-            transaction { HomeTable.deleteWhere { (uuid eq player.uniqueId) and (HomeTable.home eq home) } }
+            transaction { HomeTable.deleteWhere { (HomeTable.uuid eq uuid) and (HomeTable.home eq home) } }
         }
     }
 
-    override fun moveHome(player: Player, home: String, location: Location) {
+    override fun moveHome(uuid: UUID, home: String, location: Location) {
         SchedulerMagenta.doAsync(plugin) {
-            transaction { HomeTable.update( {  (HomeTable.uuid eq player.uniqueId) and (HomeTable.home eq home) }) {
+            transaction { HomeTable.update( {  (HomeTable.uuid eq uuid) and (HomeTable.home eq home) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
                 it[y] = location.y.toInt()
@@ -50,26 +51,26 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
         }
     }
 
-    override fun renameHome(player: Player, oldHomeName: String, newHomeName: String) {
+    override fun renameHome(uuid: UUID, oldHomeName: String, newHomeName: String) {
         SchedulerMagenta.doAsync(plugin) {
             transaction {
-                HomeTable.update({ HomeTable.uuid eq player.uniqueId and (HomeTable.home eq oldHomeName) }) {
+                HomeTable.update({ HomeTable.uuid eq uuid and (HomeTable.home eq oldHomeName) }) {
                     it[home] = newHomeName
                 }
             }
         }
     }
 
-    override fun setHomeIcon(player: Player, home: String, icon: String) {
+    override fun setHomeIcon(uuid: UUID, home: String, icon: String) {
         SchedulerMagenta.doAsync(plugin) {
-            transaction { HomeTable.update({HomeTable.uuid eq player.uniqueId and (HomeTable.home eq home)}) {
+            transaction { HomeTable.update({HomeTable.uuid eq uuid and (HomeTable.home eq home)}) {
                 it[homeIcon] = icon
             } }
         }
     }
 
-    override fun getHomeExist(player: Player, home: String): Boolean {
-        return transaction { !HomeTable.select(HomeTable.home).where(HomeTable.home eq home).empty() }
+    override fun getHomeExist(uuid: UUID, home: String): Boolean {
+        return transaction { !HomeTable.select(HomeTable.home).where(HomeTable.uuid eq uuid and (HomeTable.home eq home)).empty() }
     }
 
     override fun canSetHome(player: Player): Boolean {
@@ -91,12 +92,12 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
         }
     }
 
-    override fun getHomesByOwner(player: Player): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq player.uniqueId).mapNotNull{rowResultToHomeEntity(it)} }
+    override fun getHomesByOwner(uuid: UUID): List<HomeEntity> {
+        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
     }
 
     override fun toLocation(player: Player, home: String): Location {
-        val homes = getHomesByOwner(player).first { h -> h.homeName == home }
+        val homes = getHomesByOwner(player.uniqueId).first { h -> h.homeName == home }
 
         return Location(Bukkit.getWorld(homes.world), homes.x.toDouble(), homes.y.toDouble(), homes.z.toDouble(), homes.yaw, homes.pitch)
     }

@@ -7,7 +7,7 @@ menu:
     button:
       previous:
         item: GREEN_CONCRETE
-        name: <gray>Zpět
+        name: <gray>Zpět <prev_page>
         positions:
           row: 6
           col: 4
@@ -20,7 +20,7 @@ menu:
           col: 5
       next:
         item: ORANGE_CONCRETE
-        name: <gray>Další
+        name: <gray>Další <next_page>
         positions:
           row: 6
           col: 6
