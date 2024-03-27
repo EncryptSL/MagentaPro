@@ -3,7 +3,7 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.home.*
-import com.github.encryptsl.magenta.api.menu.home.HomeGUI
+import com.github.encryptsl.magenta.api.menu.modules.home.HomeGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver

@@ -4,7 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.warp.*
-import com.github.encryptsl.magenta.api.menu.warp.WarpGUI
+import com.github.encryptsl.magenta.api.menu.modules.warp.WarpGUI
 import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
