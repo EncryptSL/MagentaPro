@@ -25,7 +25,9 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
 
         menuUI.useAllFillers(gui.filler, magenta.warpPlayerMenuConfig.getConfig())
 
-        magenta.warpModel.getWarpsByOwner(player.uniqueId).forEach { warp ->
+        val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId)
+
+        for (warp in playerWarps) {
 
             val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
 
@@ -69,7 +71,6 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
             }
             gui.addItem(item)
         }
-
         controlButtons(player, menuUI, magenta.warpPlayerMenuConfig, gui)
 
         gui.open(player)

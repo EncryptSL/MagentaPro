@@ -108,33 +108,34 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
     }
 
     private fun loadIcons(player: HumanEntity, gui: Gui, warpName: String, fileConfiguration: FileConfiguration) {
-        val icons: List<Material> = fileConfiguration.getStringList("menu.icons").filter { s -> Material.getMaterial(s)?.name == s }.map { Material.getMaterial(it)!! }
+        val icons: Set<String> = fileConfiguration.getStringList("menu.icons").filter { s -> Material.getMaterial(s) != null }.map { it }.toSet()
         val itemName = fileConfiguration.getString("menu.icon.name")
 
         if (clicked) return
         clicked = true
-        for (m in icons) {
+        for (icon in icons) {
             val lore = fileConfiguration.getStringList("menu.icon.lore")
-                .map { ModernText.miniModernText(it, Placeholder.parsed("icon", m.name)) }
+                .map { ModernText.miniModernText(it, Placeholder.parsed("icon", icon)) }
                 .toMutableList()
-            setIcon(player, warpName, itemName ?: m.name, gui, m, lore)
+            setIcon(player, warpName, itemName ?: icon, gui, icon, lore)
         }
     }
 
-    private fun setIcon(player: HumanEntity, warpName: String, itemName: String, gui: Gui, m: Material, lore: MutableList<Component>) {
+    private fun setIcon(player: HumanEntity, warpName: String, itemName: String, gui: Gui, materialName: String, lore: MutableList<Component>) {
+        val material = Material.getMaterial(materialName)!!
         gui.addItem(ItemBuilder.from(
-            com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
+            com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
                 .setName(
                     ModernText.miniModernText(itemName,
-                        Placeholder.parsed("icon", m.name))
+                        Placeholder.parsed("icon", materialName))
                 ).addLore(lore)
                 .create()
         ).asGuiItem { action ->
-            magenta.warpModel.setWarpIcon(player.uniqueId, warpName, m.name)
+            magenta.warpModel.setWarpIcon(player.uniqueId, warpName, materialName)
             if (action.isLeftClick) {
                 player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.change.icon", TagResolver.resolver(
                     Placeholder.parsed("warp", warpName),
-                    Placeholder.parsed("icon", m.name)
+                    Placeholder.parsed("icon", materialName)
                 )))
             }
         })

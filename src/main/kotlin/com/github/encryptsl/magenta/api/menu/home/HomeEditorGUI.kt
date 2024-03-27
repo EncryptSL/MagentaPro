@@ -34,7 +34,9 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
 
         menu.useAllFillers(gui.filler, magenta.homeEditorConfig.getConfig())
 
-        for (el in magenta.homeEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
+        val menuSection = magenta.homeEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false) ?: return
+
+        for (el in menuSection) {
             val material = Material.getMaterial(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()) ?: continue
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el")) continue
 
@@ -107,8 +109,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
     private fun setNewIcon(player: HumanEntity, homeName: String, fileConfiguration: FileConfiguration, el: String, gui: Gui) {
         val itemName = fileConfiguration.getString("menu.icon.name")
 
-        val icons: List<Material> = fileConfiguration.getStringList("menu.icons").filter { m -> Material.getMaterial(m)?.name != null }.map { Material.getMaterial(it)!! }
-
+        val icons: Set<String> = fileConfiguration.getStringList("menu.icons").filter { m -> Material.getMaterial(m) != null }.map { it }.toSet()
 
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_ICON", true)) {
             if (clicked) return
@@ -116,28 +117,29 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
 
             for (m in icons) {
                 val lore = fileConfiguration.getStringList("menu.icon.lore")
-                    .map { ModernText.miniModernText(it, Placeholder.parsed("icon", m.name)) }
+                    .map { ModernText.miniModernText(it, Placeholder.parsed("icon", m)) }
                     .toMutableList()
-                setIcon(player, homeName, gui, itemName ?: m.name, m, lore)
+                setIcon(player, homeName, gui, itemName ?: m, m, lore)
             }
             gui.update()
         }
     }
 
-    private fun setIcon(player: HumanEntity, homeName: String, gui: Gui, itemName: String, m: Material, lore: MutableList<Component>) {
+    private fun setIcon(player: HumanEntity, homeName: String, gui: Gui, itemName: String, materialName: String, lore: MutableList<Component>) {
+        val material = Material.getMaterial(materialName)!!
         gui.addItem(ItemBuilder.from(
-            com.github.encryptsl.magenta.api.ItemBuilder(m, 1)
+            com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
                 .setName(ModernText.miniModernText(itemName,
-                    Placeholder.parsed("icon", m.name))
+                    Placeholder.parsed("icon", materialName))
                 ).addLore(lore)
                 .create()
         ).asGuiItem { action ->
             if (action.isLeftClick) {
                 menu.playClickSound(player, magenta.homeEditorConfig.getConfig())
-                magenta.homeModel.setHomeIcon(player.uniqueId, homeName, m.name)
+                magenta.homeModel.setHomeIcon(player.uniqueId, homeName, materialName)
                 player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.change.icon", TagResolver.resolver(
                     Placeholder.parsed("home", homeName),
-                    Placeholder.parsed("icon", m.name)
+                    Placeholder.parsed("icon", materialName)
                 )))
             }
         })

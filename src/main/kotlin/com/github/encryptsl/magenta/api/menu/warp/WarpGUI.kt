@@ -26,7 +26,9 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
 
         menuUI.useAllFillers(gui.filler, magenta.warpMenuConfig.getConfig())
 
-        magenta.warpModel.getWarps().forEach { warp ->
+        val warps = magenta.warpModel.getWarps()
+
+        for (warp in warps) {
             val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
 
             val itemHomeBuilder = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
@@ -34,8 +36,8 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
             if (magenta.warpMenuConfig.getConfig().contains("menu.warp-info.display")) {
                 itemHomeBuilder.setName(
                     ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
-                    Placeholder.parsed("warp", warp.warpName)
-                ))
+                        Placeholder.parsed("warp", warp.warpName)
+                    ))
             }
 
             if (magenta.warpMenuConfig.getConfig().contains("menu.warp-info.lore")) {
