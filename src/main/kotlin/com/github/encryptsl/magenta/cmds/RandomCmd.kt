@@ -54,29 +54,6 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         )))
     }
 
-    @Command("random crates key <player> [amount]")
-    @Permission("magenta.random.crates.key")
-    @CommandDescription("This command give random crate key to player")
-    fun onRandomCratesKey(
-        commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "players") target: Player,
-        @Argument("amount") @Range(min = "1", max = "100") amount: Int = 1
-    ) {
-        val keys: List<String> = magenta.randomConfig.getConfig().getStringList("crates.keys")
-        val randomKey = keys.random().replace("%amount%", amount.toString())
-        magenta.logger.info("Hráč ${target.name} dostal náhodný klíč !")
-
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
-
-        target.sendMessage(magenta.localeConfig.translation("magenta.command.random.crates.key.success.player",
-            Placeholder.parsed("amount", amount.toString())
-        ))
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.random.crates.key.success.to", TagResolver.resolver(
-            Placeholder.parsed("player", target.name),
-            Placeholder.parsed("amount", amount.toString())
-        )))
-    }
-
     @Command("random tag <type> <player>")
     @Permission("magenta.random.tag")
     @CommandDescription("This command give random tag to player")
@@ -106,5 +83,4 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
             Placeholder.parsed("tag", randomTag)
         )))
     }
-
 }
