@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.UserAccount
+import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.extensions.convertFromMillis
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -64,7 +64,7 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
         }
     }
 
-    private fun sendMessage(commandSender: CommandSender, message: String, player: OfflinePlayer, user: UserAccount) {
+    private fun sendMessage(commandSender: CommandSender, message: String, player: OfflinePlayer, user: UserAccountImpl) {
         val ip = user.getAccount().getString("ip-address").toString()
         val maxmind = magenta.database.getGeoMaxMing()
         val country = maxmind.country(InetAddress.getByName(ip)).country

@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.UserAccount
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
@@ -24,7 +23,7 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.back")
     @CommandDescription("This command teleport you back on your previous location.")
     fun onBack(player: Player) {
-        val userAccount = UserAccount(magenta, player.uniqueId)
+        val userAccount = magenta.user.getUser(player.uniqueId)
         player.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
         player.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))
     }
@@ -33,7 +32,7 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.back.other")
     @CommandDescription("This command teleport other player back on his previous location.")
     fun onBack(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        val userAccount = UserAccount(magenta, target.uniqueId)
+        val userAccount = magenta.user.getUser(target.uniqueId)
 
         target.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
         target.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))

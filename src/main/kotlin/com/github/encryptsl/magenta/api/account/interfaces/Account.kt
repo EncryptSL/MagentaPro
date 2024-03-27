@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.account
+package com.github.encryptsl.magenta.api.account.interfaces
 
 import org.bukkit.GameMode
 import org.bukkit.Location

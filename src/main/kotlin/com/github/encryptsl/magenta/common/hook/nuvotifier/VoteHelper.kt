@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.UserAccount
+import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
@@ -30,7 +30,7 @@ object VoteHelper {
             .replace("{expression_reward}", expressionFormula)
         }
 
-        val userAccount = UserAccount(magenta, offlinePlayer.uniqueId)
+        val userAccount = UserAccountImpl(magenta, offlinePlayer.uniqueId)
         userAccount.set("votifier.rewards", rewards)
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
     }
