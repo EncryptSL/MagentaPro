@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.api.menu.provider.models.components
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
+import com.github.encryptsl.magenta.api.menu.provider.buttons.MenuButton
 import com.github.encryptsl.magenta.api.menu.provider.buttons.MenuCloseButton
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -10,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.HumanEntity
 
-open class CloseButton(private val magenta: Magenta) : MenuCloseButton {
+open class CloseButton(private val magenta: Magenta) : MenuCloseButton, MenuButton {
     override fun closeButton(
         player: HumanEntity,
         material: Material,
@@ -38,9 +40,15 @@ open class CloseButton(private val magenta: Magenta) : MenuCloseButton {
                             } else {
                                 gui.close(player)
                             }
+                            clickSound(it.whoClicked, fileConfiguration)
                         }
                 )
             }
         }
+    }
+
+    override fun clickSound(humanEntity: HumanEntity, fileConfiguration: FileConfiguration) {
+        val type = fileConfiguration.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
+        ShopHelper.playSound(humanEntity, type, 5f, 1f)
     }
 }

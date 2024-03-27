@@ -26,8 +26,6 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
         val gui: Gui = simpleMenu.simpleGui(magenta.shopConfig.getConfig().getString("menu.gui.display").toString(),
             magenta.shopConfig.getConfig().getInt("menu.gui.size", 6), GuiType.CHEST)
 
-        gui.setDefaultClickAction { simpleMenu.clickSound(it.whoClicked, magenta.shopConfig.getConfig()) }
-
         menuUI.useAllFillers(gui.filler, magenta.shopConfig.getConfig())
 
         val menuCategories = magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false) ?: return
@@ -57,6 +55,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 magenta.itemFactory.shopItem(material, name)
             ).asGuiItem { action ->
                 if (action.isRightClick || action.isLeftClick) {
+                    simpleMenu.clickSound(action.whoClicked, magenta.shopConfig.getConfig())
                     return@asGuiItem openCategory(action.whoClicked, category)
                 }
                 action.isCancelled = true
@@ -93,9 +92,6 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
             Placeholder.parsed("category", categoryName)
         ), shopCategory.getConfig().getInt("menu.gui.size", 6))
 
-        gui.setDefaultClickAction { paginationMenu.clickSound(it.whoClicked, shopCategory.getConfig()) }
-
-
         menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
         val menuItems = shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
@@ -126,6 +122,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
             guiItem.setAction { action ->
                 // BUY BY STACK = 64
                 if (action.isShiftClick && action.isLeftClick) {
+                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction vaultShopPaymentMethods.buy(
                         ShopPaymentHolder(
                             magenta.itemFactory.shopItem(material, 64, itemName),
@@ -136,6 +133,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
                 // BUY BY ONE ITEM = 1
                 if (action.isLeftClick) {
+                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction vaultShopPaymentMethods.buy(
                         ShopPaymentHolder(
                             magenta.itemFactory.shopItem(material, itemName),
@@ -145,6 +143,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
                 // SELL BY STACK = 64
                 if (action.isShiftClick && action.isRightClick) {
+                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     for (i in 0..35) {
                         if (player.inventory.getItem(i)?.type == material) {
                             val itemStack = player.inventory.getItem(i)
@@ -160,6 +159,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
                 // SELL BY ONE ITEM = 1
                 if (action.isRightClick) {
+                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction vaultShopPaymentMethods.sell(
                         ShopPaymentHolder(magenta.itemFactory.shopItem(material, 1, itemName),
                             ShopHelper.calcPrice(1, sellPrice), isSellAllowed)

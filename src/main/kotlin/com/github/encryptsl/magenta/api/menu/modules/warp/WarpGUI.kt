@@ -23,8 +23,6 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
             ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.gui.display").toString(), Placeholder.parsed("count", magenta.warpModel.getWarps().count().toString())),
             magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
         )
-        gui.setDefaultClickAction { a -> paginationMenu.clickSound(a.whoClicked, magenta.warpMenuConfig.getConfig()) }
-
         menuUI.useAllFillers(gui.filler, magenta.warpMenuConfig.getConfig())
 
         val warps = magenta.warpModel.getWarps()

@@ -33,8 +33,6 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
             GuiType.CHEST
         )
 
-        gui.setDefaultClickAction { simpleMenu.clickSound(player, magenta.homeEditorConfig.getConfig()) }
-
         menu.useAllFillers(gui.filler, magenta.homeEditorConfig.getConfig())
 
         val menuSection = magenta.homeEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false) ?: return
@@ -76,6 +74,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                     setLocation(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
                     setNewIcon(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
                     deleteHome(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
+                    simpleMenu.clickSound(player, magenta.homeEditorConfig.getConfig())
                 }
             }
             gui.setItem(magenta.homeEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)

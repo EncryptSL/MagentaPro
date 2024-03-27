@@ -33,8 +33,6 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             GuiType.CHEST
         )
 
-        gui.setDefaultClickAction { simpleMenu.clickSound(it.whoClicked, magenta.warpEditorConfig.getConfig()) }
-
         menu.useAllFillers(gui.filler, magenta.warpEditorConfig.getConfig())
 
         for (el in magenta.warpEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
@@ -73,6 +71,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                         setLocation(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
                         setNewIcon(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
                         deleteHome(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
+                        simpleMenu.clickSound(action.whoClicked, magenta.warpEditorConfig.getConfig())
                     }
                 }
                 gui.setItem(magenta.warpEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)

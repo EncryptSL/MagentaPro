@@ -23,8 +23,6 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
             magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
         )
 
-        gui.setDefaultClickAction { paginationMenu.clickSound(it.whoClicked, magenta.warpEditorConfig.getConfig()) }
-
         menuUI.useAllFillers(gui.filler, magenta.warpPlayerMenuConfig.getConfig())
 
         val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId)
@@ -66,6 +64,7 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
                 }
 
                 if (action.isRightClick) {
+                    paginationMenu.clickSound(action.whoClicked, magenta.warpEditorConfig.getConfig())
                     playerEditorGUI.openWarpPlayerEditor(action.whoClicked, warp.warpName)
                 }
             }

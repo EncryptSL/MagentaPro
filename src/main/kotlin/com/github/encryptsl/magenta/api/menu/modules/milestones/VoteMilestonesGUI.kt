@@ -21,7 +21,9 @@ class VoteMilestonesGUI(private val magenta: Magenta) : MenuExtender {
             return player.sendMessage(ModernText.miniModernText("<red>Milníky nejsou nastavené !"))
 
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
-        val gui = paginationMenu.paginatedGui(ModernText.miniModernText(magenta.config.getString("menu.items.gui.display") ?: player.name), 6)
+        val gui = paginationMenu.paginatedGui(ModernText.miniModernText(magenta.milestonesVotePass.getConfig().getString("menu.items.gui.display") ?: player.name), 6)
+
+        menuUI.useAllFillers(gui.filler, magenta.milestonesVotePass.getConfig())
 
         val menuSection = magenta.milestonesVotePass.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
 
@@ -40,7 +42,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : MenuExtender {
                     )))
                 }.toMutableList()
 
-            if (magenta.config.getInt("menu.items.$item.required_votes") > playerVotes) {
+            if (magenta.milestonesVotePass.getConfig().getInt("menu.items.$item.required_votes") > playerVotes) {
                 itemStack.addLore(lockedLores)
             } else {
                 itemStack.addLore(unlockedLores)
@@ -50,7 +52,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : MenuExtender {
             gui.addItem(guiItem)
         }
 
-        paginationMenu.paginatedControlButtons(player, magenta.config, gui)
+        paginationMenu.paginatedControlButtons(player, magenta.milestonesVotePass.getConfig(), gui)
 
         gui.open(player)
     }

@@ -33,6 +33,7 @@ open class PaginationNavigation(private val magenta: Magenta) : CloseButton(mage
                     fileConfiguration.getInt("menu.gui.button.$btnType.positions.col"),
                     ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.$btnType.name").toString().replace("<prev_page>", "${gui.prevPageNum}")))
                         .asGuiItem {
+                            clickSound(it.whoClicked, fileConfiguration)
                             gui.previous()
                         }
                 )
@@ -50,19 +51,26 @@ open class PaginationNavigation(private val magenta: Magenta) : CloseButton(mage
         if (gui.pagesNum < 1 && 1 == gui.pagesNum) return
         if (fileConfiguration.contains("menu.gui.button.$btnType")) {
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions",
+                    Placeholder.parsed("file", fileConfiguration.name))
+                )
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.row"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row", Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row",
+                    Placeholder.parsed("file", fileConfiguration.name))
+                )
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.col"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col", Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col",
+                    Placeholder.parsed("file", fileConfiguration.name))
+                )
 
             if (fileConfiguration.getString("menu.gui.button.$btnType.item").equals(material.name, true)) {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
                     fileConfiguration.getInt("menu.gui.button.$btnType.positions.col"),
                     ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.$btnType.name").toString().replace("<next_page>", "${gui.nextPageNum}")))
                         .asGuiItem {
+                            clickSound(it.whoClicked, fileConfiguration)
                             gui.next()
                         }
                 )

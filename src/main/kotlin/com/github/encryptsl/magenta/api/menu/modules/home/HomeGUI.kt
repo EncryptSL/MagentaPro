@@ -28,7 +28,6 @@ class HomeGUI(private val magenta: Magenta) {
             magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6),
             GuiType.CHEST)
 
-        gui.setDefaultClickAction { simpleMenu.clickSound(player, magenta.homeEditorConfig.getConfig()) }
         menuUI.useAllFillers(gui.filler, magenta.homeMenuConfig.getConfig())
 
         for (home in magenta.homeModel.getHomesByOwner(player.uniqueId)) {
@@ -65,6 +64,7 @@ class HomeGUI(private val magenta: Magenta) {
                     return@asGuiItem
                 }
                 if (action.isRightClick) {
+                    simpleMenu.clickSound(player, magenta.homeEditorConfig.getConfig())
                     homeEditorGUI.openHomeEditorGUI(player, home.homeName)
                 }
             }

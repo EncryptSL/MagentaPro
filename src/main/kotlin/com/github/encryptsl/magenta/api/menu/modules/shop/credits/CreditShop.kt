@@ -29,8 +29,6 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
             GuiType.CHEST
         )
 
-        gui.setDefaultClickAction { simpleMenu.clickSound(it.whoClicked, magenta.creditShopConfig.getConfig()) }
-
         menuUI.useAllFillers(gui.filler, magenta.creditShopConfig.getConfig())
 
         for (category in magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
@@ -61,6 +59,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
             item.setAction { action ->
                 if (action.isRightClick || action.isLeftClick) {
+                    simpleMenu.clickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
                     return@setAction openCategory(action.whoClicked, category)
                 }
                 action.isCancelled = true
@@ -90,9 +89,6 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
             ModernText.miniModernText(name, Placeholder.parsed("category", categoryName)),
             shopCategory.getConfig().getInt("menu.gui.size", 6)
         )
-
-        gui.setDefaultClickAction { simpleMenu.clickSound(it.whoClicked, shopCategory.getConfig()) }
-
 
         menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
@@ -157,8 +153,10 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
             guiItem.setAction { action ->
                 if (action.isLeftClick) {
                     if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required")) {
+                        simpleMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                         return@setAction creditShopPaymentMethod.buyItem(action.whoClicked, shopCategory.getConfig(), item, guiItem.itemStack.displayName(), isBuyAllowed)
                     }
+                    simpleMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction confirmMenu.openConfirmMenu(
                         player = action.whoClicked,
                         item = item,
