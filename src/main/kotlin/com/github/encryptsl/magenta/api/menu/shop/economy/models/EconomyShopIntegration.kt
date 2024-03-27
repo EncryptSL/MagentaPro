@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.api.menu.shop
+package com.github.encryptsl.magenta.api.menu.shop.economy.models
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.shop.CreditShopBuyEvent
@@ -14,9 +14,9 @@ import org.bukkit.entity.Player
 class EconomyShopIntegration(private val magenta: Magenta) {
     fun doVaultTransaction(
         player: Player,
-        transactionType: TransactionType,
+        shopPaymentAction: ShopPaymentAction,
         transactionProcess: TransactionProcess,
-        shopPaymentInformation: ShopPaymentInformation,
+        shopPaymentHolder: ShopPaymentHolder,
         message: String,
         commands: MutableList<String>?,
     ) {
@@ -24,20 +24,20 @@ class EconomyShopIntegration(private val magenta: Magenta) {
             return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.not.enough.money"))
 
         if (transactionProcess == TransactionProcess.SUCCESS) {
-            val item = shopPaymentInformation.itemStack
-            val price = shopPaymentInformation.price
+            val item = shopPaymentHolder.itemStack
+            val price = shopPaymentHolder.price
             player.sendMessage(magenta.localeConfig.translation(message, TagResolver.resolver(
                 Placeholder.component("item", item.displayName()),
                 Placeholder.parsed("quantity", item.amount.toString()),
                 Placeholder.parsed("price", price.toString())
             )))
 
-            when (transactionType) {
-                TransactionType.SELL -> {
+            when (shopPaymentAction) {
+                ShopPaymentAction.SELL -> {
                     magenta.pluginManager.callEvent(ShopSellEvent(player, item.type.name, price.toInt(), item.amount))
                     player.inventory.removeItem(item)
                 }
-                TransactionType.BUY -> {
+                ShopPaymentAction.BUY -> {
                     magenta.pluginManager.callEvent(ShopBuyEvent(player, item.type.name, price.toInt(), item.amount))
                     if (commands.isNullOrEmpty())
                         player.inventory.addItem(item)
@@ -62,6 +62,4 @@ class EconomyShopIntegration(private val magenta: Magenta) {
             ShopHelper.giveRewards(commands, player.name, quantity)
         }
     }
-
-
 }

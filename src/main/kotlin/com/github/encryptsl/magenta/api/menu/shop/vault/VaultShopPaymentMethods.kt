@@ -1,28 +1,28 @@
 package com.github.encryptsl.magenta.api.menu.shop.vault
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.shop.EconomyShopIntegration
-import com.github.encryptsl.magenta.api.menu.shop.ShopAction
-import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
-import com.github.encryptsl.magenta.api.menu.shop.TransactionType
 import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyDeposit
 import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyWithdraw
+import com.github.encryptsl.magenta.api.menu.shop.economy.models.EconomyShopIntegration
+import com.github.encryptsl.magenta.api.menu.shop.economy.models.ShopPaymentAction
+import com.github.encryptsl.magenta.api.menu.shop.economy.models.ShopPaymentHolder
+import com.github.encryptsl.magenta.api.menu.shop.economy.models.ShopPaymentImpl
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VaultShopInventory(private val magenta: Magenta) : ShopAction {
+class VaultShopPaymentMethods(private val magenta: Magenta) : ShopPaymentImpl {
 
     private val economyShopIntegration: EconomyShopIntegration by lazy { EconomyShopIntegration(magenta) }
     override fun buy(
-        shopPaymentInformation: ShopPaymentInformation,
+        shopPaymentHolder: ShopPaymentHolder,
         commands: MutableList<String>?,
         inventory: InventoryClickEvent
     ) {
         val player = inventory.whoClicked as Player
-        val price = shopPaymentInformation.price
+        val price = shopPaymentHolder.price
 
-        if (!shopPaymentInformation.isOperationAllowed)
+        if (!shopPaymentHolder.isOperationAllowed)
             return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.buy.disabled"))
 
         if (ShopHelper.isPlayerInventoryFull(player))
@@ -31,17 +31,17 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         val transactions = EconomyWithdraw(player, price).transaction(magenta.vaultHook) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.BUY, transactions, shopPaymentInformation,"magenta.shop.success.buy", commands)
+            ShopPaymentAction.BUY, transactions, shopPaymentHolder,"magenta.shop.success.buy", commands)
     }
     override fun sell(
-        shopPaymentInformation: ShopPaymentInformation,
+        shopPaymentHolder: ShopPaymentHolder,
         inventory: InventoryClickEvent
     ) {
         val player = inventory.whoClicked as Player
-        val item = shopPaymentInformation.itemStack
-        val price = shopPaymentInformation.price
+        val item = shopPaymentHolder.itemStack
+        val price = shopPaymentHolder.price
 
-        if (!shopPaymentInformation.isOperationAllowed)
+        if (!shopPaymentHolder.isOperationAllowed)
             return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.sell.disabled"))
 
         if (!ShopHelper.hasPlayerRequiredItem(player, item))
@@ -50,7 +50,7 @@ class VaultShopInventory(private val magenta: Magenta) : ShopAction {
         val transactions = EconomyDeposit(player, price).transaction(magenta.vaultHook) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            TransactionType.SELL, transactions, shopPaymentInformation,"magenta.shop.success.sell", null)
+            ShopPaymentAction.SELL, transactions, shopPaymentHolder,"magenta.shop.success.sell", null)
     }
 
 }

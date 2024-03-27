@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.api.menu.shop.credits
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.shop.EconomyShopIntegration
 import com.github.encryptsl.magenta.api.menu.shop.economy.components.EconomyWithdraw
+import com.github.encryptsl.magenta.api.menu.shop.economy.models.EconomyShopIntegration
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import net.kyori.adventure.text.Component

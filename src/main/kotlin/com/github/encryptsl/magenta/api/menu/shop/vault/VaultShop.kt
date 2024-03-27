@@ -4,7 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.MenuExtender
 import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.api.menu.shop.ShopPaymentInformation
+import com.github.encryptsl.magenta.api.menu.shop.economy.models.ShopPaymentHolder
 import com.github.encryptsl.magenta.api.menu.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -17,7 +17,7 @@ import org.bukkit.entity.HumanEntity
 
 class VaultShop(private val magenta: Magenta) : MenuExtender {
 
-    private val vaultShopInventory: VaultShopInventory by lazy { VaultShopInventory(magenta) }
+    private val vaultShopPaymentMethods: VaultShopPaymentMethods by lazy { VaultShopPaymentMethods(magenta) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
 
     override fun openMenu(player: HumanEntity) {
@@ -26,7 +26,9 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
         menuUI.useAllFillers(gui.filler, magenta.shopConfig.getConfig())
 
-        for (category in magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
+        val menuCategories = magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false) ?: return
+
+        for (category in menuCategories) {
             val material = Material.getMaterial(
                 magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
             ) ?: continue
@@ -91,7 +93,9 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
         menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
-        for (item in shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false)!!) {
+        val menuItems = shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
+
+        for (item in menuItems) {
             if (!shopCategory.getConfig().contains("menu.items.$item")) continue
             val material = Material.getMaterial(
                 shopCategory.getConfig().getString("menu.items.${item}.icon").toString()
@@ -118,8 +122,8 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 // BUY BY STACK = 64
                 if (action.isShiftClick && action.isLeftClick) {
                     menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
-                    return@setAction vaultShopInventory.buy(
-                        ShopPaymentInformation(
+                    return@setAction vaultShopPaymentMethods.buy(
+                        ShopPaymentHolder(
                             magenta.itemFactory.shopItem(material, 64, itemName),
                             ShopHelper.calcPrice(64, buyPrice),
                             isBuyAllowed
@@ -129,8 +133,8 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 // BUY BY ONE ITEM = 1
                 if (action.isLeftClick) {
                     menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
-                    return@setAction vaultShopInventory.buy(
-                        ShopPaymentInformation(
+                    return@setAction vaultShopPaymentMethods.buy(
+                        ShopPaymentHolder(
                             magenta.itemFactory.shopItem(material, itemName),
                             ShopHelper.calcPrice(1, buyPrice), isBuyAllowed
                         ), commands, action)
@@ -142,8 +146,8 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                     for (i in 0..35) {
                         if (player.inventory.getItem(i)?.type == material) {
                             val itemStack = player.inventory.getItem(i)
-                            return@setAction vaultShopInventory.sell(
-                                ShopPaymentInformation(
+                            return@setAction vaultShopPaymentMethods.sell(
+                                ShopPaymentHolder(
                                     itemStack!!,
                                     ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed
                                 ), action)
@@ -155,8 +159,8 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 // SELL BY ONE ITEM = 1
                 if (action.isRightClick) {
                     menuUI.playClickSound(action.whoClicked, shopCategory.getConfig())
-                    return@setAction vaultShopInventory.sell(
-                        ShopPaymentInformation(magenta.itemFactory.shopItem(material, 1, itemName),
+                    return@setAction vaultShopPaymentMethods.sell(
+                        ShopPaymentHolder(magenta.itemFactory.shopItem(material, 1, itemName),
                             ShopHelper.calcPrice(1, sellPrice), isSellAllowed)
                         , action)
                 }
