@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.common.hook
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
+import com.github.encryptsl.magenta.common.hook.miniplaceholder.MagentaMiniPlaceholders
 import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobsListener
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.oraxen.OraxenListener
@@ -65,6 +66,7 @@ class HookManager(private val magenta: Magenta) {
     fun hookMiniPlaceholders() {
         if (isPluginInstalled("MiniPlaceholders")) {
             magenta.logger.info("MiniPlaceholders found, placeholders are registered !")
+            MagentaMiniPlaceholders(magenta).register()
         } else {
             magenta.logger.warning("Warning plugin MiniPlaceholders not found !")
             magenta.logger.warning("Keep in mind without MiniPlaceholders, you can't use MagentaPro MiniPlaceholders.")

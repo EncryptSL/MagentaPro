@@ -99,18 +99,12 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
     {
         return magenta.virtualLevel.getLevels()
             .filterKeys { Bukkit.getOfflinePlayer(UUID.fromString(it)).hasPlayedBefore() }
-            .toList()
-            .sortedByDescending { (_, level) -> level }
-            .toMap()
             .let { LinkedHashMap(it) }
     }
 
     private fun topVotes(): LinkedHashMap<String, Int> {
         return magenta.vote.topVotes()
             .filterKeys { Bukkit.getOfflinePlayer(UUID.fromString(it)).hasPlayedBefore() }
-            .toList()
-            .sortedByDescending { (_, vote) -> vote }
-            .toMap()
             .let { LinkedHashMap(it) }
     }
 }

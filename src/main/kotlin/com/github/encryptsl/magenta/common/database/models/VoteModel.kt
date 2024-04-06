@@ -125,7 +125,7 @@ class VoteModel(private val plugin: Plugin) : VoteSQL {
     }
 
     override fun topVotes(): MutableMap<String, Int> = transaction {
-        VoteTable.selectAll().associate {
+        VoteTable.selectAll().orderBy(vote, SortOrder.DESC).associate {
             it[uuid] to getPlayerVote(UUID.fromString(it[uuid]))
         }.toMutableMap()
     }

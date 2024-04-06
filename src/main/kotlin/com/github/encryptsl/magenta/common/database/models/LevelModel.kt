@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.database.sql.LevelSQL
 import com.github.encryptsl.magenta.common.database.tables.LevelTable
 import org.bukkit.plugin.Plugin
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.insertIgnore
@@ -66,13 +67,13 @@ class LevelModel(private val plugin: Plugin) : LevelSQL {
     }
 
     override fun getLevels(top: Int): MutableMap<String, Int> = transaction {
-        LevelTable.selectAll().limit(top).associate {
+        LevelTable.selectAll().limit(top).orderBy(LevelTable.level, SortOrder.DESC).associate {
             it[LevelTable.username] to it[LevelTable.level]
         }.toMutableMap()
     }
 
     override fun getLevels(): MutableMap<String, Int> = transaction {
-        LevelTable.selectAll().associate {
+        LevelTable.selectAll().orderBy(LevelTable.level, SortOrder.DESC).associate {
             it[LevelTable.username] to it[LevelTable.level]
         }.toMutableMap()
     }
