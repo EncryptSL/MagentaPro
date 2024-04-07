@@ -79,8 +79,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
     private fun topVoteNameByRank(rank: Int): String {
         val topVote = topVotes()
         return if (rank in 1..topVote.size) {
-            val uuid = topVote.keys.elementAt(rank - 1)
-            Bukkit.getOfflinePlayer(UUID.fromString(uuid)).name ?: "UNKNOWN"
+            topVote.keys.elementAt(rank - 1)
         } else {
             "N/A"
         }

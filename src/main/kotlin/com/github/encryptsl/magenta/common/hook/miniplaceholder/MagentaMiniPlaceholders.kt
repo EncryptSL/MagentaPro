@@ -5,9 +5,7 @@ import com.github.encryptsl.magenta.api.level.LevelFormula
 import io.github.miniplaceholders.kotlin.asInsertingTag
 import io.github.miniplaceholders.kotlin.expansion
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import java.util.*
 
 class MagentaMiniPlaceholders(private val magenta: Magenta) {
 
@@ -73,8 +71,7 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) {
     private fun topLevelNameByRank(rank: Int): String {
         val topLevel = topLevels()
         return if (rank in 1 .. topLevel.size) {
-            val uuid = topLevel.keys.elementAt(rank - 1)
-            Bukkit.getOfflinePlayer(UUID.fromString(uuid)).name ?: "UNKNOWN"
+            topLevel.keys.elementAt(rank - 1)
         } else {
             "N/A"
         }
@@ -93,8 +90,7 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) {
     private fun topVoteNameByRank(rank: Int): String {
         val topVote = topVotes()
         return if (rank in 1..topVote.size) {
-            val uuid = topVote.keys.elementAt(rank - 1)
-            Bukkit.getOfflinePlayer(UUID.fromString(uuid)).name ?: "UNKNOWN"
+            topVote.keys.elementAt(rank - 1)
         } else {
             "N/A"
         }
