@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.cmds
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.menu.modules.milestones.VoteMilestonesGUI
+import com.github.encryptsl.magenta.common.extensions.positionIndexed
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -52,6 +53,21 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command open vote milestones")
     fun onVoteMilestones(player: Player) {
         voteMilestonesGUI.openMenu(player)
+    }
+
+    @Command("vote top")
+    @Permission("magenta.vote.top")
+    @CommandDescription("This command shows leaderboards in vote")
+    fun onVoteLeaderBoard(commandSender: CommandSender) {
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.vote.top.header"))
+        magenta.vote.votesLeaderBoard().toList().positionIndexed { k, v ->
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.vote.top", TagResolver.resolver(
+                Placeholder.parsed("position", k.toString()),
+                Placeholder.parsed("player", v.first),
+                Placeholder.parsed("votes", v.second.toString()),
+            )))
+        }
+        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.vote.top.footer"))
     }
 
     @Command("vote claim rewards")

@@ -11,6 +11,6 @@ interface LevelAPI {
     fun setExperience(uuid: UUID, experience: Int)
     fun hasAccount(uuid: UUID): Boolean
     fun getLevel(uuid: UUID): LevelEntity?
-    fun getLevels(top: Int): MutableMap<String, Int>
-    fun getLevels(): MutableMap<String, Int>
+    fun getLevels(top: Int): Map<String, Int>
+    fun getLevels(): Map<String, Int>
 }

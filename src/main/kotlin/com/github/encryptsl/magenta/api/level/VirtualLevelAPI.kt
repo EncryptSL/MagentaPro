@@ -35,11 +35,11 @@ class VirtualLevelAPI(private val magenta: Magenta) : LevelAPI {
         return magenta.levelModel.getLevel(uuid)
     }
 
-    override fun getLevels(top: Int): MutableMap<String, Int> {
+    override fun getLevels(top: Int): Map<String, Int> {
         return magenta.levelModel.getLevels(top)
     }
 
-    override fun getLevels(): MutableMap<String, Int> {
+    override fun getLevels(): Map<String, Int> {
         return magenta.levelModel.getLevels()
     }
 }

@@ -59,7 +59,7 @@ class MagentaVoteAPI(plugin: Plugin) : VoteAPI {
         return voteModel.totalVotes()
     }
 
-    override fun topVotes(): MutableMap<String, Int> {
+    override fun votesLeaderBoard(): MutableMap<String, Int> {
         return voteModel.topVotes()
     }
 }

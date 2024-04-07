@@ -109,17 +109,13 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) {
         }
     }
 
-    private fun topLevels(): LinkedHashMap<String, Int>
+    private fun topLevels(): Map<String, Int>
     {
         return magenta.virtualLevel.getLevels()
-            .filterKeys { Bukkit.getOfflinePlayer(UUID.fromString(it)).hasPlayedBefore() }
-            .let { LinkedHashMap(it) }
     }
 
-    private fun topVotes(): LinkedHashMap<String, Int> {
-        return magenta.vote.topVotes()
-            .filterKeys { Bukkit.getOfflinePlayer(UUID.fromString(it)).hasPlayedBefore() }
-            .let { LinkedHashMap(it) }
+    private fun topVotes(): Map<String, Int> {
+        return magenta.vote.votesLeaderBoard()
     }
 
 

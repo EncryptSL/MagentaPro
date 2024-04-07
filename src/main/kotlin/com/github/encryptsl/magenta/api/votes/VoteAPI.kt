@@ -17,5 +17,5 @@ interface VoteAPI {
     fun resetVotes()
     fun deleteAll()
     fun totalVotes(): Int
-    fun topVotes(): MutableMap<String, Int>
+    fun votesLeaderBoard(): Map<String, Int>
 }

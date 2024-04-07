@@ -359,6 +359,7 @@ permissions:
     children:
       magenta.vote: true
       magenta.vote.milestones: true
+      magenta.vote.top: true
       magenta.vote.claim.rewards: true
       magenta.voteparty: true
   magenta.votes.*:
