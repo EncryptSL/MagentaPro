@@ -25,12 +25,12 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         commandManager.parserRegistry().registerSuggestionProvider("homes") { sender, _ ->
             val player = sender.sender() as Player
-            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player.uniqueId).map { s -> Suggestion.simple(s.homeName) })
+            return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.homeModel.getHomesByOwner(player.uniqueId).map { s -> Suggestion.suggestion(s.homeName) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("homeIcons") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
                 .completedFuture(magenta.homeEditorConfig.getConfig().getStringList("menu.icons")
-                    .map { Suggestion.simple(it) }
+                    .map { Suggestion.suggestion(it) }
                 )
         }
         annotationParser.parse(this)

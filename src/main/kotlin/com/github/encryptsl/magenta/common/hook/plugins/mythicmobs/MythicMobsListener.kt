@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common.hook.mythicmobs
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.forEachIndexed
+import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.lumine.mythic.bukkit.MythicBukkit
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent
@@ -18,7 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.math.RoundingMode
 import java.util.*
 
-class MythicMobsListener(private val magenta: Magenta) : Listener {
+class MythicMobsListener(private val magenta: Magenta) : PluginHook("MythicMobs"), Listener {
 
     private val damageMap = HashMap<UUID, Double>()
 
@@ -123,7 +124,7 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
         try {
             val topPlayer = sortedByDamage()
             return topPlayer.values.elementAt(position - 1)
-        } catch (e : IndexOutOfBoundsException) {
+        } catch (_ : IndexOutOfBoundsException) {
             return 0.0
         }
     }
@@ -133,7 +134,7 @@ class MythicMobsListener(private val magenta: Magenta) : Listener {
             val topPlayer = sortedByDamage()
             val uuid = topPlayer.keys.elementAt(position - 1)
             return Bukkit.getOfflinePlayer(uuid).name ?: "UNKNOWN"
-        } catch (e: IndexOutOfBoundsException) {
+        } catch (_: IndexOutOfBoundsException) {
             return "EMPTY"
         }
     }

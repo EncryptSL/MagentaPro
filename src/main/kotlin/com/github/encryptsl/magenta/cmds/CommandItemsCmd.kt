@@ -25,7 +25,7 @@ class CommandItemsCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandManager.parserRegistry().registerSuggestionProvider("citems") {_, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(magenta.cItems.getConfig().getConfigurationSection("citems")
                 ?.getKeys(false)
-                ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!)
+                ?.mapNotNull { a -> Suggestion.suggestion(a.toString()) }!!)
         }
         annotationParser.parse(this)
     }

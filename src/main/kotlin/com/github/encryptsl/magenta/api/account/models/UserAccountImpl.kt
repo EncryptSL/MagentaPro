@@ -32,17 +32,13 @@ class UserAccountImpl(private val plugin: Plugin, uuid: UUID) : UserAccountAbstr
 
     override fun saveLastLocation(player: Player) {
         if (isJailed() || hasPunish()) return
-        getAccount().set("lastlocation.world-name", player.world.name)
-        getAccount().set("lastlocation.x", player.location.x)
-        getAccount().set("lastlocation.y", player.location.y)
-        getAccount().set("lastlocation.z", player.location.z)
-        getAccount().set("lastlocation.yaw", player.location.yaw)
-        getAccount().set("lastlocation.pitch", player.location.pitch)
+        getAccount().set("lastlocation", player.location)
         save()
     }
 
     override fun saveQuitData(player: Player) {
         getAccount().set("timestamps.logout", System.currentTimeMillis())
+        saveLastLocation(player)
         save()
     }
 

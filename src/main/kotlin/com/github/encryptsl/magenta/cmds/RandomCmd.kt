@@ -25,7 +25,7 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.randomConfig.getConfig().getConfigurationSection("tags")
                     ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+                    ?.mapNotNull { Suggestion.suggestion(it.toString()) }!!
             )
         }
         annotationParser.parse(this)

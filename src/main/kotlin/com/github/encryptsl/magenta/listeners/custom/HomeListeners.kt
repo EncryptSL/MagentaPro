@@ -86,16 +86,14 @@ class HomeListeners(private val magenta: Magenta) : Listener {
                         Placeholder.parsed("home", homeName))
                     )
 
-                magenta.config.getStringList("home-info-format").forEach { s ->
-                    player.sendMessage(ModernText.miniModernText(s, TagResolver.resolver(
-                        Placeholder.parsed("home", magenta.homeModel.getHome(homeName, HomeTable.home)),
-                        Placeholder.parsed("owner", magenta.homeModel.getHome(homeName, HomeTable.username)),
-                        Placeholder.parsed("world", magenta.homeModel.getHome(homeName, HomeTable.world)),
-                        Placeholder.parsed("x", magenta.homeModel.getHome(homeName, HomeTable.x).toString()),
-                        Placeholder.parsed("y", magenta.homeModel.getHome(homeName, HomeTable.y).toString()),
-                        Placeholder.parsed("z", magenta.homeModel.getHome(homeName, HomeTable.z).toString()),
-                    )))
-                }
+                player.sendMessage(ModernText.miniModernText(magenta.config.getStringList("home-info-format").toString(), TagResolver.resolver(
+                    Placeholder.parsed("home", magenta.homeModel.getHome(homeName, HomeTable.home)),
+                    Placeholder.parsed("owner", magenta.homeModel.getHome(homeName, HomeTable.username)),
+                    Placeholder.parsed("world", magenta.homeModel.getHome(homeName, HomeTable.world)),
+                    Placeholder.parsed("x", magenta.homeModel.getHome(homeName, HomeTable.x).toString()),
+                    Placeholder.parsed("y", magenta.homeModel.getHome(homeName, HomeTable.y).toString()),
+                    Placeholder.parsed("z", magenta.homeModel.getHome(homeName, HomeTable.z).toString()),
+                )))
             }
         }
     }

@@ -25,14 +25,14 @@ class ShopCmd(private val magenta: Magenta) : AnnotationFeatures {
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")
                     ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+                    ?.mapNotNull { Suggestion.suggestion(it.toString()) }!!
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("creditshops") {_, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")
                     ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+                    ?.mapNotNull { Suggestion.suggestion(it.toString()) }!!
             )
         }
         annotationParser.parse(this)

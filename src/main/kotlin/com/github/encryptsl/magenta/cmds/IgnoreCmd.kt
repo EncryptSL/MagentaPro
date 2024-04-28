@@ -25,7 +25,7 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
             val c = sender as Player
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.user.getUser(c.uniqueId).getAccount().getStringList("ignore")
-                    .map { Suggestion.simple(it) }
+                    .map { Suggestion.suggestion(it) }
             )
         }
         annotationParser.parse(this)

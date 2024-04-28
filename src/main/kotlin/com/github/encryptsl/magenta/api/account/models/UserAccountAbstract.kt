@@ -3,7 +3,6 @@ package com.github.encryptsl.magenta.api.account.models
 import com.github.encryptsl.magenta.api.account.interfaces.Account
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
@@ -89,17 +88,15 @@ abstract class UserAccountAbstract(private val uuid: UUID, private val plugin: P
     }
 
     override fun getLastLocation(): Location {
-        val world = getAccount().getString("lastlocation.world-name").toString()
-        val x = getAccount().getDouble("lastlocation.x")
-        val y = getAccount().getDouble("lastlocation.y")
-        val z = getAccount().getDouble("lastlocation.z")
-        val yaw = getAccount().getString("lastlocation.yaw").toString().toFloat()
-        val pitch = getAccount().getString("lastlocation.pitch").toString().toFloat()
-        return Location(Bukkit.getWorld(world), x, y, z, yaw, pitch)
+        return universalConfig.getConfig().getLocation("lastlocation") ?: throw Exception("Something bad with last saved location")
     }
 
     override fun set(path: String, value: Any?, sync: Boolean) {
         universalConfig.set(path, value, sync)
+    }
+
+    override fun set(path: MutableMap<String, Any>, sync: Boolean) {
+        for (i in path) { universalConfig.set(i.key, i.value) }
     }
 
     override fun set(path: String, list: MutableList<Any>) {

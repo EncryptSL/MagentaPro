@@ -9,71 +9,59 @@ import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.oraxen.OraxenListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
+import org.bukkit.Bukkit
 
 class HookManager(private val magenta: Magenta) {
 
-    /**
-     * Method for check if plugin is installed
-     * @param pluginName - String name of plugin is CaseSensitive
-     * @return Boolean
-     */
-    private fun isPluginInstalled(pluginName: String): Boolean {
-        return magenta.pluginManager.getPlugin(pluginName) != null && magenta.pluginManager.isPluginEnabled(pluginName)
+    fun isPluginEnabled(pluginName: String): Boolean {
+        return Bukkit.getPluginManager().getPlugin(pluginName) != null && Bukkit.getPluginManager().isPluginEnabled(pluginName)
     }
 
-    fun hookMythicMobs() {
-        if (isPluginInstalled("MythicMobs")) {
+    fun hookPlugins() {
+        MythicMobsListener(magenta).runIfSuccess {
             magenta.logger.info("MythicMobs Found Hook Success")
             magenta.pluginManager.registerEvents(MythicMobsListener(magenta), magenta)
-        } else {
+        }.runIfElse {
             magenta.logger.warning("MythicMobs not found, you can't use damage rewarding !")
         }
-    }
-
-    fun hookOraxen() {
-        if (isPluginInstalled("Oraxen")) {
+        OraxenListener(magenta).runIfSuccess {
             magenta.logger.info("Oraxen found, now you can allow or ban item in worlds.")
             magenta.pluginManager.registerEvents(OraxenListener(magenta), magenta)
-        } else {
+        }.runIfElse {
             magenta.logger.warning("Oraxen not found, you can't allow or ban item in worlds !")
         }
-    }
-
-    fun hookLuckPerms() {
-        if (isPluginInstalled("LuckPerms") && LuckPermsAPI().setupLuckPerms()) {
+        LuckPermsAPI().runIfSuccess {
             magenta.logger.info("LuckPerms found hook success !")
-        } else {
+        }.runIfElse {
             magenta.logger.warning("LuckPerms not found please use vault plugin.")
         }
-    }
-
-    fun hookVault() {
-        if (isPluginInstalled("Vault") && VaultHook(magenta).setupEconomy()) {
+        VaultHook(magenta).runIfSuccess {
             magenta.logger.info("Vault found hook success !")
-        } else {
+        }.runIfElse {
             magenta.logger.warning("Vault not found, please download !")
         }
-    }
-
-    fun hookCreditLite() {
-        if (isPluginInstalled("CreditLite") && CreditLiteHook(magenta).setupCreditLite()) {
+        CreditLiteHook(magenta).runIfSuccess {
             magenta.logger.info("CreditLite found hook success !")
-        } else {
+        }.runIfElse {
             magenta.logger.warning("CreditLite not found, you can't use credit economy !")
         }
-    }
-
-    fun hookMiniPlaceholders() {
-        if (isPluginInstalled("MiniPlaceholders")) {
+        MagentaMiniPlaceholders(magenta).runIfSuccess {
             magenta.logger.info("MiniPlaceholders found, placeholders are registered !")
             MagentaMiniPlaceholders(magenta).register()
-        } else {
+        }.runIfElse {
             magenta.logger.warning("Warning plugin MiniPlaceholders not found !")
             magenta.logger.warning("Keep in mind without MiniPlaceholders, you can't use MagentaPro MiniPlaceholders.")
         }
+        VotifierListener(magenta).runIfSuccess {
+            magenta.logger.info("NuVotifier found hook success !")
+            magenta.pluginManager.registerEvents(VotifierListener(magenta), magenta)
+        }.runIfElse {
+            magenta.logger.warning("NuVotifier not found, rewarding from voting not working now !")
+        }
+        hookPAPI()
     }
-    fun hookPAPI() {
-        if (isPluginInstalled("PlaceholderAPI")) {
+    private fun hookPAPI() {
+        if (isPluginEnabled("PlaceholderAPI")) {
             magenta.logger.info("PlaceholderAPI found, placeholders are registered !")
             MagentaPlaceholderAPI(magenta, "1.0.0").register()
         } else {
@@ -81,15 +69,4 @@ class HookManager(private val magenta: Magenta) {
             magenta.logger.warning("Keep in mind without PlaceholderAPI, you can't use MagentaPro PAPI Placeholders.")
         }
     }
-
-    fun hookNuVotifier() {
-        if (isPluginInstalled("Votifier")) {
-            magenta.logger.info("NuVotifier found hook success !")
-            magenta.pluginManager.registerEvents(VotifierListener(magenta), magenta)
-        } else {
-            magenta.logger.warning("NuVotifier not found, rewarding from voting not working now !")
-        }
-    }
-
-
 }

@@ -25,7 +25,7 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         commandManager.parserRegistry().registerSuggestionProvider("gamemodes") { sender, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(
-                GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { Suggestion.simple(it.name) }
+                GameMode.entries.filter { sender.hasPermission("magenta.gamemodes.${it.name.lowercase()}") }.map { Suggestion.suggestion(it.name) }
             )
         }
         annotationParser.parse(this)

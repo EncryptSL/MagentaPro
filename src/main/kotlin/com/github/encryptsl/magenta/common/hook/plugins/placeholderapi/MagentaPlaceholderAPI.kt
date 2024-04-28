@@ -15,7 +15,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
     override fun getRequiredPlugin(): String = "MagentaPro"
 
     override fun canRegister(): Boolean {
-        return magenta.pluginManager.getPlugin(requiredPlugin)?.isEnabled ?: false
+        return magenta.pluginManager.getPlugin(requiredPlugin)?.isEnabled == true
     }
 
     override fun onRequest(player: OfflinePlayer, identifier: String): String? {

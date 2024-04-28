@@ -13,6 +13,7 @@ interface Account {
     fun saveLastLocation(player: Player)
     fun saveQuitData(player: Player)
     fun set(path: String, value: Any?, sync: Boolean = true)
+    fun set(path: MutableMap<String, Any>, sync: Boolean = true)
     fun set(path: String, list: MutableList<Any>)
     fun setDelay(duration: Duration?, type: String)
     fun resetDelay(type: String)

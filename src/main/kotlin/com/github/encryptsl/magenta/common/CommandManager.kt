@@ -78,26 +78,26 @@ class CommandManager(private val magenta: Magenta) {
     private fun registerGlobalSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
         commandManager.parserRegistry().registerSuggestionProvider("help_queries") { sender, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(
-                createCommandManager().createHelpHandler().queryRootIndex(sender.sender()).entries().map { Suggestion.simple(it.syntax())}
+                createCommandManager().createHelpHandler().queryRootIndex(sender.sender()).entries().map { Suggestion.suggestion(it.syntax())}
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("players") { _, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(Bukkit.getOnlinePlayers()
-                .map { Suggestion.simple(it.name) }
+                .map { Suggestion.suggestion(it.name) }
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("offlinePlayers") { _, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(Bukkit.getOfflinePlayers()
-                .map { Suggestion.simple(it.name.toString()) }
+                .map { Suggestion.suggestion(it.name.toString()) }
             )
         }
         commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
-                .completedFuture(Material.entries.map { Suggestion.simple(it.name) })
+                .completedFuture(Material.entries.map { Suggestion.suggestion(it.name) })
         }
         commandManager.parserRegistry().registerSuggestionProvider("worlds") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
-                .completedFuture(Bukkit.getWorlds().map { Suggestion.simple(it.name) })
+                .completedFuture(Bukkit.getWorlds().map { Suggestion.suggestion(it.name) })
         }
     }
 

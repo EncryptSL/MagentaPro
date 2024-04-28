@@ -24,7 +24,7 @@ class KitCmd(private val magenta: Magenta) : AnnotationFeatures {
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.kitConfig.getConfig().getConfigurationSection("kits")?.getKeys(false)
                     ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
-                    ?.mapNotNull { a -> Suggestion.simple(a.toString()) }!!
+                    ?.mapNotNull { a -> Suggestion.suggestion(a.toString()) }!!
             )
         }
         annotationParser.parse(this)

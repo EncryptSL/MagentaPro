@@ -51,9 +51,12 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         magenta.earnBlocksProgressManager.syncInitData(player.uniqueId, user.getAccount().getInt("mined.blocks", 0))
 
         if (player.hasPlayedBefore()) {
-            user.set("timestamps.login", System.currentTimeMillis())
-            user.set("ip-address", player.address.address.hostAddress)
-
+            val map = mutableMapOf(
+                "timestamps.login" to System.currentTimeMillis(),
+                "ip-address" to player.address.address.hostAddress
+            )
+            user.set(map.toMutableMap())
+            map.clear()
             FileUtil.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
                 player.sendMessage(ModernText.miniModernTextCenter(text, TagResolver.resolver(
                     Placeholder.component("player", player.displayName()),
@@ -109,7 +112,6 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         magenta.earnBlocksProgressManager.remove(player.uniqueId)
         magenta.afk.clear(player.uniqueId)
         user.saveQuitData(player)
-        user.saveLastLocation(player)
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

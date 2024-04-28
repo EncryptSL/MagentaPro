@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta.common.hook.luckperms
 
+import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.LuckPermsProvider
 import net.luckperms.api.cacheddata.CachedMetaData
@@ -13,20 +14,11 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 
-class LuckPermsAPI {
-
-    fun setupLuckPerms(): Boolean {
-        return try {
-            Class.forName("net.luckperms.api.LuckPerms")
-            true
-        } catch (e : ClassNotFoundException) {
-            false
-        }
-    }
+class LuckPermsAPI : PluginHook("LuckPerms") {
 
     fun hasPermission(player: OfflinePlayer, permission: String): Boolean
     {
-        if (!setupLuckPerms())
+        if (!isPluginEnabled())
             return player.player?.hasPermission(permission) == true
 
         var a = false
@@ -39,7 +31,7 @@ class LuckPermsAPI {
     }
 
     fun getGroup(player: Player): String {
-        if (!setupLuckPerms())
+        if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
         val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
@@ -49,7 +41,7 @@ class LuckPermsAPI {
     }
 
     fun getPrefix(player: Player): String {
-        if (!setupLuckPerms())
+        if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
         val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
@@ -59,7 +51,7 @@ class LuckPermsAPI {
     }
 
     fun getSuffix(player: Player): String {
-        if (!setupLuckPerms())
+        if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
         val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
@@ -69,7 +61,7 @@ class LuckPermsAPI {
     }
 
     fun getExpireGroup(offlinePlayer: OfflinePlayer, group: String): Instant? {
-        if (!setupLuckPerms())
+        if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
         var a: Instant? = null
@@ -87,7 +79,7 @@ class LuckPermsAPI {
     }
 
     fun getMetaValue(player: Player, value: String): String {
-        if (!setupLuckPerms())
+        if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
         val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
@@ -100,7 +92,7 @@ class LuckPermsAPI {
     }
 
     private fun getLuckPerms(): LuckPerms {
-        if (!setupLuckPerms())
+        if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
         return LuckPermsProvider.get()

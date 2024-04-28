@@ -1,13 +1,14 @@
 package com.github.encryptsl.magenta.common.hook.oraxen
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import io.th0rgal.oraxen.api.OraxenItems
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 
-class OraxenListener(private val magenta: Magenta) : Listener {
+class OraxenListener(private val magenta: Magenta) : PluginHook("Oraxen"), Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onOraxenItemsBlockBreak(event: BlockBreakEvent) {

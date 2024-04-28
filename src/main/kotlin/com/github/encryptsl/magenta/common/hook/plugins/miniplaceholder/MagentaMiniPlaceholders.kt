@@ -2,14 +2,16 @@ package com.github.encryptsl.magenta.common.hook.miniplaceholder
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.level.LevelFormula
+import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import io.github.miniplaceholders.kotlin.asInsertingTag
 import io.github.miniplaceholders.kotlin.expansion
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
-class MagentaMiniPlaceholders(private val magenta: Magenta) {
+class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPlaceholders") {
 
     fun register() {
+        if (!isPluginEnabled()) return
         val expansion = expansion("magenta") {
             audiencePlaceholder("afk") { p, _, _ ->
                 val player  = p as Player

@@ -64,7 +64,7 @@ class ItemBuilder(private val material: Material, val amount: Int) {
         }
 
         if (glowing) {
-            itemMeta.addEnchant(Enchantment.ARROW_DAMAGE, 0, true)
+            itemMeta.addEnchant(Enchantment.UNBREAKING, 0, true)
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         }
 

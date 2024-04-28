@@ -23,22 +23,26 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.back")
     @CommandDescription("This command teleport you back on your previous location.")
     fun onBack(player: Player) {
-        val userAccount = magenta.user.getUser(player.uniqueId)
-        player.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))
+        try {
+            val userAccount = magenta.user.getUser(player.uniqueId)
+            player.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
+            player.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))
+        } catch (e : Exception) {
+            player.sendMessage(magenta.localeConfig.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
     }
 
     @Command("back <player>")
     @Permission("magenta.back.other")
     @CommandDescription("This command teleport other player back on his previous location.")
     fun onBack(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
-        val userAccount = magenta.user.getUser(target.uniqueId)
-
-        target.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
-        target.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.back.success.to",
-            Placeholder.parsed("player", target.name)
-        ))
+        try {
+            onBack(target)
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.back.success.to",
+                Placeholder.parsed("player", target.name)
+            ))
+        } catch (e : Exception) {
+            commandSender.sendMessage(magenta.localeConfig.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
     }
-
 }

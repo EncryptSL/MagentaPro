@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerStartedEvent
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
+import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import com.vexsoftware.votifier.model.Vote
 import com.vexsoftware.votifier.model.VotifierEvent
 import com.vexsoftware.votifier.util.QuietException
@@ -13,7 +14,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
-class VotifierListener(private val magenta: Magenta) : Listener {
+class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), Listener {
+
     @EventHandler(priority = EventPriority.NORMAL)
     fun onVote(event: VotifierEvent) {
         val vote: Vote = event.vote

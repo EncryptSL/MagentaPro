@@ -48,27 +48,30 @@ object ShopHelper {
     @JvmStatic
     fun reloadShopConfigs(magenta: Magenta) {
         val shopConfig = magenta.shopConfig.getConfig()
-        for (category in shopConfig.getConfigurationSection("menu.categories")?.getKeys(false)!!) {
-            val categoryConfig = UniversalConfig(magenta, "menu/shop/categories/$category.yml")
-            if (categoryConfig.fileExist()) {
-                categoryConfig.reload()
-                categoryConfig.save()
-                magenta.logger.config("Shop config $category.yml was reloaded !")
-            } else {
-                magenta.logger.config("Shop config $category.yml not exist !")
+        val shopCategories = shopConfig.getConfigurationSection("menu.categories")?.getKeys(false)
+
+        if (shopCategories != null) {
+            for (category in shopCategories) {
+                val categoryConfig = UniversalConfig(magenta, "menu/shop/categories/$category.yml")
+                if (categoryConfig.fileExist()) {
+                    categoryConfig.reload()
+                    categoryConfig.save()
+                }
             }
+            magenta.logger.info("VaultShop was reloaded with ${shopCategories.size} configs !")
         }
         
         val creditConfig = magenta.creditShopConfig.getConfig()
-        for (category in creditConfig.getConfigurationSection("menu.categories")?.getKeys(false)!!) {
-            val categoryConfig = UniversalConfig(magenta, "menu/creditshop/categories/$category.yml")
-            if (categoryConfig.fileExist()) {
-                categoryConfig.reload()
-                categoryConfig.save()
-                magenta.logger.config("Shop config $category.yml was reloaded !")
-            } else {
-                magenta.logger.config("Shop config $category.yml not exist !")
+        val creditShopCategories = creditConfig.getConfigurationSection("menu.categories")?.getKeys(false)
+        if (creditShopCategories != null) {
+            for (category in creditShopCategories) {
+                val categoryConfig = UniversalConfig(magenta, "menu/creditshop/categories/$category.yml")
+                if (categoryConfig.fileExist()) {
+                    categoryConfig.reload()
+                    categoryConfig.save()
+                }
             }
+            magenta.logger.info("CreditShop was reloaded with ${creditShopCategories.size} configs !")
         }
     }
 }

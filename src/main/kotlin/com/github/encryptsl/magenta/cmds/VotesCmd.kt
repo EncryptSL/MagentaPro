@@ -26,7 +26,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.config.getConfigurationSection("votifier.services")
                     ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(VoteHelper.replaceService(it.toString(), "_", ".")) }!!
+                    ?.mapNotNull { Suggestion.suggestion(VoteHelper.replaceService(it.toString(), "_", ".")) }!!
             )
         }
         annotationParser.parse(this)

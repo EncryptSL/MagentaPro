@@ -26,7 +26,7 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.jailConfig.getConfig().getConfigurationSection("jails")
                     ?.getKeys(false)
-                    ?.mapNotNull { Suggestion.simple(it.toString()) }!!
+                    ?.mapNotNull { Suggestion.suggestion(it.toString()) }!!
             )
         }
         annotationParser.parse(this)

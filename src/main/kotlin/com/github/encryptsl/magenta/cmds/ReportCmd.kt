@@ -29,7 +29,7 @@ class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
-                .completedFuture(ReportCategories.entries.map { Suggestion.simple(it.name) })
+                .completedFuture(ReportCategories.entries.map { Suggestion.suggestion(it.name) })
         }
         annotationParser.parse(this)
     }

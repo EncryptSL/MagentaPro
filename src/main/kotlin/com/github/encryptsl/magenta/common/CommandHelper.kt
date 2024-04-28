@@ -34,9 +34,7 @@ class CommandHelper(private val magenta: Magenta) {
 
 
     fun teleportAll(sender: Player, players: HashSet<Player>) {
-        for (it in players) {
-            it.teleportAsync(sender.location)
-        }
+        for (it in players) { it.teleportAsync(sender.location) }
         players.clear()
     }
 

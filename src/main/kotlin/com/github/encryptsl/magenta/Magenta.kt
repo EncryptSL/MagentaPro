@@ -32,6 +32,7 @@ import com.github.encryptsl.magenta.common.tasks.LevelUpTask
 import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
+import com.github.encryptsl.magenta.listeners.CommandListener
 import com.github.encryptsl.magenta.listeners.custom.*
 import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
@@ -141,9 +142,9 @@ open class Magenta : JavaPlugin() {
             voteParty.createTable()
             commandManager.registerCommands()
             newsQueueManager.loadQueue()
+            hookManger.hookPlugins()
             registerTasks()
             handlerListener()
-            hookRegistration()
         }
         logger.info("Plugin enabled in time ${time.inWholeSeconds}")
     }
@@ -167,17 +168,6 @@ open class Magenta : JavaPlugin() {
         }
     }
 
-    private fun hookRegistration() {
-        hookManger.hookLuckPerms()
-        hookManger.hookOraxen()
-        hookManger.hookMythicMobs()
-        hookManger.hookVault()
-        hookManger.hookCreditLite()
-        hookManger.hookMiniPlaceholders()
-        hookManger.hookPAPI()
-        hookManger.hookNuVotifier()
-    }
-
     private fun registerTasks() {
         SchedulerMagenta.runTaskTimerAsync(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
         SchedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
@@ -191,18 +181,12 @@ open class Magenta : JavaPlugin() {
             EntityAttackListener(this),
             BlockListener(this),
             PlayerListener(this),
-            PlayerCommandPreprocessListener(this),
+            CommandListener(this),
             SignListener(this),
             PrivateMessageListener(this),
             PortalListener(this),
             HomeListeners(this),
-            JailInfoListener(this),
-            JailCheckListener(this),
-            JailCreateListener(this),
-            JailDeleteListener(this),
-            JailListener(this),
-            JailPardonListener(this),
-            JailTeleportListener(this),
+            JailListeners(this),
             KitListeners(this),
             SocialSpyListener(this),
             TpaListener(this),
