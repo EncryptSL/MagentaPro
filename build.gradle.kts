@@ -3,7 +3,7 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
-group = "com.github.encryptsl.magenta"
+group = "com.github.encryptsl"
 version = providers.gradleProperty("plugin_version").get()
 description = providers.gradleProperty("plugin_description").get()
 
