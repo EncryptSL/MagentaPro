@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
+import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.database.sql.LevelSQL
 import com.github.encryptsl.magenta.common.database.tables.LevelTable
-import org.bukkit.plugin.Plugin
+import fr.euphyllia.energie.model.SchedulerType
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
@@ -14,9 +14,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.util.*
 
-class LevelModel(private val plugin: Plugin) : LevelSQL {
+class LevelModel : LevelSQL {
     override fun createAccount(levelEntity: LevelEntity) {
-        SchedulerMagenta.doAsync(plugin) {
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
             transaction { LevelTable.insertIgnore {
                 it[username] = levelEntity.username
                 it[uuid] = levelEntity.uuid

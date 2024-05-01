@@ -9,9 +9,9 @@ import com.github.encryptsl.magenta.api.events.jail.JailEvent
 import com.github.encryptsl.magenta.api.events.jail.JailInfoEvent
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
 import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
+import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -154,7 +154,7 @@ class JailListeners(private val magenta: Magenta) : Listener {
         val player = event.target
         val location = event.location
 
-        SchedulerMagenta.doSync(magenta) {
+        Magenta.scheduler.runTask(SchedulerType.SYNC) {
             player.teleport(location)
         }
     }

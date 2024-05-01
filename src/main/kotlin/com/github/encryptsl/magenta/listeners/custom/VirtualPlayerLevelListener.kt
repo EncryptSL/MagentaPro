@@ -19,24 +19,22 @@ class VirtualPlayerLevelListener(private val magenta: Magenta) : Listener {
         val expToLevel = event.experienceToLevel
 
         magenta.virtualLevel.addLevel(offlinePlayer.uniqueId, 1)
-            offlinePlayer.player?.let {
-                it.playSound(
-                    Sound.sound()
-                        .volume(magenta.config.getString("level.effect.volume").toString().toFloat())
-                        .pitch(magenta.config.getString("level.effect.pitch").toString().toFloat())
-                        .type(Key.key(magenta.config.getString("level.effect.sound").toString()))
-                        .build()
-                )
-                for (line in magenta.config.getStringList("level.format")) {
-                    it.sendMessage(ModernText.miniModernTextCenter(
-                        line, TagResolver.resolver(
-                            Placeholder.parsed("level", level.toString()),
-                            Placeholder.parsed("current_exp", currentExp.toString()),
-                            Placeholder.parsed("exp_to_level", expToLevel.toString()),
-                        )
-                    ))
-                }
+        offlinePlayer.player?.let {
+            it.playSound(Sound.sound()
+                .volume(magenta.config.getString("level.effect.volume").toString().toFloat())
+                .pitch(magenta.config.getString("level.effect.pitch").toString().toFloat())
+                .type(Key.key(magenta.config.getString("level.effect.sound").toString()))
+                .build()
+            )
+            for (line in magenta.config.getStringList("level.format")) {
+                it.sendMessage(ModernText.miniModernTextCenter(
+                    line, TagResolver.resolver(
+                        Placeholder.parsed("level", level.toString()),
+                        Placeholder.parsed("current_exp", currentExp.toString()),
+                        Placeholder.parsed("exp_to_level", expToLevel.toString()),)
+                ))
             }
+        }
         magenta.virtualLevel.setExperience(offlinePlayer.uniqueId, 0)
     }
 

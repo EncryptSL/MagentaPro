@@ -2,20 +2,25 @@ package com.github.encryptsl.magenta.common.tasks
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ModernText
+import fr.euphyllia.energie.model.SchedulerCallBack
+import fr.euphyllia.energie.model.SchedulerTaskInter
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 import java.util.*
 
-class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
-    override fun run() {
-        if (!magenta.config.contains("news")) return
-        if (!magenta.config.contains("news.delay")) return
+class BroadcastNewsTask(private val magenta: Magenta) : SchedulerCallBack {
+
+    override fun run(e: SchedulerTaskInter?) {
+        if (e == null) return
+        if (!e.plugin.config.contains("news")) return
+        if (!e.plugin.config.contains("news.delay")) return
         if (magenta.newsQueueManager.isQueueEmpty()) return
 
-        val isRandomEnabled = magenta.config.getBoolean("news.random")
+        val isRandomEnabled = e.plugin.config.getBoolean("news.random")
         runSender(magenta.newsQueueManager.news, isRandomEnabled)
     }
+
 
     private fun runSender(messages: Queue<String>, isRandomEnabled: Boolean) {
         val format = magenta.config.getString("news.format").toString()

@@ -25,21 +25,19 @@ object BlockUtils {
     fun updateSpawner(block: Block, player: Player) {
         val itemInHand = player.inventory.itemInMainHand
 
-        if (itemInHand.type == Material.SPAWNER && itemInHand.hasItemMeta()) {
-            val spawnerItemMeta = itemInHand.itemMeta
-            val spawnerName = spawnerItemMeta.displayName()
-            if (spawnerItemMeta.hasDisplayName() && spawnerName != null) {
-                val itemName = ModernText.convertComponentToText(spawnerName)
-                val entityName = itemName.split(" ")
-                val entityType = EntityType.valueOf(entityName[1])
+        if (itemInHand.type != Material.SPAWNER && !itemInHand.hasItemMeta()) return
 
-                val spawnerBlock: Block = block
+        val spawnerItemMeta = itemInHand.itemMeta
+        if (!spawnerItemMeta.hasDisplayName()) return
 
-                val spawner: CreatureSpawner = spawnerBlock.state as CreatureSpawner
-                spawner.spawnedType = entityType
-                spawner.update()
-            }
-        }
+        val spawnerName = spawnerItemMeta.displayName() ?: return
+        val itemName = ModernText.convertComponentToText(spawnerName)
+        val entityName = itemName.split(" ")
+        val entityType = EntityType.valueOf(entityName[1])
+        val spawnerBlock: Block = block
+        val spawner: CreatureSpawner = spawnerBlock.state as CreatureSpawner
+        spawner.spawnedType = entityType
+        spawner.update()
     }
 
 }

@@ -7,7 +7,6 @@ import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
 import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
 import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
@@ -34,6 +33,9 @@ import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.CommandListener
 import com.github.encryptsl.magenta.listeners.custom.*
+import fr.euphyllia.energie.Energie
+import fr.euphyllia.energie.model.Scheduler
+import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
@@ -44,17 +46,22 @@ import kotlin.time.measureTime
 open class Magenta : JavaPlugin() {
 
     lateinit var paperContainerProvider: PaperContainerProvider
+
+    companion object {
+        lateinit var scheduler: Scheduler
+    }
+
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
     val database: DatabaseConnector by lazy { DatabaseConnector(this) }
     val user: User by lazy { User(this) }
-    val vote: MagentaVoteAPI by lazy { MagentaVoteAPI(this) }
-    val voteParty: MagentaVotePartyAPI by lazy { MagentaVotePartyAPI(VotePartyModel(this)) }
+    val vote: MagentaVoteAPI by lazy { MagentaVoteAPI() }
+    val voteParty: MagentaVotePartyAPI by lazy { MagentaVotePartyAPI(VotePartyModel()) }
     val virtualLevel: VirtualLevelAPI by lazy { VirtualLevelAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
-    val levelModel: LevelModel by lazy { LevelModel(this) }
+    val levelModel: LevelModel by lazy { LevelModel() }
     val kitManager: KitManager by lazy { KitManager(this) }
     val tpaManager: TpaManager by lazy { TpaManager(this) }
     val afk: AfkUtils by lazy { AfkUtils(this) }
@@ -92,6 +99,7 @@ open class Magenta : JavaPlugin() {
     val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     private val hookManger: HookManager by lazy { HookManager(this) }
+    private val energie: Energie by lazy {Energie(this)}
 
     override fun onLoad() {
         configLoader
@@ -139,6 +147,7 @@ open class Magenta : JavaPlugin() {
     override fun onEnable() {
         val time = measureTime {
             isPaperServer()
+            scheduler = energie.minecraftScheduler
             voteParty.createTable()
             commandManager.registerCommands()
             newsQueueManager.loadQueue()
@@ -169,9 +178,9 @@ open class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        SchedulerMagenta.runTaskTimerAsync(this, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
-        SchedulerMagenta.runTaskTimerAsync(this, JailCountDownTask(this), 20, 20)
-        SchedulerMagenta.runTaskTimerAsync(this, LevelUpTask(this), 20, 1)
+        scheduler.runAtFixedRate(SchedulerType.SYNC, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
+        scheduler.runAtFixedRate(SchedulerType.SYNC, JailCountDownTask(this), 20, 20)
+        scheduler.runAtFixedRate(SchedulerType.SYNC, LevelUpTask(this), 20, 1)
     }
 
     private fun handlerListener() {

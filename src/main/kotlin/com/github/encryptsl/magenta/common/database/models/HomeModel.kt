@@ -1,9 +1,10 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
+import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import com.github.encryptsl.magenta.common.database.sql.HomeSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
+import fr.euphyllia.energie.model.SchedulerType
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -15,7 +16,7 @@ import java.util.*
 
 class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun createHome(player: Player, location: Location, home: String) {
-        SchedulerMagenta.doAsync(plugin) {
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
             transaction {
                 HomeTable.insertIgnore {
                     it[username] = player.name
@@ -33,13 +34,13 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun deleteHome(uuid: UUID, home: String) {
-        SchedulerMagenta.doAsync(plugin) {
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
             transaction { HomeTable.deleteWhere { (HomeTable.uuid eq uuid) and (HomeTable.home eq home) } }
         }
     }
 
     override fun moveHome(uuid: UUID, home: String, location: Location) {
-        SchedulerMagenta.doAsync(plugin) {
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
             transaction { HomeTable.update( {  (HomeTable.uuid eq uuid) and (HomeTable.home eq home) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -52,7 +53,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun renameHome(uuid: UUID, oldHomeName: String, newHomeName: String) {
-        SchedulerMagenta.doAsync(plugin) {
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
             transaction {
                 HomeTable.update({ HomeTable.uuid eq uuid and (HomeTable.home eq oldHomeName) }) {
                     it[home] = newHomeName
@@ -62,7 +63,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun setHomeIcon(uuid: UUID, home: String, icon: String) {
-        SchedulerMagenta.doAsync(plugin) {
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
             transaction { HomeTable.update({HomeTable.uuid eq uuid and (HomeTable.home eq home)}) {
                 it[homeIcon] = icon
             } }

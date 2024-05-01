@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.chat.PlayerMentionEvent
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -25,12 +24,8 @@ class MentionManager(private val magenta: Magenta) {
                     val volume = magenta.config.getString("mentions.volume").toString().toFloat()
                     val pitch = magenta.config.getString("mentions.pitch").toString().toFloat()
 
-                    SchedulerMagenta.doAsync(magenta) {
-                        Bukkit.getPlayer(m.replace("@", ""))?.let {
-                            SchedulerMagenta.doSync(magenta) {
-                                magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
-                            }
-                        }
+                    Bukkit.getPlayer(m.replace("@", ""))?.let {
+                        magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
                     }
                     val mentioned =
                         Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), ""))

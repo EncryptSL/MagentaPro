@@ -86,11 +86,11 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     }
 
     private fun safeFly(player: Player) {
-        if (player.hasPermission("magenta.fly.safelogin")) {
-            player.fallDistance = 0F
-            player.allowFlight = true
-            player.isFlying = true
-        }
+        if (!player.hasPermission("magenta.fly.safelogin")) return
+
+        player.fallDistance = 0F
+        player.allowFlight = true
+        player.isFlying = true
     }
 
     @EventHandler

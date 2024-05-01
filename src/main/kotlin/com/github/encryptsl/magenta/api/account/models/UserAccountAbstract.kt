@@ -14,7 +14,7 @@ import java.util.*
 abstract class UserAccountAbstract(private val uuid: UUID, private val plugin: Plugin) : Account {
 
     private val universalConfig = UniversalConfig(plugin, "/players/$uuid.yml")
-    private val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI(plugin) }
+    private val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI() }
 
     override fun getGameMode(): GameMode {
         return GameMode.valueOf(getAccount().getString("gamemode", "SURVIVAL").toString())
@@ -96,7 +96,7 @@ abstract class UserAccountAbstract(private val uuid: UUID, private val plugin: P
     }
 
     override fun set(path: MutableMap<String, Any>, sync: Boolean) {
-        for (i in path) { universalConfig.set(i.key, i.value) }
+        for (i in path) { universalConfig.set(i.key, i.value, sync) }
     }
 
     override fun set(path: String, list: MutableList<Any>) {

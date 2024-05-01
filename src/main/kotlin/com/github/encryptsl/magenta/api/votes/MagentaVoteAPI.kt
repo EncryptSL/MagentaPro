@@ -2,13 +2,12 @@ package com.github.encryptsl.magenta.api.votes
 
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.models.VoteModel
-import org.bukkit.plugin.Plugin
 import java.util.*
 
-class MagentaVoteAPI(plugin: Plugin) : VoteAPI {
+class MagentaVoteAPI() : VoteAPI {
 
 
-    private val voteModel: VoteModel by lazy { VoteModel(plugin) }
+    private val voteModel: VoteModel by lazy { VoteModel() }
 
     override fun addVote(voteImpl: VoteEntity) {
         if (!hasAccount(voteImpl.uuid, voteImpl.serviceName)) {

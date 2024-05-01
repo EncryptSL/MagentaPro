@@ -3,10 +3,10 @@ package com.github.encryptsl.magenta.common.filter
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.chat.enums.Violations
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.utils.ModernText
+import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -27,11 +27,11 @@ class ChatPunishManager(private val magenta: Magenta) {
             flagging.computeIfPresent(player.uniqueId) { _, i -> i + 1 } ?: 1
             val score = flagging[player.uniqueId] ?: 0
             if (score >= 2) {
-                SchedulerMagenta.doSync(magenta) {
+                Magenta.scheduler.runTask(SchedulerType.SYNC) {
+                    flagging.remove(player.uniqueId)
                     player.kick(magenta.localeConfig.translation("magenta.filter.action.kick",
                         Placeholder.parsed("reason", violations.name))
                     )
-                    flagging.remove(player.uniqueId)
                 }
             }
         }

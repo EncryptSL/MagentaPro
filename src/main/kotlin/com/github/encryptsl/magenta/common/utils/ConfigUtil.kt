@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.common.utils
 
-import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
@@ -22,18 +21,18 @@ class ConfigUtil {
     }
 
     fun reload() {
-        runCatching {
+        try {
             config.load(file)
-            Bukkit.getLogger().info("${file.name} is reloaded !")
-        }.onFailure { e ->
+            plugin.logger.info("${file.name} is reloaded !")
+        } catch (e : Exception) {
             plugin.logger.severe(e.message ?: e.localizedMessage)
         }
     }
 
     fun save() {
-        runCatching {
+        try {
             config.save(file)
-        }.onFailure { e ->
+        } catch (e : Exception) {
             plugin.logger.severe(e.message ?: e.localizedMessage)
         }
     }

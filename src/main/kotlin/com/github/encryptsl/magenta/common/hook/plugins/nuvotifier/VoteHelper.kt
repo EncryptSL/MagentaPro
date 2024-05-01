@@ -6,9 +6,9 @@ import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
+import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -17,7 +17,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitRunnable
 
 
 object VoteHelper {
@@ -40,37 +39,35 @@ object VoteHelper {
         commands: MutableList<String>,
         countdown: Int
     ) {
-        object : BukkitRunnable() {
+        Magenta.scheduler.runAtFixedRate(SchedulerType.ASYNC, { e ->
             var timer = countdown
-            override fun run() {
-                broadcastActionBar(
-                    magenta.localeConfig.translation("magenta.votifier.voteparty.broadcast",
-                        Placeholder.parsed("delay", timer.toString())
-                    )
+            broadcastActionBar(
+                magenta.localeConfig.translation("magenta.votifier.voteparty.broadcast",
+                    Placeholder.parsed("delay", timer.toString())
                 )
-                if (timer == 0) {
-                    SchedulerMagenta.doSync(magenta) {
-                        val players = Bukkit.getOnlinePlayers()
-                        giveRewards(players, commands)
-                        if (magenta.config.contains("votifier.voteparty.random")) {
-                            val player = players.random()
-                            giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
-                            magenta.voteParty.partyFinished(player.name)
-                            magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
-                            magenta.notification.addEmbed {
-                                setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
-                                setThumbnailUrl(player.uniqueId.toMinotarAvatar())
-                                setColor(0xa730c2)
-                                addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
-                            }?.let { magenta.notification.client.send(it) }
-                        }
+            )
+            if (timer == 0) {
+                Magenta.scheduler.runTask(SchedulerType.SYNC) {
+                    val players = Bukkit.getOnlinePlayers()
+                    giveRewards(players, commands)
+                    if (magenta.config.contains("votifier.voteparty.random")) {
+                        val player = players.random()
+                        giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
+                        magenta.voteParty.partyFinished(player.name)
+                        magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
+                        magenta.notification.addEmbed {
+                            setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
+                            setThumbnailUrl(player.uniqueId.toMinotarAvatar())
+                            setColor(0xa730c2)
+                            addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
+                        }?.let { magenta.notification.client.send(it) }
                     }
-                    broadcast(magenta.localeConfig.translation("magenta.votifier.voteparty.success"))
-                    cancel()
                 }
-                timer--
+                broadcast(magenta.localeConfig.translation("magenta.votifier.voteparty.success"))
+                e?.cancel()
             }
-        }.runTaskTimerAsynchronously(magenta, 20, 20)
+            timer--
+        }, 20, 20)
     }
 
     @JvmStatic

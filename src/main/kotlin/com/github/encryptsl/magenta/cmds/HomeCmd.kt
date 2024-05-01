@@ -4,7 +4,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.home.*
 import com.github.encryptsl.magenta.api.menu.modules.home.HomeGUI
-import com.github.encryptsl.magenta.api.scheduler.SchedulerMagenta
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
@@ -40,18 +39,14 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.home")
     @CommandDescription("This command teleport you into your home")
     fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
-        }
+        magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
     }
 
     @Command("sethome <home>")
     @Permission("magenta.sethome")
     @CommandDescription("This command create your home where you stand.")
     fun onSetHome(player: Player, @Argument(value = "home") home: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.server.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
-        }
+        magenta.server.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
     }
 
     @Command("sethomeicon|sethicon <home> <icon>")
@@ -71,27 +66,21 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.movehome")
     @CommandDescription("This command move your home to location where you stand.")
     fun onMoveHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.server.pluginManager.callEvent(HomeMoveLocationEvent(player, player.location, home))
-        }
+        magenta.server.pluginManager.callEvent(HomeMoveLocationEvent(player, player.location, home))
     }
 
     @Command("delhome|dhome <home>")
     @Permission("magenta.delhome")
     @CommandDescription("This command delete your home.")
     fun onDeleteHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
-        }
+        magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
     }
 
     @Command("renamehome|rhome <oldName> <newName>")
     @Permission("magenta.rename.home")
     @CommandDescription("This command rename your home.")
     fun onRenameHome(player: Player, @Argument(value = "oldName") oldName: String, @Argument(value = "newName") newName: String) {
-        SchedulerMagenta.doSync(magenta) {
-            magenta.server.pluginManager.callEvent(HomeRenameEvent(player, oldName, newName))
-        }
+        magenta.server.pluginManager.callEvent(HomeRenameEvent(player, oldName, newName))
     }
 
     @Command("homes|homelist")

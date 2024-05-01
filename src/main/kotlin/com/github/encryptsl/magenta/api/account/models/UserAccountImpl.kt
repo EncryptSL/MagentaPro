@@ -21,12 +21,7 @@ class UserAccountImpl(private val plugin: Plugin, uuid: UUID) : UserAccountAbstr
         getAccount().set("timestamps.onlinejail", 0)
         getAccount().set("timestamps.logout", 0)
         getAccount().set("timestamps.login", System.currentTimeMillis())
-        getAccount().set("lastlocation.world-name", player.world.name)
-        getAccount().set("lastlocation.x", player.location.x)
-        getAccount().set("lastlocation.y", player.location.y)
-        getAccount().set("lastlocation.z", player.location.z)
-        getAccount().set("lastlocation.yaw", player.location.yaw)
-        getAccount().set("lastlocation.pitch", player.location.pitch)
+        getAccount().set("lastlocation", player.location)
         save()
     }
 

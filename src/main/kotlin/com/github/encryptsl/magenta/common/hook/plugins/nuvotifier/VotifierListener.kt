@@ -118,8 +118,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
 
     private fun addVote(p: OfflinePlayer, serviceName: String, timestamp: Long) {
         val voteEntity = VoteEntity(
-            p.name.toString(),
-            p.uniqueId,
+            p.name.toString(), p.uniqueId,
             1,
             VoteHelper.replaceService(serviceName, "_", "."),
             Instant.fromEpochMilliseconds(timestamp)
