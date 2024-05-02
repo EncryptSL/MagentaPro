@@ -45,11 +45,11 @@ class MenuUI(private val magenta: Magenta) {
             val material = Material.getMaterial(fileConfiguration.getString("menu.custom-items.$item.icon").toString())
             if (material != null) {
                 if (!fileConfiguration.contains("menu.custom-items.$item.name"))
-                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                    return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
                         Placeholder.parsed("category", type)
                     ))
                 if (!fileConfiguration.contains("menu.custom-items.$item.position.slot"))
-                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
+                    return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
                         Placeholder.parsed("category", type)
                     ))
                 val itemName = fileConfiguration.getString("menu.custom-items.$item.name").toString()

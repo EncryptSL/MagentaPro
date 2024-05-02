@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.kit.*
 import com.github.encryptsl.magenta.common.CommandHelper
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -22,7 +23,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         try {
             kitManager.createKit(player, kitName, kitDelay)
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.created", TagResolver.resolver(
+            player.sendMessage(magenta.locale.translation("magenta.command.kit.success.created", TagResolver.resolver(
                 Placeholder.parsed("kit", kitName),
                 Placeholder.parsed("delay", kitDelay.toString())
             )))
@@ -36,7 +37,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         try {
             magenta.kitManager.deleteKit(kitName)
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.deleted", Placeholder.parsed("kit", kitName)))
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.kit.success.deleted", Placeholder.parsed("kit", kitName)))
         } catch (e : Exception) { commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 
@@ -49,8 +50,8 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         try {
             kitManager.giveKit(target, kitName)
-            target.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.given.to", TagResolver.resolver(
+            target.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.to", TagResolver.resolver(
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))
@@ -67,16 +68,16 @@ class KitListeners(private val magenta: Magenta) : Listener {
                 val section = magenta.kitConfig.getConfig().getConfigurationSection("kits") ?: return
 
                 val list = section.getKeys(false).joinToString { s ->
-                    magenta.localeConfig.getMessage("magenta.command.kit.success.list.component").replace("<kit>", s)
+                    magenta.locale.getMessage("magenta.command.kit.success.list.component").replace("<kit>", s)
                 }
-                commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.list",
+                commandSender.sendMessage(magenta.locale.translation("magenta.command.kit.success.list",
                     Placeholder.component("kits", ModernText.miniModernText(list))
                 ))
             }
             InfoType.INFO -> {
                 val kitName = event.kitName ?: return
                 if (magenta.kitConfig.getConfig().getConfigurationSection("kits.$kitName") == null)
-                    return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.kit.error.not.exist"))
+                    return commandSender.sendMessage(magenta.locale.translation("magenta.command.kit.error.not.exist"))
                 commandSender.sendMessage(ModernText.miniModernText("<yellow>Jméno Kitu $kitName"))
                 commandSender.sendMessage(ModernText.miniModernText("<yellow>Delay ${magenta.kitConfig.getConfig().getString("kits.$kitName.delay")}"))
                 magenta.kitManager.listOfItems(commandSender, kitName)
@@ -94,15 +95,15 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         val timeLeft: Duration = user.getRemainingCooldown("kits.$kitName")
 
-        if (user.hasDelay("kits.$kitName") && !player.hasPermission("magenta.kit.delay.exempt"))
+        if (user.hasDelay("kits.$kitName") && !player.hasPermission(Permissions.KIT_DELAY_EXEMPT))
             return commandHelper.delayMessage(player, "magenta.command.kit.error.delay", timeLeft)
 
         try {
-            if (delay != 0L && delay != -1L || !player.hasPermission("magenta.kit.delay.exempt")) {
+            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.KIT_DELAY_EXEMPT)) {
                 user.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
             }
             kitManager.giveKit(player, kitName)
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
+            player.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
         } catch (e : Exception) { player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 

@@ -41,9 +41,9 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
             magenta.reloadConfig()
             magenta.saveConfig()
             magenta.newsQueueManager.reloadQueue()
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
         } catch (e : InvalidConfigurationException) {
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+            commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
         }
     }
 
@@ -58,7 +58,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
         magenta.creditShopConfirmMenuConfig.reload()
         magenta.creditShopConfirmMenuConfig.save()
         ShopHelper.reloadShopConfigs(magenta)
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -69,7 +69,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
         magenta.homeMenuConfig.save()
         magenta.homeEditorConfig.reload()
         magenta.homeEditorConfig.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -82,7 +82,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
         magenta.warpEditorConfig.save()
         magenta.warpPlayerMenuConfig.reload()
         magenta.warpPlayerMenuConfig.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -93,7 +93,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
         magenta.milestonesVotePass.save()
         magenta.milestonesOres.reload()
         magenta.milestonesOres.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -102,7 +102,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onReloadMythicRewards(commandSender: CommandSender) {
         magenta.mmConfig.reload()
         magenta.mmConfig.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -111,7 +111,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onReloadRandomConfig(commandSender: CommandSender) {
         magenta.randomConfig.reload()
         magenta.randomConfig.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -120,15 +120,15 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onReloadActivationItems(commandSender: CommandSender) {
         magenta.cItems.reload()
         magenta.cItems.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
     @Command("reload locale")
     @CommandDescription("This command reload locale config")
     fun onReloadLocale(commandSender: CommandSender) {
-        magenta.localeConfig.loadLocale("locale/cs_cz.properties")
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        magenta.locale.loadLocale("locale/cs_cz.properties")
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -137,7 +137,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onReloadKits(commandSender: CommandSender) {
         magenta.kitConfig.reload()
         magenta.kitConfig.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -146,7 +146,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onReloadJails(commandSender: CommandSender) {
         magenta.jailConfig.reload()
         magenta.jailConfig.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -155,7 +155,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onReloadChatControl(commandSender: CommandSender) {
         magenta.chatControl.reload()
         magenta.chatControl.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 
     @Permission("magenta.plugin.reload")
@@ -164,6 +164,6 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onReloadOraxenConfig(commandSender: CommandSender) {
         magenta.oraxenControl.reload()
         magenta.oraxenControl.save()
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.magenta.success.reload"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 }

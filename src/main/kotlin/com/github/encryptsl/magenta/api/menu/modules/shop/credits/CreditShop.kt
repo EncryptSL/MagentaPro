@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -38,16 +39,16 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
             if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.name"))
                 return player.sendMessage(
-                    magenta.localeConfig.translation("magenta.menu.error.not.defined.name", Placeholder.parsed("category", category))
+                    magenta.locale.translation("magenta.menu.error.not.defined.name", Placeholder.parsed("category", category))
                 )
 
             if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.slot"))
                 return player.sendMessage(
-                    magenta.localeConfig.translation("magenta.menu.error.not.defined.slot", Placeholder.parsed("category", category))
+                    magenta.locale.translation("magenta.menu.error.not.defined.slot", Placeholder.parsed("category", category))
                 )
             if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.icon"))
                 return player.sendMessage(
-                    magenta.localeConfig.translation("magenta.menu.error.not.defined.icon", Placeholder.parsed("category", category))
+                    magenta.locale.translation("magenta.menu.error.not.defined.icon", Placeholder.parsed("category", category))
                 )
 
             val glowing = magenta.creditShopConfig.getConfig().getBoolean("menu.categories.$category.glowing")
@@ -71,15 +72,15 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
 
     fun openCategory(player: HumanEntity, category: String) {
-        val shopCategory = UniversalConfig(magenta, "menu/creditshop/categories/$category.yml")
+        val shopCategory = UniversalConfig("menu/creditshop/categories/$category.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
-                magenta.localeConfig.translation("magenta.command.shop.error.category.not.exist", Placeholder.parsed("category", category))
+                magenta.locale.translation("magenta.command.shop.error.category.not.exist", Placeholder.parsed("category", category))
             )
 
-        if (!player.hasPermission("magenta.credit.shop.category.$category") || !player.hasPermission("magenta.credit.shop.category.*"))
+        if (!player.hasPermission(Permissions.CREDIT_SHOP_CATEGORY.format(category)) || !player.hasPermission(Permissions.CREDIT_SHOP_CATEGORY_ALL))
             return player.sendMessage(
-                magenta.localeConfig.translation("magenta.command.shop.error.category.permission", Placeholder.parsed("category", category))
+                magenta.locale.translation("magenta.command.shop.error.category.permission", Placeholder.parsed("category", category))
             )
 
         val name = magenta.creditShopConfig.getConfig().getString("menu.gui.categoryName").toString()
@@ -105,22 +106,22 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
             if (!shopCategory.getConfig().contains("menu.items.$item.name"))
                 return player.sendMessage(
-                    magenta.localeConfig.translation("magenta.menu.error.not.defined.name", Placeholder.parsed("category", category))
+                    magenta.locale.translation("magenta.menu.error.not.defined.name", Placeholder.parsed("category", category))
                 )
 
             if (!shopCategory.getConfig().contains("menu.items.$item.position.slot"))
                 return player.sendMessage(
-                    magenta.localeConfig.translation("magenta.menu.error.not.defined.slot", Placeholder.parsed("category", category))
+                    magenta.locale.translation("magenta.menu.error.not.defined.slot", Placeholder.parsed("category", category))
                 )
 
             if (!shopCategory.getConfig().contains("menu.items.$item.commands"))
                 return player.sendMessage(
-                    magenta.localeConfig.translation("magenta.menu.error.not.defined.commands", Placeholder.parsed("category", category))
+                    magenta.locale.translation("magenta.menu.error.not.defined.commands", Placeholder.parsed("category", category))
                 )
 
             if (!shopCategory.getConfig().contains("menu.items.$item.buy.quantity"))
                 return player.sendMessage(
-                    magenta.localeConfig.translation("magenta.menu.error.not.defined.quantity", Placeholder.parsed("category", category))
+                    magenta.locale.translation("magenta.menu.error.not.defined.quantity", Placeholder.parsed("category", category))
                 )
 
             val itemName = shopCategory.getConfig().getString("menu.items.$item.name").toString()
@@ -162,7 +163,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
                         item = item,
                         category = category,
                         categoryConfig = shopCategory.getConfig(),
-                        creditShopPaymetMethod = creditShopPaymentMethod,
+                        creditShopPaymentMethod = creditShopPaymentMethod,
                         displayName =  guiItem.itemStack.displayName(),
                         creditShop = this,
                         isBuyAllowed = isBuyAllowed

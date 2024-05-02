@@ -77,7 +77,7 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
             val material = Material.getMaterial(config.getString("menu.items.buttons.${el}.icon").toString()) ?: continue
             if (config.contains("menu.items.buttons.$el")) {
                 if (!config.contains("menu.items.buttons.$el.name"))
-                    return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                    return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
                         Placeholder.parsed("category", config.name)
                     ))
 

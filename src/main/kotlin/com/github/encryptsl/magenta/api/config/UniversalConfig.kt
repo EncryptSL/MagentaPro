@@ -4,11 +4,10 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.utils.ConfigUtil
 import fr.euphyllia.energie.model.SchedulerType
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.plugin.Plugin
 
-class UniversalConfig(val plugin: Plugin, type: String) {
+class UniversalConfig(type: String) {
 
-    private val configUtil = ConfigUtil(plugin, type)
+    private val configUtil = ConfigUtil(type)
 
     fun fileExist(): Boolean
     {

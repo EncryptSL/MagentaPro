@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.Permissions
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -15,12 +16,12 @@ class PortalListener(private val magenta: Magenta) : Listener {
         if (event.entity is Player) {
             val player = event.entity as Player
             if (player.gameMode == GameMode.CREATIVE) return
-            if (player.hasPermission("magenta.portal.blacklist.bypass")) return
+            if (player.hasPermission(Permissions.PORTAL_BLACKLIST_BYPASS)) return
             val reason: CreateReason = event.reason
 
             if (!magenta.stringUtils.inInList("portal.blacklist", reason.name)) return
 
-            player.sendMessage(magenta.localeConfig.translation("magenta.portal.error"))
+            player.sendMessage(magenta.locale.translation("magenta.portal.error"))
             event.isCancelled = true
         }
     }

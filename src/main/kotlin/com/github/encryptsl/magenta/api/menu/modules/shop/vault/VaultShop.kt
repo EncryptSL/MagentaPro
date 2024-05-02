@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.modules.shop.economy.models.ShopPaymentHolder
 import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
@@ -36,17 +37,17 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
             ) ?: continue
 
             if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
                     Placeholder.parsed("category", category)
                 ))
 
             if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
                     Placeholder.parsed("category", category)
                 ))
 
             if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.icon",
                     Placeholder.parsed("category", category)
                 ))
 
@@ -67,21 +68,21 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
     }
 
     fun openCategory(player: HumanEntity, type: String) {
-        val shopCategory = UniversalConfig(magenta, "menu/shop/categories/$type.yml")
+        val shopCategory = UniversalConfig("menu/shop/categories/$type.yml")
         if (!shopCategory.fileExist())
             return player.sendMessage(
-                magenta.localeConfig.translation("magenta.command.shop.error.category.not.exist",
+                magenta.locale.translation("magenta.command.shop.error.category.not.exist",
                     Placeholder.parsed("category", type))
             )
 
-        if (!player.hasPermission("magenta.shop.category.$type") || !player.hasPermission("magenta.shop.category.*"))
+        if (!player.hasPermission(Permissions.SHOP_CATEGORY.format(type)) || !player.hasPermission(Permissions.SHOP_CATEGORY_ALL))
             return player.sendMessage(
-                magenta.localeConfig.translation("magenta.command.shop.error.category.permission",
+                magenta.locale.translation("magenta.command.shop.error.category.permission",
                     Placeholder.parsed("category", type)
             ))
 
         if (!shopCategory.getConfig().contains("menu.items"))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.items",
+            return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.items",
                 Placeholder.parsed("category", type)
             ))
 

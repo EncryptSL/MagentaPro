@@ -18,10 +18,10 @@ class CreditShopPaymetMethod(private val magenta: Magenta) {
         val player = humanEntity as Player
 
         if (!isBuyAllowed)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.buy.disabled"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.buy.disabled"))
 
         if (ShopHelper.isPlayerInventoryFull(player))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.inventory.full"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.inventory.full"))
 
         val price = config.getDouble("menu.items.$item.buy.price")
         val quantity = config.getInt("menu.items.$item.buy.quantity")

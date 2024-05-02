@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -32,7 +33,7 @@ class HelpOpCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onHelpOp(player: Player, @Argument(value = "message") @Greedy message: String) {
         val component = chat(player, null, message, "magenta.command.helpop.chat")
 
-        Bukkit.broadcast(component, "magenta.helpop.staff.chat")
+        Bukkit.broadcast(component, Permissions.HELPOP_STAFF_CHAT)
         player.sendMessage(component)
     }
 
@@ -54,14 +55,14 @@ class HelpOpCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private fun sendChannelMessage(commandSender: CommandSender, target: Player, message: String) {
         val component = chat(commandSender, target, message, "magenta.command.helpop.answer.chat")
-        Bukkit.broadcast(component, "magenta.helpop.staff.chat")
+        Bukkit.broadcast(component, Permissions.HELPOP_STAFF_CHAT)
         target.sendMessage(component)
     }
 
     private fun chat(from: CommandSender, to: Player?, message: String, locale: String): Component {
         val group = if (from is Player) magenta.stringUtils.colorize(luckPermsHook.getPrefix(from)) else ""
 
-       return magenta.localeConfig.translation(locale, TagResolver.resolver(
+       return magenta.locale.translation(locale, TagResolver.resolver(
             Placeholder.component("group", Component.text(group)),
             Placeholder.parsed("from", from.name),
             Placeholder.parsed("to", to?.name ?: ""),

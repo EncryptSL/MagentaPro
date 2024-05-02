@@ -77,34 +77,37 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         if (commandSender is Player) {
             if (target == null) {
-                commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport",
+                commandSender.sendMessage(magenta.locale.translation("magenta.command.jail.success.teleport",
                     Placeholder.parsed("jail", jailName)
                 ))
 
-                magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
+                val location = magenta.jailManager.getJailLocation(jailName)
+                location?.let { magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, it)) }
                 return
             }
-            target.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport",
+            target.sendMessage(magenta.locale.translation("magenta.command.jail.success.teleport",
                 Placeholder.parsed("jail", jailName)
             ))
 
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport.to", TagResolver.resolver(
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.jail.success.teleport.to", TagResolver.resolver(
                 Placeholder.parsed("jail", jailName),
                 Placeholder.parsed("player", target.name)
             )))
 
-            magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, magenta.jailManager.getJailLocation(jailName)))
+            val location = magenta.jailManager.getJailLocation(jailName)
+            location?.let { magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, it)) }
         } else {
             if (target == null) return
 
-            target.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport", Placeholder.parsed("jail", jailName)))
+            target.sendMessage(magenta.locale.translation("magenta.command.jail.success.teleport", Placeholder.parsed("jail", jailName)))
 
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.jail.success.teleport.to", TagResolver.resolver(
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.jail.success.teleport.to", TagResolver.resolver(
                 Placeholder.parsed("jail", jailName),
                 Placeholder.parsed("player", target.name)
             )))
 
-            magenta.pluginManager.callEvent(JailTeleportEvent(target, magenta.jailManager.getJailLocation(jailName)))
+            val location = magenta.jailManager.getJailLocation(jailName)
+            location?.let { magenta.pluginManager.callEvent(JailTeleportEvent(target, it)) }
         }
 
     }

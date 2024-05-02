@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.parseMinecraftTime
@@ -56,7 +57,6 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 "ip-address" to player.address.address.hostAddress
             )
             user.set(map.toMutableMap())
-            map.clear()
             FileUtil.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
                 player.sendMessage(ModernText.miniModernTextCenter(text, TagResolver.resolver(
                     Placeholder.component("player", player.displayName()),
@@ -66,7 +66,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 )))
             }
             if (user.getAccount().contains("votifier.rewards")) {
-                player.sendMessage(magenta.localeConfig.translation("magenta.command.vote.success.exist.rewards.to.claim"))
+                player.sendMessage(magenta.locale.translation("magenta.command.vote.success.exist.rewards.to.claim"))
             }
             return
         }
@@ -86,7 +86,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     }
 
     private fun safeFly(player: Player) {
-        if (!player.hasPermission("magenta.fly.safelogin")) return
+        if (!player.hasPermission(Permissions.FLY_SAFE_LOGIN)) return
 
         player.fallDistance = 0F
         player.allowFlight = true
@@ -136,13 +136,13 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         if (type == InventoryType.PLAYER) {
             val ownerInv = top.holder ?: return
             if (ownerInv is HumanEntity) {
-                if (!whoClicked.hasPermission("magenta.invsee.modify") && ownerInv.hasPermission("magenta.invsee.prevent.modify")) {
-                    if (whoClicked.hasPermission("magenta.invsee.prevent.modify.exempt")) return
+                if (!whoClicked.hasPermission(Permissions.INVSEE_MODIFY) && ownerInv.hasPermission(Permissions.INVSEE_PREVENT_MODIFY)) {
+                    if (whoClicked.hasPermission(Permissions.INVSEE_PREVENT_MODIFY_EXEMPT)) return
                     event.isCancelled = true
                 }
             }
         } else if (type == InventoryType.ENDER_CHEST) {
-            if (!whoClicked.hasPermission("magenta.echest.modify")) {
+            if (!whoClicked.hasPermission(Permissions.ECHEST_MODIFY)) {
                 event.isCancelled = true
             }
         }
@@ -193,7 +193,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         val sign: Sign = block.state as Sign
         val side = sign.getSide(Side.FRONT)
 
-        if (!side.line(0).toString().contains(magenta.localeConfig.translation("magenta.sign.warp").toString()))
+        if (!side.line(0).toString().contains(magenta.locale.translation("magenta.sign.warp").toString()))
             return
 
         if (!sign.isWaxed) {
@@ -204,12 +204,12 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
         if (convertedWarpName.isBlank() || convertedWarpName.isEmpty()) {
             block.breakNaturally()
-            return player.sendMessage(magenta.localeConfig.translation("magenta.sign.warp.error.name.empty"))
+            return player.sendMessage(magenta.locale.translation("magenta.sign.warp.error.name.empty"))
         }
 
         if (!magenta.warpModel.getWarpExist(convertedWarpName)) {
             block.breakNaturally()
-            return player.sendMessage(magenta.localeConfig.translation("magenta.sign.warp.error.not.exist", Placeholder.component("warp", side.line(1))))
+            return player.sendMessage(magenta.locale.translation("magenta.sign.warp.error.not.exist", Placeholder.component("warp", side.line(1))))
         }
 
         player.teleport(magenta.warpModel.toLocation(convertedWarpName))
@@ -223,7 +223,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         if (!magenta.config.getBoolean("change-world-message")) return
 
         player.sendMessage(
-            magenta.localeConfig.translation("magenta.player.change.world",
+            magenta.locale.translation("magenta.player.change.world",
                 Placeholder.parsed("world", player.world.name))
         )
     }

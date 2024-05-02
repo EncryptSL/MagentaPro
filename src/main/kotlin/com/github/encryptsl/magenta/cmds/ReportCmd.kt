@@ -44,12 +44,12 @@ class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "message") @Default("Zpráva není specifikovaná.") @Greedy message: String
     ) {
         if (player.name.equals(target.name, ignoreCase = true))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.report.error.yourself"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.report.error.yourself"))
 
         if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()) || luckPermsAPI.hasPermission(target, "magenta.report.exempt"))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.report.error.exempt"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.report.error.exempt"))
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.report.success", TagResolver.resolver(
+        player.sendMessage(magenta.locale.translation("magenta.command.report.success", TagResolver.resolver(
             Placeholder.parsed("player", target.name.toString()),
             Placeholder.parsed("category", category.name)
         )))

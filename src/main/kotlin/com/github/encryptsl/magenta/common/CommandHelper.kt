@@ -16,7 +16,7 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun delayMessage(sender: Player, message: String, duration: Duration) {
         sender.sendMessage(
-                magenta.localeConfig.translation(message,
+                magenta.locale.translation(message,
                 Placeholder.parsed("delay", duration.toSeconds().toString())
             )
         )
@@ -24,7 +24,7 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun doVanish(player: Player, isVanished: Boolean) {
         for (players in Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission("magenta.vanish.exempt")) continue
+            if (player.hasPermission(Permissions.VANISH_EXEMPT)) continue
             if (isVanished)
                 players.showPlayer(magenta, player)
             else
@@ -53,18 +53,18 @@ class CommandHelper(private val magenta: Magenta) {
         if (player.allowFlight) {
             player.allowFlight = false
             magenta.user.getUser(player.uniqueId).set("flying", false)
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.fly.success.deactivated"))
+            player.sendMessage(magenta.locale.translation("magenta.command.fly.success.deactivated"))
             commandSender?.sendMessage(
-                magenta.localeConfig.translation("magenta.command.fly.success.deactivated.to",
+                magenta.locale.translation("magenta.command.fly.success.deactivated.to",
                     Placeholder.parsed("player", player.name)
                 )
             )
         } else {
             player.allowFlight = true
             magenta.user.getUser(player.uniqueId).set("flying", true)
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.fly.success.activated"))
+            player.sendMessage(magenta.locale.translation("magenta.command.fly.success.activated"))
             commandSender?.sendMessage(
-                magenta.localeConfig.translation("magenta.command.fly.success.activated.to", Placeholder.parsed("player", player.name))
+                magenta.locale.translation("magenta.command.fly.success.activated.to", Placeholder.parsed("player", player.name))
             )
         }
     }
@@ -79,7 +79,7 @@ class CommandHelper(private val magenta: Magenta) {
             item.setItemMeta(itemMeta)
             player.updateInventory()
         }
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.repair.success.item"))
+        player.sendMessage(magenta.locale.translation("magenta.command.repair.success.item"))
     }
 
     fun repairItems(player: Player) {
@@ -111,19 +111,19 @@ class CommandHelper(private val magenta: Magenta) {
         )
 
         commandSender.sendMessage(
-                magenta.localeConfig.translation("magenta.command.level.success.your.level",
+                magenta.locale.translation("magenta.command.level.success.your.level",
                 Placeholder.parsed("level", level.toString())
             )
         )
         commandSender.sendMessage(
-            magenta.localeConfig.translation("magenta.command.level.success.score", TagResolver.resolver(
+            magenta.locale.translation("magenta.command.level.success.score", TagResolver.resolver(
                     Placeholder.parsed("current_exp", currentExp.toString()),
                     Placeholder.parsed("exp_to_up", needToLevelUp.toString()),
                     Placeholder.parsed("percentage_progress", percentageProgress.toString())
             )
         ))
         commandSender.sendMessage(
-            magenta.localeConfig.translation("magenta.command.level.success.progressbar",
+            magenta.locale.translation("magenta.command.level.success.progressbar",
                 Placeholder.parsed("progress_bar", progressBar)
             )
         )

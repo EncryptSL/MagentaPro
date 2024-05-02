@@ -22,13 +22,13 @@ open class CloseButton(private val magenta: Magenta) : MenuCloseButton, MenuButt
     ) {
         if (fileConfiguration.contains("menu.gui.button.close")) {
             if (!fileConfiguration.contains("menu.gui.button.close.positions"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (!fileConfiguration.contains("menu.gui.button.close.positions.row"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row", Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.row", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col", Placeholder.parsed("file", fileConfiguration.name)))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.col", Placeholder.parsed("file", fileConfiguration.name)))
 
             if (fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.close.positions.row"),

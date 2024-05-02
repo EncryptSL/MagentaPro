@@ -1,12 +1,12 @@
 package com.github.encryptsl.magenta.api.account.models
 
+import com.github.encryptsl.magenta.Magenta
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
 import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-class UserAccountImpl(private val plugin: Plugin, uuid: UUID) : UserAccountAbstract(uuid, plugin) {
+class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
 
     override fun createDefaultData(player: Player) {
         getAccount().set("teleportenabled", true)
@@ -42,7 +42,7 @@ class UserAccountImpl(private val plugin: Plugin, uuid: UUID) : UserAccountAbstr
     }
 
     override fun setOnlineTime(millis: Long) {
-        val onlineTime = plugin.config.getBoolean("online-jail-time")
+        val onlineTime = Magenta.instance.config.getBoolean("online-jail-time")
         set("timestamps.onlinejail", if (onlineTime) millis else 0)
     }
 

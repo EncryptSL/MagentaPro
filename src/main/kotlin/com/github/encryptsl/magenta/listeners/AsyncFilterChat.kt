@@ -28,7 +28,7 @@ class AsyncFilterChat(private val magenta: Magenta) : Listener {
         if(antiSpam.isDetected(player, phrase))
            return chatPunishManager.action(player,
                 event,
-                magenta.localeConfig.getMessage("magenta.filter.antispam"),
+                magenta.locale.getMessage("magenta.filter.antispam"),
                 "Spamovat",
                 Violations.ANTISPAM
             )
@@ -37,24 +37,24 @@ class AsyncFilterChat(private val magenta: Magenta) : Listener {
             return chatPunishManager.action(
                 player,
                 event,
-                magenta.localeConfig.getMessage("magenta.filter.caps"),
+                magenta.locale.getMessage("magenta.filter.caps"),
                 "Psát CapsLockem",
                 Violations.CAPSLOCK
             )
 
         if(ipFilter.isDetected(player, phrase))
-            return chatPunishManager.action(player, event, magenta.localeConfig.getMessage("magenta.filter.ip_filter"), phrase, Violations.IPFILTER)
+            return chatPunishManager.action(player, event, magenta.locale.getMessage("magenta.filter.ip_filter"), phrase, Violations.IPFILTER)
 
         if(swear.isDetected(player, phrase))
             return chatPunishManager.action(
                 player,
                 event,
-                magenta.localeConfig.getMessage("magenta.filter.swear"),
+                magenta.locale.getMessage("magenta.filter.swear"),
                 phrase,
                 Violations.SWEAR
             )
 
         if(websiteFilter.isDetected(player, phrase))
-            return chatPunishManager.action(player, event, magenta.localeConfig.getMessage("magenta.filter.web_filter"), phrase, Violations.WEBSITE)
+            return chatPunishManager.action(player, event, magenta.locale.getMessage("magenta.filter.web_filter"), phrase, Violations.WEBSITE)
     }
 }

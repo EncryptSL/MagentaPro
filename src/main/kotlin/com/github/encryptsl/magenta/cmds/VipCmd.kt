@@ -32,11 +32,11 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVIPExpire(player: Player) {
         try {
             val time = luckPermsAPI.getExpireGroup(player, group)
-                ?: return player.sendMessage(magenta.localeConfig.translation("magenta.command.vip.error.expired"))
+                ?: return player.sendMessage(magenta.locale.translation("magenta.command.vip.error.expired"))
 
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.vip.success.expire.time", Placeholder.parsed("expire", convertInstant(time))))
+            player.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time", Placeholder.parsed("expire", convertInstant(time))))
         } catch (e : Exception) {
-            player.sendMessage(magenta.localeConfig.translation("magenta.exception",
+            player.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
             ))
             magenta.logger.severe(e.message ?: e.localizedMessage)
@@ -49,14 +49,14 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVIPExpireOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         try {
             val time = luckPermsAPI.getExpireGroup(target, group)
-                ?: return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.vip.error.expired.other", Placeholder.parsed("player", target.name.toString())))
+                ?: return commandSender.sendMessage(magenta.locale.translation("magenta.command.vip.error.expired.other", Placeholder.parsed("player", target.name.toString())))
 
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.vip.success.expire.time.other", TagResolver.resolver(
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time.other", TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("expire", convertInstant(time))))
             )
         } catch (e : Exception) {
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.exception",
+            commandSender.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
             ))
             magenta.logger.severe(e.printStackTrace().toString())

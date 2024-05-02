@@ -45,10 +45,10 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
 
-        target.sendMessage(magenta.localeConfig.translation("magenta.command.random.world.ticket.success.player",
+        target.sendMessage(magenta.locale.translation("magenta.command.random.world.ticket.success.player",
             Placeholder.parsed("amount", amount.toString())
         ))
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.random.world.ticket.success.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.random.world.ticket.success.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("amount", amount.toString())
         )))
@@ -66,7 +66,7 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         val randomTag = tags.random()
         if (!target.hasPermission(randomTag)) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target))
-            return target.sendMessage(magenta.localeConfig.translation("magenta.command.random.tag.success.player",
+            return target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
                 Placeholder.parsed("category", type)
             ))
         }
@@ -75,10 +75,10 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
             magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target)
         )
-        target.sendMessage(magenta.localeConfig.translation("magenta.command.random.tag.success.player",
+        target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
             Placeholder.parsed("category", type)
         ))
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.random.tag.success.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.to", TagResolver.resolver(
             Placeholder.parsed("category", type),
             Placeholder.parsed("tag", randomTag)
         )))

@@ -1,11 +1,14 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
+import com.github.encryptsl.magenta.api.menu.modules.shop.economy.TransactionProcess
+import com.github.encryptsl.magenta.api.menu.modules.shop.economy.components.EconomyDeposit
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.utils.BlockUtils
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.block.Sign
@@ -17,13 +20,13 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 
-class BlockListener(private val magenta: Magenta) : Listener {
+class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreakJail(event: BlockBreakEvent) {
         val player = event.player
         if (!magenta.user.getUser(player.uniqueId).isJailed()) return
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "ničit bloky")))
+        player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "ničit bloky")))
         event.isCancelled = true
     }
 
@@ -41,8 +44,8 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val tools = silkyTools.contains(itemInHand.type.name)
         if (!tools && !itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) return
 
-        if (!player.hasPermission("magenta.silky.spawner"))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.silky.spawner.error.permissions"))
+        if (!player.hasPermission(Permissions.SILKY_SPAWNER))
+            return player.sendMessage(magenta.locale.translation("magenta.silky.spawner.error.permissions"))
 
         BlockUtils.dropSpawner(block, magenta.config.getString("silky_spawners.spawner_name").toString())
     }
@@ -53,6 +56,8 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val block = event.block
         val material = block.type
         if (!magenta.stringUtils.inInList("jobs.whitelist_world", player.world.name)) return
+        if (!magenta.config.contains("jobs.miner")) return
+
         if (!magenta.stringUtils.inInList("jobs.miner.blocks", material.name)) return
 
         val currentProgress = magenta.earnBlocksProgressManager.updateProgress(player.uniqueId, 1)
@@ -63,13 +68,17 @@ class BlockListener(private val magenta: Magenta) : Listener {
         )))
 
         if (currentProgress >= magenta.config.getInt("jobs.miner.max_progress")) {
-            player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.earn_bar").toString(), TagResolver.resolver(
-                Placeholder.parsed("current_progress", currentProgress.toString()),
-                Placeholder.parsed("max_progress", magenta.config.getInt("jobs.miner.max_progress").toString()),
-            )))
             magenta.earnBlocksProgressManager.earnBlocksProgress[player.uniqueId] = 0
-            for (it in magenta.config.getStringList("jobs.miner.rewards")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(it, player))
+            if (!magenta.config.contains("jobs.miner.earn_money")) return
+
+            val defaultEarnMoney = magenta.config.getDouble("jobs.miner.earn_money", 408.0)
+            val moneyEarned = if (isHalloweenSeason()) magenta.config.getDouble("halloween.reward_multiplier") * defaultEarnMoney else defaultEarnMoney
+            val transaction = EconomyDeposit(player, moneyEarned).transaction(magenta.vaultHook) ?: return
+
+            if (transaction == TransactionProcess.SUCCESS) {
+                player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.earn_bar").toString(),
+                    Placeholder.parsed("value", moneyEarned.toString())
+                ))
             }
         }
     }
@@ -83,11 +92,11 @@ class BlockListener(private val magenta: Magenta) : Listener {
 
         val sign: Sign = block.state as Sign
 
-        val hasPlayerPermission = player.hasPermission("magenta.sign.warp.break")
+        val hasPlayerPermission = player.hasPermission(Permissions.WARP_SIGN_BREAK)
 
         val isLineSame = sign.getSide(Side.FRONT)
             .line(0)
-            .contains(magenta.localeConfig.translation("magenta.sign.warp"))
+            .contains(magenta.locale.translation("magenta.sign.warp"))
 
         if (isLineSame && !hasPlayerPermission) {
             event.isCancelled = true
@@ -101,7 +110,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val block = event.block
 
         if (player.gameMode == GameMode.CREATIVE) return
-        if (player.hasPermission("magenta.level.mining.bypass")) return
+        if (player.hasPermission(Permissions.LEVEL_MINIG_BYPASS)) return
         val (_, _, level, _) = magenta.levelModel.getLevel(uuid)
         if (!magenta.config.contains("level.ores.${block.type.name}")) return
 
@@ -110,7 +119,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
         if (requiredLevel < level) return
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.mining.level.required", TagResolver.resolver(
+        player.sendMessage(magenta.locale.translation("magenta.mining.level.required", TagResolver.resolver(
             Placeholder.parsed("block", block.type.name),
             Placeholder.parsed("level", level.toString()),
             Placeholder.parsed("required_level", requiredLevel.toString()))
@@ -123,7 +132,7 @@ class BlockListener(private val magenta: Magenta) : Listener {
         val player = event.player
 
         if (magenta.user.getUser(player.uniqueId).isJailed()) {
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "pokládat bloky")))
+            player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "pokládat bloky")))
             event.isCancelled = true
             return
         }

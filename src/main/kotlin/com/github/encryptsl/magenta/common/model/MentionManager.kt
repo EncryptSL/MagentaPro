@@ -27,20 +27,6 @@ class MentionManager(private val magenta: Magenta) {
                     Bukkit.getPlayer(m.replace("@", ""))?.let {
                         magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
                     }
-                    val mentioned =
-                        Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), ""))
-
-                    mentioned?.let {
-                        PlayerBuilderAction.player(it).sound(sound, volume, pitch).message(mentionedPlayer(player, "magenta.player.mentioned"))
-                        chatEvent.message(
-                            ModernText.miniModernText(
-                                message.replace(
-                                    m, magenta.config.getString("mentions.formats.player").toString()
-                                        .replace("[player]", mentioned.name)
-                                )
-                            )
-                        )
-                    }
                     if (m.contains("@everyone")) {
                         for (p in Bukkit.getOnlinePlayers()) {
                             p.sendMessage(mentionedPlayer(p, "magenta.player.mentioned"))
@@ -55,12 +41,20 @@ class MentionManager(private val magenta: Magenta) {
                             )
                         )
                     }
+
+                    val mentioned = Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), "")) ?: return
+
+                    PlayerBuilderAction.player(mentioned).sound(sound, volume, pitch).message(mentionedPlayer(player, "magenta.player.mentioned"))
+                    chatEvent.message(
+                        ModernText.miniModernText(message.replace(
+                            m, magenta.config.getString("mentions.formats.player").toString().replace("[player]", mentioned.name)
+                        )))
                 }
             }
         }
     }
 
     private fun mentionedPlayer(player: Player, key: String): Component {
-        return magenta.localeConfig.translation(key, Placeholder.parsed("player", player.name))
+        return magenta.locale.translation(key, Placeholder.parsed("player", player.name))
     }
 }

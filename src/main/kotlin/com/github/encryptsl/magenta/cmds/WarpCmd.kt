@@ -32,34 +32,34 @@ class WarpCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command create your warp on location")
     @Permission("magenta.setwarp")
     fun onWarpCreate(player: Player, @Argument(value = "warp") warpName: String) {
-        magenta.server.pluginManager.callEvent(WarpCreateEvent(player, player.location, warpName))
+        magenta.pluginManager.callEvent(WarpCreateEvent(player, player.location, warpName))
     }
 
     @Command("delwarp|dwarp <warp>")
     @Permission("magenta.delwarp")
     @CommandDescription("This command delete your warp")
     fun onWarpDelete(player: Player, @Argument("warp", suggestions = "warps") warpName: String) {
-        magenta.server.pluginManager.callEvent(WarpDeleteEvent(player, warpName))
+        magenta.pluginManager.callEvent(WarpDeleteEvent(player, warpName))
     }
 
     @Command("movewarp|mwarp <warp>")
     @Permission("magenta.move.warp")
     @CommandDescription("This command move warp to your current location")
     fun onWarpMoveLocation(player: Player, @Argument("warp", suggestions = "warps") warpName: String) {
-        magenta.server.pluginManager.callEvent(WarpMoveLocationEvent(player, player.location, warpName))
+        magenta.pluginManager.callEvent(WarpMoveLocationEvent(player, player.location, warpName))
     }
 
     @Command("renamewarp|rwarp <oldWarp> <newName>")
     @Permission("magenta.rename.warp")
     @CommandDescription("This command rename your warp")
     fun onWarpRename(player: Player, @Argument("oldWarp", suggestions = "warps") fromWarp: String, @Argument("newName") toWarpName: String) {
-        magenta.server.pluginManager.callEvent(WarpRenameEvent(player, fromWarp, toWarpName))
+        magenta.pluginManager.callEvent(WarpRenameEvent(player, fromWarp, toWarpName))
     }
     @Command("warp <warp> [target]")
     @Permission("magenta.warp")
     @CommandDescription("This command teleport player to warp")
     fun onWarpTeleport(commandSender: CommandSender, @Argument("warp", suggestions = "warps") warpName: String, @Argument(value = "target", suggestions = "players") target: Player?) {
-        magenta.server.pluginManager.callEvent(WarpTeleportEvent(commandSender, target, warpName))
+        magenta.pluginManager.callEvent(WarpTeleportEvent(commandSender, target, warpName))
     }
 
     @Command("warps|warplist")
@@ -69,7 +69,7 @@ class WarpCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (commandSender is Player) {
             warpGUI.openMenu(commandSender)
         } else {
-            magenta.server.pluginManager.callEvent(WarpInfoEvent(commandSender, null, InfoType.LIST))
+            magenta.pluginManager.callEvent(WarpInfoEvent(commandSender, null, InfoType.LIST))
         }
     }
 }

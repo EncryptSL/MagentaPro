@@ -11,21 +11,21 @@ class CreditLiteHook(private val magenta: Magenta) : PluginHook("CreditLite"), E
 
     override fun hasBalance(player: OfflinePlayer, value: Double): Boolean {
         if (!isPluginEnabled())
-            throw MissingEconomyException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
+            throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
         return CreditEconomy.has(player, value)
     }
 
     override fun deposit(player: OfflinePlayer, value: Double) {
         if (!isPluginEnabled())
-            throw MissingEconomyException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
+            throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
         CreditEconomy.deposit(player, value)
     }
 
     override fun withdraw(player: OfflinePlayer, value: Double) {
         if (!isPluginEnabled())
-            throw MissingEconomyException(magenta.localeConfig.getMessage("magenta.missing.credits.economy"))
+            throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
         CreditEconomy.withdraw(player, value)
     }

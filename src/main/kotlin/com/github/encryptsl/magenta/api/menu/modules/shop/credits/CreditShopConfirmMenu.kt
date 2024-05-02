@@ -21,7 +21,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         item: String,
         category: String,
         categoryConfig: FileConfiguration,
-        creditShopPaymetMethod: CreditShopPaymetMethod,
+        creditShopPaymentMethod: CreditShopPaymetMethod,
         displayName: Component,
         creditShop: CreditShop,
         isBuyAllowed: Boolean = false
@@ -33,7 +33,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         )
         menuUI.useAllFillers(gui.filler, magenta.creditShopConfirmMenuConfig.getConfig())
 
-        confirmPay(player, item, category, gui, creditShop, categoryConfig, creditShopPaymetMethod, displayName, isBuyAllowed)
+        confirmPay(player, item, category, gui, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
         cancelPay(player, category, gui, creditShop)
         close(player, gui, magenta.creditShopConfirmMenuConfig.getConfig())
 

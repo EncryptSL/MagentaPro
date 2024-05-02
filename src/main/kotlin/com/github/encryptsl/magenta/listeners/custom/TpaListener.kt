@@ -33,10 +33,10 @@ class TpaListener(private val magenta: Magenta) : Listener {
         val target = event.target
 
         if (sender.uniqueId == target.uniqueId)
-            return sender.sendMessage(magenta.localeConfig.translation("magenta.command.tpa.error.request.yourself"))
+            return sender.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.yourself"))
 
         if (!magenta.tpaManager.createRequest(sender, target))
-            return sender.sendMessage(magenta.localeConfig.translation("magenta.command.tpa.error.request.exist"))
+            return sender.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.exist"))
 
         Magenta.scheduler.runDelayed(SchedulerType.SYNC, {
             magenta.tpaManager.killRequest(sender)
@@ -44,10 +44,10 @@ class TpaListener(private val magenta: Magenta) : Listener {
         PlayerBuilderAction
             .player(target)
             .sound("block.note_block.pling", 1.5F, 1.5F)
-            .message(magenta.localeConfig.translation("magenta.command.tpa.success.request", TagResolver.resolver(
+            .message(magenta.locale.translation("magenta.command.tpa.success.request", TagResolver.resolver(
                 Placeholder.component("player", sender.displayName()),
-                Placeholder.component("accept", magenta.localeConfig.translation("magenta.command.tpa.success.request.component.accept")),
-                Placeholder.component("deny", magenta.localeConfig.translation("magenta.command.tpa.success.request.component.deny"))
+                Placeholder.component("accept", magenta.locale.translation("magenta.command.tpa.success.request.component.accept")),
+                Placeholder.component("deny", magenta.locale.translation("magenta.command.tpa.success.request.component.deny"))
             )))
     }
 }

@@ -20,7 +20,7 @@ class KitManager(private val magenta: Magenta) {
         val inv: Inventory = player.inventory
 
         if (!magenta.kitConfig.getConfig().contains("kits.$kitName"))
-            throw KitNotFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist"))
+            throw KitNotFoundException(magenta.locale.getMessage("magenta.command.kit.error.not.exist"))
 
         for (material in Material.entries) {
             if (!magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) continue
@@ -44,7 +44,7 @@ class KitManager(private val magenta: Magenta) {
 
     fun createKit(player: Player, kitName: String, delay: Int) {
         if (magenta.kitConfig.getConfig().contains("kits.$kitName"))
-            throw KitNotFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.exist"))
+            throw KitNotFoundException(magenta.locale.getMessage("magenta.command.kit.error.exist"))
 
         val kitSection = magenta.kitConfig.getConfig().createSection("kits.$kitName")
         kitSection.set("name", kitName)
@@ -78,7 +78,7 @@ class KitManager(private val magenta: Magenta) {
 
     fun deleteKit(kitName: String) {
         if (!magenta.kitConfig.getConfig().contains("kits.$kitName"))
-            throw KitNotFoundException(magenta.localeConfig.getMessage("magenta.command.kit.error.not.exist"))
+            throw KitNotFoundException(magenta.locale.getMessage("magenta.command.kit.error.not.exist"))
 
         magenta.kitConfig.set("kits.$kitName", null)
     }

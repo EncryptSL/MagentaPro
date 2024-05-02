@@ -2,7 +2,6 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
 import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
@@ -29,7 +28,7 @@ object VoteHelper {
             .replace("{expression_reward}", expressionFormula)
         }
 
-        val userAccount = UserAccountImpl(magenta, offlinePlayer.uniqueId)
+        val userAccount = magenta.user.getUser(offlinePlayer.uniqueId)
         userAccount.set("votifier.rewards", rewards)
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
     }
@@ -42,7 +41,7 @@ object VoteHelper {
         Magenta.scheduler.runAtFixedRate(SchedulerType.ASYNC, { e ->
             var timer = countdown
             broadcastActionBar(
-                magenta.localeConfig.translation("magenta.votifier.voteparty.broadcast",
+                magenta.locale.translation("magenta.votifier.voteparty.broadcast",
                     Placeholder.parsed("delay", timer.toString())
                 )
             )
@@ -63,7 +62,7 @@ object VoteHelper {
                         }?.let { magenta.notification.client.send(it) }
                     }
                 }
-                broadcast(magenta.localeConfig.translation("magenta.votifier.voteparty.success"))
+                broadcast(magenta.locale.translation("magenta.votifier.voteparty.success"))
                 e?.cancel()
             }
             timer--

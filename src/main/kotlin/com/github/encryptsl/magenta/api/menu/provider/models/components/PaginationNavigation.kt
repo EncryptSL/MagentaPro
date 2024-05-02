@@ -20,13 +20,13 @@ open class PaginationNavigation(private val magenta: Magenta) : CloseButton(mage
         if (gui.currentPageNum == 1) return
         if (fileConfiguration.contains("menu.gui.button.$btnType")) {
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions"))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions"))
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.row"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row"))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.row"))
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.col"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col"))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.col"))
 
             if (fileConfiguration.getString("menu.gui.button.$btnType.item").equals(material.name, true)) {
                 gui.setItem(fileConfiguration.getInt("menu.gui.button.$btnType.positions.row"),
@@ -51,17 +51,17 @@ open class PaginationNavigation(private val magenta: Magenta) : CloseButton(mage
         if (gui.pagesNum < 1 && 1 == gui.pagesNum) return
         if (fileConfiguration.contains("menu.gui.button.$btnType")) {
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions",
                     Placeholder.parsed("file", fileConfiguration.name))
                 )
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.row"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.row",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.row",
                     Placeholder.parsed("file", fileConfiguration.name))
                 )
 
             if (!fileConfiguration.contains("menu.gui.button.$btnType.positions.col"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.button.missing.positions.col",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.col",
                     Placeholder.parsed("file", fileConfiguration.name))
                 )
 

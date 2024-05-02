@@ -34,7 +34,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
         }
 
         if (user.isJailed()) {
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "psát")))
+            player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "psát")))
             event.isCancelled = true
         }
 
@@ -71,7 +71,11 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
         }
     }
     private fun hoverText(player: Player): HoverEvent<Component> {
-        return ModernText.hover(HoverEvent.Action.SHOW_TEXT, Component.text(magenta.stringUtils.colorize(ModernText.papi(player,"\n${magenta.config.getString("chat.hoverText")}"))))
+        return ModernText.hover(
+            HoverEvent.Action.SHOW_TEXT,
+            Component.text(magenta.stringUtils.colorize(
+                ModernText.papi(player,"\n${magenta.config.getString("chat.hoverText")}"))
+            ))
     }
 
     private fun hoverItem(player: Player, message: String, event: AsyncChatEvent) {

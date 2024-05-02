@@ -26,9 +26,9 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
         try {
             val userAccount = magenta.user.getUser(player.uniqueId)
             player.teleport(userAccount.getLastLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.back.success"))
+            player.sendMessage(magenta.locale.translation("magenta.command.back.success"))
         } catch (e : Exception) {
-            player.sendMessage(magenta.localeConfig.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+            player.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
         }
     }
 
@@ -38,11 +38,11 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onBack(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         try {
             onBack(target)
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.back.success.to",
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.back.success.to",
                 Placeholder.parsed("player", target.name)
             ))
         } catch (e : Exception) {
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+            commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
         }
     }
 }

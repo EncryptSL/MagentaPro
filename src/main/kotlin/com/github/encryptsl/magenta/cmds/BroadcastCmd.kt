@@ -22,7 +22,7 @@ class BroadcastCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.broadcast")
     @CommandDescription("This command send broadcast message to every one.")
     fun onBroadcast(commandSender: CommandSender, @Greedy @Argument(value = "message") message: String) {
-        commandSender.server.broadcast(magenta.localeConfig.translation("magenta.broadcast",
+        commandSender.server.broadcast(magenta.locale.translation("magenta.broadcast",
                 Placeholder.parsed("message", message)
             )
         )

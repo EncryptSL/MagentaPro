@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -23,7 +24,7 @@ class InvseeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.invsee")
     @CommandDescription("This command open other player inventory")
     fun onInvseePlayer(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
-        if (target.hasPermission("magenta.invsee.exempt")) return
+        if (target.hasPermission(Permissions.INVSEE_EXEMPT)) return
 
         player.openInventory(target.inventory)
     }

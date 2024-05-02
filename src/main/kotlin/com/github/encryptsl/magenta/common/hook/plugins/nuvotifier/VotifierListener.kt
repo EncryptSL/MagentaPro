@@ -62,7 +62,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
     private fun processVote(serviceName: String, player: OfflinePlayer, timestamp: Long) {
         if (magenta.config.contains("votifier.services.$serviceName.rewards")) {
             this.addVote(player, serviceName, timestamp)
-            VoteHelper.broadcast(magenta.localeConfig, "magenta.votifier.broadcast", player.name.toString(), serviceName)
+            VoteHelper.broadcast(magenta.locale, "magenta.votifier.broadcast", player.name.toString(), serviceName)
 
             val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.$serviceName.rewards")
             val expressionFormula = expressionFormula(player)
@@ -77,7 +77,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
         if (magenta.config.contains("votifier.services.default")) {
             if (magenta.config.contains("votifier.services.default.rewards")) {
                 addVote(player, serviceName, timestamp)
-                VoteHelper.broadcast(magenta.localeConfig, "magenta.votifier.broadcast", player.name.toString(), serviceName)
+                VoteHelper.broadcast(magenta.locale, "magenta.votifier.broadcast", player.name.toString(), serviceName)
                 val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.default.rewards")
                 val expressionFormula = expressionFormula(player)
                 if (!player.isOnline)
@@ -95,7 +95,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
         if (!magenta.config.contains("votifier.cumulative.${playerVotes}")) return
 
         if (magenta.config.contains("votifier.cumulative.${playerVotes}.broadcast")) {
-            VoteHelper.broadcast(magenta.localeConfig, "votifier.cumulative.$playerVotes}.broadcast", player.name.toString(), serviceName)
+            VoteHelper.broadcast(magenta.locale, "votifier.cumulative.$playerVotes}.broadcast", player.name.toString(), serviceName)
         }
         val rewards: MutableList<String> = magenta.config.getStringList("votifier.cumulative.${playerVotes}.rewards")
         val expressionFormula = expressionFormula(player, playerVotes)

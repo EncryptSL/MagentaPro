@@ -28,7 +28,7 @@ class FeedbackCmd(private val magenta: Magenta) : AnnotationFeatures {
         player: Player,
         @Argument(value = "message") @Greedy message: String
     ) {
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.feedback.success"))
+        player.sendMessage(magenta.locale.translation("magenta.command.feedback.success"))
 
         magenta.serverFeedback.addEmbed {
             setTitle(WebhookEmbed.EmbedTitle("Zpětná vazba (#${magenta.random})", null))

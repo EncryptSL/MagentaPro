@@ -21,12 +21,12 @@ class EconomyShopIntegration(private val magenta: Magenta) {
         commands: MutableList<String>?,
     ) {
         if (transactionProcess == TransactionProcess.ERROR_ENOUGH_BALANCE)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.not.enough.money"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.not.enough.money"))
 
         if (transactionProcess == TransactionProcess.SUCCESS) {
             val item = shopPaymentHolder.itemStack
             val price = shopPaymentHolder.price
-            player.sendMessage(magenta.localeConfig.translation(message, TagResolver.resolver(
+            player.sendMessage(magenta.locale.translation(message, TagResolver.resolver(
                 Placeholder.component("item", item.displayName()),
                 Placeholder.parsed("quantity", item.amount.toString()),
                 Placeholder.parsed("price", price.toString())
@@ -50,11 +50,11 @@ class EconomyShopIntegration(private val magenta: Magenta) {
 
     fun doCreditTransaction(player: Player, transactionProcess: TransactionProcess, message: String, product: Component, price: Double, quantity: Int, commands: MutableList<String>) {
         if (transactionProcess == TransactionProcess.ERROR_ENOUGH_BALANCE)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.not.enough.credit"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.not.enough.credit"))
 
         if (transactionProcess == TransactionProcess.SUCCESS) {
             magenta.pluginManager.callEvent(CreditShopBuyEvent(player, price.toInt(), quantity))
-            player.sendMessage(magenta.localeConfig.translation(message, TagResolver.resolver(
+            player.sendMessage(magenta.locale.translation(message, TagResolver.resolver(
                 Placeholder.component("item", product),
                 Placeholder.parsed("quantity", quantity.toString()),
                 Placeholder.parsed("price", price.toString())

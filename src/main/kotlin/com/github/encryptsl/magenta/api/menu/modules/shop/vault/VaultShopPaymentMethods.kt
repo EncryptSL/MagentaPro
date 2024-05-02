@@ -23,10 +23,10 @@ class VaultShopPaymentMethods(private val magenta: Magenta) : ShopPaymentImpl {
         val price = shopPaymentHolder.price
 
         if (!shopPaymentHolder.isOperationAllowed)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.buy.disabled"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.buy.disabled"))
 
         if (ShopHelper.isPlayerInventoryFull(player))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.inventory.full"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.inventory.full"))
 
         val transactions = EconomyWithdraw(player, price).transaction(magenta.vaultHook) ?: return
 
@@ -42,10 +42,10 @@ class VaultShopPaymentMethods(private val magenta: Magenta) : ShopPaymentImpl {
         val price = shopPaymentHolder.price
 
         if (!shopPaymentHolder.isOperationAllowed)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.sell.disabled"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.sell.disabled"))
 
         if (!ShopHelper.hasPlayerRequiredItem(player, item))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.shop.error.empty.no.item"))
+            return player.sendMessage(magenta.locale.translation("magenta.shop.error.empty.no.item"))
 
         val transactions = EconomyDeposit(player, price).transaction(magenta.vaultHook) ?: return
 

@@ -31,19 +31,19 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         if (!magenta.virtualLevel.hasAccount(target.uniqueId))
             return commandSender.sendMessage(
-                magenta.localeConfig.translation("magenta.command.level.error.not.account",
+                magenta.locale.translation("magenta.command.level.error.not.account",
                     Placeholder.parsed("player", target.name.toString()))
             )
 
         magenta.virtualLevel.addLevel(target.uniqueId, amount)
         target.player?.sendMessage(
-            magenta.localeConfig.translation("magenta.command.levels.success.level.add",
+            magenta.locale.translation("magenta.command.levels.success.level.add",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("level", amount.toString()),
             )))
         commandSender.sendMessage(
-            magenta.localeConfig.translation("magenta.command.levels.success.level.add.to",
+            magenta.locale.translation("magenta.command.levels.success.level.add.to",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("level", amount.toString()),
@@ -60,20 +60,20 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         if (!magenta.virtualLevel.hasAccount(target.uniqueId))
             return commandSender.sendMessage(
-                magenta.localeConfig.translation("magenta.command.level.error.not.account",
+                magenta.locale.translation("magenta.command.level.error.not.account",
                 Placeholder.parsed("player", target.name.toString())
             ))
 
         magenta.virtualLevel.setLevel(target.uniqueId, amount)
         magenta.virtualLevel.setExperience(target.uniqueId, 0)
         target.player?.sendMessage(
-            magenta.localeConfig.translation("magenta.command.levels.success.level.set",
+            magenta.locale.translation("magenta.command.levels.success.level.set",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("level", amount.toString()),
             )))
         commandSender.sendMessage(
-            magenta.localeConfig.translation("magenta.command.levels.success.level.set.to",
+            magenta.locale.translation("magenta.command.levels.success.level.set.to",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("level", amount.toString()),
@@ -91,24 +91,24 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         if (!magenta.virtualLevel.hasAccount(target.uniqueId))
             return commandSender.sendMessage(
-                magenta.localeConfig.translation("magenta.command.level.error.not.account",
+                magenta.locale.translation("magenta.command.level.error.not.account",
                 Placeholder.parsed("player", target.name.toString())
             ))
         magenta.virtualLevel.addExperience(target.uniqueId, amount)
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.levels.success.experience.add.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.success.experience.add.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name.toString()),
             Placeholder.parsed("experience", amount.toString()))
         ))
 
         if (silent)
             return target.player.let { it?.sendMessage(
-                magenta.localeConfig.translation("magenta.command.levels.success.experience.add.silent",
+                magenta.locale.translation("magenta.command.levels.success.experience.add.silent",
                     Placeholder.parsed("experience", amount.toString())
                 ))
             }
 
         target.player?.sendMessage(
-            magenta.localeConfig.translation("magenta.command.levels.success.experience.add",
+            magenta.locale.translation("magenta.command.levels.success.experience.add",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("experience", amount.toString()),
@@ -125,19 +125,19 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         if (!magenta.virtualLevel.hasAccount(target.uniqueId))
             return commandSender.sendMessage(
-                magenta.localeConfig.translation("magenta.command.level.error.not.account",
+                magenta.locale.translation("magenta.command.level.error.not.account",
                 Placeholder.parsed("player", target.name.toString())
             ))
 
         magenta.virtualLevel.setExperience(target.uniqueId, amount)
         target.player?.sendMessage(
-            magenta.localeConfig.translation("magenta.command.levels.success.experience.set",
+            magenta.locale.translation("magenta.command.levels.success.experience.set",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("experience", amount.toString()),
             )))
         commandSender.sendMessage(
-            magenta.localeConfig.translation("magenta.command.levels.success.experience.set.to",
+            magenta.locale.translation("magenta.command.levels.success.experience.set.to",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("experience", amount.toString()),

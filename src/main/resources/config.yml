@@ -97,6 +97,11 @@ portal:
 # true = enabled, false = disabled.
 change-world-message: true
 
+# Halloween's settings
+# Halloween is event of double rewards of money and experience.
+halloween:
+  reward_multiplier: 2
+
 # Settings for Level UP notifications
 # You can set sound effect when player have level up
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
@@ -273,12 +278,14 @@ silky_spawners:
 jobs:
   whitelist_world:
     - mineworld
+  hunter:
+    earn_bar: '<gray>+ <green>5 $'
+    earn_money: 5
   miner:
     max_progress: 1000
     action_bar: '<yellow>Progress: <gold><current_progress>/<max_progress>'
     earn_bar: '<gray>+ <green>408 $'
-    rewards:
-      - 'eco add {player} 408 -s'
+    earn_money: 408
     blocks:
       - STONE
       - COAL_ORE

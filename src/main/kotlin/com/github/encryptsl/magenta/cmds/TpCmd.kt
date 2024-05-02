@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaRequestEvent
 import com.github.encryptsl.magenta.common.CommandHelper
+import com.github.encryptsl.magenta.common.Permissions
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -56,17 +57,17 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command teleport you to other player")
     fun onTeleport(player: Player, @Argument(value = "player", suggestions = "players") target: Player) {
         val account = magenta.user.getUser(target.uniqueId)
-        if (!account.getAccount().getBoolean("teleportenabled") && !player.hasPermission("magenta.tp.exempt"))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.tp.error.exempt",
+        if (!account.getAccount().getBoolean("teleportenabled") && !player.hasPermission(Permissions.TELEPORT_EXEMPT))
+            return player.sendMessage(magenta.locale.translation("magenta.command.tp.error.exempt",
                 Placeholder.parsed("player", player.name)
             ))
 
         if (player.uniqueId == target.uniqueId)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.tp.error.yourself"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.tp.error.yourself"))
 
         player.teleport(target, PlayerTeleportEvent.TeleportCause.COMMAND)
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.tp.success.self", Placeholder.parsed("target", target.name)))
+        player.sendMessage(magenta.locale.translation("magenta.command.tp.success.self", Placeholder.parsed("target", target.name)))
     }
 
     @Command("tp <player> <target>")
@@ -74,21 +75,21 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command teleport player to player")
     fun onTeleportConsole(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
         val targetAccount = magenta.user.getUser(target.uniqueId)
-        if (!targetAccount.getAccount().getBoolean("teleportenabled") && !commandSender.hasPermission("magenta.tp.exempt"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.tp.error.exempt",
+        if (!targetAccount.getAccount().getBoolean("teleportenabled") && !commandSender.hasPermission(Permissions.TELEPORT_EXEMPT))
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.error.exempt",
                 Placeholder.parsed("player", player.name)
             ))
 
         if (player.uniqueId == target.uniqueId)
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.tp.error.yourself.same"))
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.error.yourself.same"))
 
         player.teleport(target.location, PlayerTeleportEvent.TeleportCause.COMMAND)
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.tp.success.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.success.to", TagResolver.resolver(
             Placeholder.parsed("player", player.name),
             Placeholder.parsed("target", target.name)
         )))
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.tp.success.self", Placeholder.parsed("target", target.name)))
+        player.sendMessage(magenta.locale.translation("magenta.command.tp.success.self", Placeholder.parsed("target", target.name)))
     }
 
     @Command("tpo <target>")
@@ -97,7 +98,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onTeleportOfflineLocation(player: Player, @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer) {
         commandHelper.teleportOffline(player, offlinePlayer)
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.tpo.success",
+        player.sendMessage(magenta.locale.translation("magenta.command.tpo.success",
             Placeholder.parsed("player", offlinePlayer.name.toString())
         ))
     }
@@ -109,11 +110,11 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         if (target == null) {
             commandHelper.teleportAll(player, HashSet(Bukkit.getOnlinePlayers()))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.tpall.success"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.tpall.success"))
         }
 
         target.teleport(player, PlayerTeleportEvent.TeleportCause.COMMAND)
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.tphere.success",
+        player.sendMessage(magenta.locale.translation("magenta.command.tphere.success",
             Placeholder.parsed("player", target.name)
         ))
     }
@@ -125,13 +126,13 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         if (world != null) {
             commandHelper.teleportAll(player, HashSet(world.players))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.tpall.world.success",
+            return player.sendMessage(magenta.locale.translation("magenta.command.tpall.world.success",
                 Placeholder.parsed("world", world.name)
             ))
         }
 
         commandHelper.teleportAll(player, HashSet(Bukkit.getOnlinePlayers()))
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.tpall.success"))
+        player.sendMessage(magenta.locale.translation("magenta.command.tpall.success"))
     }
 
 }

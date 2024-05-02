@@ -55,7 +55,7 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onSetHomeIcon(player: Player, @Argument(value = "home", suggestions = "homes") home: String, @Argument("icon", suggestions = "homeIcons") icon: String) {
         magenta.homeModel.setHomeIcon(player.uniqueId, home, icon)
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.change.icon",
+        player.sendMessage(magenta.locale.translation("magenta.command.home.success.change.icon",
             TagResolver.resolver(
                 Placeholder.parsed("home", home),
                 Placeholder.parsed("icon", icon))

@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.listeners.custom
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.warp.*
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -20,13 +21,13 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val location: Location = event.location
 
         if (magenta.warpModel.getWarpExist(warpName))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.exist", Placeholder.parsed("warp", warpName)))
+            return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.exist", Placeholder.parsed("warp", warpName)))
 
         if (!magenta.warpModel.canSetWarp(player))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.limit"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.limit"))
 
         magenta.warpModel.creteWarp(player, location, warpName)
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
+        player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
     }
 
     @EventHandler
@@ -35,14 +36,14 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val player: Player = event.player
 
         if (!magenta.warpModel.getWarpExist(warpName))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", warpName)))
+            return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", warpName)))
 
-        if (player.hasPermission("magenta.warp.delete.other"))
+        if (player.hasPermission(Permissions.WARPS_DELETE_OTHER))
             magenta.warpModel.deleteWarp(warpName)
         else
             magenta.warpModel.deleteWarp(player.uniqueId, warpName)
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
+        player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
     }
 
     @EventHandler
@@ -53,7 +54,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         when(warpInfoType) {
             InfoType.LIST -> {
                 val list = magenta.warpModel.getWarps().joinToString { s ->
-                    magenta.localeConfig.getMessage("magenta.command.warp.success.list.component")
+                    magenta.locale.getMessage("magenta.command.warp.success.list.component")
                         .replace("<warp>", s.warpName)
                         .replace("<info>", magenta.config.getString("warp-info-format").toString()
                             .replace("<warp>", s.warpName)
@@ -64,14 +65,14 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                             .replace("<world>", s.world)
                         )
                 }
-                commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.list",
+                commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.success.list",
                     Placeholder.component("warps", ModernText.miniModernText(list))
                 ))
             }
             InfoType.INFO -> {
                 val warpName = event.warpName ?: return
                 if (!magenta.warpModel.getWarpExist(warpName))
-                    return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.not.exist",
+                    return commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist",
                         Placeholder.parsed("warp", warpName))
                     )
 
@@ -98,15 +99,15 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val warpName: String = event.warpName
 
         if (!magenta.warpModel.getWarpExist(warpName))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", warpName)))
+            return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", warpName)))
 
 
-        if (player.hasPermission("magenta.move.warp.other"))
+        if (player.hasPermission(Permissions.WARPS_MOVE_OTHER))
             magenta.warpModel.moveWarp(warpName, location)
         else
             magenta.warpModel.moveWarp(player.uniqueId, warpName, location)
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.moved", TagResolver.resolver(
+        player.sendMessage(magenta.locale.translation("magenta.command.warp.success.moved", TagResolver.resolver(
             Placeholder.parsed("warp", warpName),
             Placeholder.parsed("x", location.x.toString()),
             Placeholder.parsed("y", location.z.toString()),
@@ -121,16 +122,16 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val toWarpName = event.toWarpName
 
         if (!magenta.warpModel.getWarpExist(fromWarpName))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.not.exist",
+            return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist",
                 Placeholder.parsed("warp", fromWarpName)))
 
 
-        if (player.hasPermission("magenta.rename.warp.other"))
+        if (player.hasPermission(Permissions.WARPS_RENAME_OTHER))
             magenta.warpModel.renameWarp(fromWarpName, toWarpName)
         else
             magenta.warpModel.renameWarp(player.uniqueId, fromWarpName, toWarpName)
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.warp.success.renamed", TagResolver.resolver(
+        player.sendMessage(magenta.locale.translation("magenta.command.warp.success.renamed", TagResolver.resolver(
             Placeholder.parsed("from_warp", fromWarpName),
             Placeholder.parsed("to_warp", toWarpName)
         )))
@@ -143,14 +144,14 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val warpName = event.warpName
 
         if (!magenta.warpModel.getWarpExist(warpName))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.warp.error.not.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist",
                    Placeholder.parsed("warp", warpName)))
 
         try {
             val location = magenta.warpModel.toLocation(warpName)
-            val teleportSelfMessage = magenta.localeConfig.translation("magenta.command.warp.success.teleport.self",
+            val teleportSelfMessage = magenta.locale.translation("magenta.command.warp.success.teleport.self",
                 Placeholder.parsed("warp", warpName))
-            val teleportMessageTo = magenta.localeConfig.translation("magenta.command.warp.success.teleport.to",
+            val teleportMessageTo = magenta.locale.translation("magenta.command.warp.success.teleport.to",
                 Placeholder.parsed("warp", warpName))
 
             if (commandSender is Player) {
@@ -160,7 +161,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                     return
                 }
 
-                if (!commandSender.hasPermission("magenta.warp.other")) return
+                if (!commandSender.hasPermission(Permissions.WARP_TELEPORT_OTHER)) return
 
                 target.teleport(location)
                 target.sendMessage(teleportSelfMessage)

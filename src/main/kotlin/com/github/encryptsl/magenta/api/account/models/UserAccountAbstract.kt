@@ -1,19 +1,19 @@
 package com.github.encryptsl.magenta.api.account.models
 
+import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.interfaces.Account
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.plugin.Plugin
 import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-abstract class UserAccountAbstract(private val uuid: UUID, private val plugin: Plugin) : Account {
+abstract class UserAccountAbstract(private val uuid: UUID) : Account {
 
-    private val universalConfig = UniversalConfig(plugin, "/players/$uuid.yml")
+    private val universalConfig = UniversalConfig("/players/$uuid.yml")
     private val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI() }
 
     override fun getGameMode(): GameMode {
@@ -45,7 +45,7 @@ abstract class UserAccountAbstract(private val uuid: UUID, private val plugin: P
     }
 
     override fun hasPunish(): Boolean {
-        val onlineTime = plugin.config.getBoolean("online-jail-time")
+        val onlineTime = Magenta.instance.config.getBoolean("online-jail-time")
 
         return if (onlineTime) getOnlineJailedTime() > 0 else hasDelay("jail")
     }
@@ -60,7 +60,7 @@ abstract class UserAccountAbstract(private val uuid: UUID, private val plugin: P
     }
 
     override fun getRemainingJailTime(): Long {
-        val onlineTime = plugin.config.getBoolean("online-jail-time")
+        val onlineTime = Magenta.instance.config.getBoolean("online-jail-time")
 
         return if (onlineTime) getOnlineJailedTime().minus(1) else getRemainingCooldown("jail").seconds
     }

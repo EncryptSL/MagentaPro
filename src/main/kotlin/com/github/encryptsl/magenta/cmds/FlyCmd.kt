@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -32,7 +33,7 @@ class FlyCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command enable or disable other player flying")
     fun onFlyTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player) {
 
-        if (target.hasPermission("magenta.fly.modify.exempt")) return
+        if (target.hasPermission(Permissions.FLY_MODIFY_EXEMPT)) return
 
         magenta.commandHelper.allowFly(commandSender, target)
     }

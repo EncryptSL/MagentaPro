@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
+import com.github.encryptsl.magenta.common.Permissions
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
@@ -29,15 +30,15 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         val timeLeft = user.getRemainingCooldown("heal")
 
-        if (user.hasDelay("heal") && !player.hasPermission("magenta.heal.delay.exempt")) {
+        if (user.hasDelay("heal") && !player.hasPermission(Permissions.HEAL_DELAY_EXEMPT)) {
             return magenta.commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
         }
 
-        if (delay != 0L && delay != -1L || !player.hasPermission("magenta.heal.delay.exempt")) {
+        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HEAL_DELAY_EXEMPT)) {
             user.setDelay(Duration.ofSeconds(delay), "heal")
         }
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.heal"))
+        player.sendMessage(magenta.locale.translation("magenta.command.heal"))
         player.health = 20.0
         player.foodLevel = 20
     }
@@ -46,10 +47,10 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.heal.other")
     @CommandDescription("This command heal other player")
     fun onHeal(commandSender: CommandSender, @Argument(value="player", suggestions = "players") target: Player) {
-        target.sendMessage(magenta.localeConfig.translation("magenta.command.heal"))
+        target.sendMessage(magenta.locale.translation("magenta.command.heal"))
         target.health = 20.0
         target.foodLevel = 20
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.heal.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.heal.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name)
         )))
     }

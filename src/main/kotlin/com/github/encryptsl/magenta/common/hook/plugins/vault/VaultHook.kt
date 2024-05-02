@@ -10,7 +10,7 @@ import org.bukkit.plugin.ServicesManager
 class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), com.github.encryptsl.magenta.api.menu.modules.shop.economy.Economy {
 
     private var eco: Economy? = null
-    private val exception = magenta.localeConfig.getMessage("magenta.missing.vault.economy")
+    private val exception = magenta.locale.getMessage("magenta.missing.vault.economy")
 
     override fun isPluginEnabled(): Boolean {
         if (magenta.pluginManager.getPlugin("Vault") != null) {

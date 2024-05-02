@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.sql.WarpSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
@@ -109,11 +110,11 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun canSetWarp(player: Player): Boolean {
-        if (player.hasPermission("magenta.warps.unlimited")) return true
+        if (player.hasPermission(Permissions.WARPS_UNLIMITED)) return true
 
         val section = plugin.config.getConfigurationSection("warps.groups") ?: return false
 
-        val max = section.getKeys(false).filter { player.hasPermission("magenta.warps.$it") }.map { section.getInt(it) }.first()
+        val max = section.getKeys(false).filter { player.hasPermission(Permissions.WARPS_LIMIT.format("$it")) }.map { section.getInt(it) }.first()
 
         if (max == -1) return true
 

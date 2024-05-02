@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.OfflinePlayer
@@ -36,22 +37,22 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command start ignore player in chat and pm")
     fun onIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         if (player.uniqueId == target.uniqueId)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.ignore.error.yourself"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.ignore.error.yourself"))
 
         val user = magenta.user.getUser(player.uniqueId)
         if (user.isPlayerIgnored(target.uniqueId))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.ignore.error.exist",
+            return player.sendMessage(magenta.locale.translation("magenta.command.ignore.error.exist",
                 Placeholder.parsed("player", target.name.toString())
             ))
 
 
         if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.ignore.error.exempt",
+            return player.sendMessage(magenta.locale.translation("magenta.command.ignore.error.exempt",
                 Placeholder.parsed("player", target.name.toString())
             ))
 
-        if (luckPermsAPI.hasPermission(target,"magenta.ignore.exempt"))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.ignore.error.exempt",
+        if (luckPermsAPI.hasPermission(target, Permissions.IGNORE_EXEMPT))
+            return player.sendMessage(magenta.locale.translation("magenta.command.ignore.error.exempt",
                 Placeholder.parsed("player", target.name.toString())
             ))
 
@@ -59,7 +60,7 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
         ignoreList.add(target.uniqueId.toString())
 
         user.set("ignore", ignoreList)
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.ignore.success",
+        player.sendMessage(magenta.locale.translation("magenta.command.ignore.success",
             Placeholder.parsed("player", target.name.toString())
         ))
     }
@@ -71,14 +72,14 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
         val user = magenta.user.getUser(player.uniqueId)
 
         if (!user.isPlayerIgnored(target.uniqueId))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.ignore.error.not.exist",
+            return player.sendMessage(magenta.locale.translation("magenta.command.ignore.error.not.exist",
                 Placeholder.parsed("player", target.name.toString()))
             )
 
         val list: MutableList<String> = user.getAccount().getStringList("ignore")
         list.remove(target.uniqueId.toString())
         user.set("ignore", list)
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.ignore.success.removed",
+        player.sendMessage(magenta.locale.translation("magenta.command.ignore.success.removed",
             Placeholder.parsed("player", target.name.toString())
         ))
     }

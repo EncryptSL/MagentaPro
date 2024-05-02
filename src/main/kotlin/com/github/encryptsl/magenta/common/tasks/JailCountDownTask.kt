@@ -20,7 +20,7 @@ class JailCountDownTask(private val magenta: Magenta) : SchedulerCallBack {
                 }
                 account.setOnlineTime(timeLeft)
                 player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1.15f, 1.15f)
-                player.sendActionBar(magenta.localeConfig.translation("magenta.command.jail.success.remaining",
+                player.sendActionBar(magenta.locale.translation("magenta.command.jail.success.remaining",
                     Placeholder.parsed("remaining", formatFromSecondsTime(timeLeft))
                 ))
             }

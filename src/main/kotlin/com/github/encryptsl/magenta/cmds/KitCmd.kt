@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.kit.*
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.model.KitManager
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -23,7 +24,7 @@ class KitCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandManager.parserRegistry().registerSuggestionProvider("kits") { commandSender, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.kitConfig.getConfig().getConfigurationSection("kits")?.getKeys(false)
-                    ?.filter { kit -> commandSender.hasPermission("magenta.kits.$kit") }
+                    ?.filter { kit -> commandSender.hasPermission(Permissions.KITS.format(kit)) }
                     ?.mapNotNull { a -> Suggestion.suggestion(a.toString()) }!!
             )
         }
@@ -35,7 +36,7 @@ class KitCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command give you kit")
     fun onKit(player: Player, @Argument(value = "kit", suggestions = "kits") kit: String) {
         if (!player.hasPermission("magenta.kits.$kit") && !player.hasPermission("magenta.kits.*"))
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.kit.error.not.permission"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.kit.error.not.permission"))
 
         magenta.pluginManager.callEvent(
             KitReceiveEvent(player, kit, magenta.kitConfig.getConfig().getLong("kits.$kit.delay"), KitManager(magenta))

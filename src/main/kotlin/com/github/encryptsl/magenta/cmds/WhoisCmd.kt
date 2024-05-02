@@ -30,37 +30,37 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
         val user = magenta.user.getUser(target.uniqueId)
 
         try {
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.username"), target, user)
+            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.username"), target, user)
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.geolocation"), target, user)
+            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.geolocation"), target, user)
 
             if (target.isOnline || target.isConnected) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.health"), target, user)
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.hunger"), target, user)
+                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.health"), target, user)
+                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.hunger"), target, user)
             }
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.gamemode"), target, user)
+            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.gamemode"), target, user)
 
             if (user.getFlying()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.flying"), target, user)
+                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.flying"), target, user)
             }
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastLogin"), target, user)
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.lastSeen"), target, user)
+            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.lastLogin"), target, user)
+            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.lastSeen"), target, user)
 
-            sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.votes"), target, user)
+            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.votes"), target, user)
             if (magenta.afk.isAfk(target.uniqueId) || user.isAfk()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isAfk"), target, user)
+                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.isAfk"), target, user)
             }
             if (user.isSocialSpy()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isSocialSpy"), target, user)
+                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.isSocialSpy"), target, user)
             }
             if (user.isVanished()) {
-                sendMessage(commandSender, magenta.localeConfig.getMessage("magenta.command.whois.isVanished"), target, user)
+                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.isVanished"), target, user)
             }
         } catch(e : Exception) {
             magenta.logger.severe(e.stackTraceToString())
-            commandSender.sendMessage(magenta.localeConfig.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+            commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
         }
     }
 
@@ -93,7 +93,7 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
             Placeholder.parsed("country", country.name)
         )
 
-        commandSender.sendMessage(magenta.localeConfig.translation(message, tag))
+        commandSender.sendMessage(magenta.locale.translation(message, tag))
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,13 +14,13 @@ class SignListener(private val magenta: Magenta) : Listener {
 
         val line = event.line(0)
 
-        if (ModernText.convertComponentToText(line!!).equals(magenta.localeConfig.getMessage("magenta.sign.warp.required"), true)) {
-            if (!player.hasPermission("magenta.sign.warp.place")) {
+        if (ModernText.convertComponentToText(line!!).equals(magenta.locale.getMessage("magenta.sign.warp.required"), true)) {
+            if (!player.hasPermission(Permissions.WARP_SIGN_PLACE)) {
                 event.block.breakNaturally()
                 return
             }
-            event.line(0, magenta.localeConfig.translation("magenta.sign.warp"))
-            player.sendMessage(magenta.localeConfig.translation("magenta.sign.warp.success.created"))
+            event.line(0, magenta.locale.translation("magenta.sign.warp"))
+            player.sendMessage(magenta.locale.translation("magenta.sign.warp.success.created"))
         }
     }
 }

@@ -8,34 +8,34 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import kotlin.random.Random
 
 class CommandItemManager(private val magenta: Magenta) {
-    private val sid = Random(1000).nextInt(9999)
 
     fun createItem(commandSender: CommandSender, itemName: String) {
+        val rnd = magenta.random
+
         if (magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
-        magenta.cItems.set("citems.$itemName.sid", sid)
+        magenta.cItems.set("citems.$itemName.sid", rnd)
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.success.created", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.success.created", TagResolver.resolver(
             Placeholder.parsed("item", itemName),
-            Placeholder.parsed("sid", sid.toString())
+            Placeholder.parsed("sid", rnd.toString())
         )))
     }
 
     fun setName(commandSender: CommandSender, itemName: String, name: String) {
         if (!magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
         magenta.cItems.set("citems.$itemName.name", "$name <white>#<sid>")
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.success.set.name", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.success.set.name", TagResolver.resolver(
             Placeholder.parsed("item", itemName),
             Placeholder.parsed("name", name),
         )))
@@ -43,13 +43,13 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun setMaterial(commandSender: CommandSender, itemName: String, material: Material) {
         if (!magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.not.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
         magenta.cItems.set("citems.$itemName.material", material.name)
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.success.set.material", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.success.set.material", TagResolver.resolver(
             Placeholder.parsed("item", itemName),
             Placeholder.parsed("material", material.name),
         )))
@@ -57,13 +57,13 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun setCommand(commandSender: CommandSender, itemName: String, command: String) {
         if (!magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
         magenta.cItems.set("citems.$itemName.command", command)
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.success.set.command", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.success.set.command", TagResolver.resolver(
             Placeholder.parsed("item", itemName),
             Placeholder.parsed("command", command),
         )))
@@ -71,13 +71,13 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun setLore(commandSender: CommandSender, itemName: String, lores: List<String>) {
         if (!magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
         magenta.cItems.set("citems.$itemName.lore", lores)
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.success.set.lore", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.success.set.lore", TagResolver.resolver(
             Placeholder.parsed("item", itemName),
             Placeholder.parsed("lore", lores.toString()),
         )))
@@ -85,27 +85,27 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun giveCommandItem(commandSender: CommandSender, itemName: String, amount: Int, target: Player) {
         if (!magenta.cItems.getConfig().contains("citems.${itemName}"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
         if (!magenta.cItems.getConfig().contains("citems.$itemName.name"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.not.set.name",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.set.name",
                 Placeholder.parsed("item", itemName)
             ))
 
         if (!magenta.cItems.getConfig().contains("citems.$itemName.material"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.not.set.material",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.set.material",
                 Placeholder.parsed("item", itemName)
             ))
 
         if (!magenta.cItems.getConfig().contains("citems.$itemName.lore"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.not.set.lore",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.set.lore",
                 Placeholder.parsed("item", itemName)
             ))
 
         if (!magenta.cItems.getConfig().contains("citems.$itemName.command"))
-            return commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.error.not.set.command",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.set.command",
                 Placeholder.parsed("item", itemName)
             ))
 
@@ -125,7 +125,7 @@ class CommandItemManager(private val magenta: Magenta) {
         target.inventory.addItem(itemStack)
         target.updateInventory()
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.citem.success.given", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.success.given", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.component("item", itemStack.displayName()),
             Placeholder.parsed("amount", amount.toString())

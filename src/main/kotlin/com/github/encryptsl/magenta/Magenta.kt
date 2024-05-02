@@ -13,7 +13,6 @@ import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.PlayerCacheManager
-import com.github.encryptsl.magenta.common.TpaManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
@@ -25,6 +24,7 @@ import com.github.encryptsl.magenta.common.model.EarnBlocksProgressManager
 import com.github.encryptsl.magenta.common.model.JailManager
 import com.github.encryptsl.magenta.common.model.KitManager
 import com.github.encryptsl.magenta.common.model.NewsQueueManager
+import com.github.encryptsl.magenta.common.model.TpaManager
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.tasks.LevelUpTask
@@ -49,12 +49,14 @@ open class Magenta : JavaPlugin() {
 
     companion object {
         lateinit var scheduler: Scheduler
+        lateinit var instance: Magenta
+            private set
     }
 
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
     val database: DatabaseConnector by lazy { DatabaseConnector(this) }
-    val user: User by lazy { User(this) }
+    val user: User by lazy { User() }
     val vote: MagentaVoteAPI by lazy { MagentaVoteAPI() }
     val voteParty: MagentaVotePartyAPI by lazy { MagentaVotePartyAPI(VotePartyModel()) }
     val virtualLevel: VirtualLevelAPI by lazy { VirtualLevelAPI(this) }
@@ -67,24 +69,24 @@ open class Magenta : JavaPlugin() {
     val afk: AfkUtils by lazy { AfkUtils(this) }
     val itemFactory: ItemFactory by lazy { ItemFactory() }
 
-    val localeConfig: Locale by lazy { Locale(this) }
-    val kitConfig: UniversalConfig by lazy { UniversalConfig(this, "kits.yml") }
-    val jailConfig: UniversalConfig by lazy { UniversalConfig(this, "jails.yml") }
-    val mmConfig: UniversalConfig by lazy { UniversalConfig(this, "mythicmobs/rewards.yml") }
-    val cItems: UniversalConfig by lazy { UniversalConfig(this, "citems.yml") }
-    val randomConfig: UniversalConfig by lazy { UniversalConfig(this, "random.yml") }
-    val shopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/shop/shop.yml") }
-    val creditShopConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/shop.yml") }
-    val creditShopConfirmMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/creditshop/confirm_menu.yml") }
-    val milestonesOres: UniversalConfig by lazy { UniversalConfig(this, "menu/milestones/ores.yml") }
-    val milestonesVotePass: UniversalConfig by lazy { UniversalConfig(this, "menu/milestones/vote_pass.yml") }
-    val homeMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/config.yml") }
-    val homeEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/home/editor/home_editor.yml") }
-    val warpMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/config.yml") }
-    val warpPlayerMenuConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/owner_warps.yml") }
-    val warpEditorConfig: UniversalConfig by lazy { UniversalConfig(this, "menu/warp/editor/warp_editor.yml") }
-    val chatControl: UniversalConfig by lazy { UniversalConfig(this, "chatcontrol/filter.yml") }
-    val oraxenControl: UniversalConfig by lazy { UniversalConfig(this, "oraxen/config.yml") }
+    val locale: Locale by lazy { Locale(this) }
+    val kitConfig: UniversalConfig by lazy { UniversalConfig("kits.yml") }
+    val jailConfig: UniversalConfig by lazy { UniversalConfig("jails.yml") }
+    val mmConfig: UniversalConfig by lazy { UniversalConfig("mythicmobs/rewards.yml") }
+    val cItems: UniversalConfig by lazy { UniversalConfig("citems.yml") }
+    val randomConfig: UniversalConfig by lazy { UniversalConfig("random.yml") }
+    val shopConfig: UniversalConfig by lazy { UniversalConfig("menu/shop/shop.yml") }
+    val creditShopConfig: UniversalConfig by lazy { UniversalConfig("menu/creditshop/shop.yml") }
+    val creditShopConfirmMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/creditshop/confirm_menu.yml") }
+    val milestonesOres: UniversalConfig by lazy { UniversalConfig("menu/milestones/ores.yml") }
+    val milestonesVotePass: UniversalConfig by lazy { UniversalConfig("menu/milestones/vote_pass.yml") }
+    val homeMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/home/config.yml") }
+    val homeEditorConfig: UniversalConfig by lazy { UniversalConfig("menu/home/editor/home_editor.yml") }
+    val warpMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/warp/config.yml") }
+    val warpPlayerMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/warp/owner_warps.yml") }
+    val warpEditorConfig: UniversalConfig by lazy { UniversalConfig("menu/warp/editor/warp_editor.yml") }
+    val chatControl: UniversalConfig by lazy { UniversalConfig("chatcontrol/filter.yml") }
+    val oraxenControl: UniversalConfig by lazy { UniversalConfig("oraxen/config.yml") }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
     val jailManager: JailManager by lazy { JailManager(jailConfig.getConfig()) }
@@ -102,6 +104,7 @@ open class Magenta : JavaPlugin() {
     private val energie: Energie by lazy {Energie(this)}
 
     override fun onLoad() {
+        instance = this
         configLoader
             .createFromResources("locale/cs_cz.properties", this)
             .createFromResources("kits.yml", this)
@@ -135,7 +138,7 @@ open class Magenta : JavaPlugin() {
             .createFromResources("menu/milestones/ores.yml", this)
             .createFromResources("menu/milestones/vote_pass.yml", this)
             .create("jails.yml")
-        localeConfig.loadLocale("locale/cs_cz.properties")
+        locale.loadLocale("locale/cs_cz.properties")
         database.initConnect(
             config.getString("database.host", "jdbc:sqlite:plugins/MagentaPro/database.db").toString(),
             config.getString("database.username", "root").toString(),
@@ -187,7 +190,7 @@ open class Magenta : JavaPlugin() {
         val list: ArrayList<Listener> = arrayListOf(
             AsyncChatListener(this),
             AsyncFilterChat(this),
-            EntityAttackListener(this),
+            EntityListeners(this),
             BlockListener(this),
             PlayerListener(this),
             CommandListener(this),

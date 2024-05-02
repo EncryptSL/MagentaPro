@@ -24,7 +24,7 @@ class LightningCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Flag(value = "damage", aliases = ["d"]) damage: Boolean) {
         if (damage) target.world.strikeLightning(target.location) else target.world.strikeLightningEffect(target.location)
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.lightning.success.to",
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.lightning.success.to",
             Placeholder.parsed("player", target.name)
         ))
     }

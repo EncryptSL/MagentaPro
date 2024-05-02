@@ -21,11 +21,14 @@ class Locale(private val magenta: Magenta) {
 
     fun getMessage(key: String): String {
         val prefix = magenta.config.getString("prefix", "").toString()
-        val properties = properties.getProperty(key)
-            ?: properties.getProperty("magenta.missing.translation", "Missing Translation $key").replace("<key>", key)
+        val properties = getProperty(key)
 
         return properties.replace("<prefix>", prefix)
     }
+
+    private fun getProperty(key: String): String = properties.getProperty(key)
+        ?: getProperty("magenta.missing.translation", "Missing Translation $key").replace("<key>", key)
+    private fun getProperty(key: String, defValue: String) = properties.getProperty(key, defValue)
 
     fun loadLocale(configName: String) {
         try {

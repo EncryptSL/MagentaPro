@@ -29,14 +29,14 @@ class HatCmd(private val magenta: Magenta) : AnnotationFeatures {
         val inventory = player.inventory
         val itemInMainHand = inventory.itemInMainHand
         if (itemInMainHand.type.isEmpty || itemInMainHand.type.isAir || itemInMainHand.isEmpty)
-            return player.sendMessage(magenta.localeConfig.translation("magenta.command.hat.error.empty.hand"))
+            return player.sendMessage(magenta.locale.translation("magenta.command.hat.error.empty.hand"))
 
         if (!inventory.getItem(EquipmentSlot.HEAD).isEmpty || !inventory.getItem(EquipmentSlot.HEAD).type.isAir || !inventory.getItem(EquipmentSlot.HEAD).type.isEmpty) {
             player.inventory.setItem(EquipmentSlot.HAND, inventory.getItem(EquipmentSlot.HEAD))
         }
 
         player.inventory.setItem(EquipmentSlot.HEAD, itemInMainHand)
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.hat.success.set",
+        player.sendMessage(magenta.locale.translation("magenta.command.hat.success.set",
             Placeholder.component("item", itemInMainHand.displayName())
         ))
     }

@@ -42,17 +42,17 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el")) continue
 
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.name"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.name",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
                             Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
                 ))
 
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.slot"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.slot",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
                     Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
                 ))
 
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.icon"))
-                return player.sendMessage(magenta.localeConfig.translation("magenta.menu.error.not.defined.icon",
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.icon",
                     Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
                 ))
 
@@ -95,7 +95,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
             clearIcons(gui)
             magenta.homeModel.moveHome(player.uniqueId, homeName, player.location)
             player.sendMessage(
-               magenta.localeConfig.translation("magenta.command.home.success.moved",
+               magenta.locale.translation("magenta.command.home.success.moved",
                     TagResolver.resolver(
                         Placeholder.parsed("home", homeName),
                         Placeholder.parsed("x", player.location.x.toInt().toString()),
@@ -137,7 +137,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         ).asGuiItem { action ->
             if (action.isLeftClick) {
                 magenta.homeModel.setHomeIcon(player.uniqueId, homeName, materialName)
-                player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.change.icon", TagResolver.resolver(
+                player.sendMessage(magenta.locale.translation("magenta.command.home.success.change.icon", TagResolver.resolver(
                     Placeholder.parsed("home", homeName),
                     Placeholder.parsed("icon", materialName)
                 )))
@@ -150,7 +150,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
             clicked = false
             magenta.homeModel.deleteHome(player.uniqueId, homeName)
             gui.close(player)
-            player.sendMessage(magenta.localeConfig.translation("magenta.command.home.success.deleted", Placeholder.parsed("home", homeName)))
+            player.sendMessage(magenta.locale.translation("magenta.command.home.success.deleted", Placeholder.parsed("home", homeName)))
         }
     }
 

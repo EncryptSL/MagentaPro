@@ -28,7 +28,7 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
         magenta.commandHelper.doVanish(player, user.isVanished())
         val mode = magenta.commandHelper.isVanished(user.isVanished())
 
-        player.sendMessage(magenta.localeConfig.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
+        player.sendMessage(magenta.locale.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
 
         if (user.isVanished()) {
             user.set("vanished", false)
@@ -47,9 +47,9 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         val mode = magenta.commandHelper.isVanished(user.isVanished())
 
-        target.sendMessage(magenta.localeConfig.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
+        target.sendMessage(magenta.locale.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
 
-        commandSender.sendMessage(magenta.localeConfig.translation("magenta.command.vanish.success.vanish.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.vanish.success.vanish.to", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("mode", mode)
         )))
