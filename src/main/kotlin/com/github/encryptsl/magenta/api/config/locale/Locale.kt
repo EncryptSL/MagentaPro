@@ -32,10 +32,8 @@ class Locale(private val magenta: Magenta) {
 
     fun loadLocale(configName: String) {
         try {
-            val reader = InputStreamReader(FileInputStream(File(magenta.dataFolder, configName)))
+            val reader = InputStreamReader(FileInputStream(File(magenta.dataFolder, configName)), Charsets.UTF_8)
             properties.load(reader)
-        } catch (e : IOException) {
-            magenta.logger.severe( e.message ?: e.localizedMessage)
-        }
+        } catch (e : IOException) { magenta.logger.severe( e.message ?: e.localizedMessage) }
     }
 }
