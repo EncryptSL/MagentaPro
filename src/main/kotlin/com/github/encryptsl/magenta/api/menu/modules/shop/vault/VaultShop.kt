@@ -69,7 +69,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
     fun openCategory(player: HumanEntity, type: String) {
         val shopCategory = UniversalConfig("menu/shop/categories/$type.yml")
-        if (!shopCategory.fileExist())
+        if (!shopCategory.exists())
             return player.sendMessage(
                 magenta.locale.translation("magenta.command.shop.error.category.not.exist",
                     Placeholder.parsed("category", type))
@@ -116,6 +116,8 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                     material,
                     buyPrice,
                     sellPrice,
+                    isBuyAllowed,
+                    isSellAllowed,
                     magenta.shopConfig.getConfig()
                 )
             ).asGuiItem()

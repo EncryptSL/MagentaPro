@@ -52,26 +52,26 @@ object ShopHelper {
 
         if (shopCategories != null) {
             for (category in shopCategories) {
-                val categoryConfig = UniversalConfig(magenta, "menu/shop/categories/$category.yml")
-                if (categoryConfig.fileExist()) {
-                    categoryConfig.reload()
-                    categoryConfig.save()
-                }
+                val categoryConfig = UniversalConfig("menu/shop/categories/$category.yml")
+                if (!categoryConfig.exists()) continue
+
+                categoryConfig.reload()
+                categoryConfig.save()
             }
-            magenta.logger.info("VaultShop was reloaded with ${shopCategories.size} configs !")
+            magenta.logger.info("VaultShop are reloaded with ${shopCategories.size} configs !")
         }
         
         val creditConfig = magenta.creditShopConfig.getConfig()
         val creditShopCategories = creditConfig.getConfigurationSection("menu.categories")?.getKeys(false)
         if (creditShopCategories != null) {
             for (category in creditShopCategories) {
-                val categoryConfig = UniversalConfig(magenta, "menu/creditshop/categories/$category.yml")
-                if (categoryConfig.fileExist()) {
-                    categoryConfig.reload()
-                    categoryConfig.save()
-                }
+                val categoryConfig = UniversalConfig("menu/creditshop/categories/$category.yml")
+                if (!categoryConfig.exists()) continue
+
+                categoryConfig.reload()
+                categoryConfig.save()
             }
-            magenta.logger.info("CreditShop was reloaded with ${creditShopCategories.size} configs !")
+            magenta.logger.info("CreditShop are reloaded with ${creditShopCategories.size} configs !")
         }
     }
 }

@@ -17,7 +17,15 @@ class ItemFactory {
             .addLore(lores.map { ModernText.miniModernText(it) }.toMutableList()).create()
     }
 
-    fun shopItem(itemName: String, material: Material, buyPrice:Double, sellPrice:Double, fileConfiguration: FileConfiguration): ItemStack {
+    fun shopItem(
+        itemName: String,
+        material: Material,
+        buyPrice:Double,
+        sellPrice:Double,
+        isBuyAllowed: Boolean,
+        isSellAllowed: Boolean,
+        fileConfiguration: FileConfiguration
+    ): ItemStack {
         val itemStack = ItemBuilder(material, 1).setName(ModernText.miniModernText(itemName))
         val lore = fileConfiguration.getStringList("menu.gui.item_lore")
 
@@ -28,6 +36,15 @@ class ItemFactory {
                     Placeholder.parsed("sell", sellPrice.toString()),
                 ))
             }.toMutableList()
+
+            if (!isBuyAllowed) {
+                lores.removeAt(0)
+            }
+
+            if (!isSellAllowed) {
+                lores.removeAt(1)
+            }
+
             itemStack.addLore(lores)
         }
         if (fileConfiguration.contains("menu.items.${itemName}.options")) {

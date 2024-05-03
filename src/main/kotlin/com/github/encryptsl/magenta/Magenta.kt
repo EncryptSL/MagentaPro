@@ -18,6 +18,7 @@ import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
+import com.github.encryptsl.magenta.common.filter.ChatChecksManager
 import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.model.EarnBlocksProgressManager
@@ -101,6 +102,7 @@ open class Magenta : JavaPlugin() {
     val commandManager: CommandManager by lazy { CommandManager(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     private val hookManger: HookManager by lazy { HookManager(this) }
+    private val chatChecksManager: ChatChecksManager by lazy { ChatChecksManager(this) }
     private val energie: Energie by lazy {Energie(this)}
 
     override fun onLoad() {
@@ -156,6 +158,7 @@ open class Magenta : JavaPlugin() {
             newsQueueManager.loadQueue()
             hookManger.hookPlugins()
             registerTasks()
+            chatChecksManager.initializeChecks()
             handlerListener()
         }
         logger.info("Plugin enabled in time ${time.inWholeSeconds}")
@@ -189,7 +192,6 @@ open class Magenta : JavaPlugin() {
     private fun handlerListener() {
         val list: ArrayList<Listener> = arrayListOf(
             AsyncChatListener(this),
-            AsyncFilterChat(this),
             EntityListeners(this),
             BlockListener(this),
             PlayerListener(this),

@@ -21,7 +21,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         item: String,
         category: String,
         categoryConfig: FileConfiguration,
-        creditShopPaymentMethod: CreditShopPaymetMethod,
+        creditShopPaymentMethod: CreditShopPaymentMethod,
         displayName: Component,
         creditShop: CreditShop,
         isBuyAllowed: Boolean = false
@@ -47,7 +47,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         gui: Gui,
         creditShop: CreditShop,
         config: FileConfiguration,
-        creditShopPaymetMethod: CreditShopPaymetMethod,
+        creditShopPaymentMethod: CreditShopPaymentMethod,
         displayName: Component,
         isBuyAllowed: Boolean
     ) {
@@ -75,7 +75,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
                     simpleMenu.clickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
-                    creditShopPaymetMethod.buyItem(action.whoClicked, config, item, displayName, isBuyAllowed)
+                    creditShopPaymentMethod.buyItem(action.whoClicked, config, item, displayName, isBuyAllowed)
                     creditShop.openCategory(player, category)
                     return@asGuiItem
                 }

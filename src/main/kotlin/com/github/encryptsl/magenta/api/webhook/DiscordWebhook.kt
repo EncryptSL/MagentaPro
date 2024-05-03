@@ -22,7 +22,7 @@ class DiscordWebhook(private val url: String) {
                  thread.setDaemon(true)
                  thread
              }.setWait(true).build()
-        } catch (e : Exception) { client.close() }
+        } catch (_ : Exception) { client.close() }
     }
 
     fun addEmbed(embedBuilder: WebhookEmbedBuilder.() -> Unit): WebhookEmbed?

@@ -15,9 +15,11 @@ import org.jetbrains.exposed.sql.update
 
 class VotePartyModel : VotePartySQL {
 
+    private val fieldPartyName = "vote_party"
+
     override fun createTable() {
         VotePartyTable.insert {
-            it[voteParty] = "vote_party"
+            it[voteParty] = fieldPartyName
             it[currentVotes] = 0
             it[lastVoteParty] = null
         }
@@ -25,7 +27,7 @@ class VotePartyModel : VotePartySQL {
 
     override fun updateParty() {
         Magenta.scheduler.runTask(SchedulerType.ASYNC) {
-            transaction { VotePartyTable.update({ VotePartyTable.voteParty eq "vote_party" }) {
+            transaction { VotePartyTable.update({ VotePartyTable.voteParty eq fieldPartyName }) {
                 it[currentVotes] = currentVotes.plus(1)
             } }
         }
@@ -33,7 +35,7 @@ class VotePartyModel : VotePartySQL {
 
     override fun partyFinished(winner: String) {
         Magenta.scheduler.runTask(SchedulerType.ASYNC) {
-            transaction { VotePartyTable.update({VotePartyTable.voteParty eq "vote_party"}) {
+            transaction { VotePartyTable.update({VotePartyTable.voteParty eq fieldPartyName}) {
                 it[currentVotes] = 0
                 it[lastVoteParty] = Clock.System.now()
                 it[lastWinnerOfParty] = winner
@@ -43,7 +45,7 @@ class VotePartyModel : VotePartySQL {
 
     override fun resetParty() {
         Magenta.scheduler.runTask(SchedulerType.ASYNC) {
-            transaction { VotePartyTable.update({ VotePartyTable.voteParty eq "vote_party" }) {
+            transaction { VotePartyTable.update({ VotePartyTable.voteParty eq fieldPartyName }) {
                 it[currentVotes] = 0
                 it[lastVoteParty] = null
                 it[lastWinnerOfParty] = null

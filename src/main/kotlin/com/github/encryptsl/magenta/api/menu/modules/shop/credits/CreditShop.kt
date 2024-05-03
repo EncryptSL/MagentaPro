@@ -17,7 +17,7 @@ import org.bukkit.entity.Player
 
 class CreditShop(private val magenta: Magenta) : MenuExtender {
 
-    private val creditShopPaymentMethod: CreditShopPaymetMethod by lazy { CreditShopPaymetMethod(magenta) }
+    private val creditShopPaymentMethod: CreditShopPaymentMethod by lazy { CreditShopPaymentMethod(magenta) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val simpleMenu = menuUI.SimpleMenu(magenta)
     private val paginationMenu = menuUI.PaginationMenu(magenta, this)
@@ -73,7 +73,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
     fun openCategory(player: HumanEntity, category: String) {
         val shopCategory = UniversalConfig("menu/creditshop/categories/$category.yml")
-        if (!shopCategory.fileExist())
+        if (!shopCategory.exists())
             return player.sendMessage(
                 magenta.locale.translation("magenta.command.shop.error.category.not.exist", Placeholder.parsed("category", category))
             )

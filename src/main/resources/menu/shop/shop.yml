@@ -7,8 +7,13 @@ menu:
     click-sounds:
       ui: "ui.button.click"
     item_lore:
-      - <color:#004c9e>Nákup <color:#037cff><price>
-      - <color:#004c9e>Prodej <color:#037cff><sell>
+      - <green>Koupit 1ks za <color:#037cff><price>
+      - <red>Prodat 1ks za <color:#037cff><sell>
+      - ''
+      - '<green>Koupit <gray>1ks <white>(Right Click)'
+      - '<red>Prodat <gray>1ks <white>(Left Click)'
+      - '<underline><green>Koupit stack <white>(Shift + Right Click)</underline>'
+      - '<underline><red>Prodat stack <white>(Shift + Left Click)</underline>'
   categories:
     blocks:
       icon: GRASS_BLOCK

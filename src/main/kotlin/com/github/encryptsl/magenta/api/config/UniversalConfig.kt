@@ -9,9 +9,9 @@ class UniversalConfig(type: String) {
 
     private val configUtil = ConfigUtil(type)
 
-    fun fileExist(): Boolean
+    fun exists(): Boolean
     {
-        return configUtil.file.isFile
+        return configUtil.file.exists()
     }
 
     fun set(path: String, value: Any?, sync: Boolean = true) {

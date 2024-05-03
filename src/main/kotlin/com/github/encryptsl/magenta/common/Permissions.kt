@@ -12,6 +12,12 @@ object Permissions {
     const val HEAL_DELAY_EXEMPT: String = "magenta.heal.delay.exempt"
     const val HELPOP_STAFF_CHAT: String = "magenta.helpop.staff.chat"
 
+    const val CHAT_FILTER_BYPASS_SPAM: String = "magenta.chat.filter.bypass.antispam"
+    const val CHAT_FILTER_BYPASS_CAPS: String = "magenta.chat.filter.bypass.capslock"
+    const val CHAT_FILTER_BYPASS_IP_ADDRESS: String = "magenta.chat.filter.bypass.ipfilter"
+    const val CHAT_FILTER_BYPASS_SWEAR: String = "magenta.chat.filter.bypass.swear"
+    const val CHAT_FILTER_BYPASS_WEBSITES: String = "magenta.chat.filter.bypass.websites"
+
     const val SILKY_SPAWNER: String = "magenta.silkyspawner"
 
     const val SOCIAL_SPY: String = "magenta.social.spy"

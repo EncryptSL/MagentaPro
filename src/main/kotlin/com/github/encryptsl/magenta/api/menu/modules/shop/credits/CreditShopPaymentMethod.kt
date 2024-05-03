@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 
-class CreditShopPaymetMethod(private val magenta: Magenta) {
+class CreditShopPaymentMethod(private val magenta: Magenta) {
 
     private val economyShopIntegration = EconomyShopIntegration(magenta)
 
