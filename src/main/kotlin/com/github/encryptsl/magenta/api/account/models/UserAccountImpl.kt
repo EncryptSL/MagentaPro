@@ -37,6 +37,18 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
         save()
     }
 
+    override fun addToIgnore(uuid: UUID) {
+        val list: MutableList<String> = getAccount().getStringList("ignore")
+        list.add(uuid.toString())
+        set("ignore", list)
+    }
+
+    override fun removeIgnoredPlayer(uuid: UUID) {
+        val list: MutableList<String> = getAccount().getStringList("ignore")
+        list.remove(uuid.toString())
+        set("ignore", list)
+    }
+
     override fun setJailTimeout(seconds: Long) {
         setDelay(Duration.ofSeconds(seconds), "jail")
     }

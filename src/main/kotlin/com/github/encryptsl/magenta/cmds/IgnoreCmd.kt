@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -25,8 +26,7 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandManager.parserRegistry().registerSuggestionProvider("ignoredPlayers") {sender, _ ->
             val c = sender as Player
             return@registerSuggestionProvider CompletableFuture.completedFuture(
-                magenta.user.getUser(c.uniqueId).getAccount().getStringList("ignore")
-                    .map { Suggestion.suggestion(it) }
+                magenta.user.getUser(c.uniqueId).getAccount().getStringList("ignore").map { Suggestion.suggestion(Bukkit.getOfflinePlayer(it).name.toString()) }
             )
         }
         annotationParser.parse(this)
@@ -56,10 +56,7 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("player", target.name.toString())
             ))
 
-        val ignoreList:MutableList<String> = user.getAccount().getStringList("ignore")
-        ignoreList.add(target.uniqueId.toString())
-
-        user.set("ignore", ignoreList)
+        user.addToIgnore(target.uniqueId)
         player.sendMessage(magenta.locale.translation("magenta.command.ignore.success",
             Placeholder.parsed("player", target.name.toString())
         ))
@@ -76,9 +73,7 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("player", target.name.toString()))
             )
 
-        val list: MutableList<String> = user.getAccount().getStringList("ignore")
-        list.remove(target.uniqueId.toString())
-        user.set("ignore", list)
+        user.removeIgnoredPlayer(target.uniqueId)
         player.sendMessage(magenta.locale.translation("magenta.command.ignore.success.removed",
             Placeholder.parsed("player", target.name.toString())
         ))

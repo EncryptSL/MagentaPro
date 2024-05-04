@@ -34,11 +34,11 @@ class WebsiteFilter(private val magenta: Magenta) : ChatCheck() {
         if(magenta.chatControl.getConfig().getStringList("filters.website.whitelist").contains(phrase))
             return false
 
+        val webRegex = magenta.chatControl.getConfig().getStringList("filters.website.web_regex")
+
         for (m in phrase.split(" ")) {
-            magenta.chatControl.getConfig().getStringList("filters.website.web_regex").forEach { regex ->
-                if (m.contains(Regex("(.*)${regex}(.*)"))) {
-                    detected = true
-                }
+            for (i in webRegex) {
+                detected = m.contains(Regex("(.*)${i}(.*)"))
             }
         }
         return detected

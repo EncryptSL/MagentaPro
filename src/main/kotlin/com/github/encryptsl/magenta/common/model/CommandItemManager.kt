@@ -29,7 +29,7 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun setName(commandSender: CommandSender, itemName: String, name: String) {
         if (!magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
@@ -57,7 +57,7 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun setCommand(commandSender: CommandSender, itemName: String, command: String) {
         if (!magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
@@ -71,7 +71,7 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun setLore(commandSender: CommandSender, itemName: String, lores: List<String>) {
         if (!magenta.cItems.getConfig().contains("citems.$itemName"))
-            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.exist",
                 Placeholder.parsed("item", itemName)
             ))
 
@@ -85,7 +85,7 @@ class CommandItemManager(private val magenta: Magenta) {
 
     fun giveCommandItem(commandSender: CommandSender, itemName: String, amount: Int, target: Player) {
         if (!magenta.cItems.getConfig().contains("citems.${itemName}"))
-            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.exist",
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.exist",
                 Placeholder.parsed("item", itemName)
             ))
 

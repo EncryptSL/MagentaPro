@@ -5,7 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration
 
 
 class JailManager(private val fileConfiguration: FileConfiguration) {
-    fun getJailLocation(jailName: String): Location? {
+    fun getJailLocation(jailName: String): Location {
         return fileConfiguration.getLocation("jails.$jailName.location")
+            ?: throw Exception("Something is bad with saved location...")
     }
 }

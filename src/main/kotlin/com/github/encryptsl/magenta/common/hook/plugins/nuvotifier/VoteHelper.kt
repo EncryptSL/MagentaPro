@@ -38,8 +38,8 @@ object VoteHelper {
         commands: MutableList<String>,
         countdown: Int
     ) {
+        var timer = countdown
         Magenta.scheduler.runAtFixedRate(SchedulerType.ASYNC, { e ->
-            var timer = countdown
             broadcastActionBar(
                 magenta.locale.translation("magenta.votifier.voteparty.broadcast",
                     Placeholder.parsed("delay", timer.toString())

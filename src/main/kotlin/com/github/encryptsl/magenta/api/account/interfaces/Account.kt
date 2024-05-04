@@ -12,6 +12,8 @@ interface Account {
     fun createDefaultData(player: Player)
     fun saveLastLocation(player: Player)
     fun saveQuitData(player: Player)
+    fun addToIgnore(uuid: UUID)
+    fun removeIgnoredPlayer(uuid: UUID)
     fun set(path: String, value: Any?, sync: Boolean = true)
     fun set(path: MutableMap<String, Any>, sync: Boolean = true)
     fun set(path: String, list: MutableList<Any>)

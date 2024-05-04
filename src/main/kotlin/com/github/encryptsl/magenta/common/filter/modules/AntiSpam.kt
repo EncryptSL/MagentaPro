@@ -39,8 +39,7 @@ class AntiSpam(val magenta: Magenta) : ChatCheck() {
         spam.asMap().computeIfPresent(player.uniqueId) { _, _ -> phrase }
 
         return spam.getIfPresent(player.uniqueId)?.let {
-            magenta.stringUtils.checkSimilarity(phrase,
-                it, magenta.chatControl.getConfig().getInt("filters.antispam.similarity"))
+            checkSimilarity(phrase, it, magenta.chatControl.getConfig().getInt("filters.antispam.similarity"))
         } == true
     }
 }

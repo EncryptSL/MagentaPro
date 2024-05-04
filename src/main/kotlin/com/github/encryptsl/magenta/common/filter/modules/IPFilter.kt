@@ -30,9 +30,7 @@ class IPFilter(private val magenta: Magenta) : ChatCheck() {
         if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_IP_ADDRESS)) return false
 
         for (m in phrase.split(" ") ) {
-            if (m.matches(Regex("${magenta.chatControl.getConfig().getString("filters.ipfilter.ip_regex")}"))) {
-                detected = true
-            }
+            detected = m.matches(Regex("${magenta.chatControl.getConfig().getString("filters.ipfilter.ip_regex")}"))
         }
 
         return detected

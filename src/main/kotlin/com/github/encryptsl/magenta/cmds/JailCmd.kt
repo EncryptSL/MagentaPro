@@ -80,9 +80,7 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
                 commandSender.sendMessage(magenta.locale.translation("magenta.command.jail.success.teleport",
                     Placeholder.parsed("jail", jailName)
                 ))
-
-                val location = magenta.jailManager.getJailLocation(jailName)
-                location?.let { magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, it)) }
+                teleportOnLocation(commandSender, jailName)
                 return
             }
             target.sendMessage(magenta.locale.translation("magenta.command.jail.success.teleport",
@@ -93,9 +91,7 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("jail", jailName),
                 Placeholder.parsed("player", target.name)
             )))
-
-            val location = magenta.jailManager.getJailLocation(jailName)
-            location?.let { magenta.pluginManager.callEvent(JailTeleportEvent(commandSender, it)) }
+            teleportOnLocation(target, jailName)
         } else {
             if (target == null) return
 
@@ -105,9 +101,7 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("jail", jailName),
                 Placeholder.parsed("player", target.name)
             )))
-
-            val location = magenta.jailManager.getJailLocation(jailName)
-            location?.let { magenta.pluginManager.callEvent(JailTeleportEvent(target, it)) }
+            teleportOnLocation(target, jailName)
         }
 
     }
@@ -125,6 +119,16 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send jail list")
     fun onJails(commandSender: CommandSender) {
         magenta.pluginManager.callEvent(JailInfoEvent(commandSender, null, InfoType.LIST))
+    }
+
+    private fun teleportOnLocation(player: Player, jailName: String) {
+        try {
+            val location = magenta.jailManager.getJailLocation(jailName)
+            magenta.pluginManager.callEvent(JailTeleportEvent(player, location))
+        } catch (e : Exception) {
+            player.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+            magenta.logger.severe(e.message ?: e.localizedMessage)
+        }
     }
 
 }

@@ -27,8 +27,6 @@ class CapsLock(private val magenta: Magenta) : ChatCheck() {
 
         if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_CAPS)) return false
 
-        val count = phrase.toCharArray().count { Character.isUpperCase(it) }
-
-        return (count > magenta.chatControl.getConfig().getInt("filters.capslock.sensitive", 15))
+        return (countUpperCaseLetters(phrase) > magenta.chatControl.getConfig().getInt("filters.capslock.sensitive", 15))
     }
 }

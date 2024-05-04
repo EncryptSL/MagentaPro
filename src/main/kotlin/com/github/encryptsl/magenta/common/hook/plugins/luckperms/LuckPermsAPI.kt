@@ -12,6 +12,7 @@ import org.bukkit.entity.Player
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 
 
 class LuckPermsAPI : PluginHook("LuckPerms") {
@@ -72,7 +73,7 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
             .filter(Node::hasExpiry)
             .filter {node -> !node.hasExpired()}
             .filter { g -> g.groupName == group }
-            .findFirst().get().expiry
+            .findFirst().getOrNull()?.expiry
         }
 
         return a

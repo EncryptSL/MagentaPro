@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.hook.miniplaceholder
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.PluginPlaceholders
 import com.github.encryptsl.magenta.api.level.LevelFormula
 import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import io.github.miniplaceholders.kotlin.asInsertingTag
@@ -9,6 +10,8 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
 class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPlaceholders") {
+
+    private val pluginPlaceholders: PluginPlaceholders by lazy { PluginPlaceholders(magenta) }
 
     fun register() {
         if (!isPluginEnabled()) return
@@ -51,71 +54,21 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPl
                 return@globalPlaceholder Component.text(magenta.voteParty.getVoteParty().lastWinnerOfParty ?: "NEVER").asInsertingTag()
             }
             globalPlaceholder("top_vote") { _, _ ->
-                return@globalPlaceholder Component.text(topVoteNameByRank(1)).asInsertingTag()
+                return@globalPlaceholder Component.text(pluginPlaceholders.topVoteNameByRank(1)).asInsertingTag()
             }
             globalPlaceholder("votes_leaderboard_player") { i, _ ->
-                return@globalPlaceholder Component.text(topVoteNameByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
+                return@globalPlaceholder Component.text(pluginPlaceholders.topVoteNameByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
             }
             globalPlaceholder("votes_leaderboard_votes_vote") { i, _ ->
-                return@globalPlaceholder Component.text(voteByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
+                return@globalPlaceholder Component.text(pluginPlaceholders.voteByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
             }
             globalPlaceholder("levels_leaderboard_player") { i, _ ->
-                return@globalPlaceholder Component.text(topLevelNameByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
+                return@globalPlaceholder Component.text(pluginPlaceholders.topLevelNameByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
             }
             globalPlaceholder("levels_leaderboard_level") { i, _ ->
-                return@globalPlaceholder Component.text(levelByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
+                return@globalPlaceholder Component.text(pluginPlaceholders.levelByRank(i.popOr("You need provide position.").value().toInt())).asInsertingTag()
             }
         }
         expansion.register()
     }
-
-
-    private fun topLevelNameByRank(rank: Int): String {
-        val topLevel = topLevels()
-        return if (rank in 1 .. topLevel.size) {
-            topLevel.keys.elementAt(rank - 1)
-        } else {
-            "N/A"
-        }
-    }
-
-
-    private fun levelByRank(rank: Int): Int {
-        val topLevel = topLevels()
-        return if (rank in 1..topLevel.size) {
-            topLevel.values.elementAt(rank - 1).toInt()
-        } else {
-            0
-        }
-    }
-
-    private fun topVoteNameByRank(rank: Int): String {
-        val topVote = topVotes()
-        return if (rank in 1..topVote.size) {
-            topVote.keys.elementAt(rank - 1)
-        } else {
-            "N/A"
-        }
-    }
-
-    private fun voteByRank(rank: Int): Int {
-        val topVote = topVotes()
-        return if (rank in 1..topVote.size) {
-            topVote.values.elementAt(rank - 1).toInt()
-        } else {
-            0
-        }
-    }
-
-    private fun topLevels(): Map<String, Int>
-    {
-        return magenta.virtualLevel.getLevels()
-    }
-
-    private fun topVotes(): Map<String, Int> {
-        return magenta.vote.votesLeaderBoard()
-    }
-
-
-
 }

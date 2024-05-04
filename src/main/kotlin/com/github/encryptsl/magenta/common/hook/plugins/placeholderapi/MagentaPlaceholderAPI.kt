@@ -1,13 +1,15 @@
 package com.github.encryptsl.magenta.common.hook.placeholderapi
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.PluginPlaceholders
 import com.github.encryptsl.magenta.api.level.LevelFormula
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
-import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
-import java.util.*
 
 class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: String) : PlaceholderExpansion() {
+
+    private val pluginPlaceholders: PluginPlaceholders by lazy { PluginPlaceholders(magenta) }
+
     override fun getIdentifier(): String = "magenta"
     override fun getAuthor(): String = "EncryptSL"
     override fun getVersion(): String = version
@@ -41,65 +43,18 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
             "voteparty_now" -> magenta.voteParty.getVoteParty().currentVotes.toString()
             "voteparty_max" -> magenta.config.getInt("votifier.voteparty.start_at").toString()
             "voteparty_winner" -> magenta.voteParty.getVoteParty().lastWinnerOfParty ?: "NEVER"
-            "top_vote_rank_player" -> topVoteNameByRank(1)
+            "top_vote_rank_player" -> pluginPlaceholders.topVoteNameByRank(1)
             else -> {
                 rank?.let {
                     when {
-                        identifier.startsWith("top_vote_name_") -> topVoteNameByRank(rank)
-                        identifier.startsWith("top_vote_votes_") -> voteByRank(rank).toString()
-                        identifier.startsWith("top_level_name_") -> topLevelNameByRank(rank)
-                        identifier.startsWith("top_level_levels_") -> levelByRank(rank).toString()
+                        identifier.startsWith("top_vote_name_") -> pluginPlaceholders.topVoteNameByRank(rank)
+                        identifier.startsWith("top_vote_votes_") -> pluginPlaceholders.voteByRank(rank).toString()
+                        identifier.startsWith("top_level_name_") -> pluginPlaceholders.topLevelNameByRank(rank)
+                        identifier.startsWith("top_level_levels_") -> pluginPlaceholders.levelByRank(rank).toString()
                         else -> null
                     }
                 }
             }
         }
-    }
-
-    private fun topLevelNameByRank(rank: Int): String {
-        val topLevel = topLevels()
-        return if (rank in 1 .. topLevel.size) {
-            val uuid = topLevel.keys.elementAt(rank - 1)
-            Bukkit.getOfflinePlayer(UUID.fromString(uuid)).name ?: "UNKNOWN"
-        } else {
-            "N/A"
-        }
-    }
-
-
-    private fun levelByRank(rank: Int): Int {
-        val topLevel = topLevels()
-        return if (rank in 1..topLevel.size) {
-            topLevel.values.elementAt(rank - 1).toInt()
-        } else {
-            0
-        }
-    }
-
-    private fun topVoteNameByRank(rank: Int): String {
-        val topVote = topVotes()
-        return if (rank in 1..topVote.size) {
-            topVote.keys.elementAt(rank - 1)
-        } else {
-            "N/A"
-        }
-    }
-
-    private fun voteByRank(rank: Int): Int {
-        val topVote = topVotes()
-        return if (rank in 1..topVote.size) {
-            topVote.values.elementAt(rank - 1).toInt()
-        } else {
-            0
-        }
-    }
-
-    private fun topLevels(): Map<String, Int>
-    {
-        return magenta.virtualLevel.getLevels()
-    }
-
-    private fun topVotes(): Map<String, Int> {
-        return magenta.vote.votesLeaderBoard()
     }
 }

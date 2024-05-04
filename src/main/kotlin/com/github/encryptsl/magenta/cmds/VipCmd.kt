@@ -49,7 +49,10 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVIPExpireOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         try {
             val time = luckPermsAPI.getExpireGroup(target, group)
-                ?: return commandSender.sendMessage(magenta.locale.translation("magenta.command.vip.error.expired.other", Placeholder.parsed("player", target.name.toString())))
+                ?: return commandSender.sendMessage(
+                    magenta.locale.translation("magenta.command.vip.error.expired.other",
+                        Placeholder.parsed("player", target.name.toString())
+                    ))
 
             commandSender.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time.other", TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),

@@ -71,12 +71,12 @@ class ChatPunishManager(private val magenta: Magenta) {
         flagging.computeIfPresent(player.uniqueId) { _, i -> i + 1 } ?: 1
         val score = flagging[player.uniqueId] ?: 0
 
+        message(player, actionList, translation)
         if (score == 1) {
             notify(player, actionList, score, violations.name, messageFromChat)
         } else if (score == 3) {
             kick(player, actionList, score, violations.name)
         }
-        message(player, actionList, translation)
         cancel(actionList, event)
     }
 }
