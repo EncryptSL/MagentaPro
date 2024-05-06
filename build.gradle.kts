@@ -68,6 +68,9 @@ tasks {
         useJUnitPlatform()
     }
     shadowJar {
+        manifest {
+            attributes["paperweight-mappings-namespace"] = "spigot"
+        }
         minimize {
             relocate("com.github.keelar", "magena.exprk")
             relocate("fr.euphyllia.energie", "magenta.energie")
