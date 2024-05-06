@@ -90,7 +90,7 @@ open class Magenta : JavaPlugin() {
     val oraxenControl: UniversalConfig by lazy { UniversalConfig("oraxen/config.yml") }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
-    val jailManager: JailManager by lazy { JailManager(jailConfig.getConfig()) }
+    val jailManager: JailManager by lazy { JailManager(this) }
 
     val newsQueueManager: NewsQueueManager by lazy { NewsQueueManager(this) }
     val earnBlocksProgressManager: EarnBlocksProgressManager by lazy { EarnBlocksProgressManager(this) }

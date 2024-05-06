@@ -43,9 +43,14 @@ dependencies {
     implementation("com.github.Euphillya:Energie:1.2.0")
     implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.7")
-    implementation("org.incendo:cloud-paper:2.0.0-beta.5")
-    implementation("org.incendo:cloud-annotations:2.0.0-beta.5")
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.5")
+    implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
+    implementation("org.incendo:cloud-annotations:2.0.0-SNAPSHOT") {
+        exclude(group = "org.incendo", module = "cloud-core")
+    }
+    implementation("org.incendo:cloud-minecraft-extras:2.0.0-SNAPSHOT") {
+        exclude(group = "net.kyori")
+        exclude(group = "org.incendo", module = "cloud-core")
+    }
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
     testImplementation(kotlin("test"))
     testImplementation("org.bspfsystems:yamlconfiguration:2.0.1")

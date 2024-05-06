@@ -128,5 +128,5 @@ class KitManager(private val magenta: Magenta) {
         }
     }
 
-    class KitNotFoundException(message: String) : Exception(message)
+    inner class KitNotFoundException(message: String) : Exception(message)
 }

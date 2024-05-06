@@ -8,14 +8,11 @@ import com.github.encryptsl.magenta.api.events.jail.JailDeleteEvent
 import com.github.encryptsl.magenta.api.events.jail.JailEvent
 import com.github.encryptsl.magenta.api.events.jail.JailInfoEvent
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
-import com.github.encryptsl.magenta.api.events.jail.JailTeleportEvent
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.utils.ModernText
-import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.command.CommandSender
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -46,17 +43,8 @@ class JailListeners(private val magenta: Magenta) : Listener {
             ))
 
         if (target.player != null) {
-            val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails.$jailName") ?: return
             target.player?.sendMessage(magenta.locale.translation("magenta.command.jail.success.jailed"))
-
-            magenta.pluginManager.callEvent(JailTeleportEvent(target.player!!, Location(
-                Bukkit.getWorld(jailSection.getString("location.world").toString()),
-                jailSection.getDouble("location.x"),
-                jailSection.getDouble("location.y"),
-                jailSection.getDouble("location.z"),
-                jailSection.getInt("location.yaw").toFloat(),
-                jailSection.getInt("location.pitch").toFloat()
-            )))
+            magenta.jailManager.teleport(target.player!!, jailName)
         }
 
 
@@ -77,9 +65,7 @@ class JailListeners(private val magenta: Magenta) : Listener {
             val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails") ?: return
             val randomJail = jailSection.getKeys(false).random()
             player.sendMessage(magenta.locale.translation("magenta.command.jail.success.jailed"))
-
-            val location = magenta.jailManager.getJailLocation(randomJail)
-            location?.let { player.teleport(it) }
+            magenta.jailManager.teleport(player, randomJail)
             event.isCancelled = true
         }
 
@@ -134,7 +120,7 @@ class JailListeners(private val magenta: Magenta) : Listener {
 
         player?.sendMessage(magenta.locale.translation("magenta.command.jail.success.unjailed"))
 
-        player?.let { magenta.pluginManager.callEvent(JailTeleportEvent(player, user.getLastLocation())) }
+        player?.let { player.teleport(user.getLastLocation()) }
 
         Bukkit.broadcast(magenta.locale.translation("magenta.command.jail.success.unjailed.to",
             Placeholder.parsed("player", target.name.toString())
@@ -142,16 +128,6 @@ class JailListeners(private val magenta: Magenta) : Listener {
 
         user.resetDelay("jail")
         user.resetDelay("onlinejail")
-    }
-
-    @EventHandler
-    fun onJailTeleport(event: JailTeleportEvent) {
-        val player = event.target
-        val location = event.location
-
-        Magenta.scheduler.runTask(SchedulerType.SYNC) {
-            player.teleport(location)
-        }
     }
 
     @EventHandler
@@ -173,13 +149,14 @@ class JailListeners(private val magenta: Magenta) : Listener {
     private fun jailList(commandSender: CommandSender) {
         val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails") ?: return
         val list = jailSection.getKeys(false).joinToString { s ->
+            val location = magenta.jailManager.getJailLocation(s)
             magenta.locale.getMessage("magenta.command.jail.success.list.component").replace("<jail>", s)
                 .replace("<info>", magenta.config.getString("jail-info-format").toString()
                     .replace("<jail>", s)
-                    .replace("<world>", jailSection.getString("$s.location.world").toString())
-                    .replace("<x>", jailSection.getString("$s.location.x").toString())
-                    .replace("<y>", jailSection.getString("$s.location.y").toString())
-                    .replace("<z>", jailSection.getString("$s.location.z").toString())
+                    .replace("<world>", location.world.name)
+                    .replace("<x>", location.x().toString())
+                    .replace("<y>", location.y().toString())
+                    .replace("<z>", location.z().toString())
                 )
         }
         commandSender.sendMessage(magenta.locale.translation("magenta.command.jail.success.list",
@@ -192,12 +169,14 @@ class JailListeners(private val magenta: Magenta) : Listener {
         if (!jailSection.contains(jailName))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist"))
 
+        val location = magenta.jailManager.getJailLocation(jailName)
+
         commandSender.sendMessage(ModernText.miniModernText(magenta.config.getString("jail-info-format").toString(), TagResolver.resolver(
             Placeholder.parsed("jail", jailName),
-            Placeholder.parsed("world", jailSection.getString("$jailName.location.world").toString()),
-            Placeholder.parsed("x", jailSection.getString("$jailName.location.x").toString()),
-            Placeholder.parsed("y", jailSection.getString("$jailName.location.y").toString()),
-            Placeholder.parsed("z", jailSection.getString("$jailName.location.z").toString()),
+            Placeholder.parsed("world", location.world.name.toString()),
+            Placeholder.parsed("x", location.x().toString()),
+            Placeholder.parsed("y", location.y().toString()),
+            Placeholder.parsed("z", location.z().toString()),
         )))
     }
 
