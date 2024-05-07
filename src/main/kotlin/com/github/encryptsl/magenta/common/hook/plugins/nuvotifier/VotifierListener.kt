@@ -6,7 +6,6 @@ import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import com.vexsoftware.votifier.model.Vote
 import com.vexsoftware.votifier.model.VotifierEvent
-import com.vexsoftware.votifier.util.QuietException
 import kotlinx.datetime.Instant
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
@@ -52,8 +51,6 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
                 magenta.voteParty.updateParty()
                 checkVoteParty(player)
             }
-        } catch (e : QuietException) {
-            magenta.logger.severe(e.message ?: e.localizedMessage)
         } catch (e : Exception) {
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }
