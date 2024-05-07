@@ -16,7 +16,7 @@ abstract class PluginHook(val pluginName: String) : Hook {
     }
 
     override fun runIfSuccess(any: Any.() -> Unit): PluginHook {
-        if(!isPluginEnabled()) {
+        if(isPluginEnabled()) {
             any.any()
         }
         return this
