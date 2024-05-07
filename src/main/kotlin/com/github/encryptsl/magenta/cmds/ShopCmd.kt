@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.menu.modules.shop.credits.CreditShop
 import com.github.encryptsl.magenta.api.menu.modules.shop.vault.VaultShop
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotations.*
@@ -42,27 +43,47 @@ class ShopCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.shop")
     @CommandDescription("This command open shop gui")
     fun onShop(player: Player) {
-        vaultShop.openMenu(player)
+        try {
+            vaultShop.openMenu(player)
+        } catch (e : Exception) {
+            magenta.logger.severe(e.message ?: e.localizedMessage)
+            player.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
     }
 
     @Command("shop open <type>")
     @Permission("magenta.shop.open")
     @CommandDescription("This command open shop category gui")
     fun onShopOpen(player: Player, @Argument(value = "type", suggestions = "shops") type: String) {
-        vaultShop.openCategory(player, type)
+        try {
+            vaultShop.openCategory(player, type)
+        } catch (e : Exception) {
+            magenta.logger.severe(e.message ?: e.localizedMessage)
+            player.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
     }
 
     @Command("creditshop|cshop")
     @Permission("magenta.credit.shop")
     @CommandDescription("This command open credit shop")
     fun onCreditShop(player: Player) {
-        creditShop.openMenu(player)
+        try {
+            creditShop.openMenu(player)
+        } catch (e : Exception) {
+            magenta.logger.severe(e.message ?: e.localizedMessage)
+            player.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
     }
 
     @Command("creditshop|cshop open <type>")
     @Permission("magenta.credit.shop.open")
     @CommandDescription("This command open credit shop category")
     fun onOpenCreditShop(player: Player, @Argument(value = "type", suggestions = "creditshops") type: String) {
-        creditShop.openCategory(player, type)
+        try {
+            creditShop.openCategory(player, type)
+        } catch (e : Exception) {
+            magenta.logger.severe(e.message ?: e.localizedMessage)
+            player.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
     }
 }

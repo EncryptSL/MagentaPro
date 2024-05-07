@@ -22,13 +22,7 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             return player.player?.hasPermission(permission) == true
 
-        var a = false
-
-        getUser(player.uniqueId).thenAcceptAsync { user ->
-           a = user.cachedData.permissionData.checkPermission(permission).asBoolean()
-        }
-
-        return a
+        return getUser(player.uniqueId).get().cachedData.permissionData.checkPermission(permission).asBoolean()
     }
 
     fun getGroup(player: Player): String {
@@ -45,8 +39,8 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
-        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
-        val prefix = metaData.prefix ?: "[DEFAULT]"
+        val metaData: CachedMetaData? = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val prefix = metaData?.prefix ?: "[DEFAULT]"
 
         return prefix
     }
@@ -55,8 +49,8 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
-        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
-        val suffix = metaData.suffix ?: ""
+        val metaData: CachedMetaData? = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val suffix = metaData?.suffix ?: ""
 
         return suffix
     }
@@ -77,9 +71,9 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
-        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val metaData: CachedMetaData? = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
 
-        return metaData.getMetaValue(value) ?: ""
+        return metaData?.getMetaValue(value) ?: ""
     }
 
     fun getUser(uuid: UUID): CompletableFuture<User> {

@@ -55,9 +55,11 @@ class HelpOpCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     private fun sendChannelMessage(commandSender: CommandSender, target: Player, message: String) {
-        val component = chat(commandSender, target, message, "magenta.command.helpop.answer.chat")
-        Bukkit.broadcast(component, Permissions.HELPOP_STAFF_CHAT)
-        target.sendMessage(component)
+        try {
+            val component = chat(commandSender, target, message, "magenta.command.helpop.answer.chat")
+            Bukkit.broadcast(component, Permissions.HELPOP_STAFF_CHAT)
+            target.sendMessage(component)
+        } catch (_ : Exception) {}
     }
 
     private fun chat(from: CommandSender, to: Player?, message: String, locale: String): Component {

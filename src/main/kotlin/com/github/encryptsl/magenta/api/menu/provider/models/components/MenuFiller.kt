@@ -6,7 +6,7 @@ import dev.triumphteam.gui.guis.GuiItem
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 
-class MenuFiller : MenuElementsFiller {
+open class MenuFiller : MenuElementsFiller {
     override fun fillBorder(
         guiFiller: GuiFiller,
         fileConfiguration: FileConfiguration

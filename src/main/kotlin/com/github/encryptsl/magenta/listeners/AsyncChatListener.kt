@@ -46,29 +46,36 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
             }
         }
 
-        val format = magenta.config.getString("chat.group-formats.${luckPermsHook.getGroup(player)}") ?: magenta.config.getString("chat.default-format").toString()
         val suggestCommand = magenta.config.getString("chat.suggestCommand", "/tell $player ").toString()
 
-        event.renderer { source, _, ms, _ ->
-            val plainText = ModernText.convertComponentToText(ms)
-            ModernText.miniModernText(format,
-                TagResolver.resolver(
-                    Placeholder.parsed("world", source.world.name),
-                    Placeholder.component("name", Component.text(source.name)
-                        .clickEvent(ModernText.action(
-                            ClickEvent.Action.SUGGEST_COMMAND,
-                            suggestCommand.replace("{name}", source.name).replace("{player}", source.name))
-                        )
-                    ),
-                    Placeholder.component("prefix", Component.text(colorize(luckPermsHook.getPrefix(player))).hoverEvent(hoverText(source))),
-                    Placeholder.parsed("suffix", colorize(luckPermsHook.getSuffix(player))),
-                    Placeholder.parsed("username_color", colorize(luckPermsHook.getMetaValue(player, "username-color"))),
-                    Placeholder.parsed("message_color", colorize(luckPermsHook.getMetaValue(player, "message-color"))),
-                    Placeholder.parsed("message", if (player.hasPermission("magenta.chat.colors")) colorize(plainText) else plainText)
-                )
-            )
-        }
+        renderer(event, suggestCommand)
     }
+
+    private fun renderer(event: AsyncChatEvent, suggestCommand: String) {
+        try {
+            val format = magenta.config.getString("chat.group-formats.${luckPermsHook.getGroup(event.player)}") ?: magenta.config.getString("chat.default-format").toString()
+            event.renderer { source, _, ms, _ ->
+                val plainText = ModernText.convertComponentToText(ms)
+                ModernText.miniModernText(format,
+                    TagResolver.resolver(
+                        Placeholder.parsed("world", source.world.name),
+                        Placeholder.component("name", Component.text(source.name)
+                            .clickEvent(ModernText.action(
+                                ClickEvent.Action.SUGGEST_COMMAND,
+                                suggestCommand.replace("{name}", source.name).replace("{player}", source.name))
+                            )
+                        ),
+                        Placeholder.component("prefix", Component.text(colorize(luckPermsHook.getPrefix(source))).hoverEvent(hoverText(source))),
+                        Placeholder.parsed("suffix", colorize(luckPermsHook.getSuffix(source))),
+                        Placeholder.parsed("username_color", colorize(luckPermsHook.getMetaValue(source, "username-color"))),
+                        Placeholder.parsed("message_color", colorize(luckPermsHook.getMetaValue(source, "message-color"))),
+                        Placeholder.parsed("message", if (source.hasPermission("magenta.chat.colors")) colorize(plainText) else plainText)
+                    )
+                )
+            }
+        } catch (_ : Exception) {}
+    }
+
     private fun hoverText(player: Player): HoverEvent<Component> {
         return ModernText.hover(
             HoverEvent.Action.SHOW_TEXT,

@@ -15,8 +15,12 @@ class UniversalConfig(type: String) {
     }
 
     fun set(path: String, value: Any?, sync: Boolean = true) {
-        val methodSynchronization = if (sync) SchedulerType.SYNC else SchedulerType.ASYNC
-        Magenta.scheduler.runTask(methodSynchronization) {
+        if (sync) {
+            getConfig().set(path, value)
+            save()
+            return
+        }
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
             getConfig().set(path, value)
             save()
         }

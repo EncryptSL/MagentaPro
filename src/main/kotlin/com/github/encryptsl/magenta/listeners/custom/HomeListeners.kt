@@ -24,9 +24,10 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val player: Player = event.player
         val location: Location = event.location
 
-        val worldsWhitelist = magenta.config.getStringList("homes.whitelist")
+        val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", location.world.name)
+        val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if ((!worldsWhitelist.contains(location.world.name) && !worldsWhitelist.contains("*")) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
@@ -45,11 +46,12 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val player: Player = event.player
         val homeName: String = event.homeName
 
-        val worldsWhitelist = magenta.config.getStringList("homes.whitelist")
+        val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", player.location.world.name)
+        val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if (!worldsWhitelist.contains(player.location.world.name) && !worldsWhitelist.contains("*") && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
-                Placeholder.parsed("world", player.location.world.name)))
+                TagResolver.resolver(Placeholder.parsed("world", player.location.world.name))))
 
         if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
@@ -105,11 +107,12 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val location: Location = player.location
         val homeName: String = event.homeName
 
-        val worldsWhitelist = magenta.config.getStringList("homes.whitelist")
+        val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", player.location.world.name)
+        val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if (!worldsWhitelist.contains(player.location.world.name) && !worldsWhitelist.contains("*"))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
-                Placeholder.parsed("world", player.location.world.name)))
+                TagResolver.resolver(Placeholder.parsed("world", player.location.world.name))))
 
         if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
@@ -130,11 +133,12 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val oldHomeName: String = event.fromHomeName
         val newHomeName: String = event.toHomeName
 
-        val worldsWhitelist = magenta.config.getStringList("homes.whitelist")
+        val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", location.world.name)
+        val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if (!worldsWhitelist.contains(player.location.world.name) && !worldsWhitelist.contains("*") && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
-                Placeholder.parsed("world", location.world.name)))
+                TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
         if (!magenta.homeModel.getHomeExist(player.uniqueId, oldHomeName))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist",
@@ -154,11 +158,13 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val location: Location = player.location
         val user = magenta.user.getUser(player.uniqueId)
 
-        val worldsWhitelist = magenta.config.getStringList("homes.whitelist")
 
-        if (!worldsWhitelist.contains(player.location.world.name) && !worldsWhitelist.contains("*") && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", location.world.name)
+        val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
+
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
-                Placeholder.parsed("world", location.world.name)))
+                TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
         if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist",

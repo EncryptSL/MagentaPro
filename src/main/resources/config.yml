@@ -151,7 +151,7 @@ mentions:
   formats:
     player: <hover:show_text:'<gray>Označen <yellow>[player]<yellow>'><yellow>[player]</yellow></hover>
     everyone: <hover:show_text:'<gray>Všichni byli označeni'><green>@everyone</green></hover>
-  sound: BLOCK_ANVIL_PLACE
+  sound: block.anvil.place
   volume: 5.5f
   pitch: 5f
 

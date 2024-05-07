@@ -4,7 +4,10 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.chat.PlayerMentionEvent
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import com.github.encryptsl.magenta.common.utils.ModernText
+import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.event.player.AsyncChatEvent
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
@@ -24,13 +27,10 @@ class MentionManager(private val magenta: Magenta) {
                     val volume = magenta.config.getString("mentions.volume").toString().toFloat()
                     val pitch = magenta.config.getString("mentions.pitch").toString().toFloat()
 
-                    Bukkit.getPlayer(m.replace("@", ""))?.let {
-                        magenta.pluginManager.callEvent(PlayerMentionEvent(player, it))
-                    }
                     if (m.contains("@everyone")) {
                         for (p in Bukkit.getOnlinePlayers()) {
                             p.sendMessage(mentionedPlayer(p, "magenta.player.mentioned"))
-                            p.playSound(p, sound, volume, pitch)
+                            p.playSound(Sound.sound().volume(volume).pitch(pitch).type(Key.key(sound)).build())
                         }
                         chatEvent.message(
                             ModernText.miniModernText(
@@ -44,10 +44,14 @@ class MentionManager(private val magenta: Magenta) {
 
                     val mentioned = Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), "")) ?: return
 
+                    Magenta.scheduler.runTask(SchedulerType.SYNC) {
+                        magenta.pluginManager.callEvent(PlayerMentionEvent(player, mentioned))
+                    }
+
                     PlayerBuilderAction.player(mentioned).sound(sound, volume, pitch).message(mentionedPlayer(player, "magenta.player.mentioned"))
                     chatEvent.message(
                         ModernText.miniModernText(message.replace(
-                            m, magenta.config.getString("mentions.formats.player").toString().replace("[player]", mentioned.name)
+                            m, magenta.config.getString("mentions.formats.player").toString().replace("[player]", mentioned.name.lowercase())
                         )))
                 }
             }
