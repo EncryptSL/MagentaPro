@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.extensions.colorize
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.model.MentionManager
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -29,9 +30,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
         val message = ModernText.convertComponentToText(event.message())
         mentionManager.mentionProcess(event)
 
-        if (message.contains("[item]")) {
-            hoverItem(player, message, event)
-        }
+        hoverItem(player, message, event)
 
         if (user.isJailed()) {
             player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "psát")))
@@ -61,11 +60,11 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
                             suggestCommand.replace("{name}", source.name).replace("{player}", source.name))
                         )
                     ),
-                    Placeholder.component("prefix", Component.text(magenta.stringUtils.colorize(luckPermsHook.getPrefix(player))).hoverEvent(hoverText(source))),
-                    Placeholder.parsed("suffix", magenta.stringUtils.colorize(luckPermsHook.getSuffix(player))),
-                    Placeholder.parsed("username_color", magenta.stringUtils.colorize(luckPermsHook.getMetaValue(player, "username-color"))),
-                    Placeholder.parsed("message_color", magenta.stringUtils.colorize(luckPermsHook.getMetaValue(player, "message-color"))),
-                    Placeholder.parsed("message", if (player.hasPermission("magenta.chat.colors")) magenta.stringUtils.colorize(plainText) else plainText)
+                    Placeholder.component("prefix", Component.text(colorize(luckPermsHook.getPrefix(player))).hoverEvent(hoverText(source))),
+                    Placeholder.parsed("suffix", colorize(luckPermsHook.getSuffix(player))),
+                    Placeholder.parsed("username_color", colorize(luckPermsHook.getMetaValue(player, "username-color"))),
+                    Placeholder.parsed("message_color", colorize(luckPermsHook.getMetaValue(player, "message-color"))),
+                    Placeholder.parsed("message", if (player.hasPermission("magenta.chat.colors")) colorize(plainText) else plainText)
                 )
             )
         }
@@ -73,7 +72,7 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
     private fun hoverText(player: Player): HoverEvent<Component> {
         return ModernText.hover(
             HoverEvent.Action.SHOW_TEXT,
-            Component.text(magenta.stringUtils.colorize(
+            Component.text(colorize(
                 ModernText.papi(player,"\n${magenta.config.getString("chat.hoverText")}"))
             ))
     }
@@ -81,14 +80,14 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
     private fun hoverItem(player: Player, message: String, event: AsyncChatEvent) {
         val split = message.split(" ")
         for (m in split) {
-            if (m.equals("[item]", true)) {
-                if (player.inventory.itemInMainHand.isEmpty) return
-                val itemStack = player.inventory.itemInMainHand
+            if (!m.equals("[item]", true)) continue
 
-                event.message(ModernText.miniModernText(message.replace(m, m.replace("[item]", "<item>")), TagResolver.resolver(
-                    Placeholder.component("item", itemStack.displayName())
-                )))
-            }
+            if (player.inventory.itemInMainHand.isEmpty) return
+            val itemStack = player.inventory.itemInMainHand
+
+            event.message(ModernText.miniModernText(message.replace(m, m.replace("[item]", "<item>")), TagResolver.resolver(
+                Placeholder.component("item", itemStack.displayName())
+            )))
         }
     }
 }

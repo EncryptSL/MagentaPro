@@ -2,13 +2,13 @@ package com.github.encryptsl.magenta.api.account.interfaces
 
 import org.bukkit.GameMode
 import org.bukkit.Location
+import org.bukkit.OfflinePlayer
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import java.time.Duration
 import java.util.*
 
 interface Account {
-
     fun createDefaultData(player: Player)
     fun saveLastLocation(player: Player)
     fun saveQuitData(player: Player)
@@ -38,5 +38,7 @@ interface Account {
     fun getVotesByService(serviceName: String): Int
     fun getVotifierRewards(): MutableList<String>
     fun getLastLocation(): Location
+    fun getPlayer(): Player?
+    fun getOfflinePlayer(): OfflinePlayer?
     fun getAccount(): FileConfiguration
 }

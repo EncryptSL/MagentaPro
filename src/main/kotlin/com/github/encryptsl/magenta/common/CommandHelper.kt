@@ -45,31 +45,34 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun toggleSocialSpy(player: Player, boolean: Boolean) {
-        val user = magenta.user.getUser(player.uniqueId)
-        user.set("socialspy", boolean)
+        magenta.user.getUser(player.uniqueId).set("socialspy", boolean)
     }
 
     fun allowFly(commandSender: CommandSender?, player: Player) {
-        if (player.allowFlight) {
-            player.allowFlight = false
-            magenta.user.getUser(player.uniqueId).set("flying", false)
-            player.sendMessage(magenta.locale.translation("magenta.command.fly.success.deactivated"))
-            commandSender?.sendMessage(
-                magenta.locale.translation("magenta.command.fly.success.deactivated.to",
-                    Placeholder.parsed("player", player.name)
+
+        when(player.allowFlight) {
+            true -> {
+                player.allowFlight = false
+                magenta.user.getUser(player.uniqueId).set("flying", false)
+                player.sendMessage(magenta.locale.translation("magenta.command.fly.success.deactivated"))
+                commandSender?.sendMessage(
+                    magenta.locale.translation("magenta.command.fly.success.deactivated.to",
+                        Placeholder.parsed("player", player.name)
+                    )
                 )
-            )
-        } else {
-            player.allowFlight = true
-            magenta.user.getUser(player.uniqueId).set("flying", true)
-            player.sendMessage(magenta.locale.translation("magenta.command.fly.success.activated"))
-            commandSender?.sendMessage(
-                magenta.locale.translation("magenta.command.fly.success.activated.to", Placeholder.parsed("player", player.name))
-            )
+            }
+            false -> {
+                player.allowFlight = true
+                magenta.user.getUser(player.uniqueId).set("flying", true)
+                player.sendMessage(magenta.locale.translation("magenta.command.fly.success.activated"))
+                commandSender?.sendMessage(
+                    magenta.locale.translation("magenta.command.fly.success.activated.to", Placeholder.parsed("player", player.name))
+                )
+            }
         }
     }
 
-    fun repairItem(player: Player) {
+    fun repairItemFromHand(player: Player) {
         val inventory = player.inventory
         val item = inventory.itemInMainHand
         val itemMeta = item.itemMeta
@@ -84,8 +87,8 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun repairItems(player: Player) {
         val inventory = player.inventory
-        inventory.forEach { item ->
-            val itemMeta = item?.itemMeta
+        for (item in inventory) {
+            val itemMeta = item.itemMeta
             if (itemMeta is Damageable) {
                 itemMeta.damage = 0
                 item.setItemMeta(itemMeta)

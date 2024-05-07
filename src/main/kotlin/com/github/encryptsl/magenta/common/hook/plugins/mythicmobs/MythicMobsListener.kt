@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.hook.mythicmobs
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.extensions.console
 import com.github.encryptsl.magenta.common.extensions.forEachIndexed
 import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import com.github.encryptsl.magenta.common.utils.ModernText
@@ -52,15 +53,15 @@ class MythicMobsListener(private val magenta: Magenta) : PluginHook("MythicMobs"
 
                 for (p in positions) {
                     for (message in magenta.mmConfig.getConfig().getStringList("mythic_rewards.$entityName.RewardMessage.message")) {
-                        Bukkit.getPlayer(p.key)?.sendMessage(ModernText.miniModernTextCenter(
-                            message
-                                .replace("{top_player_1}", nameByRank(1))
-                                .replace("{top_player_2}", nameByRank(2))
-                                .replace("{top_player_3}", nameByRank(3))
-                                .replace("{top_damage_1}", roundingDamage(1).toString())
-                                .replace("{top_damage_2}", roundingDamage(2).toString())
-                                .replace("{top_damage_3}", roundingDamage(3).toString())
-                                .replace("{personal_score}", roundingPersonalDamage(p.value).toString())
+                        val player = Bukkit.getPlayer(p.key) ?: continue
+                        player.sendMessage(ModernText.miniModernTextCenter(message
+                            .replace("{top_player_1}", nameByRank(1))
+                            .replace("{top_player_2}", nameByRank(2))
+                            .replace("{top_player_3}", nameByRank(3))
+                            .replace("{top_damage_1}", roundingDamage(1).toString())
+                            .replace("{top_damage_2}", roundingDamage(2).toString())
+                            .replace("{top_damage_3}", roundingDamage(3).toString())
+                            .replace("{personal_score}", roundingPersonalDamage(p.value).toString())
                         ))
                     }
                 }
@@ -70,13 +71,10 @@ class MythicMobsListener(private val magenta: Magenta) : PluginHook("MythicMobs"
                 }
 
                 if (magenta.mmConfig.getConfig().contains("mythic_rewards.$entityName.RewardCommands")) {
-                    positions.filter { Bukkit.getPlayer(it.key) != null }.entries.forEachIndexed { index, entry ->
-                        val onlineP = Bukkit.getPlayer(entry.key)!!
+                    positions.entries.forEachIndexed { index, entry ->
+                        val offlinePlayer = Bukkit.getOfflinePlayer(entry.key)
                         for (command in magenta.mmConfig.getConfig().getStringList("mythic_rewards.$entityName.RewardCommands.$index")) {
-                            Bukkit.dispatchCommand(
-                                Bukkit.getConsoleSender(),
-                                command.replace("%player%", onlineP.name).replace("{player}", onlineP.name)
-                            )
+                            console(command, offlinePlayer)
                         }
                     }
                 }

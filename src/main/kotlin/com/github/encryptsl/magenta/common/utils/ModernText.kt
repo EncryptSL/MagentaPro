@@ -14,6 +14,7 @@ import org.bukkit.entity.Player
 import solar.squares.pixelwidth.utils.CenterAPI
 
 object ModernText {
+
     private val miniMessage: MiniMessage by lazy { initMiniMessage() }
 
     @JvmStatic
@@ -24,6 +25,16 @@ object ModernText {
     @JvmStatic
     fun miniModernText(message: String, resolver: TagResolver): Component {
         return miniMessage.deserialize(convertVariables(message), resolver).decoration(TextDecoration.ITALIC, false)
+    }
+
+    @JvmStatic
+    fun miniModernText(player: Player, message: String): Component {
+        return miniModernText(papi(player, message))
+    }
+
+    @JvmStatic
+    fun miniModernText(player: Player, message: String, resolver: TagResolver): Component {
+        return miniModernText(papi(player, message), resolver)
     }
 
     @JvmStatic
@@ -42,6 +53,7 @@ object ModernText {
         return if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) PlaceholderAPI.setPlaceholders(player, message) else message
     }
 
+    @JvmStatic
     fun convertComponentToText(component: Component): String
         = PlainTextComponentSerializer.plainText().serialize(component)
 

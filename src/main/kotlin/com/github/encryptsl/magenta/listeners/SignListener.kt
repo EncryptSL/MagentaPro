@@ -12,9 +12,9 @@ class SignListener(private val magenta: Magenta) : Listener {
     fun onChangeWarpSign(event: SignChangeEvent) {
         val player = event.player
 
-        val line = event.line(0)
+        val line = event.line(0) ?: return
 
-        if (ModernText.convertComponentToText(line!!).equals(magenta.locale.getMessage("magenta.sign.warp.required"), true)) {
+        if (ModernText.convertComponentToText(line).equals(magenta.locale.getMessage("magenta.sign.warp.required"), true)) {
             if (!player.hasPermission(Permissions.WARP_SIGN_PLACE)) {
                 event.block.breakNaturally()
                 return

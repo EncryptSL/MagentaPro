@@ -77,7 +77,7 @@ class ItemFactory {
 
         if (lore.isNotEmpty()) {
             val lores = lore.map {
-                ModernText.miniModernText(ModernText.papi(player, it), TagResolver.resolver(
+                ModernText.miniModernText(player, it, TagResolver.resolver(
                     Placeholder.parsed("price", buyPrice.toString()),
                 ))
             }.toMutableList()

@@ -4,9 +4,12 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.interfaces.Account
 import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
+import org.bukkit.OfflinePlayer
 import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.Player
 import java.time.Duration
 import java.time.Instant
 import java.util.*
@@ -105,6 +108,18 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
 
     override fun save() {
         universalConfig.save()
+    }
+
+    override fun getPlayer(): Player? {
+        val player = Bukkit.getPlayer(uuid)
+        if (player != null)
+            return player
+
+        return null
+    }
+
+    override fun getOfflinePlayer(): OfflinePlayer {
+        return Bukkit.getOfflinePlayer(uuid)
     }
 
     override fun getAccount(): FileConfiguration {

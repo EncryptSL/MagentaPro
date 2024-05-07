@@ -26,9 +26,10 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
         val entity = event.entity
         if (entity is Player) {
             val player = entity.player ?: return
+            val user = magenta.user.getUser(player.uniqueId)
+
             if (event.cause  != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
-            if (!magenta.user.getUser(player.uniqueId).isJailed()) return
-            if (!magenta.user.getUser(player.uniqueId).isAfk()) return
+            if (!user.isJailed() || !user.isAfk()) return
 
             event.isCancelled = true
         }
@@ -37,9 +38,9 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
             if (event.cause  != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
 
             val player = event.damager as Player
+            val user = magenta.user.getUser(player.uniqueId)
 
-            if (!magenta.user.getUser(player.uniqueId).isJailed()) return
-            if (!magenta.user.getUser(player.uniqueId).isAfk()) return
+            if (!user.isJailed() || !user.isAfk()) return
 
             player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "útočit")))
             event.isCancelled = true
@@ -53,7 +54,7 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
 
             if (!magenta.config.contains("jobs.hunter") || !magenta.config.contains("jobs.hunter.earn_money")) return
 
-            val earnMoney = magenta.config.getDouble("halloween.reward_multiplier") * magenta.config.getDouble("jobs.hunter.earn_money", 5.0)
+            val earnMoney = magenta.config.getDouble("halloween.reward_multiplier").times(magenta.config.getDouble("jobs.hunter.earn_money", 5.0))
             val transaction = EconomyDeposit(player, earnMoney).transaction(magenta.vaultHook) ?: return
 
             if (transaction == TransactionProcess.SUCCESS) {

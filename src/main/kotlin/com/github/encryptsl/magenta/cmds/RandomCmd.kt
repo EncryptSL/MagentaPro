@@ -2,9 +2,9 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
+import com.github.encryptsl.magenta.common.extensions.console
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Range
@@ -43,7 +43,7 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         val randomKey = tickets.random().replace("%amount%", amount.toString())
         magenta.logger.info("Hráč ${target.name} dostal náhodnou vstupenku !")
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(randomKey, target))
+        console(randomKey, target)
 
         target.sendMessage(magenta.locale.translation("magenta.command.random.world.ticket.success.player",
             Placeholder.parsed("amount", amount.toString())
@@ -65,16 +65,14 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         val tags: List<String> = magenta.randomConfig.getConfig().getStringList("tags.$type")
         val randomTag = tags.random()
         if (!target.hasPermission(randomTag)) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target))
+            console("lp user %player% permission set $randomTag", target)
             return target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
                 Placeholder.parsed("category", type)
             ))
         }
 
         magenta.logger.info("Hráč ${target.name} již $randomTag oprávnění vlastní proto mu byl nabídnut jiný tag !")
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-            magenta.stringUtils.magentaPlaceholders("lp user %player% permission set $randomTag", target)
-        )
+        console("lp user %player% permission set $randomTag", target)
         target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
             Placeholder.parsed("category", type)
         ))

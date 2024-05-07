@@ -41,7 +41,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
             user.setDelay(Duration.ofSeconds(delay), "repair")
         }
 
-        magenta.commandHelper.repairItem(player)
+        magenta.commandHelper.repairItemFromHand(player)
     }
 
     @ProxiedBy("fixall")

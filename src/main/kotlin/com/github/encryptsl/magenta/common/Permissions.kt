@@ -38,7 +38,9 @@ object Permissions {
     const val WARPS_UNLIMITED: String = "magenta.warps.unlimited"
     const val WARPS_LIMIT: String = "magenta.warps.%s"
 
-    const val LEVEL_MINIG_BYPASS: String = "magenta.level.mining.bypass"
+    const val WHOIS_IP: String = "magenta.whois.ip"
+
+    const val LEVEL_MINE_BYPASS: String = "magenta.level.mining.bypass"
 
     const val KITS = "magenta.kits.%s"
     const val KIT_DELAY_EXEMPT: String = "magenta.kit.delay.exempt"

@@ -18,10 +18,10 @@ class LightningCmd(private val magenta: Magenta) : AnnotationFeatures {
         annotationParser.parse(this)
     }
 
-    @Command("lightning|thor <player>")
+    @Command("lightning|thor <player> [damage]")
     @Permission("magenta.lightning")
     @CommandDescription("This command create lightning effect with dmg or without to player")
-    fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Flag(value = "damage", aliases = ["d"]) damage: Boolean) {
+    fun onLightning(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player, @Default(value = "false") @Argument(value = "damage") damage: Boolean) {
         if (damage) target.world.strikeLightning(target.location) else target.world.strikeLightningEffect(target.location)
 
         commandSender.sendMessage(magenta.locale.translation("magenta.command.lightning.success.to",

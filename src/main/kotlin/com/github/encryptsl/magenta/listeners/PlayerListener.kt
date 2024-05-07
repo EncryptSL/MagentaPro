@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
 import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
+import com.github.encryptsl.magenta.common.extensions.console
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.parseMinecraftTime
 import com.github.encryptsl.magenta.common.utils.FileUtil
@@ -170,7 +171,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                         if (itemName != activationItemName) continue
 
                         val command = magenta.cItems.getConfig().getString("citems.$it.command").toString()
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), magenta.stringUtils.magentaPlaceholders(command, player))
+                        console(command, player)
                         if (itemInHand.amount > 1) {
                             itemInHand.amount -= 1
                         } else {

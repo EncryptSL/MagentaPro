@@ -34,15 +34,13 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
     fun onBlockBreak(event: BlockBreakEvent) {
         val player = event.player
         val block = event.block
-        val silkyTools = magenta.config.getStringList("silky_spawners.tools")
 
-        if (!magenta.config.getBoolean("silky_spawners.enabled")) return
-
-        if (block.type != Material.SPAWNER) return
+        if (!magenta.config.getBoolean("silky_spawners.enabled") && block.type != Material.SPAWNER) return
 
         val itemInHand = player.inventory.itemInMainHand
-        val tools = silkyTools.contains(itemInHand.type.name)
-        if (!tools && !itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) return
+        val tools = magenta.stringUtils.inInList("silky_spawners.tools", itemInHand.type.name)
+        val hasToolEnchantment = itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)
+        if (!tools && !hasToolEnchantment) return
 
         if (!player.hasPermission(Permissions.SILKY_SPAWNER))
             return player.sendMessage(magenta.locale.translation("magenta.silky.spawner.error.permissions"))
@@ -110,7 +108,7 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
         val block = event.block
 
         if (player.gameMode == GameMode.CREATIVE) return
-        if (player.hasPermission(Permissions.LEVEL_MINIG_BYPASS)) return
+        if (player.hasPermission(Permissions.LEVEL_MINE_BYPASS)) return
         val (_, _, level, _) = magenta.levelModel.getLevel(uuid)
         if (!magenta.config.contains("level.ores.${block.type.name}")) return
 

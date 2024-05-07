@@ -65,18 +65,12 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
-        var a: Instant? = null
-
-        getUser(offlinePlayer.uniqueId).thenAcceptAsync { user ->
-           a = user.getNodes(NodeType.INHERITANCE)
+        return getUser(offlinePlayer.uniqueId)
+            .get().getNodes(NodeType.INHERITANCE)
             .stream()
             .filter(Node::hasExpiry)
-            .filter {node -> !node.hasExpired()}
-            .filter { g -> g.groupName == group }
-            .findFirst().getOrNull()?.expiry
-        }
-
-        return a
+            .filter { n -> !n.hasExpired() }
+            .filter { n -> n.groupName.equals(group, true)}.findFirst().getOrNull()?.expiry
     }
 
     fun getMetaValue(player: Player, value: String): String {
