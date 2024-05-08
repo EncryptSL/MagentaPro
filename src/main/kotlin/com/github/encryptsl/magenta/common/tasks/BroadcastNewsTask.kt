@@ -12,8 +12,7 @@ import java.util.*
 class BroadcastNewsTask(private val magenta: Magenta) : SchedulerCallBack {
 
     override fun run(e: SchedulerTaskInter?) {
-        if (magenta.config.contains("news") == false) return
-        if (magenta.config.contains("news.delay") == false) return
+        if (!magenta.config.contains("news")) return
         if (magenta.newsQueueManager.isQueueEmpty()) return
 
         val isRandomEnabled = magenta.config.getBoolean("news.random", false)
