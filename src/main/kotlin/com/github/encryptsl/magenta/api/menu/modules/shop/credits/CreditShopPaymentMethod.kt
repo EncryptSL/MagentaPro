@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.credits
 
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
+import com.github.encryptsl.kmono.lib.extensions.isPlayerInventoryFull
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.components.EconomyWithdraw
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.models.EconomyShopIntegration
-import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
+import com.github.encryptsl.magenta.api.menu.modules.shop.EconomyShopIntegration
 import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import net.kyori.adventure.text.Component
 import org.bukkit.configuration.file.FileConfiguration
@@ -20,7 +20,7 @@ class CreditShopPaymentMethod(private val magenta: Magenta) {
         if (!isBuyAllowed)
             return player.sendMessage(magenta.locale.translation("magenta.shop.error.buy.disabled"))
 
-        if (ShopHelper.isPlayerInventoryFull(player))
+        if (isPlayerInventoryFull(player))
             return player.sendMessage(magenta.locale.translation("magenta.shop.error.inventory.full"))
 
         val price = config.getDouble("menu.items.$item.buy.price")

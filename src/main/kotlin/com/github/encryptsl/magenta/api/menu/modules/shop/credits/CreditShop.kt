@@ -1,11 +1,11 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.credits
 
+import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
@@ -72,7 +72,7 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
 
     fun openCategory(player: HumanEntity, category: String) {
-        val shopCategory = UniversalConfig("menu/creditshop/categories/$category.yml")
+        val shopCategory = UniversalConfig("${magenta.dataFolder}/menu/creditshop/categories/$category.yml")
         if (!shopCategory.exists())
             return player.sendMessage(
                 magenta.locale.translation("magenta.command.shop.error.category.not.exist", Placeholder.parsed("category", category))

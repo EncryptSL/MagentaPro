@@ -1,21 +1,22 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentAction
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentHolder
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentImpl
+import com.github.encryptsl.kmono.lib.extensions.hasPlayerRequiredItem
+import com.github.encryptsl.kmono.lib.extensions.isPlayerInventoryFull
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.components.EconomyDeposit
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.components.EconomyWithdraw
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.models.EconomyShopIntegration
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.models.ShopPaymentAction
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.models.ShopPaymentHolder
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.models.ShopPaymentImpl
-import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
+import com.github.encryptsl.magenta.api.menu.modules.shop.EconomyShopIntegration
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VaultShopPaymentMethods(private val magenta: Magenta) : ShopPaymentImpl {
+class VaultShopPaymentMethods(private val magenta: Magenta) : EconomyPaymentImpl {
 
     private val economyShopIntegration: EconomyShopIntegration by lazy { EconomyShopIntegration(magenta) }
     override fun buy(
-        shopPaymentHolder: ShopPaymentHolder,
+        shopPaymentHolder: EconomyPaymentHolder,
         commands: MutableList<String>?,
         inventory: InventoryClickEvent
     ) {
@@ -25,16 +26,16 @@ class VaultShopPaymentMethods(private val magenta: Magenta) : ShopPaymentImpl {
         if (!shopPaymentHolder.isOperationAllowed)
             return player.sendMessage(magenta.locale.translation("magenta.shop.error.buy.disabled"))
 
-        if (ShopHelper.isPlayerInventoryFull(player))
+        if (isPlayerInventoryFull(player))
             return player.sendMessage(magenta.locale.translation("magenta.shop.error.inventory.full"))
 
         val transactions = EconomyWithdraw(player, price).transaction(magenta.vaultHook) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            ShopPaymentAction.BUY, transactions, shopPaymentHolder,"magenta.shop.success.buy", commands)
+            EconomyPaymentAction.BUY, transactions, shopPaymentHolder,"magenta.shop.success.buy", commands)
     }
     override fun sell(
-        shopPaymentHolder: ShopPaymentHolder,
+        shopPaymentHolder: EconomyPaymentHolder,
         inventory: InventoryClickEvent
     ) {
         val player = inventory.whoClicked as Player
@@ -44,13 +45,13 @@ class VaultShopPaymentMethods(private val magenta: Magenta) : ShopPaymentImpl {
         if (!shopPaymentHolder.isOperationAllowed)
             return player.sendMessage(magenta.locale.translation("magenta.shop.error.sell.disabled"))
 
-        if (!ShopHelper.hasPlayerRequiredItem(player, item))
+        if (!hasPlayerRequiredItem(player, item))
             return player.sendMessage(magenta.locale.translation("magenta.shop.error.empty.no.item"))
 
         val transactions = EconomyDeposit(player, price).transaction(magenta.vaultHook) ?: return
 
         economyShopIntegration.doVaultTransaction(player,
-            ShopPaymentAction.SELL, transactions, shopPaymentHolder,"magenta.shop.success.sell", null)
+            EconomyPaymentAction.SELL, transactions, shopPaymentHolder,"magenta.shop.success.sell", null)
     }
 
 }

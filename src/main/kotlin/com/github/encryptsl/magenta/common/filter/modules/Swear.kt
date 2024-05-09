@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.common.filter.modules
 
+import com.github.encryptsl.kmono.lib.utils.TextFilReader
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.filter.ChatCheck
 import com.github.encryptsl.magenta.common.filter.impl.ChatFilters
-import com.github.encryptsl.magenta.common.utils.FileUtil
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.entity.Player
@@ -29,7 +29,7 @@ class Swear(private val magenta: Magenta) : ChatCheck() {
 
         if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_SWEAR)) return false
 
-        return FileUtil.getReadableFile(magenta.dataFolder, "chatcontrol/swears.txt").find { phrase.matches(Regex("(.*)$it(.*)")) }.toBoolean()
+        return TextFilReader.getReadableFile(magenta.dataFolder, "chatcontrol/swears.txt").find { phrase.matches(Regex("(.*)$it(.*)")) }.toBoolean()
     }
 
 

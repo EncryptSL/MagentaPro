@@ -1,13 +1,13 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
+import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentHolder
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.models.ShopPaymentHolder
 import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
@@ -68,7 +68,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
     }
 
     fun openCategory(player: HumanEntity, type: String) {
-        val shopCategory = UniversalConfig("menu/shop/categories/$type.yml")
+        val shopCategory = UniversalConfig("${magenta.dataFolder}/menu/shop/categories/$type.yml")
         if (!shopCategory.exists())
             return player.sendMessage(
                 magenta.locale.translation("magenta.command.shop.error.category.not.exist",
@@ -127,7 +127,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 if (action.isShiftClick && action.isLeftClick) {
                     paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction vaultShopPaymentMethods.buy(
-                        ShopPaymentHolder(
+                        EconomyPaymentHolder(
                             magenta.itemFactory.shopItem(material, 64, itemName),
                             ShopHelper.calcPrice(64, buyPrice),
                             isBuyAllowed
@@ -138,7 +138,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 if (action.isLeftClick) {
                     paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction vaultShopPaymentMethods.buy(
-                        ShopPaymentHolder(
+                        EconomyPaymentHolder(
                             magenta.itemFactory.shopItem(material, itemName),
                             ShopHelper.calcPrice(1, buyPrice), isBuyAllowed
                         ), commands, action)
@@ -151,7 +151,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                         if (player.inventory.getItem(i)?.type == material) {
                             val itemStack = player.inventory.getItem(i)
                             return@setAction vaultShopPaymentMethods.sell(
-                                ShopPaymentHolder(
+                                EconomyPaymentHolder(
                                     itemStack!!,
                                     ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed
                                 ), action)
@@ -164,7 +164,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 if (action.isRightClick) {
                     paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction vaultShopPaymentMethods.sell(
-                        ShopPaymentHolder(magenta.itemFactory.shopItem(material, 1, itemName),
+                        EconomyPaymentHolder(magenta.itemFactory.shopItem(material, 1, itemName),
                             ShopHelper.calcPrice(1, sellPrice), isSellAllowed)
                         , action)
                 }

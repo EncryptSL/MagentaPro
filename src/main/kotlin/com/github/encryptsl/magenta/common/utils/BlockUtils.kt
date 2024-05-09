@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta.common.utils
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.CreatureSpawner

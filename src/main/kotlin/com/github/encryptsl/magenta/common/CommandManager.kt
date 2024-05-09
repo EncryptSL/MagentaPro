@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.common
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.Material

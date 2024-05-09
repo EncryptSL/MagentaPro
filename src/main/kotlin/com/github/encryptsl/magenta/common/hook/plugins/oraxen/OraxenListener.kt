@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.hook.oraxen
 
+import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import io.th0rgal.oraxen.api.OraxenItems
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority

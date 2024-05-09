@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.listeners
 
+import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionProcess
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.TransactionProcess
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.components.EconomyDeposit
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
@@ -57,7 +57,7 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
             val earnMoney = magenta.config.getDouble("halloween.reward_multiplier").times(magenta.config.getDouble("jobs.hunter.earn_money", 5.0))
             val transaction = EconomyDeposit(player, earnMoney).transaction(magenta.vaultHook) ?: return
 
-            if (transaction == TransactionProcess.SUCCESS) {
+            if (transaction == EconomyTransactionProcess.SUCCESS) {
                 player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.hunter.earn_bar").toString(),
                     Placeholder.parsed("value", earnMoney.toString())
                 ))

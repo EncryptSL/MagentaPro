@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.common.hook.mythicmobs
 
+import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.console
 import com.github.encryptsl.magenta.common.extensions.forEachIndexed
-import com.github.encryptsl.magenta.common.hook.model.PluginHook
-import com.github.encryptsl.magenta.common.utils.ModernText
 import io.lumine.mythic.bukkit.MythicBukkit
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent
 import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent

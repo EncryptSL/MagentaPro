@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.provider.models.components
 
+import com.github.encryptsl.kmono.lib.extensions.playSound
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
 import com.github.encryptsl.magenta.api.menu.provider.buttons.MenuButton
 import com.github.encryptsl.magenta.api.menu.provider.buttons.MenuCloseButton
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
@@ -49,6 +49,6 @@ open class CloseButton(private val magenta: Magenta) : MenuCloseButton, MenuButt
 
     override fun clickSound(humanEntity: HumanEntity, fileConfiguration: FileConfiguration) {
         val type = fileConfiguration.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
-        ShopHelper.playSound(humanEntity, type, 5f, 1f)
+        playSound(humanEntity, type, 5f, 1f)
     }
 }

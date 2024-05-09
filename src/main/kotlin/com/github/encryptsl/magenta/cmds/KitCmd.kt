@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
+import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
-import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.kit.*
 import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.model.KitManager

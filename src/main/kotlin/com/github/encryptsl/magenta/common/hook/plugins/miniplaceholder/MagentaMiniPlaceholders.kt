@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.common.hook.miniplaceholder
 
+import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PluginPlaceholders
 import com.github.encryptsl.magenta.api.level.LevelFormula
-import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import io.github.miniplaceholders.kotlin.asInsertingTag
 import io.github.miniplaceholders.kotlin.expansion
 import net.kyori.adventure.text.Component

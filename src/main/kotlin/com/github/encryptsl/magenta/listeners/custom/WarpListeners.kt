@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.listeners.custom
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.warp.*
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Location

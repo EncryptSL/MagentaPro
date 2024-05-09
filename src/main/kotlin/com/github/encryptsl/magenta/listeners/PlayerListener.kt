@@ -1,5 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
+import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.utils.TextFilReader
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
 import com.github.encryptsl.magenta.common.Permissions
@@ -7,8 +9,6 @@ import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.extensions.console
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.parseMinecraftTime
-import com.github.encryptsl.magenta.common.utils.FileUtil
-import com.github.encryptsl.magenta.common.utils.ModernText
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -58,7 +58,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 "ip-address" to player.address.address.hostAddress
             )
             user.set(map.toMutableMap())
-            FileUtil.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
+            TextFilReader.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
                 player.sendMessage(ModernText.miniModernTextCenter(text, TagResolver.resolver(
                     Placeholder.component("player", player.displayName()),
                     Placeholder.parsed("online", Bukkit.getOnlinePlayers().size.toString()),

@@ -18,7 +18,7 @@ fun evaluate(str: String): Double {
                 when {
                     rest.firstOrNull() == '+' -> rest = getTerm(rest.drop(1)).also { carry += it.value }.rest
                     rest.firstOrNull() == '-' -> rest = getTerm(rest.drop(1)).also { carry -= it.value }.rest
-                    else                      -> return Data(rest, carry)
+                    else -> return Data(rest, carry)
                 }
             }
         }
@@ -29,7 +29,7 @@ fun evaluate(str: String): Double {
                 when {
                     rest.firstOrNull() == '*' -> rest = getTerm(rest.drop(1)).also { carry *= it.value }.rest
                     rest.firstOrNull() == '/' -> rest = getTerm(rest.drop(1)).also { carry /= it.value }.rest
-                    else                      -> return Data(rest, carry)
+                    else -> return Data(rest, carry)
                 }
             }
         }

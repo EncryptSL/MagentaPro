@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.listeners
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.colorize
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.model.MentionManager
-import com.github.encryptsl.magenta.common.utils.ModernText
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent

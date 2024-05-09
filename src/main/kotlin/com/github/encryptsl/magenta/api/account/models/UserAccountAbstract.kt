@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.api.account.models
 
+import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.interfaces.Account
-import com.github.encryptsl.magenta.api.config.UniversalConfig
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
@@ -16,7 +16,7 @@ import java.util.*
 
 abstract class UserAccountAbstract(private val uuid: UUID) : Account {
 
-    private val universalConfig = UniversalConfig("/players/$uuid.yml")
+    private val universalConfig = UniversalConfig("${Magenta.instance.path}/players/$uuid.yml")
     private val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI() }
 
     override fun getGameMode(): GameMode {
@@ -94,12 +94,12 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
         return universalConfig.getConfig().getLocation("lastlocation") ?: throw Exception("Something bad with last saved location")
     }
 
-    override fun set(path: String, value: Any?, sync: Boolean) {
-        universalConfig.set(path, value, sync)
+    override fun set(path: String, value: Any?) {
+        universalConfig.set(path, value)
     }
 
-    override fun set(path: MutableMap<String, Any>, sync: Boolean) {
-        for (i in path) { universalConfig.set(i.key, i.value, sync) }
+    override fun set(path: MutableMap<String, Any>) {
+        for (i in path) { universalConfig.set(i.key, i.value) }
     }
 
     override fun set(path: String, list: MutableList<Any>) {

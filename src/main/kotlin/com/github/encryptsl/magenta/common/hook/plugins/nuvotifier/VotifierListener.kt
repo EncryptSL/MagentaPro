@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.common.hook.nuvotifier
 
+import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerStartedEvent
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
-import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import com.vexsoftware.votifier.model.Vote
 import com.vexsoftware.votifier.model.VotifierEvent
 import kotlinx.datetime.Instant

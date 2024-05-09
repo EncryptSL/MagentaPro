@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.common.model
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.chat.PlayerMentionEvent
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
-import com.github.encryptsl.magenta.common.utils.ModernText
 import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.key.Key

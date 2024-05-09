@@ -1,6 +1,6 @@
 package com.github.encryptsl.magenta.common.hook.luckperms
 
-import com.github.encryptsl.magenta.common.hook.model.PluginHook
+import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.LuckPermsProvider
 import net.luckperms.api.cacheddata.CachedMetaData

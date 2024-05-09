@@ -1,13 +1,13 @@
 package com.github.encryptsl.magenta.common.hook.vault
 
+import com.github.encryptsl.kmono.lib.api.economy.MissingEconomyException
+import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.modules.shop.economy.MissingEconomyException
-import com.github.encryptsl.magenta.common.hook.model.PluginHook
 import net.milkbowl.vault.economy.Economy
 import org.bukkit.OfflinePlayer
 import org.bukkit.plugin.ServicesManager
 
-class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), com.github.encryptsl.magenta.api.menu.modules.shop.economy.Economy {
+class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), com.github.encryptsl.kmono.lib.api.economy.Economy {
 
     private var eco: Economy? = null
     private val exception = magenta.locale.getMessage("magenta.missing.vault.economy")

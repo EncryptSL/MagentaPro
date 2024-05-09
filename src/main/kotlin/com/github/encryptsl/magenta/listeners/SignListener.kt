@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.listeners
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.utils.ModernText
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.SignChangeEvent

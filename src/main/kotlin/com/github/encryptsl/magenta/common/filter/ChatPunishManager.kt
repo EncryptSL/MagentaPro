@@ -1,11 +1,11 @@
 package com.github.encryptsl.magenta.common.filter
 
 import club.minnced.discord.webhook.send.WebhookEmbed
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.filter.impl.ChatFilters
-import com.github.encryptsl.magenta.common.utils.ModernText
 import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder

@@ -1,0 +1,458 @@
+# noinspection YAMLSchemaValidation
+name: ${name}
+main: com.github.encryptsl.magenta.Magenta
+version: ${version}
+api-version: '1.19'
+
+prefix: MagentaPro
+author: EncryptSL
+website: https://encryptsl.github.io/
+loader: com.github.encryptsl.magenta.MagentaLoader
+
+load: POSTWORLD
+
+dependencies:
+  server:
+    KLib:
+      load: AFTER
+      join-classpath: true
+      required: true
+    KMonoLib:
+      load: AFTER
+      join-classpath: true
+      required: true
+    Vault:
+      required: false
+    Votifier:
+      required: false
+    PlaceholderAPI:
+      required: false
+    CreditLite:
+      required: false
+    MythicMobs:
+      required: false
+    Oraxen:
+      required: false
+    MiniPlaceholders:
+      required: false
+    LuckPerms:
+      required: false
+
+permissions:
+  magenta.*:
+    description: Permissions full access and bypass
+    default: op
+    children:
+      magenta.afk.*: true
+      magenta.back.*: true
+      magenta.broadcast.*: true
+      magenta.citem.*: true
+      magenta.containers.*: true
+      magenta.echest.*: true
+      magenta.feedback.*: true
+      magenta.fly.*: true
+      magenta.gamemode.*: true
+      magenta.gamemodes.*: true
+      magenta.hat.*: true
+      magenta.heal.*: true
+      magenta.helpop.*: true
+      magenta.home.*: true
+      magenta.ignore.*: true
+      magenta.invsee.*: true
+      magenta.jail.*: true
+      magenta.kit.*: true
+      magenta.level.*: true
+      magenta.levels.*: true
+      magenta.lightning.*: true
+      magenta.plugin.*: true
+      magenta.msg.*: true
+      magenta.random.*: true
+      magenta.repair.*: true
+      magenta.report.*: true
+      magenta.shop.*: true
+      magenta.credit.shop.*: true
+      magenta.social.spy.*: true
+      magenta.tpa.*: true
+      magenta.vanish.*: true
+      magenta.votes.*: true
+      magenta.warp.*: true
+      magenta.whois.*: true
+      magenta.vip.expire.other: true
+      magenta.signs.*: true
+      magenta.restriction.bypass.*: true
+      magenta.chat.filter.bypass.*: true
+  magenta.moderator:
+    description: Permissions for moderator
+    children:
+      magenta.player: true
+      magenta.broadcast: true
+      magenta.hat.*: true
+      magenta.ignore.*: true
+      magenta.jail: true
+      magenta.jail.list: true
+      magenta.jail.info: true
+      magenta.jail.tp: true
+      magenta.jail.exempt: true
+      magenta.lightning.*: true
+      magenta.shop.*: true
+      magenta.social.spy: true
+      magenta.vote.expire.other: true
+      magenta.whois.*: true
+      magenta.chat.filter.bypass.*: true
+  magenta.player:
+    description: Permissions for player
+    default: true
+    children:
+      magenta.afk: true
+      magenta.afk.auto: true
+      magenta.feedback.*: true
+      magenta.report.*: true
+      magenta.home.player: true
+      magenta.ignore: true
+      magenta.unignore: true
+      magenta.kit: true
+      magenta.kit.list: true
+      magenta.level.*: true
+      magenta.warp: true
+      magenta.tpa.*: true
+      magenta.msg.*: true
+      magenta.vip.expire: true
+      magenta.vote.player: true
+  magenta.plugin.*:
+    description: Permissions for admins
+    default: false
+    children:
+      magenta.plugin.help: true
+      magenta.plugin.reload: true
+  magenta.afk.*:
+    description: Permissions for afk manage
+    default: false
+    children:
+      magenta.afk: true
+      magenta.afk.other: true
+      magenta.afk.auto: true
+      magenta.afk.kick.exempt: true
+  magenta.back.*:
+    description: Permissions for back
+    default: false
+    children:
+      magenta.back: true
+      magenta.back.other: true
+  magenta.broadcast.*:
+    description: Permissions for broadcast
+    default: false
+    children:
+      magenta.broadcast: true
+  magenta.citem.*:
+    description: Permissions for managing activation items with commands.
+    default: false
+    children:
+      magenta.citem.create: true
+      magenta.citem.set.name: true
+      magenta.citem.set.material: true
+      magenta.citem.set.lore: true
+      magenta.citem.set.command: true
+      magenta.citem.give: true
+  magenta.containers.*:
+    description: Permissions for virtual crafting
+    default: false
+    children:
+      magenta.anvil: true
+      magenta.grindstone: true
+      magenta.stonecutter: true
+      magenta.smithingtable: true
+      magenta.loom: true
+      magenta.workbench: true
+  magenta.echest.*:
+    description: Permissions for virtual ender chest
+    default: false
+    children:
+      magenta.echest: true
+      magenta.echest.other: true
+      magenta.echest.modify: true
+  magenta.feedback.*:
+    description: Permissions for feedback
+    default: false
+    children:
+      magenta.feedback: true
+  magenta.fly.*:
+    description: All permissions for fly commands
+    default: false
+    children:
+      magenta.fly: true
+      magenta.fly.other: true
+  magenta.gamemode.*:
+    description: All permisisosn for gamemode commands
+    default: false
+    children:
+      magenta.gamemode: true
+      magenta.gamemode.other: true
+  magenta.gamemodes.*:
+    description: All permissions for gamemodes
+    default: false
+    children:
+      magenta.gamemodes.creative: true
+      magenta.gamemodes.survival: true
+      magenta.gamemodes.spectator: true
+      magenta.gamemodes.adventure: true
+  magenta.hat.*:
+    description: Permission for hat command
+    default: false
+    children:
+      magenta.hat: true
+  magenta.heal.*:
+    description: Permissions for healing
+    default: false
+    children:
+      magenta.heal: true
+      magenta.heal.other: true
+      magenta.heal.delay.exempt: true
+  magenta.helpop.*:
+    description: Permissions for helpop
+    default: false
+    children:
+      magenta.helpop: true
+      magenta.helpop.staff.chat: true
+  magenta.home.*:
+    description: Permissions for all home commands
+    default: false
+    children:
+      magenta.home: true
+      magenta.sethome: true
+      magenta.sethomeicon: true
+      magenta.move.home: true
+      magenta.delhome: true
+      magenta.renamehome: true
+      magenta.home.list: true
+      magenta.homes.unlimited: true
+      magenta.home.delay.exempt: true
+  magenta.home.player:
+    description: Permissions for all home commands
+    default: false
+    children:
+      magenta.home: true
+      magenta.sethome: true
+      magenta.delhome: true
+      magenta.move.home: true
+      magenta.renamehome: true
+      magenta.home.list: true
+  magenta.ignore.*:
+    description: Permissions for all ignore commands
+    default: false
+    children:
+      magenta.ignore: true
+      magenta.unignore: true
+      magenta.ignore.exempt: true
+  magenta.invsee.*:
+    description: Permissions for invsee
+    default: false
+    children:
+      magenta.invsee: true
+      magenta.invsee.modify: true
+      magenta.invsee.prevent.modify: true
+      magenta.invsee.prevent.modify.exempt: true
+  magenta.jail.*:
+    description: Permissions for all jail commands
+    default: false
+    children:
+      magenta.jail: true
+      magenta.jail.info: true
+      magenta.jail.tp: true
+      magenta.jail.create: true
+      magenta.jail.delete: true
+      magenta.jail.list: true
+      magenta.jail.exempt: true
+  magenta.kit.*:
+    description: Permissions for kit manage
+    default: false
+    children:
+      magenta.kit: true
+      magenta.kit.other: true
+      magenta.kit.list: true
+      magenta.kit.delay.exempt: true
+      magenta.showkit: true
+      magenta.createkit: true
+      magenta.deletekit: true
+      magenta.kits.*: true
+  magenta.level.*:
+    description: Permissions for player about levels
+    default: true
+    children:
+      magenta.level: true
+      magenta.level.other: true
+      magenta.level.top: true
+      magenta.ores.progress: true
+  magenta.levels.*:
+    description: Permissions for manage levels by admin
+    default: false
+    children:
+      magenta.levels.add.level: true
+      magenta.levels.add.experience: true
+      magenta.levels.set.level: true
+      magenta.levels.set.experience: true
+  magenta.lightning.*:
+    description: Permissions for lightning
+    default: false
+    children:
+      magenta.lightning: true
+  magenta.msg.*:
+    description: Permissions for msg
+    default: false
+    children:
+      magenta.msg: true
+  magenta.random.*:
+    description: Permissions for random items
+    default: false
+    children:
+      magenta.random.world.tickets: true
+      magenta.random.tag: true
+  magenta.repair.*:
+    description: Permissions for repair
+    default: false
+    children:
+      magenta.repair.item: true
+      magenta.repair.all: true
+      magenta.repair.all.other: true
+      magenta.repair.delay.exempt: true
+  magenta.report.*:
+    description: Permissions for report
+    default: false
+    children:
+      magenta.report: true
+  magenta.shop.*:
+    description: Permissions for shop
+    default: false
+    children:
+      magenta.shop: true
+      magenta.shop.open: true
+      magenta.shop.category.*: true
+  magenta.credit.shop.*:
+    description: Permissions for credtishop
+    default: false
+    children:
+      magenta.credit.shop: true
+      magenta.credit.shop.open: true
+      magenta.credit.shop.category.*: true
+  magenta.social.spy.*:
+    description: Permissions for all social spy
+    default: false
+    children:
+      magenta.social.spy: true
+      magenta.social.spy.other: true
+      magenta.social.spy.exempt: true
+  magenta.spawner.*:
+    description: Permissions for manage spawners
+    default: false
+    children:
+      magenta.spawner.set: true
+      magenta.spawner.give: true
+  magenta.tpa.*:
+    description: Permissions for tpa
+    default: false
+    children:
+      magenta.tpa: true
+      magenta.tpaccept: true
+      magenta.tpadeny: true
+  magenta.tp.*:
+    description: Permissions for tp
+    default: false
+    children:
+      magenta.tp: true
+      magenta.tp.other: true
+      magenta.tpo: true
+      magenta.tphere: true
+      magenta.tpall: true
+      magenta.tp.exempt: true
+  magenta.vanish.*:
+    description: Permisisons for vanish
+    default: false
+    children:
+      magenta.vanish: true
+      magenta.vanish.other: true
+  magenta.vote.player:
+    description: Permissions for vote and voteparty
+    default: false
+    children:
+      magenta.vote: true
+      magenta.vote.milestones: true
+      magenta.vote.top: true
+      magenta.vote.claim.rewards: true
+      magenta.voteparty: true
+  magenta.votes.*:
+    description: Permissions for managing votes
+    default: false
+    children:
+      magenta.votes.add: true
+      magenta.votes.set: true
+      magenta.votes.reset.player: true
+      magenta.votes.reset.all: true
+      magenta.votes.remove: true
+      magenta.votes.remove.all: true
+  magenta.warp.*:
+    description: Permissions for all warp commands
+    default: false
+    children:
+      magenta.warp: true
+      magenta.warp.other: true
+      magenta.setwarp: true
+      magenta.delwarp: true
+      magenta.delwarp.other: true
+      magenta.move.warp: true
+      magenta.move.warp.other: true
+      magenta.rename.warp: true
+      magenta.rename.warp.other: true
+      magenta.warp.list: true
+      magenta.warp.delay.exempt: true
+      magenta.warps.unlimited: true
+  magenta.warp.default:
+    description: Permissions for all warp commands
+    default: false
+    children:
+      magenta.warp: true
+      magenta.setwarp: true
+      magenta.delwarp: true
+      magenta.move.warp: true
+      magenta.rename.warp: true
+      magenta.warp.list: true
+  magenta.whois.*:
+    description: Permissions for whois
+    default: false
+    children:
+      magenta.whois: true
+      magenta.whois.ip: true
+  magenta.signs.*:
+    default: false
+    children:
+      magenta.sign.warp.place: true
+      magenta.sign.warp.break: true
+  magenta.exempts.*:
+    default: false
+    children:
+      magenta.afk.kick.exempt: true
+      magenta.fly.modify.exempt: true
+      magenta.gamemode.modify.exempt: true
+      magenta.home.delay.exempt: true
+      magenta.heal.delay.exempt: true
+      magenta.ignore.exempt: true
+      magenta.invsee.prevent.modify.exempt: true
+      magenta.jail.exempt: true
+      magenta.kit.delay.exempt: true
+      magenta.repair.delay.exempt: true
+      magenta.social.spy.exempt: true
+      magenta.tpa.delay.exempt: true
+      magenta.warp.delay.exempt: true
+  magenta.restriction.bypass.*:
+    default: false
+    children:
+      magenta.level.mining.bypass: true
+      magenta.portal.blacklist.bypass: true
+  magenta.chat.filter.bypass.*:
+    default: false
+    children:
+      magenta.chat.filter.bypass.websites: true
+      magenta.chat.filter.bypass.ipfilter: true
+      magenta.chat.filter.bypass.swear: true
+      magenta.chat.filter.bypass.antispam: true
+      magenta.chat.filter.bypass.capslock: true
+  magenta.silky.spawner:
+    default: false

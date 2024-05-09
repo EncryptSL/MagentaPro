@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
+import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByAdminEvent
 import com.github.encryptsl.magenta.api.events.spy.SpyToggleByPlayerEvent
 import org.bukkit.command.CommandSender

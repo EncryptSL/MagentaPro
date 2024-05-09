@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
+import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VoteHelper
 import kotlinx.datetime.Instant

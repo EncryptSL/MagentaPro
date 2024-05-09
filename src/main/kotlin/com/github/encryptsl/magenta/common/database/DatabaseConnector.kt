@@ -1,8 +1,9 @@
 package com.github.encryptsl.magenta.common.database
 
+import com.github.encryptsl.kmono.lib.api.database.DatabaseConnectorProvider
+import com.github.encryptsl.kmono.lib.api.downloader.BinaryFileDownloader
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.tables.*
-import com.github.encryptsl.magenta.common.download.BinaryFileDownloader
 import com.maxmind.geoip2.DatabaseReader
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
@@ -32,17 +33,18 @@ class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvide
         }
     }
 
-    override fun initGeoMaxMind(url: String) {
+    fun initGeoMaxMind(url: String) {
         BinaryFileDownloader(magenta).downloadFile(url,"${magenta.dataFolder}", "GeoLite2-Country.mmdb") { e ->
             magenta.logger.info("${e.name} database was found !")
         }
     }
 
-    override fun getGeoMaxMing(): DatabaseReader {
+    fun getGeoMaxMing(): DatabaseReader
+    {
         var db: DatabaseReader? = null
-         try {
+        try {
             val file = File(magenta.dataFolder.path, "GeoLite2-Country.mmdb")
-             db = DatabaseReader.Builder(file).build()
+            db = DatabaseReader.Builder(file).build()
             return db
         } catch (e : IOException) {
             db?.close()

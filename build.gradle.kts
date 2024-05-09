@@ -40,6 +40,7 @@ dependencies {
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
     compileOnly("io.th0rgal:oraxen:1.171.0")
+    compileOnly("com.github.encryptsl:KMonoLib:1.0.0")
     implementation("com.github.Euphillya:Energie:1.2.0")
     implementation("solar.squares:pixel-width-utils:1.1.0")
     implementation("dev.triumphteam:triumph-gui:3.1.7")
@@ -61,6 +62,9 @@ tasks {
     }
     processResources {
         filesMatching("plugin.yml") {
+            expand(project.properties)
+        }
+        filesMatching("paper-plugin.yml") {
             expand(project.properties)
         }
     }

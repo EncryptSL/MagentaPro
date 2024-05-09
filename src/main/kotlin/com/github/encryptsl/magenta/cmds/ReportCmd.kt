@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import club.minnced.discord.webhook.send.WebhookEmbed
+import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar

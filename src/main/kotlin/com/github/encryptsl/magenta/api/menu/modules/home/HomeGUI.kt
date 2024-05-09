@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.api.menu.modules.home
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.common.utils.ModernText
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder

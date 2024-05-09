@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.tasks
 
+import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.utils.ModernText
 import fr.euphyllia.energie.model.SchedulerCallBack
 import fr.euphyllia.energie.model.SchedulerTaskInter
 import net.kyori.adventure.audience.Audience

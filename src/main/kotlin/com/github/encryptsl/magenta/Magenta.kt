@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta
 
+import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
+import com.github.encryptsl.kmono.lib.api.config.loader.ConfigLoader
+import com.github.encryptsl.kmono.lib.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
-import com.github.encryptsl.magenta.api.config.UniversalConfig
-import com.github.encryptsl.magenta.api.config.loader.ConfigLoader
-import com.github.encryptsl.magenta.api.config.locale.Locale
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
 import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
@@ -54,6 +54,7 @@ open class Magenta : JavaPlugin() {
             private set
     }
 
+    val path = dataFolder
     var random = ThreadLocalRandom.current().nextInt(1000, 9999)
     val pluginManager = server.pluginManager
     val database: DatabaseConnector by lazy { DatabaseConnector(this) }
@@ -71,23 +72,23 @@ open class Magenta : JavaPlugin() {
     val itemFactory: ItemFactory by lazy { ItemFactory() }
 
     val locale: Locale by lazy { Locale(this) }
-    val kitConfig: UniversalConfig by lazy { UniversalConfig("kits.yml") }
-    val jailConfig: UniversalConfig by lazy { UniversalConfig("jails.yml") }
-    val mmConfig: UniversalConfig by lazy { UniversalConfig("mythicmobs/rewards.yml") }
-    val cItems: UniversalConfig by lazy { UniversalConfig("citems.yml") }
-    val randomConfig: UniversalConfig by lazy { UniversalConfig("random.yml") }
-    val shopConfig: UniversalConfig by lazy { UniversalConfig("menu/shop/shop.yml") }
-    val creditShopConfig: UniversalConfig by lazy { UniversalConfig("menu/creditshop/shop.yml") }
-    val creditShopConfirmMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/creditshop/confirm_menu.yml") }
-    val milestonesOres: UniversalConfig by lazy { UniversalConfig("menu/milestones/ores.yml") }
-    val milestonesVotePass: UniversalConfig by lazy { UniversalConfig("menu/milestones/vote_pass.yml") }
-    val homeMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/home/config.yml") }
-    val homeEditorConfig: UniversalConfig by lazy { UniversalConfig("menu/home/editor/home_editor.yml") }
-    val warpMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/warp/config.yml") }
-    val warpPlayerMenuConfig: UniversalConfig by lazy { UniversalConfig("menu/warp/owner_warps.yml") }
-    val warpEditorConfig: UniversalConfig by lazy { UniversalConfig("menu/warp/editor/warp_editor.yml") }
-    val chatControl: UniversalConfig by lazy { UniversalConfig("chatcontrol/filter.yml") }
-    val oraxenControl: UniversalConfig by lazy { UniversalConfig("oraxen/config.yml") }
+    val kitConfig: UniversalConfig by lazy { UniversalConfig("${path}/kits.yml") }
+    val jailConfig: UniversalConfig by lazy { UniversalConfig("${path}/jails.yml") }
+    val mmConfig: UniversalConfig by lazy { UniversalConfig("${path}/mythicmobs/rewards.yml") }
+    val cItems: UniversalConfig by lazy { UniversalConfig("${path}/citems.yml") }
+    val randomConfig: UniversalConfig by lazy { UniversalConfig("${path}/random.yml") }
+    val shopConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/shop/shop.yml") }
+    val creditShopConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/creditshop/shop.yml") }
+    val creditShopConfirmMenuConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/creditshop/confirm_menu.yml") }
+    val milestonesOres: UniversalConfig by lazy { UniversalConfig("${path}/menu/milestones/ores.yml") }
+    val milestonesVotePass: UniversalConfig by lazy { UniversalConfig("${path}/menu/milestones/vote_pass.yml") }
+    val homeMenuConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/home/config.yml") }
+    val homeEditorConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/home/editor/home_editor.yml") }
+    val warpMenuConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/warp/config.yml") }
+    val warpPlayerMenuConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/warp/owner_warps.yml") }
+    val warpEditorConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/warp/editor/warp_editor.yml") }
+    val chatControl: UniversalConfig by lazy { UniversalConfig("${path}/chatcontrol/filter.yml") }
+    val oraxenControl: UniversalConfig by lazy { UniversalConfig("${path}/oraxen/config.yml") }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
     val jailManager: JailManager by lazy { JailManager(this) }

@@ -22,7 +22,7 @@ class EarnBlocksProgressManager(private val magenta: Magenta) {
     fun save(uuid: UUID) {
         if (!earnBlocksProgress.containsKey(uuid)) return
         val user = magenta.user.getUser(uuid)
-        user.set("mined.blocks", getValue(uuid), true)
+        user.set("mined.blocks", getValue(uuid))
     }
 
     fun saveMinedBlocks() {
