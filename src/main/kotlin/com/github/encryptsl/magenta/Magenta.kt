@@ -14,6 +14,7 @@ import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.PlayerCacheManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
+import com.github.encryptsl.magenta.common.database.GeoMaxMindDatabase
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.VotePartyModel
@@ -101,6 +102,7 @@ open class Magenta : JavaPlugin() {
     val vaultHook by lazy { VaultHook(this) }
 
     val commandManager: CommandManager by lazy { CommandManager(this) }
+    val geoMaxMind: GeoMaxMindDatabase by lazy { GeoMaxMindDatabase(this) }
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     private val hookManger: HookManager by lazy { HookManager(this) }
     private val chatChecksManager: ChatChecksManager by lazy { ChatChecksManager(this) }
@@ -147,17 +149,17 @@ open class Magenta : JavaPlugin() {
             config.getString("database.username", "root").toString(),
             config.getString("database.password", "admin").toString()
         )
-        database.initGeoMaxMind(config.getString("maxmind-url").toString())
+        geoMaxMind.initGeoMaxMind("maxmind-url")
+        voteParty.createTable()
+        hookManger.hookPlugins()
     }
 
     override fun onEnable() {
         val time = measureTime {
             isPaperServer()
             scheduler = energie.minecraftScheduler
-            voteParty.createTable()
             commandManager.registerCommands()
             newsQueueManager.loadQueue()
-            hookManger.hookPlugins()
             registerTasks()
             chatChecksManager.initializeChecks()
             handlerListener()

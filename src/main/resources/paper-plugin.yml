@@ -8,19 +8,12 @@ prefix: MagentaPro
 author: EncryptSL
 website: https://encryptsl.github.io/
 loader: com.github.encryptsl.magenta.MagentaLoader
+has-open-classloader: false
 
-load: POSTWORLD
+load: STARTUP
 
 dependencies:
   server:
-    KLib:
-      load: AFTER
-      join-classpath: true
-      required: true
-    KMonoLib:
-      load: AFTER
-      join-classpath: true
-      required: true
     Vault:
       required: false
     Votifier:

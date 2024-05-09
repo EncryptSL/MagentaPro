@@ -68,7 +68,7 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private fun sendMessage(commandSender: CommandSender, message: String, user: UserAccountImpl) {
         val ip = user.getAccount().getString("ip-address").toString()
-        val maxmind = magenta.database.getGeoMaxMing()
+        val maxmind = magenta.geoMaxMind.getGeoMaxMing()
         val country = maxmind.country(InetAddress.getByName(ip)).country
 
         val playerIP = if (commandSender.hasPermission(Permissions.WHOIS_IP)) ip else ip.censorIpAddress()

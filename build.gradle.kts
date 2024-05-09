@@ -40,10 +40,7 @@ dependencies {
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
     compileOnly("io.th0rgal:oraxen:1.171.0")
-    compileOnly("com.github.encryptsl:KMonoLib:1.0.0")
-    implementation("com.github.Euphillya:Energie:1.2.0")
-    implementation("solar.squares:pixel-width-utils:1.1.0")
-    implementation("dev.triumphteam:triumph-gui:3.1.7")
+
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-annotations:2.0.0-SNAPSHOT") {
         exclude(group = "org.incendo", module = "cloud-core")
@@ -52,14 +49,40 @@ dependencies {
         exclude(group = "net.kyori")
         exclude(group = "org.incendo", module = "cloud-core")
     }
+    implementation("com.github.encryptsl:KMonoLib:1.0.0")
+    implementation("com.github.Euphillya:Energie:1.2.0")
+    implementation("dev.triumphteam:triumph-gui:3.1.7")
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
     testImplementation(kotlin("test"))
     testImplementation("org.bspfsystems:yamlconfiguration:2.0.1")
 }
+
+sourceSets {
+    getByName("main") {
+        java {
+            srcDir("src/main/java")
+        }
+        kotlin {
+            srcDir("src/main/kotlin")
+        }
+    }
+}
+
 tasks {
     build {
         dependsOn(shadowJar)
     }
+
+    compileJava {
+        options.encoding = "UTF-8"
+        options.release.set(21)
+        options.compilerArgs.add("-Xlint:deprecation")
+    }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "21"
+    }
+
     processResources {
         filesMatching("plugin.yml") {
             expand(project.properties)
@@ -73,14 +96,14 @@ tasks {
     }
     shadowJar {
         manifest {
-            attributes["paperweight-mappings-namespace"] = "spigot"
+            attributes["paperweight-mappings-namespace"] = "mojang"
         }
         minimize {
+            relocate("org.incendo", "magenta.cloud-core")
+            relocate("com.github.encryptsl.kmono.lib", "magenta.kmono")
             relocate("com.github.keelar", "magena.exprk")
             relocate("fr.euphyllia.energie", "magenta.energie")
-            relocate("org.incendo", "magenta.cloud-core")
             relocate("dev.triumphteam.gui", "magenta.triumphteam")
-            relocate("solar.squeres", "magenta.solar-squares")
         }
     }
 }
