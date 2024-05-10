@@ -78,17 +78,16 @@ class JailListeners(private val magenta: Magenta) : Listener {
         val jailName = event.jailName
         val location = event.location
 
-        if (magenta.jailConfig.getConfig().getConfigurationSection(jailName) != null)
+        magenta.jailConfig.getConfig().createSection("jails")
+        val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails") ?: return
+
+        if (magenta.jailConfig.getConfig().getConfigurationSection("jails.$jailName") != null)
             return player.sendMessage(magenta.locale.translation("magenta.command.jail.error.exist",
                 Placeholder.parsed("jail", jailName)
             ))
 
-
-        val jailSection = magenta.jailConfig.getConfig().getConfigurationSection("jails") ?: return
-
         jailSection.set("$jailName.location", location)
         magenta.jailConfig.save()
-        magenta.jailConfig.reload()
 
         return player.sendMessage(magenta.locale.translation("magenta.command.jail.success.created", Placeholder.parsed("jail", jailName)))
     }
@@ -120,7 +119,7 @@ class JailListeners(private val magenta: Magenta) : Listener {
 
         player?.sendMessage(magenta.locale.translation("magenta.command.jail.success.unjailed"))
 
-        player?.let { player.teleport(user.getLastLocation()) }
+        player?.let { player.teleportAsync(user.getLastLocation()) }
 
         Bukkit.broadcast(magenta.locale.translation("magenta.command.jail.success.unjailed.to",
             Placeholder.parsed("player", target.name.toString())

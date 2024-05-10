@@ -26,7 +26,7 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
     }
 
     override fun saveLastLocation(player: Player) {
-        if (isJailed() || hasPunish()) return
+        if (isJailed() && hasPunish()) return
         getAccount().set("lastlocation", player.location)
         save()
     }

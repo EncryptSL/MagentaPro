@@ -16,20 +16,28 @@ dependencies:
   server:
     Vault:
       required: false
+      join-classpath: true
     Votifier:
       required: false
+      join-classpath: true
     PlaceholderAPI:
       required: false
+      join-classpath: true
     CreditLite:
       required: false
+      join-classpath: true
     MythicMobs:
       required: false
+      join-classpath: true
     Oraxen:
       required: false
+      join-classpath: true
     MiniPlaceholders:
       required: false
+      join-classpath: true
     LuckPerms:
       required: false
+      join-classpath: true
 
 permissions:
   magenta.*:
