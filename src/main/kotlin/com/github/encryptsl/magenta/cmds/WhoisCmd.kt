@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.extensions.censorIpAddress
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.extensions.censorIpAddress
 import com.github.encryptsl.magenta.common.extensions.convertFromMillis
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver

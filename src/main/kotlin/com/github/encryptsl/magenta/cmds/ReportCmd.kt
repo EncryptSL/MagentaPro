@@ -2,10 +2,10 @@ package com.github.encryptsl.magenta.cmds
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
 import com.github.encryptsl.magenta.common.extensions.now
-import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -58,7 +58,7 @@ class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
             setTitle(WebhookEmbed.EmbedTitle("Nahlášen hráč ${target.name.toString()} (#${magenta.random})", null))
             setColor(0xde4343)
             setDescription(category.message)
-            setThumbnailUrl(target.uniqueId.toMinotarAvatar())
+            setThumbnailUrl(target.uniqueId.toMinecraftAvatar())
             addField(WebhookEmbed.EmbedField(true, "Nahlásil", player.name))
             addField(WebhookEmbed.EmbedField(true, "Důvod", category.name))
             addField(WebhookEmbed.EmbedField(false, "Zpráva", message))

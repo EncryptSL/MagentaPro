@@ -2,9 +2,9 @@ package com.github.encryptsl.magenta.cmds
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.now
-import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
@@ -34,7 +34,7 @@ class FeedbackCmd(private val magenta: Magenta) : AnnotationFeatures {
             setTitle(WebhookEmbed.EmbedTitle("Zpětná vazba (#${magenta.random})", null))
             setColor(0x437ade)
             setDescription("Zpětná vazba od hráče ${player.name}")
-            setThumbnailUrl(player.uniqueId.toMinotarAvatar())
+            setThumbnailUrl(player.uniqueId.toMinecraftAvatar())
             addField(WebhookEmbed.EmbedField(false, "Zpráva", message))
             setFooter(WebhookEmbed.EmbedFooter("Vytvořeno ${now()}", null))
         }?.let { magenta.serverFeedback.client.send(it) }

@@ -2,11 +2,11 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.config.locale.Locale
+import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
 import com.github.encryptsl.magenta.common.extensions.datetime
-import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
@@ -56,7 +56,7 @@ object VoteHelper {
                         magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
                         magenta.notification.addEmbed {
                             setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
-                            setThumbnailUrl(player.uniqueId.toMinotarAvatar())
+                            setThumbnailUrl(player.uniqueId.toMinecraftAvatar())
                             setColor(0xa730c2)
                             addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
                         }?.let { magenta.notification.client.send(it) }

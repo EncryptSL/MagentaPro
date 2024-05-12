@@ -2,9 +2,9 @@ package com.github.encryptsl.magenta.common.filter
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.now
-import com.github.encryptsl.magenta.common.extensions.toMinotarAvatar
 import com.github.encryptsl.magenta.common.filter.impl.ChatFilters
 import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -34,7 +34,7 @@ class ChatPunishManager(private val magenta: Magenta) {
             if (score == 1) {
                 magenta.serverFeedback.addEmbed {
                     setAuthor(WebhookEmbed.EmbedAuthor("Chat Filter 1.0.0 - Varování", null, null))
-                    setThumbnailUrl(player.uniqueId.toMinotarAvatar())
+                    setThumbnailUrl(player.uniqueId.toMinecraftAvatar())
                     setDescription("Se pokusil napsat něco co je zakázáno !")
                     addField(WebhookEmbed.EmbedField(true, "Detekován Hráč", player.name))
                     addField(WebhookEmbed.EmbedField(true, "Detekoval filter", filterName))

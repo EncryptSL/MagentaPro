@@ -2,7 +2,7 @@
 package com.github.encryptsl.magenta.common.utils
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.extensions.expressionCalculation
+import com.github.encryptsl.magenta.common.extensions.evaluate
 import org.bukkit.OfflinePlayer
 import org.bukkit.configuration.file.FileConfiguration
 
@@ -19,6 +19,6 @@ class StringUtils(private val magenta: Magenta) {
             .replace("{money}", magenta.vaultHook.getBalance(player).toString())
             .replace("{value}", value.toString())
 
-        return expressionCalculation(expressFormula)
+        return evaluate(expressFormula).toInt().toString()
     }
 }
