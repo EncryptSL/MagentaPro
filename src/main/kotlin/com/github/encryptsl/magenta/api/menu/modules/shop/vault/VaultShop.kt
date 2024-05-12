@@ -123,9 +123,9 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
             val isSellAllowed = shopCategory.getConfig().contains("menu.items.${item}.sell.price")
             val commands = shopCategory.getConfig().getStringList("menu.items.${item}.buy.commands")
 
-            val item = getItem(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
+            val actionItem = getItem(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
 
-            item.setAction { action ->
+            actionItem.setAction { action ->
                 // BUY BY STACK = 64
                 if (action.isShiftClick && action.isLeftClick) {
                     return@setAction buy(action, material, buyPrice, 64, itemName, isBuyAllowed, commands)
@@ -148,7 +148,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 }
                 action.isCancelled = true
             }
-            gui.addItem(item)
+            gui.addItem(actionItem)
         }
         paginationMenu.paginatedControlButtons(player, shopCategory.getConfig(), gui)
         gui.open(player)
