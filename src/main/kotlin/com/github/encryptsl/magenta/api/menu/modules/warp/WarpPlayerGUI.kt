@@ -4,7 +4,9 @@ import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
+import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.guis.GuiItem
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -24,6 +26,12 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
         )
 
         menuUI.useAllFillers(gui.filler, magenta.warpPlayerMenuConfig.getConfig())
+
+        gui.setDefaultClickAction { el ->
+            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+                paginationMenu.clickSound(el.whoClicked, magenta.warpPlayerMenuConfig.getConfig())
+            }
+        }
 
         val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId)
 
@@ -56,22 +64,23 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
                     .toMutableList()
                 itemHomeBuilder.addLore(lores)
             }
-
-            val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem { action ->
-                if (action.isLeftClick) {
-                    player.teleport(magenta.warpModel.toLocation(warp.warpName))
-                    return@asGuiItem
-                }
-
-                if (action.isRightClick) {
-                    paginationMenu.clickSound(action.whoClicked, magenta.warpEditorConfig.getConfig())
-                    playerEditorGUI.openWarpPlayerEditor(action.whoClicked, warp.warpName)
-                }
-            }
-            gui.addItem(item)
+            gui.addItem(getItem(player, itemHomeBuilder, warp))
         }
         paginationMenu.paginatedControlButtons(player, magenta.warpPlayerMenuConfig.getConfig(), gui)
 
         gui.open(player)
+    }
+
+    private fun getItem(humanEntity: HumanEntity, itemBuilder: com.github.encryptsl.magenta.api.ItemBuilder, warp: WarpEntity): GuiItem {
+        return ItemBuilder.from(itemBuilder.setGlowing(true).create()).asGuiItem { action ->
+            if (action.isLeftClick) {
+                humanEntity.teleport(magenta.warpModel.toLocation(warp.warpName))
+                return@asGuiItem
+            }
+
+            if (action.isRightClick) {
+                playerEditorGUI.openWarpPlayerEditor(action.whoClicked, warp.warpName)
+            }
+        }
     }
 }

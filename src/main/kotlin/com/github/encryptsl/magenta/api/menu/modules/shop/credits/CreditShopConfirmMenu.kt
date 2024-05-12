@@ -33,6 +33,12 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         )
         menuUI.useAllFillers(gui.filler, magenta.creditShopConfirmMenuConfig.getConfig())
 
+        gui.setDefaultClickAction { el ->
+            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+                simpleMenu.clickSound(el.whoClicked, magenta.creditShopConfirmMenuConfig.getConfig())
+            }
+        }
+
         confirmPay(player, item, category, gui, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
         cancelPay(player, category, gui, creditShop)
         close(player, gui, magenta.creditShopConfirmMenuConfig.getConfig())
@@ -74,7 +80,6 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
-                    simpleMenu.clickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
                     creditShopPaymentMethod.buyItem(action.whoClicked, config, item, displayName, isBuyAllowed)
                     creditShop.openCategory(player, category)
                     return@asGuiItem
@@ -107,7 +112,6 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
-                    simpleMenu.clickSound(action.whoClicked, magenta.creditShopConfirmMenuConfig.getConfig())
                     return@asGuiItem creditShop.openCategory(player, category)
                 }
             }
@@ -117,7 +121,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
     private fun close(player: HumanEntity, gui: Gui, fileConfiguration: FileConfiguration) {
         for (material in Material.entries) {
-            simpleMenu.closeButton(player, material, gui, fileConfiguration, null)
+            simpleMenu.closeMenuOrBack(player, material, gui, fileConfiguration, null)
         }
     }
 

@@ -8,7 +8,7 @@ menu:
     button:
       close:
         item: BARRIER
-        action: back
+        action: BACK
         name: <green>Zpět do menu
         positions:
           row: 6

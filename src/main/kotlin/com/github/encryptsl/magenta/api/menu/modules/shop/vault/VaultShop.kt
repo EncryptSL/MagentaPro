@@ -11,10 +11,12 @@ import com.github.encryptsl.magenta.common.Permissions
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.Gui
+import dev.triumphteam.gui.guis.GuiItem
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
+import org.bukkit.event.inventory.InventoryClickEvent
 
 class VaultShop(private val magenta: Magenta) : MenuExtender {
 
@@ -28,6 +30,12 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
             magenta.shopConfig.getConfig().getInt("menu.gui.size", 6), GuiType.CHEST)
 
         menuUI.useAllFillers(gui.filler, magenta.shopConfig.getConfig())
+
+        gui.setDefaultClickAction { el ->
+            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+                paginationMenu.clickSound(el.whoClicked, magenta.shopConfig.getConfig())
+            }
+        }
 
         val menuCategories = magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false) ?: return
 
@@ -56,7 +64,6 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
                 magenta.itemFactory.shopItem(material, name)
             ).asGuiItem { action ->
                 if (action.isRightClick || action.isLeftClick) {
-                    simpleMenu.clickSound(action.whoClicked, magenta.shopConfig.getConfig())
                     return@asGuiItem openCategory(action.whoClicked, category)
                 }
                 action.isCancelled = true
@@ -95,6 +102,12 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
         menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
+        gui.setDefaultClickAction { el ->
+            if (el.currentItem != null && el.isLeftClick || el.isRightClick || el.isShiftClick) {
+                paginationMenu.clickSound(el.whoClicked, shopCategory.getConfig())
+            }
+        }
+
         val menuItems = shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
 
         for (item in menuItems) {
@@ -110,69 +123,86 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
             val isSellAllowed = shopCategory.getConfig().contains("menu.items.${item}.sell.price")
             val commands = shopCategory.getConfig().getStringList("menu.items.${item}.buy.commands")
 
-            val guiItem = ItemBuilder.from(
-                magenta.itemFactory.shopItem(
-                    itemName,
-                    material,
-                    buyPrice,
-                    sellPrice,
-                    isBuyAllowed,
-                    isSellAllowed,
-                    magenta.shopConfig.getConfig()
-                )
-            ).asGuiItem()
+            val item = getItem(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
 
-            guiItem.setAction { action ->
+            item.setAction { action ->
                 // BUY BY STACK = 64
                 if (action.isShiftClick && action.isLeftClick) {
-                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
-                    return@setAction vaultShopPaymentMethods.buy(
-                        EconomyPaymentHolder(
-                            magenta.itemFactory.shopItem(material, 64, itemName),
-                            ShopHelper.calcPrice(64, buyPrice),
-                            isBuyAllowed
-                        ), null, action)
+                    return@setAction buy(action, material, buyPrice, 64, itemName, isBuyAllowed, commands)
                 }
 
                 // BUY BY ONE ITEM = 1
                 if (action.isLeftClick) {
-                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
-                    return@setAction vaultShopPaymentMethods.buy(
-                        EconomyPaymentHolder(
-                            magenta.itemFactory.shopItem(material, itemName),
-                            ShopHelper.calcPrice(1, buyPrice), isBuyAllowed
-                        ), commands, action)
+                    return@setAction buy(action, material, buyPrice, 1, itemName, isBuyAllowed, commands)
                 }
 
                 // SELL BY STACK = 64
                 if (action.isShiftClick && action.isRightClick) {
-                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
-                    for (i in 0..35) {
-                        if (player.inventory.getItem(i)?.type == material) {
-                            val itemStack = player.inventory.getItem(i)
-                            return@setAction vaultShopPaymentMethods.sell(
-                                EconomyPaymentHolder(
-                                    itemStack!!,
-                                    ShopHelper.calcPrice(itemStack.amount, sellPrice), isSellAllowed
-                                ), action)
-                        }
-                    }
-                    return@setAction
+                    val item = player.inventory.storageContents.filter { el -> el?.type == material }.first()
+                    item?.let { return@setAction sell(action, material, sellPrice, it.amount, itemName, isSellAllowed) }
                 }
 
                 // SELL BY ONE ITEM = 1
                 if (action.isRightClick) {
-                    paginationMenu.clickSound(action.whoClicked, shopCategory.getConfig())
-                    return@setAction vaultShopPaymentMethods.sell(
-                        EconomyPaymentHolder(magenta.itemFactory.shopItem(material, 1, itemName),
-                            ShopHelper.calcPrice(1, sellPrice), isSellAllowed)
-                        , action)
+                    return@setAction sell(action, material, sellPrice, 1, itemName, isSellAllowed)
                 }
                 action.isCancelled = true
             }
-            gui.addItem(guiItem)
+            gui.addItem(item)
         }
         paginationMenu.paginatedControlButtons(player, shopCategory.getConfig(), gui)
         gui.open(player)
+    }
+
+    private fun buy(
+        action: InventoryClickEvent,
+        material: Material,
+        buyPrice: Double,
+        counts: Int,
+        itemName: String,
+        isBuyAllowed: Boolean,
+        commands: MutableList<String>?
+    ) {
+        vaultShopPaymentMethods.buy(
+            EconomyPaymentHolder(
+                magenta.itemFactory.shopItem(material, counts, itemName),
+                ShopHelper.calcPrice(counts, buyPrice),
+                isBuyAllowed
+            ), commands, action)
+    }
+
+    private fun sell(
+        action: InventoryClickEvent,
+        material: Material,
+        sellPrice: Double,
+        counts: Int,
+        itemName: String,
+        isSellAllowed: Boolean
+    ) {
+        vaultShopPaymentMethods.sell(
+            EconomyPaymentHolder(magenta.itemFactory.shopItem(material, counts, itemName),
+                ShopHelper.calcPrice(counts, sellPrice), isSellAllowed)
+            , action)
+    }
+
+    private fun getItem(
+        itemName: String,
+        material: Material,
+        buyPrice: Double,
+        sellPrice: Double,
+        isBuyAllowed: Boolean,
+        isSellAllowed: Boolean
+    ): GuiItem {
+        return ItemBuilder.from(
+            magenta.itemFactory.shopItem(
+                itemName,
+                material,
+                buyPrice,
+                sellPrice,
+                isBuyAllowed,
+                isSellAllowed,
+                magenta.shopConfig.getConfig()
+            )
+        ).asGuiItem()
     }
 }

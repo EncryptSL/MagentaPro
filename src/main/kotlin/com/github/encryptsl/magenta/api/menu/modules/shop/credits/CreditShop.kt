@@ -30,6 +30,12 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
             GuiType.CHEST
         )
 
+        gui.setDefaultClickAction { el ->
+            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+                paginationMenu.clickSound(el.whoClicked, magenta.creditShopConfig.getConfig())
+            }
+        }
+
         menuUI.useAllFillers(gui.filler, magenta.creditShopConfig.getConfig())
 
         for (category in magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
@@ -60,7 +66,6 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
             item.setAction { action ->
                 if (action.isRightClick || action.isLeftClick) {
-                    simpleMenu.clickSound(action.whoClicked, magenta.creditShopConfig.getConfig())
                     return@setAction openCategory(action.whoClicked, category)
                 }
                 action.isCancelled = true
@@ -93,12 +98,17 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
 
         menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
+        gui.setDefaultClickAction { el ->
+            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+                paginationMenu.clickSound(el.whoClicked, shopCategory.getConfig())
+            }
+        }
+
         if (shopCategory.getConfig().contains("menu.custom-items")) {
             menuUI.customItems(player, categoryName, shopCategory.getConfig(), gui)
         }
 
         if (!shopCategory.getConfig().contains("menu.items")) return
-
 
         for (item in shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false)!!) {
             if (!shopCategory.getConfig().contains("menu.items.$item")) continue
@@ -154,10 +164,8 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
             guiItem.setAction { action ->
                 if (action.isLeftClick) {
                     if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required")) {
-                        simpleMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                         return@setAction creditShopPaymentMethod.buyItem(action.whoClicked, shopCategory.getConfig(), item, guiItem.itemStack.displayName(), isBuyAllowed)
                     }
-                    simpleMenu.clickSound(action.whoClicked, shopCategory.getConfig())
                     return@setAction confirmMenu.openConfirmMenu(
                         player = action.whoClicked,
                         item = item,

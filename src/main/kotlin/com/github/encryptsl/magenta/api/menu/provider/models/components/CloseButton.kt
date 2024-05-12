@@ -13,38 +13,47 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.HumanEntity
 
 open class CloseButton(private val magenta: Magenta) : MenuCloseButton, MenuButton {
-    override fun closeButton(
+
+    enum class BUTTON_ACTION { CLOSE, BACK }
+
+    override fun closeMenu(gui: BaseGui, player: HumanEntity) {
+        gui.close(player)
+    }
+
+    override fun closeMenuOrBack(
         player: HumanEntity,
         material: Material,
         gui: BaseGui,
         fileConfiguration: FileConfiguration,
         menuExtender: MenuExtender?,
     ) {
-        if (fileConfiguration.contains("menu.gui.button.close")) {
-            if (!fileConfiguration.contains("menu.gui.button.close.positions"))
-                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
 
-            if (!fileConfiguration.contains("menu.gui.button.close.positions.row"))
-                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.row", Placeholder.parsed("file", fileConfiguration.name)))
+        if (!fileConfiguration.contains("menu.gui.button.close")) return
 
-            if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
-                return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.col", Placeholder.parsed("file", fileConfiguration.name)))
+        if (!fileConfiguration.contains("menu.gui.button.close.positions"))
+            return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions", Placeholder.parsed("file", fileConfiguration.name)))
 
-            if (fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) {
-                gui.setItem(fileConfiguration.getInt("menu.gui.button.close.positions.row"),
-                    fileConfiguration.getInt("menu.gui.button.close.positions.col"),
-                    ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
-                        .asGuiItem {
-                            if (fileConfiguration.getString("menu.gui.button.close.action")?.contains("back") == true) {
-                                menuExtender?.openMenu(player)
-                            } else {
-                                gui.close(player)
-                            }
-                            clickSound(it.whoClicked, fileConfiguration)
-                        }
-                )
+        if (!fileConfiguration.contains("menu.gui.button.close.positions.row"))
+            return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.row", Placeholder.parsed("file", fileConfiguration.name)))
+
+        if (!fileConfiguration.contains("menu.gui.button.close.positions.col"))
+            return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions.col", Placeholder.parsed("file", fileConfiguration.name)))
+
+        if (!fileConfiguration.getString("menu.gui.button.close.item").equals(material.name, true)) return
+
+        val row = fileConfiguration.getInt("menu.gui.button.close.positions.row")
+        val col = fileConfiguration.getInt("menu.gui.button.close.positions.col")
+
+        val item = ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString())).asGuiItem()
+
+        item.setAction {
+            val action = BUTTON_ACTION.valueOf(fileConfiguration.getString("menu.gui.button.close.action") ?: BUTTON_ACTION.BACK.name)
+            when(action) {
+                BUTTON_ACTION.CLOSE ->  { closeMenu(gui, player) }
+                BUTTON_ACTION.BACK -> { menuExtender?.openMenu(player) }
             }
         }
+        gui.setItem(row, col, item)
     }
 
     override fun clickSound(humanEntity: HumanEntity, fileConfiguration: FileConfiguration) {

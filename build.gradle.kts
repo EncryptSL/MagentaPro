@@ -16,6 +16,7 @@ repositories {
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.oraxen.com/releases")
+    maven("https://repo.triumphteam.dev/snapshots/")
 }
 
 kotlin {
@@ -51,7 +52,9 @@ dependencies {
     }
     implementation("com.github.encryptsl:KMonoLib:1.0.0")
     implementation("com.github.Euphillya:Energie:1.2.0")
-    implementation("dev.triumphteam:triumph-gui:3.1.7")
+    implementation("dev.triumphteam:triumph-gui:3.1.8-SNAPSHOT") {
+        exclude("net.kyori")
+    }
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
     testImplementation(kotlin("test"))
     testImplementation("org.bspfsystems:yamlconfiguration:2.0.1")

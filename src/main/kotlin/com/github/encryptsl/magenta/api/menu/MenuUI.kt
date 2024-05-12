@@ -20,7 +20,7 @@ class MenuUI(private val magenta: Magenta) {
         fun paginatedControlButtons(player: HumanEntity, fileConfiguration: FileConfiguration, gui: PaginatedGui) {
             for (material in Material.entries) {
                 previousPage(player, material, fileConfiguration, "previous", gui)
-                closeButton(player, material, gui, fileConfiguration, menuExtender)
+                closeMenuOrBack(player, material, gui, fileConfiguration, menuExtender)
                 previousPage(player, material, fileConfiguration, "next", gui)
             }
         }

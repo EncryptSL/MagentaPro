@@ -5,6 +5,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.guis.GuiItem
 import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -26,6 +27,12 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
         menuUI.useAllFillers(gui.filler, magenta.warpMenuConfig.getConfig())
 
         val warps = magenta.warpModel.getWarps()
+
+        gui.setDefaultClickAction { el ->
+            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+                paginationMenu.clickSound(el.whoClicked, magenta.warpMenuConfig.getConfig())
+            }
+        }
 
         for (warp in warps) {
             val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
@@ -92,18 +99,31 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
 
                 itemStack.addLore(lores)
 
-                val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
-                    if (action.isLeftClick) {
-                        paginationMenu.clickSound(action.whoClicked, config)
-                        openOwnerWarps(player, config, el)
-                    }
-                }
-                gui.setItem(config.getInt("menu.items.buttons.$el.positions.row"), config.getInt("menu.items.buttons.$el.positions.col"), actionItems)
+                val actionItem = getItem(player, itemStack, config, el)
+
+                gui.setItem(config.getInt("menu.items.buttons.$el.positions.row"), config.getInt("menu.items.buttons.$el.positions.col"), actionItem)
             }
         }
     }
 
-    private fun openOwnerWarps(player: HumanEntity, fileConfiguration: FileConfiguration, el: String) {
+    private fun getItem(
+        humanEntity:
+        HumanEntity,itemBuilder: com.github.encryptsl.magenta.api.ItemBuilder,
+        config: FileConfiguration,
+        el: String
+    ): GuiItem {
+        return ItemBuilder.from(itemBuilder.create()).asGuiItem { action ->
+            if (action.isLeftClick) {
+                openOwnerWarps(humanEntity, config, el)
+            }
+        }
+    }
+
+    private fun openOwnerWarps(
+        player: HumanEntity,
+        fileConfiguration: FileConfiguration,
+        el: String
+    ) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("OPEN_MENU", true)) {
             warpPlayerGUI.openMenu(player)
         }
