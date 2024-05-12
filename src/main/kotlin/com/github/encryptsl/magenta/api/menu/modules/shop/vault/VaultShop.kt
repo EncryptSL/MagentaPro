@@ -138,8 +138,8 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
 
                 // SELL BY STACK = 64
                 if (action.isShiftClick && action.isRightClick) {
-                    val item = player.inventory.storageContents.filter { el -> el?.type == material }.first()
-                    item?.let { return@setAction sell(action, material, sellPrice, it.amount, itemName, isSellAllowed) }
+                    val itemFromInv = player.inventory.storageContents.filter { el -> el?.type == material }.first()
+                    itemFromInv?.let { return@setAction sell(action, material, sellPrice, it.amount, itemName, isSellAllowed) }
                 }
 
                 // SELL BY ONE ITEM = 1
