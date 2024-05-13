@@ -42,10 +42,7 @@ class CommandManager(private val magenta: Magenta) {
 
 
     private fun createAnnotationParser(commandManager: PaperCommandManager<CommandSender>): AnnotationParser<CommandSender> {
-        return AnnotationParser(
-            commandManager,
-            CommandSender::class.java,
-        )
+        return AnnotationParser<CommandSender>(commandManager, CommandSender::class.java)
     }
 
     private fun helpManager(commandManager: PaperCommandManager<CommandSender>) {

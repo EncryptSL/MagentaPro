@@ -28,11 +28,11 @@ class VirtualLevelAPI(private val magenta: Magenta) : LevelAPI {
     }
 
     override fun hasAccount(uuid: UUID): Boolean {
-        return magenta.levelModel.hasAccount(uuid)
+        return magenta.levelModel.hasAccount(uuid).join()
     }
 
     override fun getLevel(uuid: UUID): LevelEntity {
-        return magenta.levelModel.getLevel(uuid)
+        return magenta.levelModel.getLevel(uuid).join()
     }
 
     override fun getLevels(top: Int): Map<String, Int> {

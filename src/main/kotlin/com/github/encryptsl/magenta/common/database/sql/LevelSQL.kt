@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.common.database.sql
 
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 interface LevelSQL {
 
@@ -12,9 +13,9 @@ interface LevelSQL {
     fun addExperience(uuid: UUID, experience: Int)
     fun setExperience(uuid: UUID, experience: Int)
 
-    fun hasAccount(uuid: UUID): Boolean
+    fun hasAccount(uuid: UUID): CompletableFuture<Boolean>
 
-    fun getLevel(uuid: UUID): LevelEntity?
+    fun getLevel(uuid: UUID): CompletableFuture<LevelEntity?>
 
     fun getLevels(top: Int): MutableMap<String, Int>
     fun getLevels(): MutableMap<String, Int>

@@ -15,6 +15,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.minus
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 class VoteModel : VoteSQL {
     override fun createAccount(voteImpl: VoteEntity) {
@@ -31,16 +32,28 @@ class VoteModel : VoteSQL {
         }
     }
 
-    override fun hasAccount(uuid: UUID): Boolean = transaction {
-        !VoteTable.select(VoteTable.uuid)
-            .where(VoteTable.uuid eq uuid.toString())
-            .empty()
+    override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
+        transaction {
+            future.completeAsync {
+                !VoteTable.select(VoteTable.uuid)
+                    .where(VoteTable.uuid eq uuid.toString())
+                    .empty()
+            }
+        }
+        return future
     }
 
-    override fun hasAccount(uuid: UUID, serviceName: String): Boolean = transaction {
-        !VoteTable.select(VoteTable.uuid, VoteTable.serviceName)
-            .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
-            .empty()
+    override fun hasAccount(uuid: UUID, serviceName: String): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
+        transaction {
+            future.completeAsync {
+                !VoteTable.select(VoteTable.uuid, VoteTable.serviceName)
+                    .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
+                    .empty()
+            }
+        }
+        return future
     }
 
 
@@ -75,19 +88,32 @@ class VoteModel : VoteSQL {
         }
     }
 
-    override fun getPlayerVote(uuid: UUID): Int = transaction {
-        val user = VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString())
+    override fun getPlayerVote(uuid: UUID): CompletableFuture<Int> {
+        val future = CompletableFuture<Int>()
 
-        return@transaction  user.groupBy(vote).sumOf { row -> row[vote] }
+        transaction {
+            val user = VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString())
+
+            future.complete(user.groupBy(vote).sumOf { row -> row[vote] })
+        }
+        return future
     }
 
-    override fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity? = transaction {
-        val user = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
-            .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
-            .firstOrNull()
+    override fun getPlayerVote(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity?> {
+        val future = CompletableFuture<VoteEntity?>()
 
-        return@transaction user?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[last_vote]) }
+        transaction {
+            val user = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
+                .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
+                .firstOrNull()
+            future.completeAsync{
+                user?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[last_vote]) }
+            }
+        }
+
+        return future
     }
+
 
     override fun removeAccount(uuid: UUID) {
         Magenta.scheduler.runTask(SchedulerType.ASYNC) {
@@ -120,13 +146,19 @@ class VoteModel : VoteSQL {
             transaction { VoteTable.deleteAll() }
         }
     }
-    override fun totalVotes(): Int = transaction {
-        VoteTable.selectAll().sumOf { row -> row[vote] }
+    override fun totalVotes(): CompletableFuture<Int> {
+        val future = CompletableFuture<Int>()
+        transaction {
+            future.completeAsync {
+                VoteTable.selectAll().sumOf { row -> row[vote] }
+            }
+        }
+        return future
     }
 
     override fun topVotes(): MutableMap<String, Int> = transaction {
         VoteTable.selectAll().orderBy(vote, SortOrder.DESC).associate {
-            it[VoteTable.username] to getPlayerVote(UUID.fromString(it[uuid]))
+            it[VoteTable.username] to getPlayerVote(UUID.fromString(it[uuid])).join()
         }.toMutableMap()
     }
 }

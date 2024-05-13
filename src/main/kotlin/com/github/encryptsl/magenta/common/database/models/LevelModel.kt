@@ -13,6 +13,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 class LevelModel : LevelSQL {
     override fun createAccount(levelEntity: LevelEntity) {
@@ -25,45 +26,65 @@ class LevelModel : LevelSQL {
             } }
         }
     }
-    override fun hasAccount(uuid: UUID): Boolean = transaction {
-        !LevelTable.select(LevelTable.uuid).where(LevelTable.uuid eq uuid.toString()).empty()
+    override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
+        transaction {
+            future.completeAsync {
+                !LevelTable.select(LevelTable.uuid).where(LevelTable.uuid eq uuid.toString()).empty()
+            }
+        }
+        return future
     }
 
     override fun addLevel(uuid: UUID, level: Int) {
-        transaction {
-            LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
-                it[LevelTable.level] = LevelTable.level plus level
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+            transaction {
+                LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
+                    it[LevelTable.level] = LevelTable.level plus level
+                }
             }
         }
     }
 
     override fun addExperience(uuid: UUID, experience: Int) {
-        transaction {
-            LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
-                it[LevelTable.experience] = LevelTable.experience plus experience
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+            transaction {
+                LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
+                    it[LevelTable.experience] = LevelTable.experience plus experience
+                }
             }
         }
     }
 
     override fun setLevel(uuid: UUID, level: Int) {
-        transaction {
-            LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
-                it[LevelTable.level] = level
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+            transaction {
+                LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
+                    it[LevelTable.level] = level
+                }
             }
         }
     }
 
     override fun setExperience(uuid: UUID, experience: Int) {
-        transaction {
-            LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
-                it[LevelTable.experience] = experience
+        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+            transaction {
+                LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
+                    it[LevelTable.experience] = experience
+                }
             }
         }
     }
 
-    override fun getLevel(uuid: UUID): LevelEntity = transaction {
-        val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).first()
-        LevelEntity(user[LevelTable.username], user[LevelTable.uuid], user[LevelTable.level], user[LevelTable.experience])
+    override fun getLevel(uuid: UUID): CompletableFuture<LevelEntity?> {
+        val future = CompletableFuture<LevelEntity?>()
+       transaction {
+            val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).first()
+            future.completeAsync {
+                LevelEntity(user[LevelTable.username], user[LevelTable.uuid], user[LevelTable.level], user[LevelTable.experience])
+            }
+        }
+        return future
     }
 
     override fun getLevels(top: Int): MutableMap<String, Int> = transaction {

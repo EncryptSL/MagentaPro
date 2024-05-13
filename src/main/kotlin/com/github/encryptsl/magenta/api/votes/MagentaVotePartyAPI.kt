@@ -5,12 +5,12 @@ import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 
 class MagentaVotePartyAPI(private val votePartyModel: VotePartyModel) : VotePartyAPI {
     override fun createTable() {
-        if (votePartyModel.getExistTable()) return
+        if (getExistTable()) return
 
         votePartyModel.createTable()
     }
     override fun getExistTable(): Boolean {
-        return votePartyModel.getExistTable()
+        return votePartyModel.getExistTable().join()
     }
     override fun updateParty() {
         votePartyModel.updateParty()
@@ -23,6 +23,6 @@ class MagentaVotePartyAPI(private val votePartyModel: VotePartyModel) : VotePart
         votePartyModel.resetParty()
     }
     override fun getVoteParty(): VotePartyEntity {
-        return votePartyModel.getVoteParty()
+        return votePartyModel.getVoteParty().join()
     }
 }

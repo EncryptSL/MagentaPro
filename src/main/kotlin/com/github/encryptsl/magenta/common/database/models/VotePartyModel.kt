@@ -12,6 +12,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import java.util.concurrent.CompletableFuture
 
 class VotePartyModel : VotePartySQL {
 
@@ -53,13 +54,25 @@ class VotePartyModel : VotePartySQL {
         }
     }
 
-    override fun getExistTable(): Boolean {
-        return transaction { VotePartyTable.exists() }
+    override fun getExistTable(): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
+        transaction {
+            future.completeAsync {
+                VotePartyTable.exists()
+            }
+        }
+        return future
     }
 
-    override fun getVoteParty(): VotePartyEntity {
+    override fun getVoteParty(): CompletableFuture<VotePartyEntity> {
+        val future = CompletableFuture<VotePartyEntity>()
+
         val party = transaction { VotePartyTable.selectAll().first() }
 
-        return VotePartyEntity(party[VotePartyTable.currentVotes], party[VotePartyTable.lastVoteParty]?.toEpochMilliseconds() ?: 0L, party[VotePartyTable.lastWinnerOfParty] ?: "NEVER")
+        future.completeAsync {
+            return@completeAsync VotePartyEntity(party[VotePartyTable.currentVotes], party[VotePartyTable.lastVoteParty]?.toEpochMilliseconds() ?: 0L, party[VotePartyTable.lastWinnerOfParty] ?: "NEVER")
+        }
+
+        return future
     }
 }

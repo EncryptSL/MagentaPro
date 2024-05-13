@@ -1,12 +1,13 @@
 package com.github.encryptsl.magenta.common.database.sql
 
 import com.github.encryptsl.magenta.common.database.entity.VotePartyEntity
+import java.util.concurrent.CompletableFuture
 
 interface VotePartySQL {
     fun createTable()
     fun updateParty()
     fun partyFinished(winner: String)
     fun resetParty()
-    fun getExistTable(): Boolean
-    fun getVoteParty(): VotePartyEntity
+    fun getExistTable(): CompletableFuture<Boolean>
+    fun getVoteParty(): CompletableFuture<VotePartyEntity>
 }

@@ -25,17 +25,17 @@ class MagentaVoteAPI() : VoteAPI {
         voteModel.removeVote(uuid, serviceName, amount)
     }
     override fun hasAccount(uuid: UUID): Boolean {
-        return voteModel.hasAccount(uuid)
+        return voteModel.hasAccount(uuid).join()
     }
     override fun hasAccount(uuid: UUID, serviceName: String): Boolean {
-        return voteModel.hasAccount(uuid, serviceName)
+        return voteModel.hasAccount(uuid, serviceName).join()
     }
     override fun getPlayerVote(uuid: UUID): Int {
-        return voteModel.getPlayerVote(uuid)
+        return voteModel.getPlayerVote(uuid).join()
     }
 
     override fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity? {
-        return voteModel.getPlayerVote(uuid, serviceName)
+        return voteModel.getPlayerVote(uuid, serviceName).join()
     }
 
     override fun removeAccount(uuid: UUID) {
@@ -55,7 +55,7 @@ class MagentaVoteAPI() : VoteAPI {
     }
 
     override fun totalVotes(): Int {
-        return voteModel.totalVotes()
+        return voteModel.totalVotes().join()
     }
 
     override fun votesLeaderBoard(): MutableMap<String, Int> {
