@@ -76,8 +76,8 @@ class LevelModel : LevelSQL {
         }
     }
 
-    override fun getLevel(uuid: UUID): CompletableFuture<LevelEntity?> {
-        val future = CompletableFuture<LevelEntity?>()
+    override fun getLevel(uuid: UUID): CompletableFuture<LevelEntity> {
+        val future = CompletableFuture<LevelEntity>()
        transaction {
             val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).first()
             future.completeAsync {
