@@ -30,7 +30,7 @@ class OresMilestonesGUI(private val magenta: Magenta) : MenuExtender {
                 ModernText.miniModernText(magenta.milestonesOres.getConfig().getString("menu.gui.item.display")
                     ?: player.name, Placeholder.parsed("item", material.name)))
             val requiredLevel = magenta.config.getInt("level.ores.${material.name}")
-            if (magenta.levelModel.getLevel(player.uniqueId).level < magenta.config.getInt("level.ores.${material.name}")) {
+            if (magenta.virtualLevel.getLevel(player.uniqueId).level < magenta.config.getInt("level.ores.${material.name}")) {
                 val lores = magenta.milestonesOres
                     .getConfig()
                     .getStringList("menu.item.locked-lore")

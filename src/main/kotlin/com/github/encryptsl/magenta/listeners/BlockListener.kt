@@ -109,7 +109,7 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
 
         if (player.gameMode == GameMode.CREATIVE) return
         if (player.hasPermission(Permissions.LEVEL_MINE_BYPASS)) return
-        val (_, _, level, _) = magenta.levelModel.getLevel(uuid)
+        val (_, _, level, _) = magenta.virtualLevel.getLevel(uuid)
         if (!magenta.config.contains("level.ores.${block.type.name}")) return
 
         if (!magenta.stringUtils.inInList("level.worlds", player.world.name)) return

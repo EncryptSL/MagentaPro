@@ -12,9 +12,11 @@ class StringUtils(private val magenta: Magenta) {
         = magenta.config.getStringList(key).contains(value)
 
     fun arithmeticExpression(player: OfflinePlayer, config: FileConfiguration, path: String, value: Int = 0): String {
+        val getLevel = magenta.virtualLevel.getLevel(player.uniqueId)
+
         val expressFormula = config.getString(path).toString()
-            .replace("{level}", magenta.levelModel.getLevel(player.uniqueId).level.toString())
-            .replace("{exp}", magenta.levelModel.getLevel(player.uniqueId).experience.toString())
+            .replace("{level}", getLevel.level.toString())
+            .replace("{exp}", getLevel.experience.toString())
             .replace("{votes}", magenta.vote.getPlayerVote(player.uniqueId).toString())
             .replace("{money}", magenta.vaultHook.getBalance(player).toString())
             .replace("{value}", value.toString())
