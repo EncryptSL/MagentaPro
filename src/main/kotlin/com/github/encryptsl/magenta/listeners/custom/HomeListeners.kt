@@ -6,7 +6,7 @@ import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.home.*
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.database.tables.HomeTable
+import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Location
@@ -31,10 +31,10 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
-        if (magenta.homeModel.getHomeExist(player.uniqueId, homeName))
+        if (magenta.homeModel.getHomeExist(player.uniqueId, homeName).join())
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.exist", Placeholder.parsed("home", homeName)))
 
-        if (!magenta.homeModel.canSetHome(player))
+        if (!magenta.homeModel.canSetHome(player).join())
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.limit"))
 
         magenta.homeModel.createHome(player, location, homeName)
@@ -53,7 +53,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                 TagResolver.resolver(Placeholder.parsed("world", player.location.world.name))))
 
-        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName).join())
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
 
         magenta.homeModel.deleteHome(player.uniqueId, homeName)
@@ -67,7 +67,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
 
         when(infoType) {
             InfoType.LIST -> {
-                val list = magenta.homeModel.getHomesByOwner(player.uniqueId).joinToString { s ->
+                val list = magenta.homeModel.getHomesByOwner(player.uniqueId).join().joinToString { s ->
                     magenta.locale.getMessage("magenta.command.home.success.list.component")
                         .replace("<home>", s.homeName)
                         .replace("info", magenta.config.getString("home-info-format").toString()
@@ -84,19 +84,23 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             }
             InfoType.INFO -> {
                 val homeName = event.homeName ?: return
-                if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
+                if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName).join())
                     return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist",
                         Placeholder.parsed("home", homeName))
                     )
 
-                player.sendMessage(ModernText.miniModernText(magenta.config.getStringList("home-info-format").toString(), TagResolver.resolver(
-                    Placeholder.parsed("home", magenta.homeModel.getHome(homeName, HomeTable.home)),
-                    Placeholder.parsed("owner", magenta.homeModel.getHome(homeName, HomeTable.username)),
-                    Placeholder.parsed("world", magenta.homeModel.getHome(homeName, HomeTable.world)),
-                    Placeholder.parsed("x", magenta.homeModel.getHome(homeName, HomeTable.x).toString()),
-                    Placeholder.parsed("y", magenta.homeModel.getHome(homeName, HomeTable.y).toString()),
-                    Placeholder.parsed("z", magenta.homeModel.getHome(homeName, HomeTable.z).toString()),
-                )))
+                magenta.homeModel.getHome(homeName).thenAccept { home ->
+                    Magenta.scheduler.runTask(SchedulerType.SYNC) {
+                        player.sendMessage(ModernText.miniModernText(magenta.config.getStringList("home-info-format").toString(), TagResolver.resolver(
+                            Placeholder.parsed("home", home.homeName),
+                            Placeholder.parsed("owner", home.owner),
+                            Placeholder.parsed("world", home.world),
+                            Placeholder.parsed("x", home.x.toString()),
+                            Placeholder.parsed("y", home.y.toString()),
+                            Placeholder.parsed("z", home.z.toString()),
+                        )))
+                    }
+                }
             }
         }
     }
@@ -114,7 +118,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                 TagResolver.resolver(Placeholder.parsed("world", player.location.world.name))))
 
-        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName).join())
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
 
         magenta.homeModel.moveHome(player.uniqueId, homeName, location)
@@ -140,7 +144,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                 TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
-        if (!magenta.homeModel.getHomeExist(player.uniqueId, oldHomeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, oldHomeName).join())
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist",
                 Placeholder.parsed("home", oldHomeName)))
 
@@ -166,7 +170,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                 TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
-        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName))
+        if (!magenta.homeModel.getHomeExist(player.uniqueId, homeName).join())
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist",
                 Placeholder.parsed("home", homeName)))
 

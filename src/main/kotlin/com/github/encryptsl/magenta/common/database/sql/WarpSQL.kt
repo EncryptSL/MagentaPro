@@ -4,6 +4,7 @@ import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 interface WarpSQL {
     fun creteWarp(player: Player, location: Location, warpName: String)
@@ -15,10 +16,10 @@ interface WarpSQL {
     fun renameWarp(oldWarpName: String, newWarpName: String)
     fun renameWarp(uuid: UUID, oldWarpName: String, newWarpName: String)
     fun setWarpIcon(uuid: UUID, warpName: String, icon: String)
-    fun getWarpExist(warpName: String): Boolean
-    fun canSetWarp(player: Player): Boolean
-    fun getWarp(warpName: String): WarpEntity
+    fun getWarpExist(warpName: String): CompletableFuture<Boolean>
+    fun canSetWarp(player: Player): CompletableFuture<Boolean>
+    fun getWarp(warpName: String): CompletableFuture<WarpEntity>
     fun toLocation(warpName: String): Location
-    fun getWarpsByOwner(uuid: UUID): List<WarpEntity>
-    fun getWarps(): List<WarpEntity>
+    fun getWarpsByOwner(uuid: UUID): CompletableFuture<List<WarpEntity>>
+    fun getWarps(): CompletableFuture<List<WarpEntity>>
 }

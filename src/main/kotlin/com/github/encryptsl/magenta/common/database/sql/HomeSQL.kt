@@ -3,8 +3,8 @@ package com.github.encryptsl.magenta.common.database.sql
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.jetbrains.exposed.sql.Expression
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 interface HomeSQL {
 
@@ -13,16 +13,16 @@ interface HomeSQL {
     fun moveHome(uuid: UUID, home: String, location: Location)
     fun renameHome(uuid: UUID, oldHomeName: String, newHomeName: String)
     fun setHomeIcon(uuid: UUID, home: String, icon: String)
-    fun getHomeExist(uuid: UUID, home: String): Boolean
+    fun getHomeExist(uuid: UUID, home: String): CompletableFuture<Boolean>
 
-    fun canSetHome(player: Player): Boolean
+    fun canSetHome(player: Player): CompletableFuture<Boolean>
 
-    fun <T> getHome(home: String, columnName: Expression<T>): T
+    fun getHome(home: String): CompletableFuture<HomeEntity>
 
-    fun getHomesByOwner(uuid: UUID): List<HomeEntity>
+    fun getHomesByOwner(uuid: UUID): CompletableFuture<List<HomeEntity>>
 
     fun toLocation(player: Player, home: String): Location
 
-    fun getHomes(): List<HomeEntity>
+    fun getHomes():  CompletableFuture<List<HomeEntity>>
 
 }

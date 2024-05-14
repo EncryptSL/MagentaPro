@@ -34,25 +34,20 @@ class VoteModel : VoteSQL {
 
     override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
-        transaction {
-            future.completeAsync {
-                !VoteTable.select(VoteTable.uuid)
-                    .where(VoteTable.uuid eq uuid.toString())
-                    .empty()
-            }
-        }
+        val boolean = transaction { !VoteTable.select(VoteTable.uuid).where(VoteTable.uuid eq uuid.toString()).empty() }
+        future.completeAsync { boolean }
         return future
     }
 
     override fun hasAccount(uuid: UUID, serviceName: String): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
-        transaction {
-            future.completeAsync {
-                !VoteTable.select(VoteTable.uuid, VoteTable.serviceName)
-                    .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
-                    .empty()
-            }
+        val boolean = transaction {
+            !VoteTable
+                .select(VoteTable.uuid, VoteTable.serviceName)
+                .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
+                .empty()
         }
+        future.completeAsync { boolean }
         return future
     }
 
@@ -90,27 +85,23 @@ class VoteModel : VoteSQL {
 
     override fun getPlayerVote(uuid: UUID): CompletableFuture<Int> {
         val future = CompletableFuture<Int>()
-
-        transaction {
-            val user = VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString())
-
-            future.complete(user.groupBy(vote).sumOf { row -> row[vote] })
+        val user = transaction {
+           VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString()).groupBy(vote).sumOf { row -> row[vote] }
         }
+        future.completeAsync { user }
         return future
     }
 
     override fun getPlayerVote(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity?> {
         val future = CompletableFuture<VoteEntity?>()
 
-        transaction {
-            val user = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
+        val data = transaction {
+            val row = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
                 .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
                 .firstOrNull()
-            future.completeAsync{
-                user?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[last_vote]) }
-            }
+            row?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[last_vote]) }
         }
-
+        future.completeAsync { data }
         return future
     }
 
@@ -148,11 +139,8 @@ class VoteModel : VoteSQL {
     }
     override fun totalVotes(): CompletableFuture<Int> {
         val future = CompletableFuture<Int>()
-        transaction {
-            future.completeAsync {
-                VoteTable.selectAll().sumOf { row -> row[vote] }
-            }
-        }
+        val int = transaction { VoteTable.selectAll().sumOf { row -> row[vote] } }
+        future.completeAsync { int }
         return future
     }
 

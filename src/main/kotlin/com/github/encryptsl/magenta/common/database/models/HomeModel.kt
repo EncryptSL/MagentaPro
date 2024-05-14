@@ -13,6 +13,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun createHome(player: Player, location: Location, home: String) {
@@ -70,41 +71,57 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
         }
     }
 
-    override fun getHomeExist(uuid: UUID, home: String): Boolean {
-        return transaction { !HomeTable.select(HomeTable.home).where(HomeTable.uuid eq uuid and (HomeTable.home eq home)).empty() }
+    override fun getHomeExist(uuid: UUID, home: String): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
+        val boolean = transaction { !HomeTable.select(HomeTable.home).where(HomeTable.uuid eq uuid and (HomeTable.home eq home)).empty() }
+        future.completeAsync { boolean }
+        return future
     }
 
-    override fun canSetHome(player: Player): Boolean {
-        if (player.hasPermission("magenta.homes.unlimited")) return true
+    override fun canSetHome(player: Player):  CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
 
-        val section = plugin.config.getConfigurationSection("homes.groups") ?: return false
+        if (player.hasPermission("magenta.homes.unlimited"))
+            return CompletableFuture.completedFuture<Boolean>(false)
+
+        val section = plugin.config.getConfigurationSection("homes.groups") ?: return CompletableFuture.completedFuture<Boolean>(false)
 
         val max = section.getKeys(false).filter { player.hasPermission("magenta.homes.$it") }.firstNotNullOf { section.getInt(it) }
 
 
-        if (max == -1) return true
+        if (max == -1) return CompletableFuture.completedFuture<Boolean>(false)
 
-        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() >= max }
+        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() >= max }
+        future.completeAsync { boolean }
+
+        return future
     }
 
-    override fun <T> getHome(home: String, columnName: Expression<T>): T {
-        return transaction {
-            HomeTable.selectAll().where( HomeTable.home eq home).first()[columnName]
-        }
+    override fun getHome(home: String): CompletableFuture<HomeEntity> {
+        val future = CompletableFuture<HomeEntity>()
+        val homeRow = transaction { HomeTable.selectAll().where( HomeTable.home eq home).first() }
+        future.completeAsync { rowResultToHomeEntity(homeRow) }
+        return future
     }
 
-    override fun getHomesByOwner(uuid: UUID): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().where( HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
+    override fun getHomesByOwner(uuid: UUID): CompletableFuture<List<HomeEntity>> {
+        val future = CompletableFuture<List<HomeEntity>>()
+
+        val homes = transaction { HomeTable.selectAll().where( HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
+        future.completeAsync { homes }
+        return future
     }
 
     override fun toLocation(player: Player, home: String): Location {
-        val homes = getHomesByOwner(player.uniqueId).first { h -> h.homeName == home }
-
+        val homes = getHomesByOwner(player.uniqueId).join().first { h -> h.homeName == home }
         return Location(Bukkit.getWorld(homes.world), homes.x.toDouble(), homes.y.toDouble(), homes.z.toDouble(), homes.yaw, homes.pitch)
     }
 
-    override fun getHomes(): List<HomeEntity> {
-        return transaction { HomeTable.selectAll().mapNotNull {rowResultToHomeEntity(it)} }
+    override fun getHomes(): CompletableFuture<List<HomeEntity>> {
+        val future = CompletableFuture<List<HomeEntity>>()
+        val homes = transaction { HomeTable.selectAll().mapNotNull {rowResultToHomeEntity(it)} }
+        future.completeAsync { homes }
+        return future
     }
 
     private fun rowResultToHomeEntity(row: ResultRow): HomeEntity {

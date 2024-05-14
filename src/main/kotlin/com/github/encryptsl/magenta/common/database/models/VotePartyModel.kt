@@ -56,23 +56,18 @@ class VotePartyModel : VotePartySQL {
 
     override fun getExistTable(): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
-        transaction {
-            future.completeAsync {
-                VotePartyTable.exists()
-            }
-        }
+        val boolean = transaction { VotePartyTable.exists() }
+        future.completeAsync { boolean }
         return future
     }
 
     override fun getVoteParty(): CompletableFuture<VotePartyEntity> {
         val future = CompletableFuture<VotePartyEntity>()
-
-        val party = transaction { VotePartyTable.selectAll().first() }
-
-        future.completeAsync {
-            return@completeAsync VotePartyEntity(party[VotePartyTable.currentVotes], party[VotePartyTable.lastVoteParty]?.toEpochMilliseconds() ?: 0L, party[VotePartyTable.lastWinnerOfParty] ?: "NEVER")
+        val party = transaction {
+            val partyData = VotePartyTable.selectAll().first()
+            return@transaction VotePartyEntity(partyData[VotePartyTable.currentVotes], partyData[VotePartyTable.lastVoteParty]?.toEpochMilliseconds() ?: 0L, partyData[VotePartyTable.lastWinnerOfParty] ?: "NEVER")
         }
-
+        future.completeAsync { party }
         return future
     }
 }

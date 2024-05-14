@@ -23,7 +23,7 @@ class WarpCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         commandManager.parserRegistry().registerSuggestionProvider("warps") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
-                .completedFuture(magenta.warpModel.getWarps().map { s -> Suggestion.suggestion(s.warpName) })
+                .completedFuture(magenta.warpModel.getWarps().join().map { s -> Suggestion.suggestion(s.warpName) })
         }
         annotationParser.parse(this)
     }

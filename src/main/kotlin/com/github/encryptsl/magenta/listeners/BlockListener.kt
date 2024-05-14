@@ -35,7 +35,7 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
         val player = event.player
         val block = event.block
 
-        if (!magenta.config.getBoolean("silky_spawners.enabled") && block.type != Material.SPAWNER) return
+        if (!magenta.config.getBoolean("silky_spawners.enabled") || block.type != Material.SPAWNER) return
 
         val itemInHand = player.inventory.itemInMainHand
         val tools = magenta.stringUtils.inInList("silky_spawners.tools", itemInHand.type.name)

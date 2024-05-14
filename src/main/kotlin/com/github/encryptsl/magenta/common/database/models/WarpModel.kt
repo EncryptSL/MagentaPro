@@ -15,6 +15,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 class WarpModel(private val plugin: Plugin) : WarpSQL {
 
@@ -105,44 +106,60 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
 
-    override fun getWarpExist(warpName: String): Boolean {
-        return transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
+    override fun getWarpExist(warpName: String): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
+        val boolean = transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
+        future.completeAsync { boolean }
+        return future
     }
 
-    override fun canSetWarp(player: Player): Boolean {
-        if (player.hasPermission(Permissions.WARPS_UNLIMITED)) return true
+    override fun canSetWarp(player: Player): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
 
-        val section = plugin.config.getConfigurationSection("warps.groups") ?: return false
+        if (player.hasPermission(Permissions.WARPS_UNLIMITED)) {
+            return CompletableFuture.completedFuture<Boolean>(false)
+        }
+
+        val section = plugin.config.getConfigurationSection("warps.groups") ?: return CompletableFuture.completedFuture<Boolean>(false)
 
         val max = section.getKeys(false).filter { player.hasPermission(Permissions.WARPS_LIMIT.format("$it")) }.map { section.getInt(it) }.first()
 
-        if (max == -1) return true
+        if (max == -1) return CompletableFuture.completedFuture<Boolean>(false)
 
+        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
 
-        return transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
+        return future.completeAsync { boolean }
     }
 
-    override fun getWarp(warpName: String): WarpEntity {
-       val row = transaction {
-            WarpTable.selectAll().where(WarpTable.warpName eq warpName).first()
+    override fun getWarp(warpName: String): CompletableFuture<WarpEntity> {
+        val future = CompletableFuture<WarpEntity>()
+        val data = transaction {
+            val warp = WarpTable.selectAll().where(WarpTable.warpName eq warpName).first()
+            return@transaction rowResultToWarpEntity(warp)
         }
-
-        return rowResultToWarpEntity(row)
+        future.completeAsync { data }
+        return future
     }
 
     override fun toLocation(warpName: String): Location {
-        val rowResult = getWarp(warpName)
+        val rowResult = getWarp(warpName).join()
 
         return Location(Bukkit.getWorld(rowResult.world), rowResult.x.toDouble(),
             rowResult.y.toDouble(), rowResult.z.toDouble(), rowResult.yaw, rowResult.pitch)
     }
 
-    override fun getWarpsByOwner(uuid: UUID): List<WarpEntity> {
-        return transaction { WarpTable.selectAll().where(WarpTable.uuid eq uuid.toString()).mapNotNull { rowResultToWarpEntity(it) } }
+    override fun getWarpsByOwner(uuid: UUID): CompletableFuture<List<WarpEntity>> {
+        val future = CompletableFuture<List<WarpEntity>>()
+        val map = transaction { WarpTable.selectAll().where(WarpTable.uuid eq uuid.toString()).mapNotNull { rowResultToWarpEntity(it) } }
+        future.completeAsync { map }
+        return future
     }
 
-    override fun getWarps(): List<WarpEntity> {
-        return transaction { WarpTable.selectAll().mapNotNull {rowResultToWarpEntity(it)} }
+    override fun getWarps(): CompletableFuture<List<WarpEntity>> {
+        val future = CompletableFuture<List<WarpEntity>>()
+        val map = transaction { WarpTable.selectAll().mapNotNull {rowResultToWarpEntity(it)} }
+        future.completeAsync { map }
+        return future
     }
 
     private fun rowResultToWarpEntity(row: ResultRow): WarpEntity {

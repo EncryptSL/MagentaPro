@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.GuiItem
+import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -20,7 +21,7 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
     override fun openMenu(player: HumanEntity) {
         val gui = paginationMenu.paginatedGui(
             ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.gui.display").toString(),
-                Placeholder.parsed("count", magenta.warpModel.getWarpsByOwner(player.uniqueId).count().toString())
+                Placeholder.parsed("count", magenta.warpModel.getWarpsByOwner(player.uniqueId).join().count().toString())
             ),
             magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
         )
@@ -33,38 +34,39 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
             }
         }
 
-        val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId)
+        magenta.warpModel.getWarpsByOwner(player.uniqueId).thenAccept { playerWarps ->
+            Magenta.scheduler.runTask(SchedulerType.SYNC) {
+                for (warp in playerWarps) {
+                    val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
 
-        for (warp in playerWarps) {
+                    val itemHomeBuilder = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
 
-            val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
+                    if (magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.display")) {
+                        itemHomeBuilder.setName(
+                            ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
+                                Placeholder.parsed("warp", warp.warpName)
+                            ))
+                    }
 
-            val itemHomeBuilder = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
-
-            if (magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.display")) {
-                itemHomeBuilder.setName(
-                    ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
-                        Placeholder.parsed("warp", warp.warpName)
-                    ))
+                    if (magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.lore")) {
+                        val lores = magenta.warpPlayerMenuConfig.getConfig()
+                            .getStringList("menu.warp-info.lore")
+                            .map { ModernText.miniModernText(it, TagResolver.resolver(
+                                Placeholder.parsed("owner", warp.owner),
+                                Placeholder.parsed("warp", warp.warpName),
+                                Placeholder.parsed("world", warp.world),
+                                Placeholder.parsed("x", warp.x.toString()),
+                                Placeholder.parsed("y", warp.y.toString()),
+                                Placeholder.parsed("z", warp.z.toString()),
+                                Placeholder.parsed("yaw", warp.yaw.toString()),
+                                Placeholder.parsed("pitch", warp.pitch.toString()),
+                            )) }
+                            .toMutableList()
+                        itemHomeBuilder.addLore(lores)
+                    }
+                    gui.addItem(getItem(player, itemHomeBuilder, warp))
+                }
             }
-
-            if (magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.lore")) {
-                val lores = magenta.warpPlayerMenuConfig.getConfig()
-                    .getStringList("menu.warp-info.lore")
-                    .map { ModernText.miniModernText(it, TagResolver.resolver(
-                        Placeholder.parsed("owner", warp.owner),
-                        Placeholder.parsed("warp", warp.warpName),
-                        Placeholder.parsed("world", warp.world),
-                        Placeholder.parsed("x", warp.x.toString()),
-                        Placeholder.parsed("y", warp.y.toString()),
-                        Placeholder.parsed("z", warp.z.toString()),
-                        Placeholder.parsed("yaw", warp.yaw.toString()),
-                        Placeholder.parsed("pitch", warp.pitch.toString()),
-                    )) }
-                    .toMutableList()
-                itemHomeBuilder.addLore(lores)
-            }
-            gui.addItem(getItem(player, itemHomeBuilder, warp))
         }
         paginationMenu.paginatedControlButtons(player, magenta.warpPlayerMenuConfig.getConfig(), gui)
 

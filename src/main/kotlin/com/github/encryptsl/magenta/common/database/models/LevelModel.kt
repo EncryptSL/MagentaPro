@@ -28,11 +28,8 @@ class LevelModel : LevelSQL {
     }
     override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
-        transaction {
-            future.completeAsync {
-                !LevelTable.select(LevelTable.uuid).where(LevelTable.uuid eq uuid.toString()).empty()
-            }
-        }
+        val boolean = transaction { !LevelTable.select(LevelTable.uuid).where(LevelTable.uuid eq uuid.toString()).empty() }
+        future.completeAsync { boolean }
         return future
     }
 
@@ -78,12 +75,11 @@ class LevelModel : LevelSQL {
 
     override fun getLevel(uuid: UUID): CompletableFuture<LevelEntity> {
         val future = CompletableFuture<LevelEntity>()
-       transaction {
-            val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).first()
-            future.completeAsync {
-                LevelEntity(user[LevelTable.username], user[LevelTable.uuid], user[LevelTable.level], user[LevelTable.experience])
-            }
+        val entity = transaction {
+           val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).first()
+           return@transaction LevelEntity(user[LevelTable.username], user[LevelTable.uuid], user[LevelTable.level], user[LevelTable.experience])
         }
+        future.completeAsync { entity }
         return future
     }
 
