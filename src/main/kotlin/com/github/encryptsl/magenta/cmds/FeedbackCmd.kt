@@ -9,14 +9,14 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 class FeedbackCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     override fun registerFeatures(
         annotationParser: AnnotationParser<CommandSender>,
-        commandManager: PaperCommandManager<CommandSender>
+        commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
         annotationParser.parse(this)
     }

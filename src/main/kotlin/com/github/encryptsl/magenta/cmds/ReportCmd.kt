@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.paper.LegacyPaperCommandManager
 import org.incendo.cloud.suggestion.Suggestion
 import java.util.concurrent.CompletableFuture
 
@@ -25,7 +25,7 @@ class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     override fun registerFeatures(
         annotationParser: AnnotationParser<CommandSender>,
-        commandManager: PaperCommandManager<CommandSender>
+        commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
         commandManager.parserRegistry().registerSuggestionProvider("reportCategories") {_, _ ->
             return@registerSuggestionProvider CompletableFuture

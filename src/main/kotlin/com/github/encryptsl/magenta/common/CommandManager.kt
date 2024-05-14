@@ -14,7 +14,7 @@ import org.incendo.cloud.execution.ExecutionCoordinator
 import org.incendo.cloud.minecraft.extras.AudienceProvider
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler
 import org.incendo.cloud.minecraft.extras.MinecraftHelp
-import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.paper.LegacyPaperCommandManager
 import org.incendo.cloud.suggestion.Suggestion
 import java.util.concurrent.CompletableFuture
 
@@ -23,29 +23,27 @@ class CommandManager(private val magenta: Magenta) {
 
     var help: MinecraftHelp<CommandSender>? = null
 
-    private fun createCommandManager(): PaperCommandManager<CommandSender> {
-        val executionCoordinatorFunction = ExecutionCoordinator.builder<CommandSender>().build()
-        val mapperFunction = SenderMapper.identity<CommandSender>()
-        val commandManager = PaperCommandManager(
+    private fun createCommandManager(): LegacyPaperCommandManager<CommandSender> {
+        val commandManager = LegacyPaperCommandManager(
             magenta,
-            executionCoordinatorFunction,
-            mapperFunction,
+            ExecutionCoordinator.builder<CommandSender>().build(),
+            SenderMapper.identity<CommandSender>(),
         )
         if (commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             commandManager.registerBrigadier()
             commandManager.brigadierManager().setNativeNumberSuggestions(false)
         } else if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-            (commandManager as PaperCommandManager<*>).registerAsynchronousCompletions()
+            (commandManager as LegacyPaperCommandManager<*>).registerAsynchronousCompletions()
         }
         return commandManager
     }
 
 
-    private fun createAnnotationParser(commandManager: PaperCommandManager<CommandSender>): AnnotationParser<CommandSender> {
+    private fun createAnnotationParser(commandManager: LegacyPaperCommandManager<CommandSender>): AnnotationParser<CommandSender> {
         return AnnotationParser<CommandSender>(commandManager, CommandSender::class.java)
     }
 
-    private fun helpManager(commandManager: PaperCommandManager<CommandSender>) {
+    private fun helpManager(commandManager: LegacyPaperCommandManager<CommandSender>) {
         this.help = MinecraftHelp.builder<CommandSender>()
                 .commandManager(commandManager)
                 .audienceProvider(AudienceProvider.nativeAudience())
@@ -61,7 +59,7 @@ class CommandManager(private val magenta: Magenta) {
                 ).build()
     }
 
-    private fun registerMinecraftExceptionHandler(commandManager: PaperCommandManager<CommandSender>) {
+    private fun registerMinecraftExceptionHandler(commandManager: LegacyPaperCommandManager<CommandSender>) {
         MinecraftExceptionHandler.createNative<CommandSender>()
             .defaultHandlers()
             .decorator { component ->
@@ -72,7 +70,7 @@ class CommandManager(private val magenta: Magenta) {
             .registerTo(commandManager)
     }
 
-    private fun registerGlobalSuggestionProviders(commandManager: PaperCommandManager<CommandSender>) {
+    private fun registerGlobalSuggestionProviders(commandManager: LegacyPaperCommandManager<CommandSender>) {
         commandManager.parserRegistry().registerSuggestionProvider("help_queries") { sender, _ ->
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 createCommandManager().createHelpHandler().queryRootIndex(sender.sender()).entries().map { Suggestion.suggestion(it.syntax())}

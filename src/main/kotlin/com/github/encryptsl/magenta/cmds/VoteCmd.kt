@@ -14,7 +14,7 @@ import org.incendo.cloud.annotations.AnnotationParser
 import org.incendo.cloud.annotations.Command
 import org.incendo.cloud.annotations.CommandDescription
 import org.incendo.cloud.annotations.Permission
-import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")
@@ -24,7 +24,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
 
     override fun registerFeatures(
         annotationParser: AnnotationParser<CommandSender>,
-        commandManager: PaperCommandManager<CommandSender>
+        commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
         annotationParser.parse(this)
     }

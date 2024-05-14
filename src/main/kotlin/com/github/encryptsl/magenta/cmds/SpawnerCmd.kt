@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BlockStateMeta
 import org.incendo.cloud.annotation.specifier.Range
 import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.paper.LegacyPaperCommandManager
 import org.incendo.cloud.suggestion.Suggestion
 import java.util.concurrent.CompletableFuture
 
@@ -24,7 +24,7 @@ class SpawnerCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     override fun registerFeatures(
         annotationParser: AnnotationParser<CommandSender>,
-        commandManager: PaperCommandManager<CommandSender>
+        commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
         commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
             return@registerSuggestionProvider CompletableFuture

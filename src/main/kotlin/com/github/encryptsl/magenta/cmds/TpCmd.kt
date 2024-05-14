@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
@@ -25,7 +25,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     override fun registerFeatures(
         annotationParser: AnnotationParser<CommandSender>,
-        commandManager: PaperCommandManager<CommandSender>
+        commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
         annotationParser.parse(this)
     }

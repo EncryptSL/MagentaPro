@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.configuration.InvalidConfigurationException
 import org.incendo.cloud.annotation.specifier.Greedy
 import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.PaperCommandManager
+import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 @Command("magenta|mg")
@@ -16,7 +16,7 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     override fun registerFeatures(
         annotationParser: AnnotationParser<CommandSender>,
-        commandManager: PaperCommandManager<CommandSender>
+        commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
         annotationParser.parse(this)
     }
