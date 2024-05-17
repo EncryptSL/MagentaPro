@@ -1,8 +1,11 @@
 package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.glow
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.ItemBuilder
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -83,7 +86,7 @@ class CommandItemManager(private val magenta: Magenta) {
         )))
     }
 
-    fun giveCommandItem(commandSender: CommandSender, itemName: String, amount: Int, target: Player) {
+    fun giveCommandItem(commandSender: CommandSender, itemName: String, count: Int, target: Player) {
         if (!magenta.cItems.getConfig().contains("citems.${itemName}"))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.error.not.exist",
                 Placeholder.parsed("item", itemName)
@@ -114,21 +117,24 @@ class CommandItemManager(private val magenta: Magenta) {
         val sid = magenta.cItems.getConfig().getInt("citems.$itemName.sid")
         val item = magenta.cItems.getConfig().getString("citems.$itemName.name").toString()
         val lore = magenta.cItems.getConfig().getStringList("citems.$itemName.lore")
-        val glowing = magenta.cItems.getConfig().getBoolean("citems.$itemName.glowing")
+        val isEnabledGlowing = magenta.cItems.getConfig().getBoolean("citems.$itemName.glowing")
         val material = Material.getMaterial(materialName) ?: return
 
-
-        val itemStack = ItemBuilder(material, amount)
-            .setName(ModernText.miniModernText(item, Placeholder.parsed("sid", sid.toString())))
-            .setGlowing(glowing)
-            .addLore(lore.map { ModernText.miniModernText(it) }.toMutableList()).create()
+        val itemStack = com.github.encryptsl.kmono.lib.extensions.createItem(material) {
+            amount = count
+            meta {
+                setNameComponent = ModernText.miniModernText(item, Placeholder.parsed("sid", sid.toString()))
+                glow = isEnabledGlowing
+                setLoreComponentList = lore.map { ModernText.miniModernText(it) }
+            }
+        }
         target.inventory.addItem(itemStack)
         target.updateInventory()
 
         commandSender.sendMessage(magenta.locale.translation("magenta.command.citem.success.given", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.component("item", itemStack.displayName()),
-            Placeholder.parsed("amount", amount.toString())
+            Placeholder.parsed("amount", count.toString())
         )))
     }
 

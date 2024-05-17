@@ -2,6 +2,10 @@ package com.github.encryptsl.magenta.api.menu.modules.shop.credits
 
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
+import com.github.encryptsl.kmono.lib.extensions.createItem
+import com.github.encryptsl.kmono.lib.extensions.glow
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
@@ -57,11 +61,17 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
                     magenta.locale.translation("magenta.menu.error.not.defined.icon", Placeholder.parsed("category", category))
                 )
 
+            val nameString = magenta.creditShopConfig.getConfig().getString("menu.categories.$category.name").toString()
             val glowing = magenta.creditShopConfig.getConfig().getBoolean("menu.categories.$category.glowing")
-            val name = magenta.creditShopConfig.getConfig().getString("menu.categories.$category.name").toString()
 
             val item = ItemBuilder.from(
-                com.github.encryptsl.magenta.api.ItemBuilder(material, 1).setName(ModernText.miniModernText(name)).setGlowing(glowing).create()
+                createItem(material) {
+                    amount = 1
+                    meta {
+                        setNameComponent = ModernText.miniModernText(nameString)
+                        glow = glowing
+                    }
+                }
             ).asGuiItem()
 
             item.setAction { action ->

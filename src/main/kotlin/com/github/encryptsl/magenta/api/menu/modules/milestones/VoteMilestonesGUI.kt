@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.api.menu.modules.milestones
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.utils.ItemBuilder
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.ItemBuilder
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder

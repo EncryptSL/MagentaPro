@@ -1,6 +1,10 @@
 package com.github.encryptsl.magenta.api.menu.modules.warp
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.createItem
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -61,19 +65,21 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                         Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
                     ))
 
-                val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
-
-                itemStack.setName(ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString()))
-
-                val lores = magenta.warpEditorConfig
+                val lore = magenta.warpEditorConfig
                     .getConfig()
                     .getStringList("menu.items.buttons.$el.lore")
                     .map { ModernText.miniModernText(it) }
                     .toMutableList()
 
-                itemStack.addLore(lores)
+                val itemStack = createItem(material) {
+                    amount = 1
+                    meta {
+                        setNameComponent = ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString())
+                        setLoreComponentList = lore
+                    }
+                }
 
-                val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
+                val actionItems = ItemBuilder.from(itemStack).asGuiItem { action ->
                     if (action.isLeftClick) {
                         editorActionButton(player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
                     }
@@ -152,7 +158,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
     ) {
         val material = Material.getMaterial(materialName)!!
         gui.addItem(ItemBuilder.from(
-            com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+            com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
                 .setName(
                     ModernText.miniModernText(itemName,
                         Placeholder.parsed("icon", materialName))

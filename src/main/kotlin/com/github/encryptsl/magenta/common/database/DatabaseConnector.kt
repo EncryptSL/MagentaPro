@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvider {
     override fun initConnect(jdbcHost: String, user: String, pass: String) {
-        DatabaseBuilder()
+        DatabaseBuilder.Builder()
             .setJdbc(jdbcHost)
             .setUser(user)
             .setPassword(pass)

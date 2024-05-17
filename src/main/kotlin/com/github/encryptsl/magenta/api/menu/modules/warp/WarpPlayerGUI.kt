@@ -1,6 +1,11 @@
 package com.github.encryptsl.magenta.api.menu.modules.warp
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.createItem
+import com.github.encryptsl.kmono.lib.extensions.glow
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
@@ -12,6 +17,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
+import org.bukkit.inventory.ItemStack
 
 class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val playerEditorGUI: WarpPlayerEditorGUI) : MenuExtender {
 
@@ -39,31 +45,35 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
                 for (warp in playerWarps) {
                     val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
 
-                    val itemHomeBuilder = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+                    if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.display")) continue
+                    if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.lore")) continue
 
-                    if (magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.display")) {
-                        itemHomeBuilder.setName(
-                            ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
-                                Placeholder.parsed("warp", warp.warpName)
-                            ))
+                    val displayItemName = ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
+                        Placeholder.parsed("warp", warp.warpName)
+                    )
+
+                    val lore = magenta.warpPlayerMenuConfig.getConfig()
+                        .getStringList("menu.warp-info.lore")
+                        .map { ModernText.miniModernText(it, TagResolver.resolver(
+                            Placeholder.parsed("owner", warp.owner),
+                            Placeholder.parsed("warp", warp.warpName),
+                            Placeholder.parsed("world", warp.world),
+                            Placeholder.parsed("x", warp.x.toString()),
+                            Placeholder.parsed("y", warp.y.toString()),
+                            Placeholder.parsed("z", warp.z.toString()),
+                            Placeholder.parsed("yaw", warp.yaw.toString()),
+                            Placeholder.parsed("pitch", warp.pitch.toString()),
+                        )) }
+
+                    val itemHomeBuilder = createItem(material) {
+                        amount = 1
+                        meta {
+                            setNameComponent = displayItemName
+                            setLoreComponentList = lore
+                            glow = true
+                        }
                     }
 
-                    if (magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.lore")) {
-                        val lores = magenta.warpPlayerMenuConfig.getConfig()
-                            .getStringList("menu.warp-info.lore")
-                            .map { ModernText.miniModernText(it, TagResolver.resolver(
-                                Placeholder.parsed("owner", warp.owner),
-                                Placeholder.parsed("warp", warp.warpName),
-                                Placeholder.parsed("world", warp.world),
-                                Placeholder.parsed("x", warp.x.toString()),
-                                Placeholder.parsed("y", warp.y.toString()),
-                                Placeholder.parsed("z", warp.z.toString()),
-                                Placeholder.parsed("yaw", warp.yaw.toString()),
-                                Placeholder.parsed("pitch", warp.pitch.toString()),
-                            )) }
-                            .toMutableList()
-                        itemHomeBuilder.addLore(lores)
-                    }
                     gui.addItem(getItem(player, itemHomeBuilder, warp))
                 }
             }
@@ -73,8 +83,8 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
         gui.open(player)
     }
 
-    private fun getItem(humanEntity: HumanEntity, itemBuilder: com.github.encryptsl.magenta.api.ItemBuilder, warp: WarpEntity): GuiItem {
-        return ItemBuilder.from(itemBuilder.setGlowing(true).create()).asGuiItem { action ->
+    private fun getItem(humanEntity: HumanEntity, itemStack: ItemStack, warp: WarpEntity): GuiItem {
+        return ItemBuilder.from(itemStack).asGuiItem { action ->
             if (action.isLeftClick) {
                 humanEntity.teleport(magenta.warpModel.toLocation(warp.warpName))
                 return@asGuiItem

@@ -1,8 +1,12 @@
 package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.createItem
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.ItemBuilder
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
@@ -25,20 +29,30 @@ class KitManager(private val magenta: Magenta) {
         for (material in Material.entries) {
             if (!magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) continue
 
-            val amount: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"))
-            val item = ItemBuilder(material, amount)
-            item.setName(ModernText.miniModernText(magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName", material.name).toString()))
+            val count: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"))
+            val displayKitName = ModernText.miniModernText(magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName") ?: material.name)
 
-            if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore")) {
-                val loreItems: List<String> = magenta.kitConfig.getConfig()
-                    .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore")
+            val lore = if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore"))
+                magenta.kitConfig.getConfig()
+                    .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore").map { ModernText.miniModernText(it) }
+            else
+                emptyList<Component>()
 
-                val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
-                item.addLore(lore)
+            val item = createItem(material) {
+                amount = count
+                meta {
+                    setNameComponent = displayKitName
+                    setLoreComponentList = lore
+                }
+                val iterator: Iterator<Enchantment> = Registry.ENCHANTMENT.iterator()
+                while(iterator.hasNext()) {
+                    val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${iterator.next().key.key().value()}"
+                    if (magenta.kitConfig.getConfig().contains(enchant)) {
+                        addEnchantment(iterator.next(), magenta.kitConfig.getConfig().getInt(enchant))
+                    }
+                }
             }
-
-            applyEnchantment(kitName, item, material)
-            inv.addItem(item.create())
+            inv.addItem(item)
         }
     }
 
@@ -86,44 +100,34 @@ class KitManager(private val magenta: Magenta) {
     fun listOfItems(commandSender: CommandSender, kitName: String) {
         for (material in Material.entries) {
             if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) {
-                val amount: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"))
-                val item = ItemBuilder(material, amount)
-                if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.displayName")) {
-                    item.setName(
-                        ModernText.miniModernText(
-                            magenta.kitConfig.getConfig()
-                                .getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName").toString()
-                        )
-                    )
+                val count: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"))
+                val displayKitName = ModernText.miniModernText(magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName") ?: material.name)
+
+                val lore = if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore"))
+                    magenta.kitConfig.getConfig()
+                        .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore").map { ModernText.miniModernText(it) }
+                else
+                    emptyList<Component>()
+
+                val item = createItem(material) {
+                    amount = count
+                    meta {
+                        setNameComponent = displayKitName
+                        setLoreComponentList = lore
+                    }
+                    val iterator: Iterator<Enchantment> = Registry.ENCHANTMENT.iterator()
+                    while(iterator.hasNext()) {
+                        val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${iterator.next().key.key().value()}"
+                        if (magenta.kitConfig.getConfig().contains(enchant)) {
+                            addEnchantment(iterator.next(), magenta.kitConfig.getConfig().getInt(enchant))
+                        }
+                    }
                 }
-                if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore")) {
-                    val loreItems: List<String> = magenta.kitConfig.getConfig()
-                        .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore")
-
-                    val lore = loreItems.map { ModernText.miniModernText(it) }.toMutableList()
-                    item.addLore(lore)
-                }
-
-                applyEnchantment(kitName, item, material)
-
-                val itemStack = item.create()
+                val itemStack = item
                 commandSender.sendMessage(ModernText.miniModernText("<hover:show_text:'<meta>'><green><items></hover>", TagResolver.resolver(
                     Placeholder.parsed("items", itemStack.type.name),
                     Placeholder.component("meta", itemStack.displayName())
                 )))
-            }
-        }
-    }
-
-    private fun applyEnchantment(kitName: String, item: ItemBuilder, material: Material) {
-        val iterator: Iterator<Enchantment> = Registry.ENCHANTMENT.iterator()
-        while(iterator.hasNext()) {
-            val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${iterator.next().key.key().value()}"
-            if (magenta.kitConfig.getConfig().contains(enchant)) {
-                item.addEnchantment(
-                    iterator.next(),
-                    magenta.kitConfig.getConfig().getInt(enchant)
-                )
             }
         }
     }

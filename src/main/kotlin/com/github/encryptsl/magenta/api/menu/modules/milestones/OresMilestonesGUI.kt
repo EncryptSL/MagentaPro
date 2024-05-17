@@ -26,7 +26,7 @@ class OresMilestonesGUI(private val magenta: Magenta) : MenuExtender {
         for (material in Material.entries) {
             if (!magenta.config.contains("level.ores.${material.name}")) continue
 
-            val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+            val itemStack = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
             itemStack.setName(
                 ModernText.miniModernText(magenta.milestonesOres.getConfig().getString("menu.gui.item.display")
                     ?: player.name, Placeholder.parsed("item", material.name)))

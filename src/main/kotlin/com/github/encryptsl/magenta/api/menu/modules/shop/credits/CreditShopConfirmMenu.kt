@@ -1,6 +1,10 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.credits
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.createItem
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -60,25 +64,28 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok")) {
             val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.icon").toString()) ?: return
 
-            val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
-
             if (!magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok.name"))
                 return
 
             if (!magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok.slot")) return
 
-            val name = magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.name").toString()
-            itemStack.setName(ModernText.miniModernText(name))
+            val itName = magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.name").toString()
 
             val lore = magenta.creditShopConfirmMenuConfig.getConfig().getStringList("menu.confirm_ok.lore")
                 .map { ModernText.miniModernText(it) }
                 .toMutableList()
 
-            itemStack.addLore(lore)
+            val itemStack = createItem(material) {
+                amount = 1
+                meta {
+                    setNameComponent = ModernText.miniModernText(itName)
+                    setLoreComponentList = lore
+                }
+            }
 
             val slot = magenta.creditShopConfirmMenuConfig.getConfig().getInt("menu.confirm_ok.slot")
 
-            val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
+            val guiItem = ItemBuilder.from(itemStack).asGuiItem { action ->
                 if (action.isLeftClick || action.isRightClick) {
                     creditShopPaymentMethod.buyItem(action.whoClicked, config, item, displayName, isBuyAllowed)
                     creditShop.openCategory(player, category)
@@ -93,7 +100,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no")) {
             val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()) ?: return
 
-            val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+            val itemStack = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
 
             if (!magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no.name")) return
 

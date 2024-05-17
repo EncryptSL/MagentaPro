@@ -1,6 +1,10 @@
 package com.github.encryptsl.magenta.api.menu.modules.home
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.createItem
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -56,19 +60,19 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                     Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
                 ))
 
-            val itemStack = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+            val itemStack = createItem(material) {
+                amount = 1
+                meta {
+                    setNameComponent = ModernText.miniModernText(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString())
+                    setLoreComponentList = magenta.warpEditorConfig
+                        .getConfig()
+                        .getStringList("menu.items.buttons.$el.lore")
+                        .map { ModernText.miniModernText(it) }
 
-            itemStack.setName(ModernText.miniModernText(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString()))
+                }
+            }
 
-            val lores = magenta.warpEditorConfig
-                .getConfig()
-                .getStringList("menu.items.buttons.$el.lore")
-                .map { ModernText.miniModernText(it) }
-                .toMutableList()
-
-            itemStack.addLore(lores)
-
-            val actionItems = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
+            val actionItems = ItemBuilder.from(itemStack).asGuiItem { action ->
                 if (action.isLeftClick) {
                     backToMenu(player, magenta.homeEditorConfig.getConfig(), el)
                     setLocation(player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
@@ -129,7 +133,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
     private fun setIcon(player: HumanEntity, homeName: String, gui: Gui, itemName: String, materialName: String, lore: MutableList<Component>) {
         val material = Material.getMaterial(materialName)!!
         gui.addItem(ItemBuilder.from(
-            com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+            com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
                 .setName(ModernText.miniModernText(itemName,
                     Placeholder.parsed("icon", materialName))
                 ).addLore(lore)

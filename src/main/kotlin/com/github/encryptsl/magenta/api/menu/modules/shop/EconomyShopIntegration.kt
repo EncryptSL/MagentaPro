@@ -13,7 +13,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Player
 import kotlin.collections.isNullOrEmpty
-import kotlin.let
 
 class EconomyShopIntegration(private val magenta: Magenta) {
     fun doVaultTransaction(
@@ -46,7 +45,7 @@ class EconomyShopIntegration(private val magenta: Magenta) {
                     if (commands.isNullOrEmpty())
                         player.inventory.addItem(item)
                     else
-                        commands.let { ShopHelper.giveRewards(it, player.name, item.amount) }
+                        ShopHelper.giveRewards(commands, player.name, item.amount)
                 }
             }
         }

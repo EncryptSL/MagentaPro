@@ -1,6 +1,11 @@
 package com.github.encryptsl.magenta.api.menu.modules.home
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.createItem
+import com.github.encryptsl.kmono.lib.extensions.glow
+import com.github.encryptsl.kmono.lib.extensions.meta
+import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
+import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.MenuUI
@@ -35,33 +40,36 @@ class HomeGUI(private val magenta: Magenta) {
             Magenta.scheduler.runTask(SchedulerType.SYNC) {
                 for (home in homes) {
                     val material = Material.getMaterial(home.homeIcon) ?: Material.OAK_DOOR
+                    if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.display")) continue
+                    if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.lore")) continue
 
-                    val itemHomeBuilder = com.github.encryptsl.magenta.api.ItemBuilder(material, 1)
+                    val itemNameComponent = ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.home-info.display").toString(),
+                        Placeholder.parsed("home", home.homeName)
+                    )
 
-                    if (magenta.homeMenuConfig.getConfig().contains("menu.home-info.display")) {
-                        itemHomeBuilder.setName(
-                            ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.home-info.display").toString(),
-                                Placeholder.parsed("home", home.homeName)
-                            ))
+                    val loresComponents = magenta.homeMenuConfig.getConfig()
+                        .getStringList("menu.home-info.lore")
+                        .map { ModernText.miniModernText(it, TagResolver.resolver(
+                            Placeholder.parsed("home", home.homeName),
+                            Placeholder.parsed("world", home.world),
+                            Placeholder.parsed("x", home.x.toString()),
+                            Placeholder.parsed("y", home.y.toString()),
+                            Placeholder.parsed("z", home.z.toString()),
+                            Placeholder.parsed("yaw", home.yaw.toString()),
+                            Placeholder.parsed("pitch", home.pitch.toString()),
+                        )) }.toMutableList()
+
+
+                    val itemHomeBuilder = createItem(material) {
+                        amount = 1
+                        meta {
+                            setNameComponent = itemNameComponent
+                            setLoreComponentList = loresComponents
+                            glow = true
+                        }
                     }
 
-                    if (magenta.homeMenuConfig.getConfig().contains("menu.home-info.lore")) {
-                        val lores = magenta.homeMenuConfig.getConfig()
-                            .getStringList("menu.home-info.lore")
-                            .map { ModernText.miniModernText(it, TagResolver.resolver(
-                                Placeholder.parsed("home", home.homeName),
-                                Placeholder.parsed("world", home.world),
-                                Placeholder.parsed("x", home.x.toString()),
-                                Placeholder.parsed("y", home.y.toString()),
-                                Placeholder.parsed("z", home.z.toString()),
-                                Placeholder.parsed("yaw", home.yaw.toString()),
-                                Placeholder.parsed("pitch", home.pitch.toString()),
-                            )) }
-                            .toMutableList()
-                        itemHomeBuilder.addLore(lores)
-                    }
-
-                    val item = ItemBuilder.from(itemHomeBuilder.setGlowing(true).create()).asGuiItem { action ->
+                    val item = ItemBuilder.from(itemHomeBuilder).asGuiItem { action ->
                         if (action.isLeftClick) {
                             magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.homeName, magenta.config.getLong("teleport-cooldown")))
                             return@asGuiItem
