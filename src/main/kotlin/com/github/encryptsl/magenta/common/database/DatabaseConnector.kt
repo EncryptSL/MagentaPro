@@ -11,23 +11,20 @@ import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvider {
-    override fun initConnect(jdbcHost: String, user: String, pass: String) {
+
+    override fun createConnection(jdbcHost: String, user: String, pass: String) {
         DatabaseBuilder.Builder()
             .setJdbc(jdbcHost)
             .setUser(user)
             .setPassword(pass)
             .setConnectionPool(10)
             .setLogger(magenta.slF4JLogger)
-            .setDatasource(dataSource())
+            .setDatasource(HikariDataSource())
             .connect()
 
         transaction {
             addLogger(StdOutSqlLogger)
             SchemaUtils.create(HomeTable, WarpTable, VoteTable, LevelTable, VotePartyTable)
         }
-    }
-
-    override fun dataSource(): HikariDataSource {
-        return HikariDataSource()
     }
 }

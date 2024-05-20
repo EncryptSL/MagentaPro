@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.api.level
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 class VirtualLevelAPI(private val magenta: Magenta) : LevelAPI {
     override fun createAccount(levelEntity: LevelEntity) {
@@ -35,11 +36,11 @@ class VirtualLevelAPI(private val magenta: Magenta) : LevelAPI {
         return magenta.levelModel.getLevel(uuid).join()
     }
 
-    override fun getLevels(top: Int): Map<String, Int> {
+    override fun getLevels(top: Int): CompletableFuture<MutableMap<String, Int>> {
         return magenta.levelModel.getLevels(top)
     }
 
     override fun getLevels(): Map<String, Int> {
-        return magenta.levelModel.getLevels()
+        return magenta.levelModel.getLevels().join()
     }
 }

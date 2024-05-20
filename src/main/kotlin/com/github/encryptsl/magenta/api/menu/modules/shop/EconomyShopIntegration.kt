@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop
 
 import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionProcess
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentAction
-import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentHolder
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.shop.CreditShopBuyEvent
 import com.github.encryptsl.magenta.api.events.shop.ShopBuyEvent
@@ -19,7 +19,7 @@ class EconomyShopIntegration(private val magenta: Magenta) {
         player: Player,
         shopPaymentAction: EconomyPaymentAction,
         transactionProcess: EconomyTransactionProcess,
-        shopPaymentHolder: EconomyPaymentHolder,
+        shopPaymentHolder: EconomyDataPayment,
         message: String,
         commands: MutableList<String>?,
     ) {

@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.listeners
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.extensions.colorize
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.PluginPlaceholders
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.model.MentionManager
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -16,9 +17,11 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import java.util.Optional
 
 class AsyncChatListener(private val magenta: Magenta) : Listener {
 
+    private val pluginPlaceholders: PluginPlaceholders by lazy { PluginPlaceholders(magenta) }
     private val mentionManager: MentionManager by lazy { MentionManager(magenta) }
     private val luckPermsHook: LuckPermsAPI by lazy { LuckPermsAPI() }
 
@@ -46,34 +49,36 @@ class AsyncChatListener(private val magenta: Magenta) : Listener {
             }
         }
 
-        val suggestCommand = magenta.config.getString("chat.suggestCommand", "/tell $player ").toString()
-
-        renderer(event, suggestCommand)
+        renderer(event)
     }
 
-    private fun renderer(event: AsyncChatEvent, suggestCommand: String) {
+    private fun renderer(event: AsyncChatEvent) {
         try {
             val format = magenta.config.getString("chat.group-formats.${luckPermsHook.getGroup(event.player)}") ?: magenta.config.getString("chat.default-format").toString()
             event.renderer { source, _, ms, _ ->
                 val plainText = ModernText.convertComponentToText(ms)
-                ModernText.miniModernText(format,
-                    TagResolver.resolver(
-                        Placeholder.parsed("world", source.world.name),
-                        Placeholder.component("name", Component.text(source.name)
-                            .clickEvent(ModernText.action(
-                                ClickEvent.Action.SUGGEST_COMMAND,
-                                suggestCommand.replace("{name}", source.name).replace("{player}", source.name))
-                            )
-                        ),
-                        Placeholder.component("prefix", Component.text(colorize(luckPermsHook.getPrefix(source))).hoverEvent(hoverText(source))),
-                        Placeholder.parsed("suffix", colorize(luckPermsHook.getSuffix(source))),
-                        Placeholder.parsed("username_color", colorize(luckPermsHook.getMetaValue(source, "username-color"))),
-                        Placeholder.parsed("message_color", colorize(luckPermsHook.getMetaValue(source, "message-color"))),
-                        Placeholder.parsed("message", if (source.hasPermission("magenta.chat.colors")) colorize(plainText) else plainText)
-                    )
-                )
+                ModernText.miniModernText(format, resolverTags(source, plainText))
             }
         } catch (_ : Exception) {}
+    }
+
+    private fun resolverTags(source: Player, plainText: String): TagResolver {
+        return TagResolver.resolver(
+            Placeholder.parsed("world", source.world.name),
+            Placeholder.component("name", Component.text(source.name)
+                .clickEvent(ModernText.action(
+                    ClickEvent.Action.SUGGEST_COMMAND,
+                    Optional.ofNullable(
+                        pluginPlaceholders.i8ln(source, magenta.config.getString("chat.suggestCommand").toString())
+                    ).orElse("/tell ${source.name}"))
+                )
+            ),
+            Placeholder.component("prefix", Component.text(colorize(luckPermsHook.getPrefix(source))).hoverEvent(hoverText(source))),
+            Placeholder.parsed("suffix", colorize(luckPermsHook.getSuffix(source))),
+            Placeholder.parsed("username_color", colorize(luckPermsHook.getMetaValue(source, "username-color"))),
+            Placeholder.parsed("message_color", colorize(luckPermsHook.getMetaValue(source, "message-color"))),
+            Placeholder.parsed("message", if (source.hasPermission("magenta.chat.colors")) colorize(plainText) else plainText)
+        )
     }
 
     private fun hoverText(player: Player): HoverEvent<Component> {

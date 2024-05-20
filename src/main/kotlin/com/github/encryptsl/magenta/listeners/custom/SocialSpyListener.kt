@@ -6,6 +6,8 @@ import com.github.encryptsl.magenta.api.events.spy.SpyToggleByPlayerEvent
 import com.github.encryptsl.magenta.common.CommandHelper
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -36,26 +38,24 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
         val target = event.target
         val user = magenta.user.getUser(target.uniqueId)
         if (user.isSocialSpy()) {
-            target.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle",
-                Placeholder.parsed("value", false.toString())
-            ))
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle.to",
-                TagResolver.resolver(
-                    Placeholder.parsed("player", target.name),
-                    Placeholder.parsed("value", true.toString())
-                )
-            ))
+            sendMessage(commandSender, target, false)
             commandHelper.toggleSocialSpy(target, false)
         } else {
-            target.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle",
-                Placeholder.parsed("value", true.toString())
-            ))
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle.to", TagResolver.resolver(
-                Placeholder.parsed("player", target.name),
-                Placeholder.parsed("value", true.toString())
-            )))
+            sendMessage(commandSender, target, true)
             commandHelper.toggleSocialSpy(target, true)
         }
+    }
+
+    private fun sendMessage(commandSender: CommandSender, target: Player, value: Boolean) {
+        target.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle",
+            Placeholder.parsed("value", value.toString())
+        ))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle.to",
+            TagResolver.resolver(
+                Placeholder.parsed("player", target.name),
+                Placeholder.parsed("value", value.toString())
+            )
+        ))
     }
 
 }

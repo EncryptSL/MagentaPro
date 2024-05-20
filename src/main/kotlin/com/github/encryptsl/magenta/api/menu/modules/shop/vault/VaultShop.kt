@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
-import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentHolder
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
@@ -164,7 +164,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
         commands: MutableList<String>?
     ) {
         vaultShopPaymentMethods.buy(
-            EconomyPaymentHolder(
+            EconomyDataPayment(
                 magenta.itemFactory.shopItem(material, counts, itemName),
                 ShopHelper.calcPrice(counts, buyPrice),
                 isBuyAllowed
@@ -180,7 +180,7 @@ class VaultShop(private val magenta: Magenta) : MenuExtender {
         isSellAllowed: Boolean
     ) {
         vaultShopPaymentMethods.sell(
-            EconomyPaymentHolder(magenta.itemFactory.shopItem(material, counts, itemName),
+            EconomyDataPayment(magenta.itemFactory.shopItem(material, counts, itemName),
                 ShopHelper.calcPrice(counts, sellPrice), isSellAllowed)
             , action)
     }

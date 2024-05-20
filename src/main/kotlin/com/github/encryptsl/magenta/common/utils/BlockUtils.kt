@@ -28,15 +28,12 @@ object BlockUtils {
 
         if (itemInHand.type != Material.SPAWNER) return
 
-        if (itemInHand.hasItemMeta()) {
-            val spawnerItemMeta = itemInHand.itemMeta
-            if (!spawnerItemMeta.hasDisplayName()) return
+        val spawnerItemMeta = itemInHand.itemMeta
+        if (spawnerItemMeta != null) {
             val spawnerName = spawnerItemMeta.displayName() ?: return
-            val itemName = ModernText.convertComponentToText(spawnerName)
-            val entityName = itemName.split(" ")
+            val entityName = ModernText.convertComponentToText(spawnerName).split(" ")
             val entityType = EntityType.valueOf(entityName[1])
-            val spawnerBlock: Block = block
-            val spawner: CreatureSpawner = spawnerBlock.state as CreatureSpawner
+            val spawner: CreatureSpawner = block.state as CreatureSpawner
             spawner.spawnedType = entityType
             spawner.update()
         }

@@ -48,16 +48,17 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         }
 
         safeFly(player)
-        magenta.commandHelper.doVanish(player, user.isVanished())
+        magenta.commandHelper.doVanish(user)
 
         magenta.earnBlocksProgressManager.syncInitData(player.uniqueId, user.getAccount().getInt("mined.blocks", 0))
 
         if (player.hasPlayedBefore()) {
-            val map = mutableMapOf(
-                "timestamps.login" to System.currentTimeMillis(),
-                "ip-address" to player.address.address.hostAddress
+            user.set(
+                mutableMapOf(
+                    "timestamps.login" to System.currentTimeMillis(),
+                    "ip-address" to player.address.address.hostAddress
+                )
             )
-            user.set(map.toMutableMap())
             TextFilReader.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->
                 player.sendMessage(ModernText.miniModernTextCenter(text, TagResolver.resolver(
                     Placeholder.component("player", player.displayName()),

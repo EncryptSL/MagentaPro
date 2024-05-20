@@ -24,7 +24,7 @@ class FeedbackCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Command("feedback <message>")
     @Permission("magenta.feedback")
     @CommandDescription("This command send feedback message to admins")
-    fun onReport(
+    fun onFeedback(
         player: Player,
         @Argument(value = "message") @Greedy message: String
     ) {

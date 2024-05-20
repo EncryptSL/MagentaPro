@@ -83,15 +83,25 @@ class LevelModel : LevelSQL {
         return future
     }
 
-    override fun getLevels(top: Int): MutableMap<String, Int> = transaction {
-        LevelTable.selectAll().limit(top).orderBy(LevelTable.level, SortOrder.DESC).associate {
-            it[LevelTable.username] to it[LevelTable.level]
-        }.toMutableMap()
+    override fun getLevels(top: Int):  CompletableFuture<MutableMap<String, Int>> {
+        val future = CompletableFuture<MutableMap<String, Int>>()
+        val map = transaction {
+            LevelTable.selectAll().limit(top).orderBy(LevelTable.level, SortOrder.DESC).associate {
+                it[LevelTable.username] to it[LevelTable.level]
+            }.toMutableMap()
+        }
+        future.completeAsync { map }
+        return future
     }
 
-    override fun getLevels(): MutableMap<String, Int> = transaction {
-        LevelTable.selectAll().orderBy(LevelTable.level, SortOrder.DESC).associate {
-            it[LevelTable.username] to it[LevelTable.level]
-        }.toMutableMap()
+    override fun getLevels():  CompletableFuture<MutableMap<String, Int>> {
+        val future = CompletableFuture<MutableMap<String, Int>>()
+        val map = transaction {
+            LevelTable.selectAll().orderBy(LevelTable.level, SortOrder.DESC).associate {
+                it[LevelTable.username] to it[LevelTable.level]
+            }.toMutableMap()
+        }
+        future.completeAsync { map }
+        return future
     }
 }

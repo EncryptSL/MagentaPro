@@ -1,10 +1,9 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.extensions.playSound
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.level.VirtualLevelUpEvent
-import net.kyori.adventure.key.Key
-import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.event.EventHandler
@@ -20,11 +19,10 @@ class VirtualPlayerLevelListener(private val magenta: Magenta) : Listener {
 
         magenta.virtualLevel.addLevel(offlinePlayer.uniqueId, 1)
         offlinePlayer.player?.let {
-            it.playSound(Sound.sound()
-                .volume(magenta.config.getString("level.effect.volume").toString().toFloat())
-                .pitch(magenta.config.getString("level.effect.pitch").toString().toFloat())
-                .type(Key.key(magenta.config.getString("level.effect.sound").toString()))
-                .build()
+            playSound(it,
+                magenta.config.getString("level.effect.sound").toString(),
+                magenta.config.getString("level.effect.volume").toString().toFloat(),
+                magenta.config.getString("level.effect.pitch").toString().toFloat()
             )
             for (line in magenta.config.getStringList("level.format")) {
                 it.sendMessage(ModernText.miniModernTextCenter(

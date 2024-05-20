@@ -66,12 +66,15 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send top players in levels")
     fun onLevelTop(commandSender: CommandSender) {
         commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.header"))
-        magenta.virtualLevel.getLevels(10).toList().positionIndexed { k, v ->
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top", TagResolver.resolver(
-                Placeholder.parsed("position", k.toString()),
-                Placeholder.parsed("player", v.first),
-                Placeholder.parsed("level", v.second.toString()),
-            )))
+
+        magenta.virtualLevel.getLevels(10).thenAccept { el ->
+            el.toList().positionIndexed { k, v ->
+                commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top", TagResolver.resolver(
+                    Placeholder.parsed("position", k.toString()),
+                    Placeholder.parsed("player", v.first),
+                    Placeholder.parsed("level", v.second.toString()),
+                )))
+            }
         }
         commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.footer"))
     }

@@ -25,16 +25,9 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVanish(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
 
-        magenta.commandHelper.doVanish(player, user.isVanished())
+        magenta.commandHelper.doVanish(user)
         val mode = magenta.commandHelper.isVanished(user.isVanished())
-
         player.sendMessage(magenta.locale.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
-
-        if (user.isVanished()) {
-            user.set("vanished", false)
-        } else {
-            user.set("vanished", true)
-        }
     }
 
     @Command("vanish <player>")
@@ -43,7 +36,7 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVanishOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         val user = magenta.user.getUser(target.uniqueId)
 
-        magenta.commandHelper.doVanish(target, user.isVanished())
+        magenta.commandHelper.doVanish(user)
 
         val mode = magenta.commandHelper.isVanished(user.isVanished())
 
@@ -53,12 +46,6 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("mode", mode)
         )))
-
-        if (user.isVanished()) {
-            user.set("vanished", false)
-        } else {
-            user.set("vanished", true)
-        }
     }
 
 }

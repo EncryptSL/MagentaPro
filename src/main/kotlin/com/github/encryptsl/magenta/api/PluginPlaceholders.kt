@@ -1,8 +1,18 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.magenta.Magenta
+import org.bukkit.entity.Player
 
 class PluginPlaceholders(private val magenta: Magenta) {
+
+    fun i8ln(player: Player, value: String): String {
+        return value
+            .replace("{username}", player.name)
+            .replace("{user}", player.name)
+            .replace("{player}", player.name)
+            .replace("%player%", player.name)
+            .replace("<player>", player.name)
+    }
 
     fun topLevelNameByRank(rank: Int): String {
         val topLevel = topLevels()

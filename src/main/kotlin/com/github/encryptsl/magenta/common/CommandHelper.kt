@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
 import com.github.encryptsl.magenta.api.level.LevelFormula
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -22,13 +23,16 @@ class CommandHelper(private val magenta: Magenta) {
         )
     }
 
-    fun doVanish(player: Player, isVanished: Boolean) {
+    fun doVanish(user: UserAccountImpl) {
         for (players in Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(Permissions.VANISH_EXEMPT)) continue
-            if (isVanished)
-                players.showPlayer(magenta, player)
-            else
-                players.hidePlayer(magenta, player)
+            if (user.getPlayer()?.hasPermission(Permissions.VANISH_EXEMPT) == true) continue
+            if (user.isVanished()) {
+                user.getPlayer()?.let { players.showPlayer(magenta, it) }
+                user.set("vanished", false)
+            } else {
+                user.getPlayer()?.let { players.hidePlayer(magenta, it) }
+                user.set("vanished", true)
+            }
         }
     }
 

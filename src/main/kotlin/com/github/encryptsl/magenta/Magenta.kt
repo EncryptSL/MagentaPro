@@ -3,13 +3,13 @@ package com.github.encryptsl.magenta
 import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
 import com.github.encryptsl.kmono.lib.api.config.loader.ConfigLoader
 import com.github.encryptsl.kmono.lib.api.config.locale.Locale
+import com.github.encryptsl.kmono.lib.api.discord.DiscordWebhook
 import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
 import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
-import com.github.encryptsl.magenta.api.webhook.DiscordWebhook
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.PlayerCacheManager
@@ -144,7 +144,7 @@ open class Magenta : JavaPlugin() {
             .createFromResources("menu/milestones/vote_pass.yml", this)
             .create("jails.yml")
         locale.loadLocale("locale/cs_cz.properties")
-        database.initConnect(
+        database.createConnection(
             config.getString("database.host", "jdbc:sqlite:plugins/MagentaPro/database.db").toString(),
             config.getString("database.username", "root").toString(),
             config.getString("database.password", "admin").toString()

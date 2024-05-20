@@ -132,7 +132,6 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
         if (magenta.user.getUser(player.uniqueId).isJailed()) {
             player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "pokládat bloky")))
             event.isCancelled = true
-            return
         }
 
         BlockUtils.updateSpawner(event.block, player)

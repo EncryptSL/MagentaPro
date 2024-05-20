@@ -2,9 +2,9 @@ package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
 import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
 import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
+import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPayment
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentAction
-import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentHolder
-import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentImpl
 import com.github.encryptsl.kmono.lib.extensions.hasPlayerRequiredItem
 import com.github.encryptsl.kmono.lib.extensions.isPlayerInventoryFull
 import com.github.encryptsl.magenta.Magenta
@@ -12,11 +12,11 @@ import com.github.encryptsl.magenta.api.menu.modules.shop.EconomyShopIntegration
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VaultShopPaymentMethods(private val magenta: Magenta) : EconomyPaymentImpl {
+class VaultShopPaymentMethods(private val magenta: Magenta) : EconomyPayment {
 
     private val economyShopIntegration: EconomyShopIntegration by lazy { EconomyShopIntegration(magenta) }
     override fun buy(
-        shopPaymentHolder: EconomyPaymentHolder,
+        shopPaymentHolder: EconomyDataPayment,
         commands: MutableList<String>?,
         inventory: InventoryClickEvent
     ) {
@@ -35,7 +35,7 @@ class VaultShopPaymentMethods(private val magenta: Magenta) : EconomyPaymentImpl
             EconomyPaymentAction.BUY, transactions, shopPaymentHolder,"magenta.shop.success.buy", commands)
     }
     override fun sell(
-        shopPaymentHolder: EconomyPaymentHolder,
+        shopPaymentHolder: EconomyDataPayment,
         inventory: InventoryClickEvent
     ) {
         val player = inventory.whoClicked as Player

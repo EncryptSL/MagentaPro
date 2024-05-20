@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.api.commands.AnnotationCommandRegister
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
 import net.kyori.adventure.text.format.NamedTextColor
@@ -105,8 +106,9 @@ class CommandManager(private val magenta: Magenta) {
 
             registerGlobalSuggestionProviders(commandManager)
             val annotationParser = createAnnotationParser(commandManager)
+            val register = AnnotationCommandRegister(magenta, annotationParser, commandManager)
 
-            val list = listOf(
+            register.registerCommand(
                 AfkCmd(magenta),
                 BackCmd(magenta),
                 BroadcastCmd(magenta),
@@ -144,7 +146,6 @@ class CommandManager(private val magenta: Magenta) {
                 WarpCmd(magenta),
                 WhoisCmd(magenta)
             )
-            for (command in list) { command.registerFeatures(annotationParser, commandManager) }
         } catch (e : NoClassDefFoundError) {
             magenta.logger.severe(e.message ?: e.localizedMessage)
         }

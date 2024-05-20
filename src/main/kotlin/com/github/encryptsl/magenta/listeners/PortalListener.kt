@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.world.PortalCreateEvent
-import org.bukkit.event.world.PortalCreateEvent.CreateReason
 
 class PortalListener(private val magenta: Magenta) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
@@ -17,9 +16,8 @@ class PortalListener(private val magenta: Magenta) : Listener {
             val player = event.entity as Player
             if (player.gameMode == GameMode.CREATIVE) return
             if (player.hasPermission(Permissions.PORTAL_BLACKLIST_BYPASS)) return
-            val reason: CreateReason = event.reason
 
-            if (!magenta.stringUtils.inInList("portal.blacklist", reason.name)) return
+            if (!magenta.stringUtils.inInList("portal.blacklist", event.reason.name)) return
 
             player.sendMessage(magenta.locale.translation("magenta.portal.error"))
             event.isCancelled = true

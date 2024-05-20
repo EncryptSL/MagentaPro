@@ -1,8 +1,6 @@
 package com.github.encryptsl.magenta.common
 
-import net.kyori.adventure.audience.Audience
-import net.kyori.adventure.key.Key
-import net.kyori.adventure.sound.Sound
+import com.github.encryptsl.kmono.lib.extensions.playSound
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
@@ -15,18 +13,13 @@ object PlayerBuilderAction {
         return this
     }
 
-    private fun audience(): Audience {
-        return Audience.audience(this.player)
-    }
-
     fun sound(sound: String, volume: Float, pitch: Float): PlayerBuilderAction {
-        audience().playSound(Sound.sound().volume(volume).pitch(pitch).type(Key.key(sound)).build())
+        playSound(this.player, sound, volume, pitch)
         return this
     }
 
     fun message(component: Component): PlayerBuilderAction {
-        audience().sendMessage(component)
+        this.player.sendMessage(component)
         return this
     }
-
 }

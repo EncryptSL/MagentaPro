@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.level
 
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 interface LevelAPI {
     fun createAccount(levelEntity: LevelEntity)
@@ -11,6 +12,6 @@ interface LevelAPI {
     fun setExperience(uuid: UUID, experience: Int)
     fun hasAccount(uuid: UUID): Boolean
     fun getLevel(uuid: UUID): LevelEntity
-    fun getLevels(top: Int): Map<String, Int>
+    fun getLevels(top: Int): CompletableFuture<MutableMap<String, Int>>
     fun getLevels(): Map<String, Int>
 }

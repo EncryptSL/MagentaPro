@@ -17,6 +17,6 @@ interface LevelSQL {
 
     fun getLevel(uuid: UUID): CompletableFuture<LevelEntity>
 
-    fun getLevels(top: Int): MutableMap<String, Int>
-    fun getLevels(): MutableMap<String, Int>
+    fun getLevels(top: Int):  CompletableFuture<MutableMap<String, Int>>
+    fun getLevels():  CompletableFuture<MutableMap<String, Int>>
 }
