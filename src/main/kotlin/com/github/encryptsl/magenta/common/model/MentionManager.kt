@@ -32,14 +32,6 @@ class MentionManager(private val magenta: Magenta) {
                             p.sendMessage(mentionedPlayer(p, "magenta.player.mentioned"))
                             p.playSound(Sound.sound().volume(volume).pitch(pitch).type(Key.key(sound)).build())
                         }
-                        chatEvent.message(
-                            ModernText.miniModernText(
-                                message.replace(
-                                    m,
-                                    magenta.config.getString("mentions.formats.everyone").toString()
-                                )
-                            )
-                        )
                     }
 
                     val mentioned = Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), "")) ?: return
@@ -52,7 +44,8 @@ class MentionManager(private val magenta: Magenta) {
                     chatEvent.message(
                         ModernText.miniModernText(message.replace(
                             m, magenta.config.getString("mentions.formats.player").toString().replace("[player]", mentioned.name.lowercase())
-                        )))
+                        ))
+                    )
                 }
             }
         }
