@@ -16,7 +16,9 @@ repositories {
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.oraxen.com/releases")
-    maven("https://repo.triumphteam.dev/snapshots/")
+    maven("https://repo.triumphteam.dev/snapshots") {
+        name = "reposiliteRepositorySnapshots"
+    }
 }
 
 kotlin {
@@ -40,7 +42,9 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
-    compileOnly("io.th0rgal:oraxen:1.171.0")
+    compileOnly("io.th0rgal:oraxen:1.174.0") {
+        exclude(group = "dev.triumphteam")
+    }
 
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-annotations:2.0.0-SNAPSHOT") {
@@ -52,7 +56,7 @@ dependencies {
     }
     implementation("com.github.encryptsl:KMonoLib:1.0.0")
     implementation("com.github.Euphillya:Energie:1.2.0")
-    implementation("dev.triumphteam:triumph-gui:3.1.8-SNAPSHOT") {
+    implementation("dev.triumphteam:triumph-gui-paper:4.0.0-SNAPSHOT") {
         exclude("net.kyori")
     }
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
@@ -87,10 +91,7 @@ tasks {
     }
 
     processResources {
-        filesMatching("plugin.yml") {
-            expand(project.properties)
-        }
-        filesMatching("paper-plugin.yml") {
+        filesMatching(listOf("plugin.yml", "paper-plugin.yml")) {
             expand(project.properties)
         }
     }

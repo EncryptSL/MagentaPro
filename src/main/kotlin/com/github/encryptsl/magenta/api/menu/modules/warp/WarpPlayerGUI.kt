@@ -1,26 +1,16 @@
 package com.github.encryptsl.magenta.api.menu.modules.warp
 
-import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.extensions.createItem
-import com.github.encryptsl.kmono.lib.extensions.glow
-import com.github.encryptsl.kmono.lib.extensions.meta
-import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
-import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
-import com.github.encryptsl.magenta.common.database.entity.WarpEntity
-import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.guis.GuiItem
-import fr.euphyllia.energie.model.SchedulerType
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Material
-import org.bukkit.entity.HumanEntity
-import org.bukkit.inventory.ItemStack
+import com.github.encryptsl.magenta.api.menu.components.template.Menu
+import org.bukkit.entity.Player
 
-class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val playerEditorGUI: WarpPlayerEditorGUI) : MenuExtender {
+class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val playerEditorGUI: WarpPlayerEditorGUI) : Menu {
 
+    override fun open(player: Player) {
+        TODO("Not yet implemented")
+    }
+
+    /*
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val paginationMenu = menuUI.PaginationMenu(magenta, warpGUI)
 
@@ -94,5 +84,5 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
                 playerEditorGUI.openWarpPlayerEditor(action.whoClicked, warp.warpName)
             }
         }
-    }
+    }*/
 }

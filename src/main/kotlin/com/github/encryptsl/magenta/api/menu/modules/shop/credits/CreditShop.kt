@@ -1,92 +1,84 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.credits
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
 import com.github.encryptsl.kmono.lib.extensions.createItem
 import com.github.encryptsl.kmono.lib.extensions.glow
 import com.github.encryptsl.kmono.lib.extensions.meta
 import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
-import com.github.encryptsl.magenta.common.Permissions
-import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.components.GuiType
-import dev.triumphteam.gui.guis.Gui
-import dev.triumphteam.gui.guis.PaginatedGui
+import com.github.encryptsl.magenta.api.menu.components.template.Menu
+import dev.triumphteam.gui.paper.Gui
+import dev.triumphteam.gui.paper.builder.item.ItemBuilder
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
-import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 
-class CreditShop(private val magenta: Magenta) : MenuExtender {
+class CreditShop(private val magenta: Magenta) : Menu {
 
+    /*
     private val creditShopPaymentMethod: CreditShopPaymentMethod by lazy { CreditShopPaymentMethod(magenta) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val simpleMenu = menuUI.SimpleMenu(magenta)
     private val paginationMenu = menuUI.PaginationMenu(magenta, this)
     private val confirmMenu: CreditShopConfirmMenu by lazy { CreditShopConfirmMenu(magenta, menuUI) }
-
-    override fun openMenu(player: HumanEntity) {
-        val gui: Gui = simpleMenu.simpleGui(
-            magenta.creditShopConfig.getConfig().getString("menu.gui.display").toString(),
-            magenta.creditShopConfig.getConfig().getInt("menu.gui.size", 6),
-            GuiType.CHEST
+   
+     */
+    override fun open(player: Player) {
+        val gui = Gui.of(magenta.creditShopConfig.getConfig().getInt("menu.gui.size", 6)).title(
+            ModernText.miniModernText(magenta.creditShopConfig.getConfig().getString("menu.gui.display").toString())
         )
 
-        gui.setDefaultClickAction { el ->
-            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
-                paginationMenu.clickSound(el.whoClicked, magenta.creditShopConfig.getConfig())
-            }
-        }
+        //gui.setDefaultClickAction { el ->
+        //    if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+        //        paginationMenu.clickSound(el.whoClicked, magenta.creditShopConfig.getConfig())
+        //    }
+        //}
 
-        menuUI.useAllFillers(gui.filler, magenta.creditShopConfig.getConfig())
+        //menuUI.useAllFillers(gui.filler, magenta.creditShopConfig.getConfig())
 
-        for (category in magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
-            val material = Material.getMaterial(
-                magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString()
-            ) ?: continue
+        gui.component { component ->
+            component.render { container, viewer ->
+                for (category in magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
+                    val material = Material.getMaterial(
+                        magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString()
+                    ) ?: continue
 
-            if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.name"))
-                return player.sendMessage(
-                    magenta.locale.translation("magenta.menu.error.not.defined.name", Placeholder.parsed("category", category))
-                )
+                    if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.name"))
+                        return@render viewer.sendMessage(
+                            magenta.locale.translation("magenta.menu.error.not.defined.name", Placeholder.parsed("category", category))
+                        )
 
-            if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.slot"))
-                return player.sendMessage(
-                    magenta.locale.translation("magenta.menu.error.not.defined.slot", Placeholder.parsed("category", category))
-                )
-            if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.icon"))
-                return player.sendMessage(
-                    magenta.locale.translation("magenta.menu.error.not.defined.icon", Placeholder.parsed("category", category))
-                )
+                    if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.slot"))
+                        return@render viewer.sendMessage(
+                            magenta.locale.translation("magenta.menu.error.not.defined.slot", Placeholder.parsed("category", category))
+                        )
+                    if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.icon"))
+                        return@render viewer.sendMessage(
+                            magenta.locale.translation("magenta.menu.error.not.defined.icon", Placeholder.parsed("category", category))
+                        )
 
-            val nameString = magenta.creditShopConfig.getConfig().getString("menu.categories.$category.name").toString()
-            val glowing = magenta.creditShopConfig.getConfig().getBoolean("menu.categories.$category.glowing")
+                    val nameString = magenta.creditShopConfig.getConfig().getString("menu.categories.$category.name").toString()
+                    val glowing = magenta.creditShopConfig.getConfig().getBoolean("menu.categories.$category.glowing")
 
-            val item = ItemBuilder.from(
-                createItem(material) {
-                    amount = 1
-                    meta {
-                        setNameComponent = ModernText.miniModernText(nameString)
-                        glow = glowing
+                    val item = ItemBuilder.from(
+                        createItem(material) {
+                            amount = 1
+                            meta {
+                                setNameComponent = ModernText.miniModernText(nameString)
+                                glow = glowing
+                            }
+                        }
+                    ).asGuiItem { whoClick, context ->
+                        //openCategory(whoClick, category)
                     }
+                    container.set(magenta.creditShopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
                 }
-            ).asGuiItem()
-
-            item.setAction { action ->
-                if (action.isRightClick || action.isLeftClick) {
-                    return@setAction openCategory(action.whoClicked, category)
-                }
-                action.isCancelled = true
             }
-            gui.setItem(magenta.creditShopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
-        }
-        gui.open(player)
+        }.build().open(player)
     }
 
-
-    fun openCategory(player: HumanEntity, category: String) {
+    /*
+    fun openCategory(player: Player, category: String) {
         val shopCategory = UniversalConfig("${magenta.dataFolder}/menu/creditshop/categories/$category.yml")
         if (!shopCategory.exists())
             return player.sendMessage(
@@ -193,5 +185,5 @@ class CreditShop(private val magenta: Magenta) : MenuExtender {
         }
         paginationMenu.paginatedControlButtons(player, shopCategory.getConfig(), gui)
         gui.open(player)
-    }
+    }*/
 }

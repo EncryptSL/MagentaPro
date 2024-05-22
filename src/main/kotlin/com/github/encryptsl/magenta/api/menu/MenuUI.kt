@@ -1,21 +1,10 @@
 package com.github.encryptsl.magenta.api.menu
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.provider.models.AbstractPaginatedMenu
-import com.github.encryptsl.magenta.api.menu.provider.models.AbstractSimpleMenu
-import com.github.encryptsl.magenta.api.menu.provider.models.components.MenuFiller
-import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
-import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.components.util.GuiFiller
-import dev.triumphteam.gui.guis.BaseGui
-import dev.triumphteam.gui.guis.PaginatedGui
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import org.bukkit.Material
-import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.HumanEntity
 
 class MenuUI(private val magenta: Magenta) {
 
+    /*
     inner class PaginationMenu(magenta: Magenta, private val menuExtender: MenuExtender) : AbstractPaginatedMenu(magenta) {
         fun paginatedControlButtons(player: HumanEntity, fileConfiguration: FileConfiguration, gui: PaginatedGui) {
             for (material in Material.entries) {
@@ -62,5 +51,5 @@ class MenuUI(private val magenta: Magenta) {
             }
             gui.setItem(slot, guiItem)
         }
-    }
+    }*/
 }

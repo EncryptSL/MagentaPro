@@ -52,7 +52,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.vote.milestones")
     @CommandDescription("This command open vote milestones")
     fun onVoteMilestones(player: Player) {
-        voteMilestonesGUI.openMenu(player)
+        voteMilestonesGUI.open(player)
     }
 
     @Command("vote top")

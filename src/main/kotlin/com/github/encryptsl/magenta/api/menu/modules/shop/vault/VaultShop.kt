@@ -2,207 +2,194 @@ package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
-import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.api.menu.modules.shop.helpers.ShopHelper
-import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
-import com.github.encryptsl.magenta.common.Permissions
-import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.components.GuiType
-import dev.triumphteam.gui.guis.Gui
-import dev.triumphteam.gui.guis.GuiItem
-import dev.triumphteam.gui.guis.PaginatedGui
+import com.github.encryptsl.magenta.api.menu.components.template.Menu
+import com.github.encryptsl.magenta.common.model.ShopManager
+import dev.triumphteam.gui.paper.Gui
+import dev.triumphteam.gui.paper.builder.item.ItemBuilder
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
-import org.bukkit.entity.HumanEntity
-import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.entity.Player
 
-class VaultShop(private val magenta: Magenta) : MenuExtender {
+class VaultShop(private val magenta: Magenta) : Menu {
 
     private val vaultShopPaymentMethods: VaultShopPaymentMethods by lazy { VaultShopPaymentMethods(magenta) }
-    private val menuUI: MenuUI by lazy { MenuUI(magenta) }
-    private val simpleMenu = menuUI.SimpleMenu(magenta)
-    private val paginationMenu = menuUI.PaginationMenu(magenta, this)
+    val shopManager: ShopManager by lazy { ShopManager(magenta) }
 
-    override fun openMenu(player: HumanEntity) {
-        val gui: Gui = simpleMenu.simpleGui(magenta.shopConfig.getConfig().getString("menu.gui.display").toString(),
-            magenta.shopConfig.getConfig().getInt("menu.gui.size", 6), GuiType.CHEST)
+    override fun open(player: Player) {
+        val gui = Gui.of(magenta.shopConfig.getConfig().getInt("menu.gui.size", 6)).title(
+            ModernText.miniModernText(magenta.shopConfig.getConfig().getString("menu.gui.display").toString())
+        )
 
-        menuUI.useAllFillers(gui.filler, magenta.shopConfig.getConfig())
+       //menuUI.useAllFillers(gui.filler, magenta.shopConfig.getConfig())
 
-        gui.setDefaultClickAction { el ->
-            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
-                paginationMenu.clickSound(el.whoClicked, magenta.shopConfig.getConfig())
+       //gui.setDefaultClickAction { el ->
+       //    if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+       //        paginationMenu.clickSound(el.whoClicked, magenta.shopConfig.getConfig())
+       //    }
+       //}
+
+        gui.component { component ->
+            component.render { container, viewer ->
+                for (category in shopManager.shopCategories()) {
+                    val material = Material.getMaterial(
+                        magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
+                    ) ?: continue
+
+                    if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
+                        return@render viewer.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
+                            Placeholder.parsed("category", category)
+                        ))
+
+                    if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
+                        return@render viewer.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
+                            Placeholder.parsed("category", category)
+                        ))
+
+                    if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
+                        return@render viewer.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.icon",
+                            Placeholder.parsed("category", category)
+                        ))
+
+                    val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
+                    val item = ItemBuilder.from(
+                        magenta.itemFactory.shopItem(material, name)
+                    ).asGuiItem { whoClick, context ->
+                        //if (context.isRightClick || context.isLeftClick) {
+                        //    return@asGuiItem openCategory(whoClick, category)
+                        //}
+                        //context.isCancelled = true
+                    }
+                    container.set(magenta.shopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
+                }
             }
-        }
-
-        val menuCategories = magenta.shopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false) ?: return
-
-        for (category in menuCategories) {
-            val material = Material.getMaterial(
-                magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
-            ) ?: continue
-
-            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
-                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
-                    Placeholder.parsed("category", category)
-                ))
-
-            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
-                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
-                    Placeholder.parsed("category", category)
-                ))
-
-            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
-                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.icon",
-                    Placeholder.parsed("category", category)
-                ))
-
-            val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
-            val item = ItemBuilder.from(
-                magenta.itemFactory.shopItem(material, name)
-            ).asGuiItem { action ->
-                if (action.isRightClick || action.isLeftClick) {
-                    return@asGuiItem openCategory(action.whoClicked, category)
-                }
-                action.isCancelled = true
-            }
-
-            gui.setItem(magenta.shopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
-        }
-        gui.open(player)
+        }.build().open(player)
     }
 
-    fun openCategory(player: HumanEntity, type: String) {
-        val shopCategory = UniversalConfig("${magenta.dataFolder}/menu/shop/categories/$type.yml")
-        if (!shopCategory.exists())
-            return player.sendMessage(
-                magenta.locale.translation("magenta.command.shop.error.category.not.exist",
-                    Placeholder.parsed("category", type))
-            )
 
-        if (!player.hasPermission(Permissions.SHOP_CATEGORY.format(type)) || !player.hasPermission(Permissions.SHOP_CATEGORY_ALL))
-            return player.sendMessage(
-                magenta.locale.translation("magenta.command.shop.error.category.permission",
-                    Placeholder.parsed("category", type)
-            ))
+    /*
+   fun openCategory(player: Player, type: String) {
+       val shopCategory = UniversalConfig("${magenta.dataFolder}/menu/shop/categories/$type.yml")
+       if (!shopCategory.exists())
+           return player.sendMessage(
+               magenta.locale.translation("magenta.command.shop.error.category.not.exist",
+                   Placeholder.parsed("category", type))
+           )
 
-        if (!shopCategory.getConfig().contains("menu.items"))
-            return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.items",
-                Placeholder.parsed("category", type)
-            ))
+       if (!player.hasPermission(Permissions.SHOP_CATEGORY.format(type)) || !player.hasPermission(Permissions.SHOP_CATEGORY_ALL))
+           return player.sendMessage(
+               magenta.locale.translation("magenta.command.shop.error.category.permission",
+                   Placeholder.parsed("category", type)
+           ))
 
-        val name = magenta.shopConfig.getConfig().getString("menu.gui.categoryName").toString()
-        val categoryName = magenta.shopConfig.getConfig().getString("menu.categories.$type.name").toString()
+       if (!shopCategory.getConfig().contains("menu.items"))
+           return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.items",
+               Placeholder.parsed("category", type)
+           ))
 
-        val gui: PaginatedGui = paginationMenu.paginatedGui(ModernText.miniModernText(name,
-            Placeholder.parsed("category", categoryName)
-        ), shopCategory.getConfig().getInt("menu.gui.size", 6))
+       val name = magenta.shopConfig.getConfig().getString("menu.gui.categoryName").toString()
+       val categoryName = magenta.shopConfig.getConfig().getString("menu.categories.$type.name").toString()
 
-        menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
+       val gui: PaginatedGui = paginationMenu.paginatedGui(ModernText.miniModernText(name,
+           Placeholder.parsed("category", categoryName)
+       ), shopCategory.getConfig().getInt("menu.gui.size", 6))
 
-        gui.setDefaultClickAction { el ->
-            if (el.currentItem != null && el.isLeftClick || el.isRightClick || el.isShiftClick) {
-                paginationMenu.clickSound(el.whoClicked, shopCategory.getConfig())
-            }
-        }
+       menuUI.useAllFillers(gui.filler, shopCategory.getConfig())
 
-        val menuItems = shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
+       gui.setDefaultClickAction { el ->
+           if (el.currentItem != null && el.isLeftClick || el.isRightClick || el.isShiftClick) {
+               paginationMenu.clickSound(el.whoClicked, shopCategory.getConfig())
+           }
+       }
 
-        for (item in menuItems) {
-            if (!shopCategory.getConfig().contains("menu.items.$item")) continue
-            val material = Material.getMaterial(
-                shopCategory.getConfig().getString("menu.items.${item}.icon").toString()
-            ) ?: continue
-            val itemName = shopCategory.getConfig().getString("menu.items.${item}.name") ?: material.name
-            val buyPrice = shopCategory.getConfig().getDouble("menu.items.${item}.buy.price")
-            val sellPrice = shopCategory.getConfig().getDouble("menu.items.${item}.sell.price")
+       val products = shopManager.getShopProducts(shopCategory)
 
-            val isBuyAllowed = shopCategory.getConfig().contains("menu.items.${item}.buy.price")
-            val isSellAllowed = shopCategory.getConfig().contains("menu.items.${item}.sell.price")
-            val commands = shopCategory.getConfig().getStringList("menu.items.${item}.buy.commands")
+       for (product in products) {
+           val itemName = product.name ?: product.material
 
-            val actionItem = getItem(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
+           val actionItem = getItem(itemName, product.material, product.buyPrice, product.sellPrice, product.isBuyAllowed, product.isSellAllowed)
 
-            actionItem.setAction { action ->
-                // BUY BY STACK = 64
-                if (action.isShiftClick && action.isLeftClick) {
-                    return@setAction buy(action, material, buyPrice, 64, itemName, isBuyAllowed, commands)
-                }
+           actionItem.setAction { action ->
+               // BUY BY STACK = 64
+               if (action.isShiftClick && action.isLeftClick) {
+                   return@setAction buy(action, product.material, product.buyPrice, 64, itemName, product.isBuyAllowed, product.commands)
+               }
 
-                // BUY BY ONE ITEM = 1
-                if (action.isLeftClick) {
-                    return@setAction buy(action, material, buyPrice, 1, itemName, isBuyAllowed, commands)
-                }
+               // BUY BY ONE ITEM = 1
+               if (action.isLeftClick) {
+                   return@setAction buy(action, product.material, product.buyPrice, 1, itemName, product.isBuyAllowed, product.product.commands)
+               }
 
-                // SELL BY STACK = 64
-                if (action.isShiftClick && action.isRightClick) {
-                    val itemFromInv = player.inventory.storageContents.filter { el -> el?.type == material }.first()
-                    itemFromInv?.let { return@setAction sell(action, material, sellPrice, it.amount, itemName, isSellAllowed) }
-                }
+               // SELL BY STACK = 64
+               if (action.isShiftClick && action.isRightClick) {
+                   val itemFromInv = player.inventory.storageContents.filter { el -> el?.type == material }.first()
+                   itemFromInv?.let { return@setAction sell(action, product.material, product.sellPrice, it.amount, itemName, product.isSellAllowed) }
+               }
 
-                // SELL BY ONE ITEM = 1
-                if (action.isRightClick) {
-                    return@setAction sell(action, material, sellPrice, 1, itemName, isSellAllowed)
-                }
-                action.isCancelled = true
-            }
-            gui.addItem(actionItem)
-        }
-        paginationMenu.paginatedControlButtons(player, shopCategory.getConfig(), gui)
-        gui.open(player)
-    }
+               // SELL BY ONE ITEM = 1
+               if (action.isRightClick) {
+                   return@setAction sell(action, product.material, product.sellPrice, 1, itemName, product.isSellAllowed)
+               }
+               action.isCancelled = true
+           }
+           gui.addItem(actionItem)
+       }
+       paginationMenu.paginatedControlButtons(player, shopCategory.getConfig(), gui)
+       gui.open(player)
+   }
+   */
 
-    private fun buy(
-        action: InventoryClickEvent,
-        material: Material,
-        buyPrice: Double,
-        counts: Int,
-        itemName: String,
-        isBuyAllowed: Boolean,
-        commands: MutableList<String>?
-    ) {
-        vaultShopPaymentMethods.buy(
-            EconomyDataPayment(
-                magenta.itemFactory.shopItem(material, counts, itemName),
-                ShopHelper.calcPrice(counts, buyPrice),
-                isBuyAllowed
-            ), commands, action)
-    }
+    /*
+   private fun buy(
+       action: InventoryClickEvent,
+       material: Material,
+       buyPrice: Double,
+       counts: Int,
+       itemName: String,
+       isBuyAllowed: Boolean,
+       commands: MutableList<String>?
+   ) {
+       vaultShopPaymentMethods.buy(
+           EconomyDataPayment(
+               magenta.itemFactory.shopItem(material, counts, itemName),
+               ShopHelper.calcPrice(counts, buyPrice),
+               isBuyAllowed
+           ), commands, action)
+   }*/
 
-    private fun sell(
-        action: InventoryClickEvent,
-        material: Material,
-        sellPrice: Double,
-        counts: Int,
-        itemName: String,
-        isSellAllowed: Boolean
-    ) {
-        vaultShopPaymentMethods.sell(
-            EconomyDataPayment(magenta.itemFactory.shopItem(material, counts, itemName),
-                ShopHelper.calcPrice(counts, sellPrice), isSellAllowed)
-            , action)
-    }
+    /*
+   private fun sell(
+       action: InventoryClickEvent,
+       material: Material,
+       sellPrice: Double,
+       counts: Int,
+       itemName: String,
+       isSellAllowed: Boolean
+   ) {
+       vaultShopPaymentMethods.sell(
+           EconomyDataPayment(magenta.itemFactory.shopItem(material, counts, itemName),
+               ShopHelper.calcPrice(counts, sellPrice), isSellAllowed)
+           , action)
+   }
 
-    private fun getItem(
-        itemName: String,
-        material: Material,
-        buyPrice: Double,
-        sellPrice: Double,
-        isBuyAllowed: Boolean,
-        isSellAllowed: Boolean
-    ): GuiItem {
-        return ItemBuilder.from(
-            magenta.itemFactory.shopItem(
-                itemName,
-                material,
-                buyPrice,
-                sellPrice,
-                isBuyAllowed,
-                isSellAllowed,
-                magenta.shopConfig.getConfig()
-            )
-        ).asGuiItem()
-    }
+   private fun getItem(
+       itemName: String,
+       material: Material,
+       buyPrice: Double,
+       sellPrice: Double,
+       isBuyAllowed: Boolean,
+       isSellAllowed: Boolean
+   ): GuiItem {
+       return ItemBuilder.from(
+           magenta.itemFactory.shopItem(
+               itemName,
+               material,
+               buyPrice,
+               sellPrice,
+               isBuyAllowed,
+               isSellAllowed,
+               magenta.shopConfig.getConfig()
+           )
+       ).asGuiItem()
+   }*/
 }

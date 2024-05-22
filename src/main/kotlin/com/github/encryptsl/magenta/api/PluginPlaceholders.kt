@@ -7,6 +7,7 @@ class PluginPlaceholders(private val magenta: Magenta) {
 
     fun i8ln(player: Player, value: String): String {
         return value
+            .replace("{name}", player.name)
             .replace("{username}", player.name)
             .replace("{user}", player.name)
             .replace("{player}", player.name)

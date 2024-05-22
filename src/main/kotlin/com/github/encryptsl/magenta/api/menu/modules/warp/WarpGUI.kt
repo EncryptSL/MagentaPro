@@ -1,31 +1,18 @@
 package com.github.encryptsl.magenta.api.menu.modules.warp
 
-import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.extensions.createItem
-import com.github.encryptsl.kmono.lib.extensions.meta
-import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
-import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.MenuUI
-import com.github.encryptsl.magenta.api.menu.provider.templates.MenuExtender
-import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.guis.GuiItem
-import dev.triumphteam.gui.guis.PaginatedGui
-import fr.euphyllia.energie.model.SchedulerType
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Material
-import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.HumanEntity
-import org.bukkit.inventory.ItemStack
+import com.github.encryptsl.magenta.api.menu.components.template.Menu
+import org.bukkit.entity.Player
 
-class WarpGUI(private val magenta: Magenta) : MenuExtender {
+class WarpGUI(private val magenta: Magenta) : Menu {
 
+    /*
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val paginationMenu = menuUI.PaginationMenu(magenta, this)
     private val warpPlayerGUI: WarpPlayerGUI by lazy { WarpPlayerGUI(magenta, this, WarpPlayerEditorGUI(magenta)) }
-
-    override fun openMenu(player: HumanEntity) {
+     */
+    override fun open(player: Player) {
+        /*
         val gui = paginationMenu.paginatedGui(
             ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.gui.display").toString(), Placeholder.parsed("count", magenta.warpModel.getWarps().join().count().toString())),
             magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
@@ -86,8 +73,10 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
         actionCustomButtons(player, magenta.warpMenuConfig.getConfig(), gui)
 
         gui.open(player)
+         */
     }
 
+    /*
     private fun actionCustomButtons(player: HumanEntity, config: FileConfiguration, gui: PaginatedGui) {
 
         for (el in config.getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
@@ -139,6 +128,6 @@ class WarpGUI(private val magenta: Magenta) : MenuExtender {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("OPEN_MENU", true)) {
             warpPlayerGUI.openMenu(player)
         }
-    }
+    }*/
 
 }

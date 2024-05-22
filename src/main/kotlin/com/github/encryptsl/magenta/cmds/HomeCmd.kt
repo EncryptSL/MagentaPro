@@ -88,6 +88,6 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.home.list")
     @CommandDescription("This command open gui list or chat list.")
     fun onHomeList(player: Player) {
-        homeMenuGUI.openHomeGUI(player)
+        //homeMenuGUI.openHomeGUI(player)
     }
 }

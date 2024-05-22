@@ -7,21 +7,22 @@ import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
 import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
-import dev.triumphteam.gui.builder.item.ItemBuilder
-import dev.triumphteam.gui.components.GuiType
-import dev.triumphteam.gui.guis.Gui
+import dev.triumphteam.gui.container.GuiContainer
+import dev.triumphteam.gui.paper.Gui
+import dev.triumphteam.gui.paper.builder.item.ItemBuilder
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: MenuUI) {
 
-    private val simpleMenu = menuUI.SimpleMenu(magenta)
+    //private val simpleMenu = menuUI.SimpleMenu(magenta)
 
     fun openConfirmMenu(
-        player: HumanEntity,
+        player: Player,
         item: String,
         category: String,
         categoryConfig: FileConfiguration,
@@ -30,31 +31,34 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         creditShop: CreditShop,
         isBuyAllowed: Boolean = false
     ) {
-        val gui: Gui = simpleMenu.simpleGui(
-            ModernText.miniModernText(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.gui.display").toString(), Placeholder.component("item", displayName)),
-            magenta.creditShopConfirmMenuConfig.getConfig().getInt("menu.gui.size", 6),
-            GuiType.CHEST
-        )
-        menuUI.useAllFillers(gui.filler, magenta.creditShopConfirmMenuConfig.getConfig())
+        val gui = Gui
+            .of(magenta.creditShopConfirmMenuConfig.getConfig().getInt("menu.gui.size", 6))
+            .title(
+                ModernText.miniModernText(
+                    magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.gui.display").toString(),
+                    Placeholder.component("item", displayName)
+                )
+            )
 
-        gui.setDefaultClickAction { el ->
-            if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
-                simpleMenu.clickSound(el.whoClicked, magenta.creditShopConfirmMenuConfig.getConfig())
+
+        //gui.setDefaultClickAction { el ->
+        //    if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
+        //        simpleMenu.clickSound(el.whoClicked, magenta.creditShopConfirmMenuConfig.getConfig())
+        //    }
+        //}
+
+        gui.component { component ->
+            component.render { container, _ ->
+                confirmPay(item, category, container, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
+                cancelPay(category, container, creditShop)
             }
-        }
-
-        confirmPay(player, item, category, gui, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
-        cancelPay(player, category, gui, creditShop)
-        close(player, gui, magenta.creditShopConfirmMenuConfig.getConfig())
-
-        gui.open(player)
+            //close(player, component, magenta.creditShopConfirmMenuConfig.getConfig())
+        }.build().open(player)
     }
-
     private fun confirmPay(
-        player: HumanEntity,
         item: String,
         category: String,
-        gui: Gui,
+        container: GuiContainer<Player, ItemStack>,
         creditShop: CreditShop,
         config: FileConfiguration,
         creditShopPaymentMethod: CreditShopPaymentMethod,
@@ -85,18 +89,16 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
             val slot = magenta.creditShopConfirmMenuConfig.getConfig().getInt("menu.confirm_ok.slot")
 
-            val guiItem = ItemBuilder.from(itemStack).asGuiItem { action ->
-                if (action.isLeftClick || action.isRightClick) {
-                    creditShopPaymentMethod.buyItem(action.whoClicked, config, item, displayName, isBuyAllowed)
-                    creditShop.openCategory(player, category)
-                    return@asGuiItem
-                }
+            val guiItem = ItemBuilder.from(itemStack).asGuiItem { player, context ->
+                creditShopPaymentMethod.buyItem(player, config, item, displayName, isBuyAllowed)
+                //creditShop.openCategory(player, category)
+                return@asGuiItem
             }
-            gui.setItem(slot, guiItem)
+            container.set(slot, guiItem)
         }
     }
 
-    private fun cancelPay(player: HumanEntity, category: String, gui: Gui, creditShop: CreditShop) {
+    private fun cancelPay(category: String, container: GuiContainer<Player, ItemStack>, creditShop: CreditShop) {
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no")) {
             val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()) ?: return
 
@@ -117,19 +119,18 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
             val slot = magenta.creditShopConfirmMenuConfig.getConfig().getInt("menu.confirm_no.slot")
 
-            val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { action ->
-                if (action.isLeftClick || action.isRightClick) {
-                    return@asGuiItem creditShop.openCategory(player, category)
-                }
+            val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem { player, context ->
+                //return@asGuiItem creditShop.openCategory(player, category)
             }
-            gui.setItem(slot, guiItem)
+            container.set(slot, guiItem)
         }
     }
 
+    /*
     private fun close(player: HumanEntity, gui: Gui, fileConfiguration: FileConfiguration) {
         for (material in Material.entries) {
             simpleMenu.closeMenuOrBack(player, material, gui, fileConfiguration, null)
         }
-    }
+    }*/
 
 }

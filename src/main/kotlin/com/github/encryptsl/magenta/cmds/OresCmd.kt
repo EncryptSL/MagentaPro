@@ -26,6 +26,6 @@ class OresCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.ores.progress")
     @CommandDescription("This command open gui with your ores level mining progress")
     fun onOresProgress(player: Player) {
-        oresGUI.openMenu(player)
+        oresGUI.open(player)
     }
 }
