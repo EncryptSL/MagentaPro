@@ -19,7 +19,7 @@ class AntiSpam(val magenta: Magenta) : ChatCheck() {
 
     val spam: Cache<UUID, String> = CacheBuilder.newBuilder().expireAfterWrite(Duration.ofSeconds(60)).build()
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     override fun handle(event: AsyncChatEvent) {
         val player = event.player
         val phrase = PlainTextComponentSerializer.plainText().serialize(event.message())
@@ -35,11 +35,6 @@ class AntiSpam(val magenta: Magenta) : ChatCheck() {
         if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_SPAM))
             return false
 
-        spam.put(player.uniqueId, phrase)
-        spam.asMap().computeIfPresent(player.uniqueId) { _, _ -> phrase }
-
-        return spam.getIfPresent(player.uniqueId)?.let {
-            checkSimilarity(phrase, it, magenta.chatControl.getConfig().getInt("filters.antispam.similarity"))
-        } == true
+        return checkSimilarity(phrase, spam.asMap()[player.uniqueId].toString(), magenta.chatControl.getConfig().getInt("filters.antispam.similarity"))
     }
 }

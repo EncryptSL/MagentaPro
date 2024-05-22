@@ -56,6 +56,6 @@ abstract class ChatCheck : ChatDetection, Listener {
     }
 
     fun checkSimilarity(str1: String, str2: String, maxSimiliarity: Int): Boolean {
-        return (similarityScore(str1, str2) * 100) > maxSimiliarity
+        return (similarityScore(str1, str2) >= maxSimiliarity)
     }
 }

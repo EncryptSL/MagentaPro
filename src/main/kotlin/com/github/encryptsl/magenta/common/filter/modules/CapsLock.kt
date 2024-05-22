@@ -13,7 +13,7 @@ import org.bukkit.event.EventPriority
 
 class CapsLock(private val magenta: Magenta) : ChatCheck() {
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     override fun handle(event: AsyncChatEvent) {
         val player = event.player
         val phrase = PlainTextComponentSerializer.plainText().serialize(event.message())
