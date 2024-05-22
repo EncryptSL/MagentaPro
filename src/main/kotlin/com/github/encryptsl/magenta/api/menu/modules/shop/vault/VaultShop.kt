@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import com.github.encryptsl.magenta.common.model.ShopManager
@@ -31,7 +30,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
 
         gui.component { component ->
             component.render { container, viewer ->
-                for (category in shopManager.shopCategories()) {
+                for (category in shopManager.getShopCategories()) {
                     val material = Material.getMaterial(
                         magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
                     ) ?: continue
