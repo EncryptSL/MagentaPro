@@ -43,9 +43,9 @@ class MsgCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Command("reply|r <message>")
     @Permission("magenta.msg")
     @CommandDescription("This command send fast reply to current conversation")
-    fun onFastReplyMsg(commandSender: CommandSender, @Argument("message") @Greedy message: String) {
-        val receiverUUID = magenta.playerCacheManager.reply.getIfPresent(commandSender)
+    fun onFastReplyMsg(player: Player, @Argument("message") @Greedy message: String) {
+        val receiverUUID = magenta.playerCacheManager.reply.getIfPresent(player)
 
-        FastReplyMessageEvent(commandSender, receiverUUID, message).callEvent()
+        FastReplyMessageEvent(player, receiverUUID, message).callEvent()
     }
 }
