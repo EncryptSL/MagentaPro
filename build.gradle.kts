@@ -33,6 +33,7 @@ dependencies {
     compileOnly("org.jetbrains.exposed:exposed-core:0.49.0")
     compileOnly("org.jetbrains.exposed:exposed-jdbc:0.49.0")
     compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.49.0")
+    compileOnly("com.github.ben-manes.caffeine:caffeine:3.1.8")
     compileOnly("com.zaxxer:HikariCP:5.1.0")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
     compileOnly("me.clip:placeholderapi:2.11.5")
