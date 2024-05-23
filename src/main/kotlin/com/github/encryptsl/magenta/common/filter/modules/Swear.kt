@@ -20,7 +20,7 @@ class Swear(private val magenta: Magenta) : ChatCheck() {
         val phrase = PlainTextComponentSerializer.plainText().serialize(event.message())
 
         if (matches(player, phrase)) {
-            return chatPunishManager().action(player, event, magenta.locale.getMessage("magenta.filter.swear"), phrase, ChatFilters.SWEAR)
+            chatPunishManager().action(player, event, magenta.locale.getMessage("magenta.filter.swear"), phrase, ChatFilters.SWEAR)
         }
     }
 

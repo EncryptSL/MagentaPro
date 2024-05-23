@@ -18,7 +18,7 @@ class IPFilter(private val magenta: Magenta) : ChatCheck() {
         val phrase = PlainTextComponentSerializer.plainText().serialize(event.message())
 
         if (matches(player, phrase)) {
-            return chatPunishManager().action(player, event, magenta.locale.getMessage("magenta.filter.ip_filter"), phrase, ChatFilters.IPFILTER)
+            chatPunishManager().action(player, event, magenta.locale.getMessage("magenta.filter.ip_filter"), phrase, ChatFilters.IPFILTER)
         }
     }
 
