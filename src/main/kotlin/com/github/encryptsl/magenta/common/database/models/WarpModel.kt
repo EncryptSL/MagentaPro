@@ -117,14 +117,14 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         val future = CompletableFuture<Boolean>()
 
         if (player.hasPermission(Permissions.WARPS_UNLIMITED)) {
-            return CompletableFuture.completedFuture<Boolean>(false)
+            return CompletableFuture.completedFuture<Boolean>(true)
         }
 
         val section = plugin.config.getConfigurationSection("warps.groups") ?: return CompletableFuture.completedFuture<Boolean>(false)
 
         val max = section.getKeys(false).filter { player.hasPermission(Permissions.WARPS_LIMIT.format("$it")) }.map { section.getInt(it) }.first()
 
-        if (max == -1) return CompletableFuture.completedFuture<Boolean>(false)
+        if (max == -1) return CompletableFuture.completedFuture<Boolean>(true)
 
         val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
 

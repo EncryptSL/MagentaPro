@@ -82,14 +82,14 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
         val future = CompletableFuture<Boolean>()
 
         if (player.hasPermission("magenta.homes.unlimited"))
-            return CompletableFuture.completedFuture<Boolean>(false)
+            return CompletableFuture.completedFuture<Boolean>(true)
 
         val section = plugin.config.getConfigurationSection("homes.groups") ?: return CompletableFuture.completedFuture<Boolean>(false)
 
         val max = section.getKeys(false).filter { player.hasPermission("magenta.homes.$it") }.firstNotNullOf { section.getInt(it) }
 
 
-        if (max == -1) return CompletableFuture.completedFuture<Boolean>(false)
+        if (max == -1) return CompletableFuture.completedFuture<Boolean>(true)
 
         val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() >= max }
         future.completeAsync { boolean }
@@ -107,7 +107,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun getHomesByOwner(uuid: UUID): CompletableFuture<List<HomeEntity>> {
         val future = CompletableFuture<List<HomeEntity>>()
 
-        val homes = transaction { HomeTable.selectAll().where( HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
+        val homes = transaction { HomeTable.selectAll().where(HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
         future.completeAsync { homes }
         return future
     }
