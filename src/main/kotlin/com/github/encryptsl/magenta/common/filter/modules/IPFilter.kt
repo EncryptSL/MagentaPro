@@ -23,16 +23,11 @@ class IPFilter(private val magenta: Magenta) : ChatCheck() {
     }
 
     override fun matches(player: Player, phrase: String): Boolean {
-        var detected = false
 
         if (!magenta.chatControl.getConfig().getBoolean("filters.ipfilter.control")) return false
 
         if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_IP_ADDRESS)) return false
 
-        for (m in phrase.split(" ") ) {
-            detected = m.matches(Regex("${magenta.chatControl.getConfig().getString("filters.ipfilter.ip_regex")}"))
-        }
-
-        return detected
+        return phrase.contains(Regex("${magenta.chatControl.getConfig().getString("filters.ipfilter.ip_regex")}"))
     }
 }
