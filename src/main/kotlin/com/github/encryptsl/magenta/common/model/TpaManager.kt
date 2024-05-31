@@ -9,26 +9,22 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import java.util.*
 import kotlin.collections.set
-import kotlin.let
-import kotlin.toString
 
 class TpaManager(private val magenta: Magenta) {
 
-    private val request: MutableMap<UUID, TpaRequest> = HashMap()
-
     fun createRequest(sender: Player, target: Player) : Boolean {
-        if (request.containsKey(sender.uniqueId)) return false
+        if (magenta.playerCacheManager.teleportRequest.asMap().containsKey(sender.uniqueId)) return false
 
-        request[target.uniqueId] = TpaRequest(sender.uniqueId, target.uniqueId)
+        magenta.playerCacheManager.teleportRequest.asMap()[target.uniqueId] = TpaRequest(sender.uniqueId, target.uniqueId)
         return true
     }
 
     fun acceptRequest(player: Player) {
-        if (!request.containsKey(player.uniqueId)) {
+        if (!magenta.playerCacheManager.teleportRequest.asMap().containsKey(player.uniqueId)) {
             return player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.not.exist"))
         }
 
-        val target = request[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
+        val target = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
             ?: return player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.accept"))
 
         player.sendMessage(magenta.locale.translation("magenta.command.tpa.success.request.accepted"))
@@ -40,33 +36,34 @@ class TpaManager(private val magenta: Magenta) {
                 )
             )).sound("block.note_block.pling", 1.5F, 1.5F)
         target.teleport(player)
-        request.remove(player.uniqueId)
+        magenta.playerCacheManager.teleportRequest.asMap().remove(player.uniqueId)
     }
 
     fun denyRequest(player: Player) {
-        if (!request.containsKey(player.uniqueId)) {
+        if (!magenta.playerCacheManager.teleportRequest.asMap().containsKey(player.uniqueId)) {
             return player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.not.exist"))
         }
 
-        val sender = request[player.uniqueId]?.from?.let { Bukkit.getPlayer(it) }
+        val sender = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.from?.let { Bukkit.getPlayer(it) }
         sender?.playSound(sender, Sound.BLOCK_NOTE_BLOCK_BASS, 1.5F, 1.5F)
         sender?.sendMessage(magenta.locale.translation("magenta.command.tpa.error.denied.to"))
         player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.denied"))
-        request.remove(player.uniqueId)
+        magenta.playerCacheManager.teleportRequest.asMap().remove(player.uniqueId)
     }
 
+    /*
     fun killRequest(player: Player) {
-        if (!request.containsKey(player.uniqueId)) return
+        if (!magenta.playerCacheManager.teleportRequest.asMap().containsKey(player.uniqueId)) return
 
-        val expire = request[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
+        val expire = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
         expire?.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.expired"))
         PlayerBuilderAction
             .player(player)
             .message(magenta.locale.translation("magenta.command.tpa.error.request.expired.to",
-                Placeholder.parsed("player", Bukkit.getOfflinePlayer(UUID.fromString(request[player.uniqueId].toString())).name.toString())
+                Placeholder.parsed("player", Bukkit.getOfflinePlayer(UUID.fromString(magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId].toString())).name.toString())
             )).sound("block.note_block.bass", 1.5F, 1.5F)
-        request.remove(player.uniqueId)
-    }
+        magenta.playerCacheManager.teleportRequest.asMap().remove(player.uniqueId)
+    }*/
 
     data class TpaRequest(val from: UUID, val to: UUID)
 }

@@ -1,38 +1,29 @@
 package com.github.encryptsl.magenta.api.menu
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.components.GuiFiller
+import dev.triumphteam.gui.container.GuiContainer
+import dev.triumphteam.gui.paper.builder.item.ItemBuilder
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.Material
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 class MenuUI(private val magenta: Magenta) {
 
-    /*
-    inner class PaginationMenu(magenta: Magenta, private val menuExtender: MenuExtender) : AbstractPaginatedMenu(magenta) {
-        fun paginatedControlButtons(player: HumanEntity, fileConfiguration: FileConfiguration, gui: PaginatedGui) {
-            for (material in Material.entries) {
-                previousPage(player, material, fileConfiguration, "previous", gui)
-                closeMenuOrBack(player, material, gui, fileConfiguration, menuExtender)
-                previousPage(player, material, fileConfiguration, "next", gui)
-            }
+    fun useAllFillers(rows: Int, container: GuiContainer<Player, ItemStack>, config: FileConfiguration) {
+        val menuFiller = GuiFiller(rows, container, config)
+        if (config.contains("menu.gui.fill")) {
+            menuFiller.fillBorder()
+            menuFiller.fillTop()
+            //menuFiller.fillBottom()
         }
     }
 
-    inner class SimpleMenu(magenta: Magenta) : AbstractSimpleMenu(magenta)
-
-
-    fun useAllFillers(filler: GuiFiller, fileConfiguration: FileConfiguration) {
-        val menuFiller = MenuFiller()
-        if (fileConfiguration.contains("menu.gui.fill")) {
-            menuFiller.fillBorder(filler, fileConfiguration)
-            menuFiller.fillTop(filler, fileConfiguration)
-            menuFiller.fillBottom(filler, fileConfiguration)
-            menuFiller.fillSide(filler, fileConfiguration)
-            menuFiller.fillFull(filler, fileConfiguration)
-        }
-    }
-
-    fun customItems(player: HumanEntity, type: String, fileConfiguration: FileConfiguration, gui: BaseGui) {
+    fun customItems(player: Player, type: String, fileConfiguration: FileConfiguration, container: GuiContainer<Player, ItemStack>) {
         for (item in fileConfiguration.getConfigurationSection("menu.custom-items")?.getKeys(false)!!) {
-            val material = Material.getMaterial(fileConfiguration.getString("menu.custom-items.$item.icon").toString())
-            if (material == null) continue
+            val material = Material.getMaterial(fileConfiguration.getString("menu.custom-items.$item.icon").toString()) ?: continue
 
             if (!fileConfiguration.contains("menu.custom-items.$item.name"))
                 return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
@@ -46,10 +37,9 @@ class MenuUI(private val magenta: Magenta) {
             val slot = fileConfiguration.getInt("menu.custom-items.$item.position.slot")
             val glowing = fileConfiguration.getBoolean("menu.custom-items.$item.options.glowing")
             val lore = fileConfiguration.getStringList("menu.custom-items.$item.lore")
-            val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem {
-                return@asGuiItem
-            }
-            gui.setItem(slot, guiItem)
+            val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem { p, context -> }
+
+            container.set(slot, guiItem)
         }
-    }*/
+    }
 }

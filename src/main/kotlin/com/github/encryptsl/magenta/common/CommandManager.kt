@@ -4,6 +4,7 @@ import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationCommandRegister
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -65,7 +66,7 @@ class CommandManager(private val magenta: Magenta) {
             .defaultHandlers()
             .decorator { component ->
                 ModernText.miniModernText(magenta.config.getString("prefix", "<red>[<bold>!</bold>]").toString())
-                    .appendSpace()
+                    .append(Component.text())
                     .append(component)
             }
             .registerTo(commandManager)
@@ -112,7 +113,7 @@ class CommandManager(private val magenta: Magenta) {
                 AfkCmd(magenta),
                 BackCmd(magenta),
                 BroadcastCmd(magenta),
-                CommandItemsCmd(magenta),
+                VoucherCmd(magenta),
                 ContainersCmd(magenta),
                 EnderChestCmd(magenta),
                 FeedbackCmd(magenta),

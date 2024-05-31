@@ -1,12 +1,8 @@
 package com.github.encryptsl.magenta.api.menu.modules.home
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.extensions.createItem
-import com.github.encryptsl.kmono.lib.extensions.glow
-import com.github.encryptsl.kmono.lib.extensions.meta
-import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
-import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.paper.Gui
 import dev.triumphteam.gui.paper.builder.item.ItemBuilder
 import fr.euphyllia.energie.model.SchedulerType
@@ -17,21 +13,27 @@ import org.bukkit.entity.Player
 
 class HomeGUI(private val magenta: Magenta) {
 
-    //private val menuUI: MenuUI by lazy { MenuUI(magenta) }
-    //private val simpleMenu = menuUI.SimpleMenu(magenta)
+    private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val homeEditorGUI: HomeEditorGUI by lazy {
         HomeEditorGUI(magenta, this)
     }
 
     fun openHomeGUI(player: Player) {
-        val gui = Gui.of(magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)).title(
+        val rows = magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
+        val gui = Gui.of(rows).title(
             ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.gui.display").toString())
         )
 
-        //menuUI.useAllFillers(gui.filler, magenta.homeMenuConfig.getConfig())
-
         gui.component { component ->
             component.render { container, viewer ->
+                menuUI.useAllFillers(rows, container, magenta.homeMenuConfig.getConfig())
+
+                val homes = magenta.homeModel.getHomesByOwner(viewer.uniqueId).join()
+
+                for (home in homes) {
+
+                }
+
                 magenta.homeModel.getHomesByOwner(viewer.uniqueId).thenAccept { homes ->
                     Magenta.scheduler.runTask(SchedulerType.SYNC) {
                         for (home in homes.withIndex()) {
@@ -56,16 +58,11 @@ class HomeGUI(private val magenta: Magenta) {
                                 )) }.toMutableList()
 
 
-                            val itemHomeBuilder = createItem(material) {
-                                amount = 1
-                                meta {
-                                    setNameComponent = itemNameComponent
-                                    setLoreComponentList = loresComponents
-                                    glow = true
-                                }
-                            }
+                            val itemBuilder = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
+                                .setName(itemNameComponent)
+                                .addLore(loresComponents).create()
 
-                            val item = ItemBuilder.from(itemHomeBuilder).asGuiItem { player, context ->
+                            val item = ItemBuilder.from(itemBuilder).asGuiItem { player, context ->
                                 //if (context.isLeftClick) {
                                 //    magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.value.homeName, magenta.config.getLong("teleport-cooldown")))
                                 //    return@asGuiItem

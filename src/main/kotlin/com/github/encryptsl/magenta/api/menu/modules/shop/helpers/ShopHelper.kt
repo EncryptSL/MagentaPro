@@ -5,11 +5,8 @@ import com.github.encryptsl.magenta.Magenta
 import org.bukkit.Bukkit
 
 object ShopHelper {
-
     @JvmStatic
-    fun calcPrice(amount: Int, price: Double) = (amount.times(price))
-    @JvmStatic
-    fun giveRewards(commands: MutableList<String>, username: String, quantity: Int) {
+    fun giveRewards(commands: List<String>, username: String, quantity: Int) {
         commands.forEach { command ->
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
                 .replace("{player}", username)

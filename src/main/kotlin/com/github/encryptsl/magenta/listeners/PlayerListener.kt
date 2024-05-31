@@ -9,6 +9,7 @@ import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.extensions.console
 import com.github.encryptsl.magenta.common.extensions.datetime
 import com.github.encryptsl.magenta.common.extensions.parseMinecraftTime
+import com.github.encryptsl.magenta.common.model.VoucherManager
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -24,7 +25,10 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.*
 
+
 class PlayerListener(private val magenta: Magenta) : Listener {
+
+    private val voucherManager: VoucherManager by lazy { VoucherManager(magenta) }
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onAsyncLogin(event: AsyncPlayerPreLoginEvent) {
@@ -110,6 +114,8 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         }
 
         magenta.playerCacheManager.reply.invalidate(player)
+        magenta.playerCacheManager.antiSpam.invalidate(player.uniqueId)
+        magenta.playerCacheManager.teleportRequest.invalidate(player.uniqueId)
         magenta.earnBlocksProgressManager.save(player.uniqueId)
         magenta.earnBlocksProgressManager.remove(player.uniqueId)
         magenta.afk.clear(player.uniqueId)
@@ -158,28 +164,18 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         magenta.afk.setTime(player.uniqueId)
 
         if (itemInHand.hasItemMeta()) {
-            if (event.action.isRightClick) {
-                val itemMeta = itemInHand.itemMeta
-                val displayName = itemMeta.displayName()
-                val cItems = magenta.cItems.getConfig().getConfigurationSection("citems")?.getKeys(false) ?: return
+            val vouchers = magenta.vouchers.getConfig().getConfigurationSection("vouchers")?.getKeys(false) ?: return
+            val voucher = vouchers.stream().filter { el -> voucherManager.isItemVoucherInHand(itemInHand, el) }.findFirst()
 
-                if (itemMeta.hasDisplayName() && displayName != null) {
-                    for (it in cItems) {
-                        val sid = magenta.cItems.getConfig().getString("citems.$it.sid").toString()
-                        val item = magenta.cItems.getConfig().getString("citems.$it.name").toString().replace("<sid>", sid)
-                        val itemName = ModernText.convertComponentToText(displayName)
-                        val activationItemName = ModernText.convertComponentToText(ModernText.miniModernText(item))
-                        if (itemName != activationItemName) continue
-
-                        val command = magenta.cItems.getConfig().getString("citems.$it.command").toString()
-                        console(command, player)
-                        if (itemInHand.amount > 1) {
-                            itemInHand.amount -= 1
-                        } else {
-                            player.inventory.remove(itemInHand)
-                        }
-                    }
+            if (voucherManager.isItemVoucherInHand(itemInHand, voucher.toString()) && event.action.isRightClick) {
+                val command = magenta.vouchers.getConfig().getString(("vouchers." + voucher.get()) + ".command").toString()
+                console(command, player)
+                if (itemInHand.amount > 1) {
+                    itemInHand.amount -= 1
+                } else {
+                    inventory.remove(itemInHand)
                 }
+                event.isCancelled = true
             }
         }
     }

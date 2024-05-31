@@ -76,7 +76,7 @@ open class Magenta : JavaPlugin() {
     val kitConfig: UniversalConfig by lazy { UniversalConfig("${path}/kits.yml") }
     val jailConfig: UniversalConfig by lazy { UniversalConfig("${path}/jails.yml") }
     val mmConfig: UniversalConfig by lazy { UniversalConfig("${path}/mythicmobs/rewards.yml") }
-    val cItems: UniversalConfig by lazy { UniversalConfig("${path}/citems.yml") }
+    val vouchers: UniversalConfig by lazy { UniversalConfig("${path}/vouchers.yml") }
     val randomConfig: UniversalConfig by lazy { UniversalConfig("${path}/random.yml") }
     val shopConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/shop/shop.yml") }
     val creditShopConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/creditshop/shop.yml") }
@@ -98,7 +98,7 @@ open class Magenta : JavaPlugin() {
     val earnBlocksProgressManager: EarnBlocksProgressManager by lazy { EarnBlocksProgressManager(this) }
     val commandHelper: CommandHelper by lazy { CommandHelper(this) }
 
-    val playerCacheManager by lazy { PlayerCacheManager() }
+    val playerCacheManager by lazy { PlayerCacheManager(this) }
     val vaultHook by lazy { VaultHook(this) }
 
     val commandManager: CommandManager by lazy { CommandManager(this) }
@@ -117,7 +117,7 @@ open class Magenta : JavaPlugin() {
             .createFromResources("chatcontrol/swears.txt", this)
             .createFromResources("chatcontrol/filter.yml", this)
             .createFromResources("motd.txt", this)
-            .createFromResources("citems.yml", this)
+            .createFromResources("vouchers.yml", this)
             .createFromResources("random.yml", this)
             .createFromResources("oraxen/config.yml", this)
             .createFromResources("mythicmobs/config.yml", this)

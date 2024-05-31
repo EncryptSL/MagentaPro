@@ -1,57 +1,45 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
 import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyUniversalBuilder
 import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
-import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPayment
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentAction
-import com.github.encryptsl.kmono.lib.extensions.hasPlayerRequiredItem
-import com.github.encryptsl.kmono.lib.extensions.isPlayerInventoryFull
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.modules.shop.EconomyShopIntegration
+import com.github.encryptsl.magenta.api.menu.modules.shop.Product
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
 
-class VaultShopPaymentMethods(private val magenta: Magenta) : EconomyPayment {
+class VaultShopPaymentMethods(private val magenta: Magenta)  {
 
-    private val economyShopIntegration: EconomyShopIntegration by lazy { EconomyShopIntegration(magenta) }
-    override fun buy(
-        shopPaymentHolder: EconomyDataPayment,
-        commands: MutableList<String>?,
-        inventory: InventoryClickEvent
+    fun buy(
+        player: Player,
+        holder: EconomyDataPayment<Product>,
+        isBuyAllowed: Boolean,
+        commands: List<String>
     ) {
-        val player = inventory.whoClicked as Player
-        val price = shopPaymentHolder.price
+        val economyUniversalBuilder = EconomyUniversalBuilder(player)
 
-        if (!shopPaymentHolder.isOperationAllowed)
-            return player.sendMessage(magenta.locale.translation("magenta.shop.error.buy.disabled"))
+        val withdraw = EconomyWithdraw(player, holder.product.productPrice).transaction(magenta.vaultHook) ?: return
 
-        if (isPlayerInventoryFull(player))
-            return player.sendMessage(magenta.locale.translation("magenta.shop.error.inventory.full"))
-
-        val transactions = EconomyWithdraw(player, price).transaction(magenta.vaultHook) ?: return
-
-        economyShopIntegration.doVaultTransaction(player,
-            EconomyPaymentAction.BUY, transactions, shopPaymentHolder,"magenta.shop.success.buy", commands)
+        economyUniversalBuilder.setEconomyProvider(withdraw).setEconomyIntegration(EconomyVaultIntegration(
+            magenta, "magenta.shop.success.buy", EconomyPaymentAction.BUY, holder, commands
+        )).setLocale(magenta.locale).setOperation(isBuyAllowed).buy()
     }
-    override fun sell(
-        shopPaymentHolder: EconomyDataPayment,
-        inventory: InventoryClickEvent
+
+    fun sell(
+        player: Player,
+        holder: EconomyDataPayment<Product>,
+        isSellAllowed: Boolean,
+        commands: List<String>
     ) {
-        val player = inventory.whoClicked as Player
-        val item = shopPaymentHolder.itemStack
-        val price = shopPaymentHolder.price
+        val economyUniversalBuilder = EconomyUniversalBuilder(player)
 
-        if (!shopPaymentHolder.isOperationAllowed)
-            return player.sendMessage(magenta.locale.translation("magenta.shop.error.sell.disabled"))
+        val deposit = EconomyDeposit(player, holder.product.productPrice).transaction(magenta.vaultHook) ?: return
 
-        if (!hasPlayerRequiredItem(player, item))
-            return player.sendMessage(magenta.locale.translation("magenta.shop.error.empty.no.item"))
-
-        val transactions = EconomyDeposit(player, price).transaction(magenta.vaultHook) ?: return
-
-        economyShopIntegration.doVaultTransaction(player,
-            EconomyPaymentAction.SELL, transactions, shopPaymentHolder,"magenta.shop.success.sell", null)
+        economyUniversalBuilder.setEconomyProvider(deposit).setEconomyIntegration(EconomyVaultIntegration(
+            magenta, "magenta.shop.success.sell", EconomyPaymentAction.SELL, holder, commands
+        )).setLocale(magenta.locale).setOperation(isSellAllowed).setItemStack(holder.product.itemStack).sell()
     }
+
 
 }

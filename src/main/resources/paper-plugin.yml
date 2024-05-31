@@ -47,7 +47,7 @@ permissions:
       magenta.afk.*: true
       magenta.back.*: true
       magenta.broadcast.*: true
-      magenta.citem.*: true
+      magenta.voucher.*: true
       magenta.containers.*: true
       magenta.echest.*: true
       magenta.feedback.*: true
@@ -144,16 +144,16 @@ permissions:
     default: false
     children:
       magenta.broadcast: true
-  magenta.citem.*:
+  magenta.voucher.*:
     description: Permissions for managing activation items with commands.
     default: false
     children:
-      magenta.citem.create: true
-      magenta.citem.set.name: true
-      magenta.citem.set.material: true
-      magenta.citem.set.lore: true
-      magenta.citem.set.command: true
-      magenta.citem.give: true
+      magenta.voucher.create: true
+      magenta.voucher.set.name: true
+      magenta.voucher.set.material: true
+      magenta.voucher.set.lore: true
+      magenta.voucher.set.command: true
+      magenta.voucher.give: true
   magenta.containers.*:
     description: Permissions for virtual crafting
     default: false

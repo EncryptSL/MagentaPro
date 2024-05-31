@@ -6,6 +6,7 @@ import com.github.encryptsl.kmono.lib.extensions.meta
 import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
 import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.container.GuiContainer
 import dev.triumphteam.gui.layout.BoxGuiLayout
 import dev.triumphteam.gui.paper.Gui
@@ -22,7 +23,7 @@ import org.bukkit.inventory.ItemStack
 class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) {
 
 
-    //private val menu: MenuUI by lazy { MenuUI(magenta) }
+    private val menu: MenuUI by lazy { MenuUI(magenta) }
     //private val simpleMenu = menu.SimpleMenu(magenta)
 
     private val ignoreSlots = listOf(17, 18, 26, 27, 35, 36, 44)
@@ -30,19 +31,20 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
     private var clicked = false
 
     fun openHomeEditorGUI(player: Player, homeName: String) {
-        val gui = Gui.of(magenta.homeEditorConfig.getConfig().getInt("menu.gui.size", 6)).title(
+        val rows = magenta.homeEditorConfig.getConfig().getInt("menu.gui.size", 6)
+
+        val gui = Gui.of(rows).title(
             ModernText.miniModernText(
                 magenta.homeEditorConfig.getConfig().getString("menu.gui.display").toString(),
                 Placeholder.parsed("home", homeName)
             )
         )
 
-        //menu.useAllFillers(gui.filler, magenta.homeEditorConfig.getConfig())
-
         val menuSection = magenta.homeEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false) ?: return
 
         gui.component { component ->
             component.render { container, viewer ->
+                menu.useAllFillers(rows, container, magenta.homeEditorConfig.getConfig())
 
                 for (el in menuSection.withIndex()) {
                     val material = Material.getMaterial(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()) ?: continue
@@ -95,7 +97,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         }
     }
 
-    private fun setLocation(player: Player, homeName: String,fileConfiguration: FileConfiguration, el: String, gui: Gui) {
+    private fun setLocation(player: Player, container: GuiContainer<Player, ItemStack>, homeName: String,fileConfiguration: FileConfiguration, el: String) {
         if (fileConfiguration.getString("menu.items.buttons.$el.action").equals("SET_HOME", true)) {
             clicked =false
             //clearIcons(gui)
@@ -116,9 +118,9 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
     private fun setNewIcon(
         player: Player,
         homeName: String,
+        container: GuiContainer<Player, ItemStack>,
         fileConfiguration: FileConfiguration,
         el: String,
-        container: GuiContainer<Player, ItemStack>
     ) {
         val itemName = fileConfiguration.getString("menu.icon.name")
 
