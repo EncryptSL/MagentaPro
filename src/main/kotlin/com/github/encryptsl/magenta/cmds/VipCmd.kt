@@ -2,10 +2,10 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.extensions.convertInstant
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.apache.commons.lang3.time.DateFormatUtils
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -18,6 +18,7 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private val luckPermsAPI: LuckPermsAPI by lazy { LuckPermsAPI() }
     private val group: String = "vip"
+    private val dateTimeFormat = "dd.MM hh:mm yyyy"
 
     override fun registerFeatures(
         annotationParser: AnnotationParser<CommandSender>,
@@ -34,7 +35,9 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
             val time = luckPermsAPI.getExpireGroup(player, group)
                 ?: return player.sendMessage(magenta.locale.translation("magenta.command.vip.error.expired"))
 
-            player.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time", Placeholder.parsed("expire", convertInstant(time))))
+            player.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time",
+                Placeholder.parsed("expire", DateFormatUtils.format(time.toEpochMilli(), dateTimeFormat))
+            ))
         } catch (e : Exception) {
             player.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -56,7 +59,7 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
 
             commandSender.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time.other", TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
-                Placeholder.parsed("expire", convertInstant(time))))
+                Placeholder.parsed("expire", DateFormatUtils.format(time.toEpochMilli(), dateTimeFormat))))
             )
         } catch (e : Exception) {
             commandSender.sendMessage(magenta.locale.translation("magenta.exception",

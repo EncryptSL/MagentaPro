@@ -39,8 +39,8 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
-        val metaData: CachedMetaData? = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
-        val prefix = metaData?.prefix ?: "[DEFAULT]"
+        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val prefix = metaData.prefix ?: "[DEFAULT]"
 
         return prefix
     }
@@ -49,8 +49,8 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
-        val metaData: CachedMetaData? = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
-        val suffix = metaData?.suffix ?: ""
+        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val suffix = metaData.suffix ?: ""
 
         return suffix
     }
@@ -71,9 +71,9 @@ class LuckPermsAPI : PluginHook("LuckPerms") {
         if (!isPluginEnabled())
             throw Exception("LuckPerms Missing")
 
-        val metaData: CachedMetaData? = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
+        val metaData: CachedMetaData = getLuckPerms().getPlayerAdapter(Player::class.java).getMetaData(player)
 
-        return metaData?.getMetaValue(value) ?: ""
+        return metaData.getMetaValue(value) ?: ""
     }
 
     fun getUser(uuid: UUID): CompletableFuture<User> {

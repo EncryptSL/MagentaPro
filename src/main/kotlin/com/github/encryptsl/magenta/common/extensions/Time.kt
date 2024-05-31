@@ -1,10 +1,9 @@
 package com.github.encryptsl.magenta.common.extensions
 
+import kotlinx.datetime.Clock
+import org.apache.commons.lang3.time.DateFormatUtils
 import org.apache.commons.lang3.time.DurationFormatUtils
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
@@ -40,17 +39,14 @@ fun formatFromSecondsTime(seconds: Long): String {
     return timeOfDay.toString()
 }
 
-fun datetime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"))
+fun datetime(): String = DateFormatUtils.format(Clock.System.now().toEpochMilliseconds(), "HH:mm")
 
 fun now(): String = LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
 
 fun convertFromMillis(millis: Long): String {
-    val date = Date(millis)
-    val from = date.toInstant()
-    val localDateTime: LocalDateTime = from.atZone(ZoneId.systemDefault()).toLocalDateTime()
-    return DateTimeFormatter.ofPattern("eeee, dd. MMMM yyyy HH:mm:ss", Locale.forLanguageTag("cs")).format(localDateTime)
+    return DateFormatUtils.format(Date(millis), "eeee, dd. MMMM yyyy HH:mm:ss", Locale.forLanguageTag("cs"))
 }
 
-fun convertInstant(instant: Instant): String {
-    return DateTimeFormatter.ofPattern("MM-dd hh:mm yyyy").format(instant)
+fun convertInstant(instant: Instant, format: String): String {
+    return DateFormatUtils.format(instant.toEpochMilli(), format)
 }
