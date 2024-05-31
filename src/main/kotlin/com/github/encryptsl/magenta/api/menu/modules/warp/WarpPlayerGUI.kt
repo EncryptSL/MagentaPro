@@ -67,7 +67,7 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
     }
 
     private fun getItem(itemStack: ItemStack, warp: WarpEntity): GuiItem<Player, ItemStack> {
-        return ItemBuilder.from(itemStack).asGuiItem { player, context ->
+        return ItemBuilder.from(itemStack).asGuiItem { player, _ ->
                 player.teleport(magenta.warpModel.toLocation(warp.warpName))
             //if (context.isRightClick) {
             //    playerEditorGUI.openWarpPlayerEditor(player, warp.warpName)

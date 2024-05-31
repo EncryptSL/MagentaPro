@@ -54,7 +54,7 @@ class HomeGUI(private val magenta: Magenta) {
                         .setName(itemNameComponent)
                         .addLore(loresComponents).create()
 
-                    val item = ItemBuilder.from(itemBuilder).asGuiItem { player, context ->
+                    val item = ItemBuilder.from(itemBuilder).asGuiItem { player, _ ->
                         magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.value.homeName, magenta.config.getLong("teleport-cooldown")))
                     //if (context.isRightClick) {
                     //    //simpleMenu.clickSound(player, magenta.homeEditorConfig.getConfig())

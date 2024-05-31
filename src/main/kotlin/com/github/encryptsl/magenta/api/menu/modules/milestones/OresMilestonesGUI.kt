@@ -52,7 +52,7 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
                         itemStack.addLore(lores)
                         itemStack.setGlowing(true)
                     }
-                    container.set(key.index, ItemBuilder.from(itemStack.create()).asGuiItem { whoClick, context -> })
+                    container.set(key.index, ItemBuilder.from(itemStack.create()).asGuiItem { _, _ -> })
                 }
             }
         }.build().open(player)

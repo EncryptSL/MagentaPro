@@ -55,7 +55,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
                         itemStack.addLore(unlockedLores)
                         itemStack.setGlowing(true)
                     }
-                    val guiItem = dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemStack.create()).asGuiItem { whoClick, context -> }
+                    val guiItem = dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemStack.create()).asGuiItem { _, _ -> }
                     container.set(item.index, guiItem)
                 }
             }

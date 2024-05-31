@@ -115,8 +115,8 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                 )))
             }
             BUTTON_ACTION.SET_ICON -> {
+                clicked = true
                 loadIcons(player, container, warpName, config)
-                //gui.update()
             }
             BUTTON_ACTION.DELETE_HOME -> {
                 clicked = false
@@ -135,9 +135,8 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
     ) {
         val icons: Set<String> = fileConfiguration.getStringList("menu.icons").filter { s -> Material.getMaterial(s) != null }.map { it }.toSet()
         val itemName = fileConfiguration.getString("menu.icon.name")
-
         if (clicked) return
-        clicked = true
+
         for (icon in icons) {
             val lore = fileConfiguration.getStringList("menu.icon.lore")
                 .map { ModernText.miniModernText(it, Placeholder.parsed("icon", icon)) }
@@ -163,7 +162,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                             Placeholder.parsed("icon", materialName))
                     ).addLore(lore)
                     .create()
-            ).asGuiItem { whoClick, context ->
+            ).asGuiItem { whoClick, _ ->
                 magenta.warpModel.setWarpIcon(whoClick.uniqueId, warpName, materialName)
                 player.sendMessage(magenta.locale.translation("magenta.command.warp.success.change.icon", TagResolver.resolver(
                     Placeholder.parsed("warp", warpName),

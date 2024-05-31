@@ -61,8 +61,8 @@ class WarpGUI(private val magenta: Magenta) : Menu {
 
                     val itemBuilder = ItemBuilder(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
 
-                    val item = dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemBuilder).asGuiItem { p, context ->
-                        player.teleport(magenta.warpModel.toLocation(warp.value.warpName))
+                    val item = dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemBuilder).asGuiItem { whoClicked, _ ->
+                        whoClicked.teleport(magenta.warpModel.toLocation(warp.value.warpName))
                         return@asGuiItem
                     }
                     container.set(warp.index, item)
@@ -104,8 +104,8 @@ class WarpGUI(private val magenta: Magenta) : Menu {
         config: FileConfiguration,
         el: String
     ): GuiItem<Player, ItemStack> {
-        return dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemStack).asGuiItem { p, context ->
-            openOwnerWarps(p, config, el)
+        return dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemStack).asGuiItem { whoClicked, _ ->
+            openOwnerWarps(whoClicked, config, el)
         }
     }
 

@@ -63,8 +63,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
         }.build().open(player)
     }
 
-
-   private fun openCategory(player: Player, type: String) {
+    fun openCategory(player: Player, type: String) {
        val shopCategory = UniversalConfig("${magenta.dataFolder}/menu/shop/categories/$type.yml")
        if (!shopCategory.exists())
            return player.sendMessage(
@@ -95,7 +94,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
 
        val products = shopManager.getShopProducts(shopCategory.getConfig())
 
-       gui.component { component -> component.render { container, p ->
+       gui.component { component -> component.render { container, _ ->
            menuUI.useAllFillers(rows, container, shopCategory.getConfig())
 
            for (product in products.withIndex()) {

@@ -83,7 +83,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
             val slot = magenta.creditShopConfirmMenuConfig.getConfig().getInt("menu.confirm_ok.slot")
 
-            val guiItem = ItemBuilder.from(itemStack).asGuiItem { player, context ->
+            val guiItem = ItemBuilder.from(itemStack).asGuiItem { player, _ ->
                 creditShopPaymentMethod.buy(player, itemStack, displayName, item, config, isBuyAllowed)
                 creditShop.openCategory(player, category)
                 return@asGuiItem
