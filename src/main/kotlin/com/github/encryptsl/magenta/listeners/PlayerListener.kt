@@ -167,15 +167,17 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             val vouchers = magenta.vouchers.getConfig().getConfigurationSection("vouchers")?.getKeys(false) ?: return
             val voucher = vouchers.stream().filter { el -> voucherManager.isItemVoucherInHand(itemInHand, el) }.findFirst()
 
-            if (voucherManager.isItemVoucherInHand(itemInHand, voucher.toString()) && event.action.isRightClick) {
-                val command = magenta.vouchers.getConfig().getString(("vouchers." + voucher.get()) + ".command").toString()
-                console(command, player)
-                if (itemInHand.amount > 1) {
-                    itemInHand.amount -= 1
-                } else {
-                    inventory.remove(itemInHand)
+            if (voucherManager.isItemVoucherInHand(itemInHand, voucher.toString())) {
+                if (event.action.isRightClick) {
+                    val command = magenta.vouchers.getConfig().getString(("vouchers." + voucher.get()) + ".command").toString()
+                    console(command, player)
+                    if (itemInHand.amount > 1) {
+                        itemInHand.amount -= 1
+                    } else {
+                        inventory.remove(itemInHand)
+                    }
+                    event.isCancelled = true
                 }
-                event.isCancelled = true
             }
         }
     }
