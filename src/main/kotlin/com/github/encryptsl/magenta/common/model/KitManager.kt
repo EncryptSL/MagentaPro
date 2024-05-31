@@ -24,7 +24,7 @@ class KitManager(private val magenta: Magenta) {
         for (material in Material.entries) {
             if (!magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) continue
 
-            val count: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"))
+            val count: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"), 1)
             val displayKitName = ModernText.miniModernText(magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName") ?: material.name)
 
             val lore = if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore"))
@@ -55,7 +55,7 @@ class KitManager(private val magenta: Magenta) {
         kitSection.set("delay", delay)
         for (item in player.inventory) {
             if (item == null) continue
-            if (!item.enchantments.isNotEmpty()) continue
+            if (item.enchantments.isEmpty()) continue
 
             val itemMeta = item.itemMeta
             val itemType = item.type

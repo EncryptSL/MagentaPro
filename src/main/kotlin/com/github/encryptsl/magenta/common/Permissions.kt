@@ -25,6 +25,7 @@ object Permissions {
     const val SHOP_CATEGORY_ALL: String = "magenta.shop.category.*"
     const val SHOP_CATEGORY: String = "magenta.shop.category.%s"
 
+    const val TPA_DELAY_EXEMPT: String = "magenta.tpa.delay.exempt"
     const val TELEPORT_EXEMPT: String = "magenta.tp.exempt"
 
     const val REPAIR_DELAY_EXEMPT: String = "magenta.repair.delay.exempt"

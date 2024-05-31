@@ -1,12 +1,14 @@
 package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
+import java.time.Duration
 import java.util.*
 import kotlin.collections.set
 
@@ -26,6 +28,13 @@ class TpaManager(private val magenta: Magenta) {
 
         val target = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
             ?: return player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.accept"))
+
+        val user = magenta.user.getUser(target.uniqueId)
+        val delay = magenta.config.getLong("teleport-cooldown", 0)
+
+        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.TPA_DELAY_EXEMPT)) {
+            user.setDelay(Duration.ofSeconds(delay), "commands.tpa")
+        }
 
         player.sendMessage(magenta.locale.translation("magenta.command.tpa.success.request.accepted"))
         PlayerBuilderAction
