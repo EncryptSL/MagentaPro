@@ -151,7 +151,6 @@ open class Magenta : JavaPlugin() {
         )
         geoMaxMind.initGeoMaxMind("maxmind-url")
         voteParty.createTable()
-        hookManger.hookPlugins()
     }
 
     override fun onEnable() {
@@ -163,6 +162,7 @@ open class Magenta : JavaPlugin() {
             registerTasks()
             chatChecksManager.initializeChecks()
             handlerListener()
+            hookManger.hookPlugins()
         }
         logger.info("Plugin enabled in time ${time.inWholeSeconds}")
     }

@@ -14,7 +14,7 @@ import org.bukkit.Bukkit
 class HookManager(private val magenta: Magenta) {
 
     fun isPluginEnabled(pluginName: String): Boolean {
-        return Bukkit.getPluginManager().getPlugin(pluginName) != null && Bukkit.getPluginManager().isPluginEnabled(pluginName)
+        return Bukkit.getPluginManager().getPlugin(pluginName) != null || Bukkit.getPluginManager().isPluginEnabled(pluginName)
     }
 
     fun hookPlugins() {
