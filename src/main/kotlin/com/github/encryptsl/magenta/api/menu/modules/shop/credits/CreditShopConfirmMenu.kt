@@ -45,7 +45,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
             component.render { container, _ ->
                 confirmPay(item, category, container, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
                 cancelPay(category, container, creditShop)
-                //close(player, component, magenta.creditShopConfirmMenuConfig.getConfig())
+                close(player, container, magenta.creditShopConfirmMenuConfig.getConfig())
             }
         }.build().open(player)
     }
@@ -120,11 +120,10 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         }
     }
 
-    /*
-    private fun close(player: HumanEntity, gui: Gui, fileConfiguration: FileConfiguration) {
+    private fun close(player: Player, container: GuiContainer<Player, ItemStack>, fileConfiguration: FileConfiguration) {
         for (material in Material.entries) {
-            simpleMenu.closeMenuOrBack(player, material, gui, fileConfiguration, null)
+            menuUI.closeMenuOrBack(player, material, container, fileConfiguration, null)
         }
-    }*/
+    }
 
 }

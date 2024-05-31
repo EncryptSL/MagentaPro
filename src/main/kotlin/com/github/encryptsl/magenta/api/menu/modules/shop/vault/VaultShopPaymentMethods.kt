@@ -40,6 +40,4 @@ class VaultShopPaymentMethods(private val magenta: Magenta)  {
             magenta, "magenta.shop.success.sell", EconomyPaymentAction.SELL, holder, commands
         )).setLocale(magenta.locale).setOperation(isSellAllowed).setItemStack(holder.product.itemStack).sell()
     }
-
-
 }

@@ -54,7 +54,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
                     val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
                     val item = ItemBuilder.from(
                         magenta.itemFactory.shopItem(material, name)
-                    ).asGuiItem { whoClick, context ->
+                    ).asGuiItem { whoClick, _ ->
                         return@asGuiItem openCategory(whoClick, category)
                     }
                     container.set(magenta.shopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
@@ -64,7 +64,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
     }
 
 
-   fun openCategory(player: Player, type: String) {
+   private fun openCategory(player: Player, type: String) {
        val shopCategory = UniversalConfig("${magenta.dataFolder}/menu/shop/categories/$type.yml")
        if (!shopCategory.exists())
            return player.sendMessage(

@@ -28,9 +28,11 @@ class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val 
         )
 
         gui.component { component ->
-            component.render { container, viewer ->
+            component.render { container, _ ->
                 menuUI.useAllFillers(rows, container, magenta.warpPlayerMenuConfig.getConfig())
-                val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId).join()
+            }
+            component.render { container, viewer ->
+                val playerWarps = magenta.warpModel.getWarpsByOwner(viewer.uniqueId).join()
                 for (warp in playerWarps.withIndex()) {
                     val material = Material.getMaterial(warp.value.warpIcon) ?: Material.OAK_SIGN
 

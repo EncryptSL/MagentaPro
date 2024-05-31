@@ -31,7 +31,7 @@ class WarpGUI(private val magenta: Magenta) : Menu {
 
         gui.component { component ->
             component.render { container, viewer ->
-                actionCustomButtons(player, container, magenta.warpMenuConfig.getConfig())
+                actionCustomButtons(viewer, container, magenta.warpMenuConfig.getConfig())
             }
             component.render { container, _ ->
                 menuUI.useAllFillers(rows, container, magenta.warpMenuConfig.getConfig())

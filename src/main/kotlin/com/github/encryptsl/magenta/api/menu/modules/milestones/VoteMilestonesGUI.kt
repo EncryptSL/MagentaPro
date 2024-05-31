@@ -20,7 +20,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
             return player.sendMessage(ModernText.miniModernText("<red>Milníky nejsou nastavené !"))
 
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
-        val rows = magenta.milestonesVotePass.getConfig().getInt("menu.gui.rows", 6)
+        val rows = magenta.milestonesVotePass.getConfig().getInt("menu.gui.size", 6)
 
         val gui = Gui.of(rows).title(
             ModernText.miniModernText(

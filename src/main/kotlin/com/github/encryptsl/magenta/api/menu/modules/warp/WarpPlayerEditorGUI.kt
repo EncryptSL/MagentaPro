@@ -79,10 +79,8 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                             }
                         }
 
-                        val actionItems = ItemBuilder.from(itemStack).asGuiItem { whoClick, context ->
-                            //if (action.isLeftClick) {
-                                //editorActionButton(whoClick, warpName, magenta.warpEditorConfig.getConfig(), el.value, container)
-                            //}
+                        val actionItems = ItemBuilder.from(itemStack).asGuiItem { whoClick, _ ->
+                            editorActionButton(whoClick, warpName, magenta.warpEditorConfig.getConfig(), el.value, container)
                         }
                         container.set(el.index, actionItems)
                     }
@@ -92,7 +90,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
     }
 
     private fun editorActionButton(
-        humanEntity: Player,
+        player: Player,
         warpName: String,
         config: FileConfiguration,
         el: String,
@@ -103,28 +101,28 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         when(action) {
             BUTTON_ACTION.BACK_TO_MENU -> {
                 clicked = false
-                warpPlayerGUI.open(humanEntity)
+                warpPlayerGUI.open(player)
             }
             BUTTON_ACTION.SET_WARP -> {
                 clicked = false
                 //clearIcons(gui)
-                magenta.warpModel.moveWarp(humanEntity.uniqueId, warpName, humanEntity.location)
-                humanEntity.sendMessage(magenta.locale.translation("magenta.command.warp.success.moved", TagResolver.resolver(
+                magenta.warpModel.moveWarp(player.uniqueId, warpName, player.location)
+                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.moved", TagResolver.resolver(
                     Placeholder.parsed("warp", warpName),
-                    Placeholder.parsed("x", humanEntity.location.x.toInt().toString()),
-                    Placeholder.parsed("y", humanEntity.location.y.toInt().toString()),
-                    Placeholder.parsed("z", humanEntity.location.z.toInt().toString())
+                    Placeholder.parsed("x", player.location.x.toInt().toString()),
+                    Placeholder.parsed("y", player.location.y.toInt().toString()),
+                    Placeholder.parsed("z", player.location.z.toInt().toString())
                 )))
             }
             BUTTON_ACTION.SET_ICON -> {
-                loadIcons(humanEntity, container, warpName, config)
+                loadIcons(player, container, warpName, config)
                 //gui.update()
             }
             BUTTON_ACTION.DELETE_HOME -> {
                 clicked = false
-                magenta.homeModel.deleteHome(humanEntity.uniqueId, warpName)
-                //gui.close(humanEntity)
-                humanEntity.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("home", warpName)))
+                magenta.homeModel.deleteHome(player.uniqueId, warpName)
+                player.closeInventory()
+                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("home", warpName)))
             }
         }
     }
@@ -167,12 +165,10 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                     .create()
             ).asGuiItem { whoClick, context ->
                 magenta.warpModel.setWarpIcon(whoClick.uniqueId, warpName, materialName)
-                //if (action.isLeftClick) {
-                //    player.sendMessage(magenta.locale.translation("magenta.command.warp.success.change.icon", TagResolver.resolver(
-                //        Placeholder.parsed("warp", warpName),
-                //        Placeholder.parsed("icon", materialName)
-                //    )))
-                //}
+                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.change.icon", TagResolver.resolver(
+                    Placeholder.parsed("warp", warpName),
+                    Placeholder.parsed("icon", materialName)
+                )))
             })
         }
     }
