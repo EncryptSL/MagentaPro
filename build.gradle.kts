@@ -33,7 +33,9 @@ dependencies {
     compileOnly("org.jetbrains.exposed:exposed-core:0.49.0")
     compileOnly("org.jetbrains.exposed:exposed-jdbc:0.49.0")
     compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.49.0")
-    compileOnly("com.github.ben-manes.caffeine:caffeine:3.1.8")
+    compileOnly("com.github.ben-manes.caffeine:caffeine:3.1.8") {
+        exclude("com.google")
+    }
     compileOnly("com.zaxxer:HikariCP:5.1.0")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
     compileOnly("me.clip:placeholderapi:2.11.5")
@@ -59,6 +61,7 @@ dependencies {
     implementation("com.github.Euphillya:Energie:1.2.0")
     implementation("dev.triumphteam:triumph-gui-paper:4.0.0-SNAPSHOT") {
         exclude("net.kyori")
+        exclude(group = "com.google.guava", module = "guava")
     }
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
     testImplementation(kotlin("test"))
