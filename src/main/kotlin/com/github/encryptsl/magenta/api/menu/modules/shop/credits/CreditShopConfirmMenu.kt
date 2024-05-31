@@ -41,8 +41,6 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         gui.component { component ->
             component.render { container, _ ->
                 menuUI.useAllFillers(rows, container, magenta.creditShopConfirmMenuConfig.getConfig())
-            }
-            component.render { container, _ ->
                 confirmPay(item, category, container, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
                 cancelPay(category, container, creditShop)
                 close(player, container, magenta.creditShopConfirmMenuConfig.getConfig())

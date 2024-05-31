@@ -95,19 +95,17 @@ class CreditShop(private val magenta: Magenta) : Menu {
             ModernText.miniModernText(name, Placeholder.parsed("category", categoryName)),
         )
 
-        if (!shopCategory.getConfig().contains("menu.items")) return
+        val items = shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
 
         gui.component { component ->
             component.render { container, _ ->
+                menuUI.useAllFillers(rows, container, shopCategory.getConfig())
+
                 if (shopCategory.getConfig().contains("menu.custom-items")) {
                     menuUI.customItems(player, categoryName, shopCategory.getConfig(), container)
                 }
-            }
-            component.render { container, _ ->
-                menuUI.useAllFillers(rows, container, shopCategory.getConfig())
-            }
-            component.render { container, _ ->
-                for (item in shopCategory.getConfig().getConfigurationSection("menu.items")?.getKeys(false)!!) {
+
+                for (item in items) {
                     if (!shopCategory.getConfig().contains("menu.items.$item")) continue
                     val material = Material.getMaterial(shopCategory.getConfig().getString("menu.items.$item.icon").toString()) ?: continue
 
