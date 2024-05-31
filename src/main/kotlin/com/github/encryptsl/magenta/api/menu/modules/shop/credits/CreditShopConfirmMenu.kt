@@ -19,8 +19,6 @@ import org.bukkit.inventory.ItemStack
 
 class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: MenuUI) {
 
-    //private val simpleMenu = menuUI.SimpleMenu(magenta)
-
     fun openConfirmMenu(
         player: Player,
         item: String,
@@ -35,15 +33,15 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
         val gui = Gui
             .of(rows)
-            .title(
-                ModernText.miniModernText(
+            .title(ModernText.miniModernText(
                     magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.gui.display").toString(),
                     Placeholder.component("item", displayName)
-                )
-            )
-
+            ))
 
         gui.component { component ->
+            component.render { container, _ ->
+                menuUI.useAllFillers(rows, container, magenta.creditShopConfirmMenuConfig.getConfig())
+            }
             component.render { container, _ ->
                 confirmPay(item, category, container, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
                 cancelPay(category, container, creditShop)

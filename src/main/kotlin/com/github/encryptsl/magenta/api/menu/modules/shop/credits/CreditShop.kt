@@ -140,22 +140,13 @@ class CreditShop(private val magenta: Magenta) : Menu {
                     val quantity = shopCategory.getConfig().getInt("menu.items.$item.buy.quantity")
                     val isBuyAllowed = shopCategory.getConfig().contains("menu.items.$item.buy.price")
 
-                    val itemStack = magenta.itemFactory.creditShopItem(
-                        player,
-                        material,
-                        itemName,
-                        quantity,
-                        buyPrice,
-                        glowing,
-                        hasOptions,
-                        isPotion,
-                        hasColor,
-                        color,
-                        magenta.creditShopConfig.getConfig().getStringList("menu.gui.item_lore")
+                    val itemStack = magenta.itemFactory
+                        .creditShopItem(
+                            player, material, itemName, quantity, buyPrice, glowing, hasOptions, isPotion, hasColor, color,
+                            magenta.creditShopConfig.getConfig().getStringList("menu.gui.item_lore"
+                        )
                     )
-                    val guiItem = ItemBuilder.from(
-                        itemStack
-                    ).asGuiItem { p, _ ->
+                    val guiItem = ItemBuilder.from(itemStack).asGuiItem { p, _ ->
                         if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required")) {
                             return@asGuiItem creditShopPaymentMethod.buy(
                                 p, itemStack, itemStack.displayName(), item, shopCategory.getConfig(), isBuyAllowed
@@ -174,7 +165,6 @@ class CreditShop(private val magenta: Magenta) : Menu {
                     }
                     container.set(slot, guiItem)
                 }
-
             }
         }.build().open(player)
     }

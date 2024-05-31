@@ -6,6 +6,7 @@ import com.github.encryptsl.kmono.lib.extensions.meta
 import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
 import com.github.encryptsl.kmono.lib.extensions.setNameComponent
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.container.GuiContainer
 import dev.triumphteam.gui.layout.BoxGuiLayout
 import dev.triumphteam.gui.paper.Gui
@@ -23,8 +24,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
     enum class BUTTON_ACTION { BACK_TO_MENU, SET_WARP, SET_ICON, DELETE_HOME }
 
-    //private val menu: MenuUI by lazy { MenuUI(magenta) }
-    //private val simpleMenu = menu.SimpleMenu(magenta)
+    private val menu: MenuUI by lazy { MenuUI(magenta) }
     private val warpPlayerGUI: WarpPlayerGUI by lazy { WarpPlayerGUI(magenta, WarpGUI(magenta), this) }
 
     private val ignoreSlots = listOf(17, 18, 26, 27, 35, 36, 44)
@@ -32,7 +32,9 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
     private var clicked = false
 
     fun openWarpPlayerEditor(player: Player, warpName: String) {
-        val gui = Gui.of(magenta.warpEditorConfig.getConfig().getInt("menu.gui.size", 6)).title(
+        val rows = magenta.warpEditorConfig.getConfig().getInt("menu.gui.size", 6)
+
+        val gui = Gui.of(rows).title(
             ModernText.miniModernText(
                 magenta.warpEditorConfig.getConfig().getString("menu.gui.display").toString(),
                 Placeholder.parsed("warp", warpName)
@@ -41,16 +43,10 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
         val buttons = magenta.warpEditorConfig.getConfig().getConfigurationSection("menu.items.buttons") ?: return
 
-       //menu.useAllFillers(gui.filler, magenta.warpEditorConfig.getConfig())
-
-        //gui.setDefaultClickAction { el ->
-        //    if (el.currentItem != null && el.isLeftClick || el.isRightClick) {
-        //        simpleMenu.clickSound(el.whoClicked, magenta.warpEditorConfig.getConfig())
-        //    }
-        //}
-
         gui.component { component ->
             component.render { container, viewer ->
+                menu.useAllFillers(rows, container, magenta.warpEditorConfig.getConfig())
+
                 for (el in buttons.getKeys(false).withIndex()) {
                     val material = Material.getMaterial(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el.value}.icon").toString()) ?: continue
                     if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el.value}")) {

@@ -24,8 +24,6 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
 
 
     private val menu: MenuUI by lazy { MenuUI(magenta) }
-    //private val simpleMenu = menu.SimpleMenu(magenta)
-
     private val ignoreSlots = listOf(17, 18, 26, 27, 35, 36, 44)
 
     private var clicked = false

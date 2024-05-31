@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.menu.modules.milestones
 
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import dev.triumphteam.gui.paper.Gui
 import dev.triumphteam.gui.paper.builder.item.ItemBuilder
@@ -11,8 +12,12 @@ import org.bukkit.entity.Player
 
 class OresMilestonesGUI(private val magenta: Magenta) : Menu {
 
+    private val menuUI: MenuUI by lazy { MenuUI(magenta) }
+
     override fun open(player: Player) {
-        val gui = Gui.of(6).title(ModernText.miniModernText(
+        val rows = magenta.milestonesOres.getConfig().getInt("menu.gui.rows", 6)
+
+        val gui = Gui.of(rows).title(ModernText.miniModernText(
             magenta.milestonesOres.getConfig().getString("menu.gui.display").toString()
         ))
 
@@ -21,6 +26,8 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
 
         gui.component { component ->
             component.render { container, viewer ->
+                menuUI.useAllFillers(rows, container, magenta.milestonesOres.getConfig())
+
                 for (key in section.withIndex()) {
                     val material = Material.getMaterial(key.value) ?: continue
                     val itemStack = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
