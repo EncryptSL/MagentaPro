@@ -38,7 +38,7 @@ dependencies {
     }
     compileOnly("com.zaxxer:HikariCP:5.1.0")
     compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
-    compileOnly("me.clip:placeholderapi:2.11.5")
+    compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("com.github.encryptsl:CreditLite:1.0.9")
