@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.extensions.colorize
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PluginPlaceholders
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
@@ -13,7 +12,7 @@ import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Player
-import java.util.Optional
+import java.util.*
 
 class MagentaChatRenderer(
     private val magenta: Magenta,
@@ -43,7 +42,7 @@ class MagentaChatRenderer(
     private fun resolverTags(source: Player, text: Component): TagResolver {
         return TagResolver.resolver(
             Placeholder.parsed("world", source.world.name),
-            Placeholder.component("name", Component.text(source.name)
+            Placeholder.component("name", ModernText.miniModernText(source.name)
                 .clickEvent(ModernText.action(
                     ClickEvent.Action.SUGGEST_COMMAND,
                     Optional.ofNullable(
@@ -51,10 +50,10 @@ class MagentaChatRenderer(
                     ).orElse("/tell ${source.name}"))
                 )
             ),
-            Placeholder.component("prefix", Component.text(colorize(luckPermsHook.getPrefix(source))).hoverEvent(hoverText(source))),
-            Placeholder.parsed("suffix", colorize(luckPermsHook.getSuffix(source))),
-            Placeholder.parsed("username_color", colorize(luckPermsHook.getMetaValue(source, "username-color"))),
-            Placeholder.parsed("message_color", colorize(luckPermsHook.getMetaValue(source, "message-color"))),
+            Placeholder.component("prefix", ModernText.miniModernText(luckPermsHook.getPrefix(source)).hoverEvent(hoverText(source))),
+            Placeholder.component("suffix", ModernText.miniModernText(luckPermsHook.getSuffix(source))),
+            Placeholder.component("username_color", ModernText.miniModernText(luckPermsHook.getMetaValue(source, "username-color"))),
+            Placeholder.component("message_color", ModernText.miniModernText(luckPermsHook.getMetaValue(source, "message-color"))),
             Placeholder.component("message", text)
         )
     }
@@ -62,8 +61,9 @@ class MagentaChatRenderer(
     private fun hoverText(player: Player): HoverEvent<Component> {
         return ModernText.hover(
             HoverEvent.Action.SHOW_TEXT,
-            Component.text(colorize(
-                ModernText.papi(player,"\n${magenta.config.getString("chat.hoverText")}"))
-            ))
+            ModernText.miniModernText(
+                ModernText.papi(player,"\n${magenta.config.getString("chat.hoverText")}")
+            )
+        )
     }
 }

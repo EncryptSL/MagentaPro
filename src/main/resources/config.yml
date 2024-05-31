@@ -14,7 +14,8 @@ discord:
 
 newbies:
   # Announcement to player who first join on server.
-  announcement: '<blue>Vítej <player> <blue>na serveru !'
+  announcement: "<color:#FBC688>Přivítejme hráče <color:#FA8B07><player> <color:#FBC688>na
+    serveru, přivítalo k nám již <color:#FA8B07><joined><color:#FBC688>x hráčů."
 
   # We teleport player on first join on spawnpoint.
   # for not spawn on point set spawnpoint: none
@@ -385,18 +386,15 @@ votifier:
 #                     Chat Section                      #
 #########################################################
 chat:
-  suggestCommand: "/msg {name} "
+  suggestCommand: '/msg {name} '
   hoverText: |-
-    &7
-    &8| &fMoney: &6%lite_eco_balance% ⛁
-    &8| &fPlayTime: &a%statistic_time_played%
-    &7
-    &8▪ &fTotal Jumps: &e%statistic_jump%
-    &8▪ &fTotal Deaths: &4%statistic_deaths%
-    &8▪ &fTotal Kills: &c%statistic_player_kills%
-
-  default-format: "<prefix> <name> <gray>» <white><message>"
-
+    <dark_gray>| <white>Rank: %vault_group_capital%
+    <dark_gray>| <white>Hlasoval: <green>%magenta_votes%
+    <gray>
+    <dark_gray>▪ <white>Peníze: <yellow>%vault_eco_balance_formatted%
+    <dark_gray>▪ <white>Online: <green>%statistic_time_played%
+    <dark_gray>▪ <white>Vyhrané Reakce: <red>%chatgames_points%
+  default-format: <prefix> <name> <gray>» <white><message>
 
   group-formats:
-    # default: "<gray><name> » <white><message>"
+  #  default: <gray><name> <dark_gray>» <white><message>
