@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack
 
 
 class GuiFiller(
-    val rows: Int,
+    val row: Int,
     val container: GuiContainer<Player, ItemStack>,
     val config: FileConfiguration
 ) {
@@ -59,6 +59,6 @@ class GuiFiller(
     }*/
 
     private fun getRows(): Int {
-        return if (!(if (1 <= this.rows) this.rows < 7 else false)) 1 else this.rows
+        return if (!(if (1 <= this.row) this.row < 7 else false)) 1 else this.row
     }
 }
