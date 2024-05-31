@@ -15,7 +15,7 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
 
     override fun open(player: Player) {
-        val rows = magenta.milestonesOres.getConfig().getInt("menu.gui.rows", 6)
+        val rows = magenta.milestonesOres.getConfig().getInt("menu.gui.size", 6)
 
         val gui = Gui.of(rows).title(ModernText.miniModernText(
             magenta.milestonesOres.getConfig().getString("menu.gui.display").toString()
