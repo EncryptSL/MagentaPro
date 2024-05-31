@@ -115,11 +115,11 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     @Permission("magenta.plugin.reload")
-    @Command("reload citems")
-    @CommandDescription("This command reload activation config")
+    @Command("reload vouchers")
+    @CommandDescription("This command reload vouchers config")
     fun onReloadActivationItems(commandSender: CommandSender) {
-        magenta.cItems.reload()
-        magenta.cItems.save()
+        magenta.vouchers.reload()
+        magenta.vouchers.save()
         commandSender.sendMessage(magenta.locale.translation("magenta.command.magenta.success.reload"))
     }
 

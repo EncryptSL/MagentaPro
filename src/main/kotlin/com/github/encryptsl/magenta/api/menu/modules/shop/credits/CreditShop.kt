@@ -64,7 +64,7 @@ class CreditShop(private val magenta: Magenta) : Menu {
                             }
                         }
                     ).asGuiItem { whoClick, context ->
-                        //openCategory(whoClick, category)
+                        openCategory(whoClick, category)
                     }
                     container.set(magenta.creditShopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
                 }
