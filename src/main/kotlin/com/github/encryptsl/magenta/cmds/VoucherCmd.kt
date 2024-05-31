@@ -41,7 +41,7 @@ class VoucherCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     @Command("voucher setName <item> <name>")
-    @Permission("magenta.citem.set.name")
+    @Permission("magenta.voucher.set.name")
     @CommandDescription("This command set to voucher item name.")
     fun onCommandItemSetName(
         commandSender: CommandSender,
@@ -52,7 +52,7 @@ class VoucherCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     @Command("voucher setMaterial <item> <material>")
-    @Permission("magenta.citem.set.material")
+    @Permission("magenta.voucher.set.material")
     @CommandDescription("This command set to voucher item material.")
     fun onCommandItemSetName(
         commandSender: CommandSender,
@@ -79,7 +79,7 @@ class VoucherCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command set to voucher item commands.")
     fun onCommandItemSetCommand(
         commandSender: CommandSender,
-        @Argument(value = "item", suggestions = "citems") itemName: String,
+        @Argument(value = "item", suggestions = "vouchers") itemName: String,
         @Argument(value = "command") @Greedy command: String
     ) {
         voucher.setCommand(commandSender, itemName, command)
