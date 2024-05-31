@@ -1,5 +1,5 @@
 #
-# citems:
+# vouchers:
 #  timedfly: <- this is a custom activation item created
 #  with command example /commanditem|ci create timedfly
 #    material: FEATHER - list of materials https://jd.papermc.io/paper/1.20/org/bukkit/Material.html
@@ -8,7 +8,7 @@
 #    command: "say example %player% acivated item" - Command is sended by consoleSender and have placeholders {player} and %player%
 #    lore:
 #      - '<green>My awesome item' - lore is description under item and can be added by /ci setlore <item> <green>my awesome item,<green>item,<green>item
-citems:
+vouchers:
   tempfly3d:
     material: FEATHER
     sid: 9802
