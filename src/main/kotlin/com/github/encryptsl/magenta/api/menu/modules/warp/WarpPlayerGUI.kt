@@ -14,7 +14,8 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class WarpPlayerGUI(private val magenta: Magenta, warpGUI: WarpGUI, private val playerEditorGUI: WarpPlayerEditorGUI) : Menu {
+@Suppress("UNUSED")
+class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, private val playerEditorGUI: WarpPlayerEditorGUI) : Menu {
 
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
 

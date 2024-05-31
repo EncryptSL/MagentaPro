@@ -21,7 +21,7 @@ class GuiFiller(
             for (i in 0..< getRows() * 9) {
                 if (i > 8 && (i < this.getRows() * 9 - 8 || i > this.getRows() * 9 - 2) && i % 9 != 0 && i % 9 != 8) continue
                 container.set(i, ItemBuilder.from(Material.valueOf(config.getString("menu.gui.fill.border").toString())
-                ).asGuiItem { p, _ -> })
+                ).asGuiItem { _, _ -> })
             }
         }
     }
@@ -31,7 +31,7 @@ class GuiFiller(
             for (i in 0..8) {
                 container.set(i,
                     ItemBuilder.from(Material.valueOf(config.getString("menu.gui.fill.top").toString()))
-                        .asGuiItem { p, _ -> })
+                        .asGuiItem { _, _ -> })
             }
         }
     }

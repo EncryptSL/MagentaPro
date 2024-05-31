@@ -98,12 +98,12 @@ class CreditShop(private val magenta: Magenta) : Menu {
         if (!shopCategory.getConfig().contains("menu.items")) return
 
         gui.component { component ->
-            component.render { container, viewer ->
+            component.render { container, _ ->
                 if (shopCategory.getConfig().contains("menu.custom-items")) {
                     menuUI.customItems(player, categoryName, shopCategory.getConfig(), container)
                 }
             }
-            component.render { container, viwer ->
+            component.render { container, _ ->
                 menuUI.useAllFillers(rows, container, shopCategory.getConfig())
             }
             component.render { container, _ ->

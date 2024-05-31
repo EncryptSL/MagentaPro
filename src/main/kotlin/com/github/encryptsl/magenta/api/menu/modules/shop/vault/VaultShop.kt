@@ -108,7 +108,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
 
                val itemStack = getShopProduct(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
 
-               val guiItem = ItemBuilder.from(itemStack).asGuiItem { player, context ->
+               val guiItem = ItemBuilder.from(itemStack).asGuiItem { _, _ ->
                    /*
                    // BUY BY STACK = 64
                    if (context.isShiftClick && context.isLeftClick) {

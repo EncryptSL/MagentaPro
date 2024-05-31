@@ -81,7 +81,7 @@ class MenuUI(private val magenta: Magenta) {
             val slot = fileConfiguration.getInt("menu.custom-items.$item.position.slot")
             val glowing = fileConfiguration.getBoolean("menu.custom-items.$item.options.glowing")
             val lore = fileConfiguration.getStringList("menu.custom-items.$item.lore")
-            val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem { p, context -> }
+            val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem { _, _ -> }
 
             container.set(slot, guiItem)
         }
