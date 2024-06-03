@@ -62,13 +62,7 @@ class MsgCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         val user = magenta.user.getUser(player.uniqueId)
 
-        val toggled = if (user.getAccount().getBoolean("commands.toggle.msg")) {
-            user.set("commands.toggle.msg", false)
-            false
-        } else {
-            user.set("commands.toggle.msg", true)
-            true
-        }
+        val toggled = magenta.commandHelper.isMsgToggled(user)
 
         player.sendMessage(magenta.locale.translation("magenta.command.msg.success.toggled", Placeholder.parsed("toggled", toggled.toString())))
     }

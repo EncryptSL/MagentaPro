@@ -105,6 +105,16 @@ class CommandHelper(private val magenta: Magenta) {
         return if (boolean) "viditelný" else "skryt"
     }
 
+    fun isMsgToggled(user: UserAccountImpl): Boolean {
+      return if (user.getAccount().getBoolean("commands.toggle.msg")) {
+            user.set("commands.toggle.msg", false)
+            false
+        } else {
+            user.set("commands.toggle.msg", true)
+            true
+        }
+    }
+
     fun showLevelProgress(commandSender: CommandSender, level: Int, currentExp: Int) {
         val needToLevelUp = LevelFormula.experienceFormula(level)
         val percentageProgress = LevelFormula.levelProgress(level, currentExp)
