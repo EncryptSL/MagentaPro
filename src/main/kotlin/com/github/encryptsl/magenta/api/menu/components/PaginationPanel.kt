@@ -44,7 +44,7 @@ class PaginationPanel(
     }
 
     fun nextPage(player: Player, material: Material) {
-        if (gui.pagesNum < 1) return
+        if (gui.pagesNum >= gui.currentPageNum) return
         if (config.contains("menu.gui.button.next")) {
             if (!config.contains("menu.gui.button.next.positions"))
                 return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions"))
