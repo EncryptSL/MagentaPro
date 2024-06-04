@@ -26,13 +26,13 @@ class HomeGUI(private val magenta: Magenta) {
 
         menuUI.useAllFillers(gui, magenta.homeMenuConfig.getConfig())
 
-        val homes = magenta.homeModel.getHomesByOwner(player.uniqueId).get()
+        val homes = magenta.homeModel.getHomesByOwner(player.uniqueId).join()
 
         if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.display")) return
         if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.lore")) return
 
         for (home in homes) {
-            val material = Material.getMaterial(home.homeIcon) ?: Material.OAK_DOOR
+            val material = Material.getMaterial(home.homeIcon) ?: Material.RED_BED
 
             val itemNameComponent = ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.home-info.display").toString(),
                 Placeholder.parsed("home", home.homeName)
@@ -47,22 +47,26 @@ class HomeGUI(private val magenta: Magenta) {
                     Placeholder.parsed("y", home.y.toString()),
                     Placeholder.parsed("z", home.z.toString()),
                     Placeholder.parsed("yaw", home.yaw.toString()),
-                    Placeholder.parsed("pitch", home.pitch.toString()),)) }.toMutableList()
+                    Placeholder.parsed("pitch", home.pitch.toString()),))
+                }
 
 
             val itemBuilder = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
                 .setName(itemNameComponent)
                 .addLore(loresComponents).create()
 
-            val item = ItemBuilder.from(itemBuilder).asGuiItem { context ->
-                if (context.isLeftClick) {
-                    magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.homeName, magenta.config.getLong("teleport-cooldown")))
+            gui.addItem(
+                ItemBuilder.from(itemBuilder).asGuiItem { context ->
+                    if (context.isLeftClick) {
+                        magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.homeName, magenta.config.getLong("teleport-cooldown")))
+                        return@asGuiItem
+                    }
+                    if (context.isRightClick) {
+                        homeEditorGUI.openHomeEditorGUI(player, home.homeName)
+                        return@asGuiItem
+                    }
                 }
-                if (context.isRightClick) {
-                    homeEditorGUI.openHomeEditorGUI(player, home.homeName)
-                }
-            }
-            gui.addItem(item)
+            )
         }
 
         menuUI.pagination(player, gui, magenta.homeMenuConfig.getConfig(), null)

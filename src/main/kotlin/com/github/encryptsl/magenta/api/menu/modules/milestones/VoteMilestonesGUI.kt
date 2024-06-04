@@ -21,7 +21,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
         val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
         val rows = magenta.milestonesVotePass.getConfig().getInt("menu.gui.size", 6)
 
-        val gui = menuUI.simpleBuilderGui(rows,
+        val gui = menuUI.paginatedBuilderGui(rows,
             ModernText.miniModernText(
                 magenta.milestonesVotePass.getConfig().getString("menu.items.gui.display") ?: player.name
             ),
@@ -57,6 +57,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
             val guiItem = ItemBuilder.from(itemStack.create()).asGuiItem()
             gui.addItem(guiItem)
         }
+        menuUI.pagination(player, gui, magenta.milestonesVotePass.getConfig(), null)
         gui.open(player)
     }
 }

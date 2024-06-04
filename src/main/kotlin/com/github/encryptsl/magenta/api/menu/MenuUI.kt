@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.components.MenuFiller
 import com.github.encryptsl.magenta.api.menu.components.PaginationPanel
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
-import dev.triumphteam.gui.builder.gui.PaginatedBuilder
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.components.GuiType
 import dev.triumphteam.gui.guis.BaseGui
@@ -36,7 +35,7 @@ class MenuUI(private val magenta: Magenta) {
     }
 
     fun paginatedBuilderGui(rows: Int, title: Component, config: FileConfiguration): PaginatedGui {
-        val builder = PaginatedBuilder().rows(rows).title(title).disableAllInteractions().create()
+        val builder = Gui.paginated().rows(rows).title(title).disableAllInteractions().pageSize(100).create()
 
         builder.setDefaultClickAction { context ->
             if (context.currentItem != null && context.isLeftClick && context.isRightClick && !isGlass(context.currentItem)) {

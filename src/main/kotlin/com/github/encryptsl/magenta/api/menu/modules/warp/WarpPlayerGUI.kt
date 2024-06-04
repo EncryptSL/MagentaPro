@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.guis.GuiItem
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -19,7 +20,7 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
 
     override fun open(player: Player) {
         val rows = magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
-        val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId).get()
+        val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId).join()
 
         val gui = menuUI.paginatedBuilderGui(rows,
             ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.gui.display").toString(),
@@ -62,13 +63,15 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
         gui.open(player)
     }
 
-    private fun getItem(itemStack: ItemStack, warp: WarpEntity): dev.triumphteam.gui.guis.GuiItem {
+    private fun getItem(itemStack: ItemStack, warp: WarpEntity): GuiItem {
         return ItemBuilder.from(itemStack).asGuiItem { context ->
-            if (context.isRightClick) {
+            if (context.isLeftClick) {
                 context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
+                return@asGuiItem
             }
             if (context.isRightClick) {
                 playerEditorGUI.openWarpPlayerEditor(context.whoClicked as Player, warp.warpName)
+                return@asGuiItem
             }
         }
     }

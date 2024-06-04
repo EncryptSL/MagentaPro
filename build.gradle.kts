@@ -59,7 +59,7 @@ dependencies {
     }
     implementation("com.github.encryptsl:KMonoLib:1.0.0")
     implementation("com.github.Euphillya:Energie:1.2.0")
-    implementation("dev.triumphteam:triumph-gui:3.1.8-SNAPSHOT") {
+    implementation("dev.triumphteam:triumph-gui:3.1.9") {
         exclude("net.kyori")
     }
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")

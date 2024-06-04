@@ -21,7 +21,7 @@ class WarpGUI(private val magenta: Magenta) : Menu {
 
     override fun open(player: Player) {
         val rows = magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
-        val warps = magenta.warpModel.getWarps().get()
+        val warps = magenta.warpModel.getWarps().join()
 
         val gui = menuUI.paginatedBuilderGui(rows,
             ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.gui.display").toString(),
@@ -36,7 +36,6 @@ class WarpGUI(private val magenta: Magenta) : Menu {
 
         for (warp in warps) {
             val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
-            magenta.logger.info(warp.toString())
 
             val itemComponentName = ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
                 Placeholder.parsed("warp", warp.warpName)
@@ -55,15 +54,16 @@ class WarpGUI(private val magenta: Magenta) : Menu {
                     Placeholder.parsed("pitch", warp.pitch.toString()),
                     )) }
 
-            val itemBuilder = ItemBuilder(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
-
-            val item = dev.triumphteam.gui.builder.item.ItemBuilder.from(itemBuilder).asGuiItem { context ->
-                if (context.isLeftClick || context.isRightClick) {
-                    context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
-                    return@asGuiItem
+            gui.addItem(
+                dev.triumphteam.gui.builder.item.ItemBuilder.from(
+                    ItemBuilder(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
+                ).asGuiItem { context ->
+                    if (context.isLeftClick || context.isRightClick) {
+                        context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
+                    }
                 }
-            }
-            gui.addItem(item)
+            )
+            gui.update()
         }
 
         menuUI.pagination(player, gui, magenta.warpMenuConfig.getConfig(), null)

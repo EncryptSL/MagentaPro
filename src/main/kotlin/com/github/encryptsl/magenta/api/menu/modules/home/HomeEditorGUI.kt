@@ -39,7 +39,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
 
         menu.useAllFillers(gui, magenta.homeEditorConfig.getConfig())
 
-        for (el in menuSection.withIndex()) {
+        for (el in menuSection) {
             val material = Material.getMaterial(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()) ?: continue
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el")) continue
 
@@ -70,10 +70,11 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
             }
 
             val actionItems = ItemBuilder.from(itemStack).asGuiItem { action ->
-                editorActionButton(action.whoClicked as Player, homeName, magenta.homeEditorConfig.getConfig(), el.value, gui)
+                editorActionButton(action.whoClicked as Player, homeName, magenta.homeEditorConfig.getConfig(), el, gui)
             }
             gui.setItem(magenta.homeEditorConfig.getConfig().getInt("menu.items.buttons.$el.slot"), actionItems)
         }
+        gui.open(player)
     }
 
     private fun editorActionButton(
@@ -102,9 +103,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                 )))
             }
            BUTTON_ACTION.SET_ICON -> {
-               clicked = true
                setNewIcon(gui, warpName, config)
-               gui.update()
             }
             BUTTON_ACTION.DELETE_HOME -> {
                 clicked = false
@@ -126,6 +125,8 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         val icons: Set<String> = fileConfiguration.getStringList("menu.icons").filter { m -> Material.getMaterial(m) != null }.map { it }.toSet()
 
         if (clicked) return
+
+        clicked = true
 
         for (m in icons) {
             val lore = fileConfiguration.getStringList("menu.icon.lore")
@@ -158,6 +159,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                 )))
             }
         )
+        gui.update()
     }
 
     private fun clearIcons(gui: Gui) {

@@ -18,7 +18,7 @@ import org.bukkit.entity.Player
 
 class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
-    enum class BUTTON_ACTION { BACK_TO_MENU, SET_WARP, SET_ICON, DELETE_HOME }
+    enum class BUTTON_ACTION { BACK_TO_MENU, SET_WARP, SET_ICON, DELETE_WARP }
 
     private val menu: MenuUI by lazy { MenuUI(magenta) }
     private val warpPlayerGUI: WarpPlayerGUI by lazy { WarpPlayerGUI(magenta, WarpGUI(magenta), this) }
@@ -41,25 +41,27 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
         menu.useAllFillers(gui, magenta.warpEditorConfig.getConfig())
 
-        for (el in buttons.getKeys(false).withIndex()) {
+        for (el in buttons.getKeys(false)) {
             val material = Material.getMaterial(
-                magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el.value}.icon").toString()
+                magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()
             ) ?: continue
-            if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el.value}")) {
-                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el.value}.name"))
+            if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}")) {
+                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}.name"))
                     return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
                         Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
                     ))
 
-                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el.value}.slot"))
+                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}.slot"))
                     return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
                         Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
                     ))
 
-                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el.value}.icon"))
+                if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}.icon"))
                     return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.icon",
                         Placeholder.parsed("category", magenta.warpEditorConfig.getConfig().name)
                     ))
+
+                val slot = magenta.warpEditorConfig.getConfig().getInt("menu.items.buttons.${el}.slot")
 
                 val lore = magenta.warpEditorConfig
                     .getConfig()
@@ -70,15 +72,15 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                 val itemStack = createItem(material) {
                     amount = 1
                     meta {
-                        setNameComponent = ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el.value}.name").toString())
+                        setNameComponent = ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString())
                         setLoreComponentList = lore
                     }
                 }
 
                 val actionItems = ItemBuilder.from(itemStack).asGuiItem { context ->
-                    editorActionButton(context.whoClicked as Player, warpName, magenta.warpEditorConfig.getConfig(), el.value, gui)
+                    editorActionButton(context.whoClicked as Player, warpName, magenta.warpEditorConfig.getConfig(), el, gui)
                 }
-                gui.addItem(actionItems)
+                gui.setItem(slot, actionItems)
             }
         }
         gui.open(player)
@@ -110,12 +112,11 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                 )))
             }
             BUTTON_ACTION.SET_ICON -> {
-                clicked = true
                 loadIcons(player, gui, warpName, config)
             }
-            BUTTON_ACTION.DELETE_HOME -> {
+            BUTTON_ACTION.DELETE_WARP -> {
                 clicked = false
-                magenta.homeModel.deleteHome(player.uniqueId, warpName)
+                magenta.warpModel.deleteWarp(player.uniqueId, warpName)
                 player.closeInventory()
                 player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("home", warpName)))
             }
@@ -126,14 +127,16 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         player: Player,
         container: BaseGui,
         warpName: String,
-        fileConfiguration: FileConfiguration
+        config: FileConfiguration
     ) {
-        val icons: Set<String> = fileConfiguration.getStringList("menu.icons").filter { s -> Material.getMaterial(s) != null }.map { it }.toSet()
-        val itemName = fileConfiguration.getString("menu.icon.name")
+        val icons: Set<String> = config.getStringList("menu.icons").filter { s -> Material.getMaterial(s) != null }.map { it }.toSet()
+        val itemName = config.getString("menu.icon.name")
         if (clicked) return
 
+        clicked = true
+
         for (icon in icons) {
-            val lore = fileConfiguration.getStringList("menu.icon.lore")
+            val lore = config.getStringList("menu.icon.lore")
                 .map { ModernText.miniModernText(it, Placeholder.parsed("icon", icon)) }
                 .toMutableList()
             setIcon(player, warpName, itemName ?: icon, container, icon, lore)
@@ -165,6 +168,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                 )))
             }
         )
+        gui.update()
     }
 
     private fun clearIcons(gui: BaseGui) {
