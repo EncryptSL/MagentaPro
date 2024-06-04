@@ -44,7 +44,7 @@ class PaginationPanel(
     }
 
     fun nextPage(player: Player, material: Material) {
-        if (gui.pagesNum < 1 && gui.pagesNum == 1) return
+        if (gui.pagesNum < 1) return
         if (config.contains("menu.gui.button.next")) {
             if (!config.contains("menu.gui.button.next.positions"))
                 return player.sendMessage(magenta.locale.translation("magenta.menu.error.button.missing.positions"))
@@ -58,7 +58,7 @@ class PaginationPanel(
             if (config.getString("menu.gui.button.next.item").equals(material.name, true)) {
                 val guiItem = ItemBuilder.from(
                     com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
-                        .setName(ModernText.miniModernText(config.getString("menu.gui.button.next.name").toString(), Placeholder.parsed("next_page", gui.prevPageNum.toString()))).create()
+                        .setName(ModernText.miniModernText(config.getString("menu.gui.button.next.name").toString(), Placeholder.parsed("next_page", gui.nextPageNum.toString()))).create()
                 ).asGuiItem {
                     gui.next()
                 }

@@ -6,21 +6,20 @@ menu:
       border: YELLOW_STAINED_GLASS_PANE
     button:
       previous:
-        item: GREEN_CONCRETE
-        name: <gray>Zpět
+        item: ENDER_CHEST
+        name: <green><< <gray><previous_page> Předchozí stránka
         positions:
           row: 6
           col: 1
       close:
         item: BOOK
-        action: BACK
-        name: <green>Zpět do menu
+        name: <green>Zavřít Menu
         positions:
           row: 6
           col: 5
       next:
-        item: ORANGE_CONCRETE
-        name: <gray>Další
+        item: ENDER_CHEST
+        name: <gray>Další stránka <next_page> <green> >>
         positions:
           row: 6
           col: 9

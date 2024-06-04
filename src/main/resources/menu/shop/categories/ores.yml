@@ -6,21 +6,21 @@ menu:
       ui: "ui.button.click"
     button:
       previous:
-        item: GREEN_CONCRETE
-        name: <gray>Zpět <prev_page>
+        item: ENDER_CHEST
+        name: <green><< <gray><previous_page> Předchozí stránka
         positions:
           row: 6
           col: 4
       close:
-        item: RED_CONCRETE
+        item: BOOK
         action: BACK
         name: <green>Zpět do menu
         positions:
           row: 6
           col: 5
       next:
-        item: ORANGE_CONCRETE
-        name: <gray>Další <next_page>
+        item: ENDER_CHEST
+        name: <gray>Další stránka <next_page> <green> >>
         positions:
           row: 6
           col: 6

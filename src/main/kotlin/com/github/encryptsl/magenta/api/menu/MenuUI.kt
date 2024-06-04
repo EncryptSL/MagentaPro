@@ -25,9 +25,11 @@ class MenuUI(private val magenta: Magenta) {
         val builder = Gui.gui(GuiType.CHEST).rows(rows).title(title).disableAllInteractions().create()
 
         builder.setDefaultClickAction { context ->
-            if (context.currentItem != null && context.isLeftClick && context.isRightClick && !isGlass(context.currentItem)) {
-                val type = config.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
-                playSound(context.whoClicked, type, 5f, 1f)
+            if (context.currentItem != null && !isGlass(context.currentItem)) {
+                if (context.isLeftClick || context.isRightClick) {
+                    val type = config.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
+                    playSound(context.whoClicked, type, 5f, 1f)
+                }
             }
         }
 
@@ -38,9 +40,11 @@ class MenuUI(private val magenta: Magenta) {
         val builder = Gui.paginated().rows(rows).title(title).disableAllInteractions().pageSize(100).create()
 
         builder.setDefaultClickAction { context ->
-            if (context.currentItem != null && context.isLeftClick && context.isRightClick && !isGlass(context.currentItem)) {
-                val type = config.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
-                playSound(context.whoClicked, type, 5f, 1f)
+            if (context.currentItem != null && !isGlass(context.currentItem)) {
+                if (context.isLeftClick || context.isRightClick) {
+                    val type = config.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
+                    playSound(context.whoClicked, type, 5f, 1f)
+                }
             }
         }
 
