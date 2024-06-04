@@ -5,9 +5,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
-import dev.triumphteam.gui.item.GuiItem
-import dev.triumphteam.gui.paper.Gui
-import dev.triumphteam.gui.paper.builder.item.ItemBuilder
+import dev.triumphteam.gui.builder.item.ItemBuilder
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -21,58 +19,57 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
 
     override fun open(player: Player) {
         val rows = magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
+        val playerWarps = magenta.warpModel.getWarpsByOwner(player.uniqueId).get()
 
-        val gui = Gui.of(rows).title(
+        val gui = menuUI.paginatedBuilderGui(rows,
             ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.gui.display").toString(),
-                Placeholder.parsed("count", magenta.warpModel.getWarpsByOwner(player.uniqueId).join().count().toString())
-            )
+                Placeholder.parsed("count", playerWarps.count().toString())
+            ), magenta.homeMenuConfig.getConfig()
         )
 
-        gui.component { component ->
-            component.render { container, _ ->
-                menuUI.useAllFillers(rows, container, magenta.warpPlayerMenuConfig.getConfig())
-            }
-            component.render { container, viewer ->
-                val playerWarps = magenta.warpModel.getWarpsByOwner(viewer.uniqueId).join()
-                for (warp in playerWarps.withIndex()) {
-                    val material = Material.getMaterial(warp.value.warpIcon) ?: Material.OAK_SIGN
+        menuUI.useAllFillers(gui, magenta.warpPlayerMenuConfig.getConfig())
 
-                    if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.display")) continue
-                    if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.lore")) continue
+        if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.display")) return
+        if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.lore")) return
 
-                    val displayItemName = ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
-                        Placeholder.parsed("warp", warp.value.warpName)
-                    )
+        for (warp in playerWarps) {
+            val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
 
-                    val lore = magenta.warpPlayerMenuConfig.getConfig()
-                        .getStringList("menu.warp-info.lore")
-                        .map { ModernText.miniModernText(it, TagResolver.resolver(
-                            Placeholder.parsed("owner", warp.value.owner),
-                            Placeholder.parsed("warp", warp.value.warpName),
-                            Placeholder.parsed("world", warp.value.world),
-                            Placeholder.parsed("x", warp.value.x.toString()),
-                            Placeholder.parsed("y", warp.value.y.toString()),
-                            Placeholder.parsed("z", warp.value.z.toString()),
-                            Placeholder.parsed("yaw", warp.value.yaw.toString()),
-                            Placeholder.parsed("pitch", warp.value.pitch.toString()),
-                        )) }
+            val displayItemName = ModernText.miniModernText(magenta.warpPlayerMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
+                Placeholder.parsed("warp", warp.warpName)
+            )
 
-                    val itemBuilder = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material).setName(displayItemName)
-                        .addLore(lore.toMutableList())
-                        .setGlowing(true).create()
+            val lore = magenta.warpPlayerMenuConfig.getConfig()
+                .getStringList("menu.warp-info.lore")
+                .map { ModernText.miniModernText(it, TagResolver.resolver(
+                    Placeholder.parsed("owner", warp.owner),
+                    Placeholder.parsed("warp", warp.warpName),
+                    Placeholder.parsed("world", warp.world),
+                    Placeholder.parsed("x", warp.x.toString()),
+                    Placeholder.parsed("y", warp.y.toString()),
+                    Placeholder.parsed("z", warp.z.toString()),
+                    Placeholder.parsed("yaw", warp.yaw.toString()),
+                    Placeholder.parsed("pitch", warp.pitch.toString()),
+                    )) }
 
-                    container.set(warp.index, getItem(itemBuilder, warp.value))
-                }
-            }
-        }.build().open(player)
+            val itemBuilder = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material).setName(displayItemName)
+                .addLore(lore.toMutableList())
+                .setGlowing(true).create()
+
+            gui.addItem(getItem(itemBuilder, warp))
+        }
+        menuUI.pagination(player, gui, magenta.warpPlayerMenuConfig.getConfig(), warpGUI)
+        gui.open(player)
     }
 
-    private fun getItem(itemStack: ItemStack, warp: WarpEntity): GuiItem<Player, ItemStack> {
-        return ItemBuilder.from(itemStack).asGuiItem { player, _ ->
-                player.teleport(magenta.warpModel.toLocation(warp.warpName))
-            //if (context.isRightClick) {
-            //    playerEditorGUI.openWarpPlayerEditor(player, warp.warpName)
-            //}
+    private fun getItem(itemStack: ItemStack, warp: WarpEntity): dev.triumphteam.gui.guis.GuiItem {
+        return ItemBuilder.from(itemStack).asGuiItem { context ->
+            if (context.isRightClick) {
+                context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
+            }
+            if (context.isRightClick) {
+                playerEditorGUI.openWarpPlayerEditor(context.whoClicked as Player, warp.warpName)
+            }
         }
     }
 }

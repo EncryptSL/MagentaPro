@@ -1,7 +1,7 @@
 world_tickets:
   tickets:
-    - 'ci give nether_ticket %amount% %player%'
-    - 'ci give end_ticket %amount% %player%'
+    - 'voucher give nether_ticket %amount% %player%'
+    - 'voucher give end_ticket %amount% %player%'
 
 tags:
   ultimate:

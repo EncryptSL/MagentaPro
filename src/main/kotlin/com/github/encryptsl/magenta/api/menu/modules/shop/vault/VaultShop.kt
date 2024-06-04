@@ -9,8 +9,7 @@ import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import com.github.encryptsl.magenta.api.menu.modules.shop.Product
 import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.model.ShopManager
-import dev.triumphteam.gui.paper.Gui
-import dev.triumphteam.gui.paper.builder.item.ItemBuilder
+import dev.triumphteam.gui.builder.item.ItemBuilder
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -24,43 +23,40 @@ class VaultShop(private val magenta: Magenta) : Menu {
 
     override fun open(player: Player) {
         val rows = magenta.shopConfig.getConfig().getInt("menu.gui.size", 6)
-        val gui = Gui.of(rows).title(
-            ModernText.miniModernText(magenta.shopConfig.getConfig().getString("menu.gui.display").toString())
+        val gui = menuUI.simpleBuilderGui(rows,
+            ModernText.miniModernText(magenta.shopConfig.getConfig().getString("menu.gui.display").toString()),
+            magenta.shopConfig.getConfig()
         )
+        menuUI.useAllFillers(gui, magenta.shopConfig.getConfig())
+        for (category in shopManager.getShopCategories()) {
+            val material = Material.getMaterial(
+                magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
+            ) ?: continue
 
-        gui.component { component ->
-            component.render { container, viewer ->
-                menuUI.useAllFillers(rows, container, magenta.shopConfig.getConfig())
-                for (category in shopManager.getShopCategories()) {
-                    val material = Material.getMaterial(
-                        magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
-                    ) ?: continue
+            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
+                    Placeholder.parsed("category", category)
+                ))
 
-                    if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
-                        return@render viewer.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
-                            Placeholder.parsed("category", category)
-                        ))
+            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
+                    Placeholder.parsed("category", category)
+                ))
 
-                    if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.slot"))
-                        return@render viewer.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.slot",
-                            Placeholder.parsed("category", category)
-                        ))
+            if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
+                return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.icon",
+                    Placeholder.parsed("category", category)
+                ))
 
-                    if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.icon"))
-                        return@render viewer.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.icon",
-                            Placeholder.parsed("category", category)
-                        ))
-
-                    val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
-                    val item = ItemBuilder.from(
-                        magenta.itemFactory.shopItem(material, name)
-                    ).asGuiItem { whoClick, _ ->
-                        return@asGuiItem openCategory(whoClick, category)
-                    }
-                    container.set(magenta.shopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
-                }
+            val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
+            val item = ItemBuilder.from(
+                magenta.itemFactory.shopItem(material, name)
+            ).asGuiItem { context ->
+                return@asGuiItem openCategory(context.whoClicked as Player, category)
             }
-        }.build().open(player)
+            gui.setItem(magenta.shopConfig.getConfig().getInt("menu.categories.$category.slot"), item)
+        }
+        gui.open(player)
     }
 
     fun openCategory(player: Player, type: String) {
@@ -86,56 +82,50 @@ class VaultShop(private val magenta: Magenta) : Menu {
        val categoryName = magenta.shopConfig.getConfig().getString("menu.categories.$type.name").toString()
        val rows = shopCategory.getConfig().getInt("menu.gui.size", 6)
 
-       val gui = Gui.of(
-           rows
-       ).title(
-           ModernText.miniModernText(name, Placeholder.parsed("category", categoryName))
+       val gui = menuUI.paginatedBuilderGui(rows,
+           ModernText.miniModernText(name, Placeholder.parsed("category", categoryName)),
+           shopCategory.getConfig()
        )
 
        val products = shopManager.getShopProducts(shopCategory.getConfig())
 
-       gui.component { component -> component.render { container, _ ->
-           menuUI.useAllFillers(rows, container, shopCategory.getConfig())
+        menuUI.useAllFillers(gui, shopCategory.getConfig())
 
-           for (product in products.withIndex()) {
-               val itemName = product.value.name ?: product.value.material.name
-               val material = product.value.material
-               val buyPrice = product.value.buyPrice
-               val sellPrice = product.value.sellPrice
-               val isBuyAllowed = product.value.isBuyAllowed
-               val isSellAllowed = product.value.isSellAllowed
-               val commands = product.value.commands
+        for (product in products.withIndex()) {
+            val itemName = product.value.name ?: product.value.material.name
+            val material = product.value.material
+            val buyPrice = product.value.buyPrice
+            val sellPrice = product.value.sellPrice
+            val isBuyAllowed = product.value.isBuyAllowed
+            val isSellAllowed = product.value.isSellAllowed
+            val commands = product.value.commands
 
-               val itemStack = getShopProduct(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
+            val itemStack = getShopProduct(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
 
-               val guiItem = ItemBuilder.from(itemStack).asGuiItem { _, _ ->
-                   /*
-                   // BUY BY STACK = 64
-                   if (context.isShiftClick && context.isLeftClick) {
-                       return@asGuiItem buy(player, material, buyPrice, 64, itemName, commands, isBuyAllowed)
-                   }
+            val guiItem = ItemBuilder.from(itemStack).asGuiItem { context ->
+                // BUY BY STACK = 64
+                if (context.isShiftClick && context.isLeftClick) {
+                    return@asGuiItem buy(context.whoClicked as Player, material, buyPrice, 64, itemName, commands, isBuyAllowed)
+                }
+                // BUY BY ONE ITEM = 1
+                if (context.isLeftClick) {
+                    return@asGuiItem buy(context.whoClicked as Player, material, buyPrice, 1, itemName, commands, isBuyAllowed)
+                }
+                // SELL BY STACK = 64
+                if (context.isShiftClick && context.isRightClick) {
+                    val itemFromInv = context.whoClicked.inventory.storageContents.filter { el -> el?.type == material }.first()
+                    itemFromInv?.let { return@asGuiItem sell(context.whoClicked as Player, material, sellPrice, it.amount, itemName, commands, isSellAllowed) }
+                }
+                // SELL BY ONE ITEM = 1
+                if (context.isRightClick) {
+                    return@asGuiItem sell(context.whoClicked as Player, material, sellPrice, 1, itemName, commands, isSellAllowed)
+                }
+            }
+            gui.addItem(guiItem)
+        }
 
-                   // BUY BY ONE ITEM = 1
-                   if (context.isLeftClick) {
-                       return@asGuiItem buy(player, material, buyPrice, 1, itemName, commands, isBuyAllowed)
-                   }
-
-                   // SELL BY STACK = 64
-                   if (context.isShiftClick && context.isRightClick) {
-                       val itemFromInv = player.inventory.storageContents.filter { el -> el?.type == material }.first()
-                       itemFromInv?.let { return@asGuiItem sell(player, material, sellPrice, it.amount, itemName, commands, isSellAllowed) }
-                   }
-
-                   // SELL BY ONE ITEM = 1
-                   if (context.isRightClick) {
-                       return@asGuiItem sell(player, material, sellPrice, 1, itemName, commands, isSellAllowed)
-                   }
-                   context.isCancelled = true
-                   */
-               }
-               container.set(product.index, guiItem)
-           }
-       }}.build().open(player)
+        menuUI.pagination(player, gui, shopCategory.getConfig(), this)
+        gui.open(player)
    }
 
    private fun buy(

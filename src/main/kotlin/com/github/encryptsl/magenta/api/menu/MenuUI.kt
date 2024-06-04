@@ -1,11 +1,17 @@
 package com.github.encryptsl.magenta.api.menu
 
+import com.github.encryptsl.kmono.lib.extensions.playSound
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.menu.components.GuiFiller
+import com.github.encryptsl.magenta.api.menu.components.MenuFiller
+import com.github.encryptsl.magenta.api.menu.components.PaginationPanel
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
-import dev.triumphteam.gui.container.GuiContainer
-import dev.triumphteam.gui.paper.builder.item.ItemBuilder
-import dev.triumphteam.gui.slot.Slot
+import dev.triumphteam.gui.builder.gui.PaginatedBuilder
+import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.components.GuiType
+import dev.triumphteam.gui.guis.BaseGui
+import dev.triumphteam.gui.guis.Gui
+import dev.triumphteam.gui.guis.PaginatedGui
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
@@ -16,14 +22,58 @@ class MenuUI(private val magenta: Magenta) {
 
     private enum class BUTTON_ACTION { CLOSE, BACK }
 
-    fun navigation() {
+    fun simpleBuilderGui(rows: Int, title: Component, config: FileConfiguration): Gui {
+        val builder = Gui.gui(GuiType.CHEST).rows(rows).title(title).disableAllInteractions().create()
 
+        builder.setDefaultClickAction { context ->
+            if (context.currentItem != null && context.isLeftClick && context.isRightClick && !isGlass(context.currentItem)) {
+                val type = config.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
+                playSound(context.whoClicked, type, 5f, 1f)
+            }
+        }
+
+        return builder
+    }
+
+    fun paginatedBuilderGui(rows: Int, title: Component, config: FileConfiguration): PaginatedGui {
+        val builder = PaginatedBuilder().rows(rows).title(title).disableAllInteractions().create()
+
+        builder.setDefaultClickAction { context ->
+            if (context.currentItem != null && context.isLeftClick && context.isRightClick && !isGlass(context.currentItem)) {
+                val type = config.getString("menu.gui.click-sounds.ui", "ui.button.click").toString()
+                playSound(context.whoClicked, type, 5f, 1f)
+            }
+        }
+
+        return builder
+    }
+
+    fun pagination(
+        player: Player,
+        gui: PaginatedGui,
+        config: FileConfiguration,
+        menu: Menu?
+    ) {
+        val paginationPanel = paginationPanel(gui, config)
+
+        for (material in Material.entries) {
+            paginationPanel.previousPage(player, material)
+            closeMenuOrBack(player, material, gui, config, menu)
+            paginationPanel.nextPage(player, material)
+        }
+    }
+
+    private fun paginationPanel(
+        gui: PaginatedGui,
+        config: FileConfiguration
+    ) : PaginationPanel {
+        return PaginationPanel(magenta, gui, config)
     }
 
     fun closeMenuOrBack(
         player: Player,
         material: Material,
-        container: GuiContainer<Player, ItemStack>,
+        container: BaseGui,
         fileConfiguration: FileConfiguration,
         menu: Menu?,
     ) {
@@ -45,27 +95,29 @@ class MenuUI(private val magenta: Magenta) {
         val col = fileConfiguration.getInt("menu.gui.button.close.positions.col")
 
         val item = ItemBuilder.from(magenta.itemFactory.shopItem(material, fileConfiguration.getString("menu.gui.button.close.name").toString()))
-            .asGuiItem { whoClicked, _ ->
+            .asGuiItem { clickEvent ->
                 val action = BUTTON_ACTION.valueOf(fileConfiguration.getString("menu.gui.button.close.action") ?: BUTTON_ACTION.BACK.name)
                 when(action) {
-                    BUTTON_ACTION.CLOSE ->  { whoClicked.closeInventory() }
-                    BUTTON_ACTION.BACK -> { menu?.open(whoClicked) }
+                    BUTTON_ACTION.CLOSE ->  { clickEvent.whoClicked.closeInventory() }
+                    BUTTON_ACTION.BACK -> { menu?.open(clickEvent.whoClicked as Player) }
                 }
             }
 
-        container.set(Slot(row, col), item)
+        container.setItem(row, col, item)
     }
 
-    fun useAllFillers(rows: Int, container: GuiContainer<Player, ItemStack>, config: FileConfiguration) {
-        val menuFiller = GuiFiller(rows, container, config)
+    fun useAllFillers(gui: BaseGui, config: FileConfiguration) {
+        val menuFiller = MenuFiller(gui.filler, config)
         if (config.contains("menu.gui.fill")) {
             menuFiller.fillBorder()
             menuFiller.fillTop()
-            //menuFiller.fillBottom()
+            menuFiller.fillSide()
+            menuFiller.fillFull()
+            menuFiller.fillBottom()
         }
     }
 
-    fun customItems(player: Player, type: String, fileConfiguration: FileConfiguration, container: GuiContainer<Player, ItemStack>) {
+    fun customItems(player: Player, type: String, fileConfiguration: FileConfiguration, gui: BaseGui) {
         for (item in fileConfiguration.getConfigurationSection("menu.custom-items")?.getKeys(false)!!) {
             val material = Material.getMaterial(fileConfiguration.getString("menu.custom-items.$item.icon").toString()) ?: continue
 
@@ -81,9 +133,13 @@ class MenuUI(private val magenta: Magenta) {
             val slot = fileConfiguration.getInt("menu.custom-items.$item.position.slot")
             val glowing = fileConfiguration.getBoolean("menu.custom-items.$item.options.glowing")
             val lore = fileConfiguration.getStringList("menu.custom-items.$item.lore")
-            val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem { _, _ -> }
+            val guiItem = ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem()
 
-            container.set(slot, guiItem)
+            gui.setItem(slot, guiItem)
         }
+    }
+
+    private fun isGlass(itemStack: ItemStack?): Boolean {
+        return itemStack?.type?.name?.contains("_GLASS") == true || itemStack?.type?.name?.contains("_GLASS_PANE") == true
     }
 }

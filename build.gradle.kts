@@ -59,9 +59,8 @@ dependencies {
     }
     implementation("com.github.encryptsl:KMonoLib:1.0.0")
     implementation("com.github.Euphillya:Energie:1.2.0")
-    implementation("dev.triumphteam:triumph-gui-paper:4.0.0-SNAPSHOT") {
+    implementation("dev.triumphteam:triumph-gui:3.1.8-SNAPSHOT") {
         exclude("net.kyori")
-        exclude(group = "com.google.guava", module = "guava")
     }
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
     testImplementation(kotlin("test"))

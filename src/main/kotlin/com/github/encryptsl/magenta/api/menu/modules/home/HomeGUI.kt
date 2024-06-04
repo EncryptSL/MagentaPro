@@ -4,8 +4,7 @@ import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.MenuUI
-import dev.triumphteam.gui.paper.Gui
-import dev.triumphteam.gui.paper.builder.item.ItemBuilder
+import dev.triumphteam.gui.builder.item.ItemBuilder
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -20,50 +19,53 @@ class HomeGUI(private val magenta: Magenta) {
 
     fun openHomeGUI(player: Player) {
         val rows = magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
-        val gui = Gui.of(rows).title(
-            ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.gui.display").toString())
+        val gui = menuUI.paginatedBuilderGui(rows,
+            ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.gui.display").toString()),
+            magenta.homeEditorConfig.getConfig()
         )
 
-        gui.component { component ->
-            component.render { container, viewer ->
-                menuUI.useAllFillers(rows, container, magenta.homeMenuConfig.getConfig())
+        menuUI.useAllFillers(gui, magenta.homeMenuConfig.getConfig())
 
-                val homes = magenta.homeModel.getHomesByOwner(viewer.uniqueId).join()
-                for (home in homes.withIndex()) {
-                    val material = Material.getMaterial(home.value.homeIcon) ?: Material.OAK_DOOR
-                    if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.display")) continue
-                    if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.lore")) continue
+        val homes = magenta.homeModel.getHomesByOwner(player.uniqueId).get()
 
-                    val itemNameComponent = ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.home-info.display").toString(),
-                        Placeholder.parsed("home", home.value.homeName)
-                    )
+        if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.display")) return
+        if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.lore")) return
 
-                    val loresComponents = magenta.homeMenuConfig.getConfig()
-                        .getStringList("menu.home-info.lore")
-                        .map { ModernText.miniModernText(it, TagResolver.resolver(
-                            Placeholder.parsed("home", home.value.homeName),
-                            Placeholder.parsed("world", home.value.world),
-                            Placeholder.parsed("x", home.value.x.toString()),
-                            Placeholder.parsed("y", home.value.y.toString()),
-                            Placeholder.parsed("z", home.value.z.toString()),
-                            Placeholder.parsed("yaw", home.value.yaw.toString()),
-                            Placeholder.parsed("pitch", home.value.pitch.toString()),)) }.toMutableList()
+        for (home in homes) {
+            val material = Material.getMaterial(home.homeIcon) ?: Material.OAK_DOOR
+
+            val itemNameComponent = ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.home-info.display").toString(),
+                Placeholder.parsed("home", home.homeName)
+            )
+
+            val loresComponents = magenta.homeMenuConfig.getConfig()
+                .getStringList("menu.home-info.lore")
+                .map { ModernText.miniModernText(it, TagResolver.resolver(
+                    Placeholder.parsed("home", home.homeName),
+                    Placeholder.parsed("world", home.world),
+                    Placeholder.parsed("x", home.x.toString()),
+                    Placeholder.parsed("y", home.y.toString()),
+                    Placeholder.parsed("z", home.z.toString()),
+                    Placeholder.parsed("yaw", home.yaw.toString()),
+                    Placeholder.parsed("pitch", home.pitch.toString()),)) }.toMutableList()
 
 
-                    val itemBuilder = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
-                        .setName(itemNameComponent)
-                        .addLore(loresComponents).create()
+            val itemBuilder = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
+                .setName(itemNameComponent)
+                .addLore(loresComponents).create()
 
-                    val item = ItemBuilder.from(itemBuilder).asGuiItem { player, _ ->
-                        magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.value.homeName, magenta.config.getLong("teleport-cooldown")))
-                    //if (context.isRightClick) {
-                    //    //simpleMenu.clickSound(player, magenta.homeEditorConfig.getConfig())
-                    //    homeEditorGUI.openHomeEditorGUI(player, home.value.homeName)
-                    //}
-                    }
-                    container.set(home.index, item)
+            val item = ItemBuilder.from(itemBuilder).asGuiItem { context ->
+                if (context.isLeftClick) {
+                    magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home.homeName, magenta.config.getLong("teleport-cooldown")))
+                }
+                if (context.isRightClick) {
+                    homeEditorGUI.openHomeEditorGUI(player, home.homeName)
                 }
             }
-        }.build().open(player)
+            gui.addItem(item)
+        }
+
+        menuUI.pagination(player, gui, magenta.homeMenuConfig.getConfig(), null)
+        gui.open(player)
     }
 }

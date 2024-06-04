@@ -66,7 +66,6 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onTeleport(
         player: Player,
         @Argument(value = "player", suggestions = "players") target: Player,
-        @Flag(value = "location", aliases = ["l"]) location: Location?
     ) {
         val account = magenta.user.getUser(target.uniqueId)
         if (!account.getAccount().getBoolean("teleportenabled") && !player.hasPermission(Permissions.TELEPORT_EXEMPT))
@@ -77,11 +76,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (player.uniqueId == target.uniqueId)
             return player.sendMessage(magenta.locale.translation("magenta.command.tp.error.yourself"))
 
-        if (location == null) {
-            player.teleport(target, PlayerTeleportEvent.TeleportCause.COMMAND)
-        } else {
-            target.teleport(location)
-        }
+        player.teleport(target, PlayerTeleportEvent.TeleportCause.COMMAND)
 
         player.sendMessage(magenta.locale.translation("magenta.command.tp.success.self", Placeholder.parsed("target", target.name)))
     }
@@ -92,7 +87,8 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onTeleportConsole(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "players") player: Player,
-        @Argument(value = "target", suggestions = "players") target: Player
+        @Argument(value = "target", suggestions = "players") target: Player,
+        @Flag(value = "location", aliases = ["l"]) location: Location?
     ) {
         val targetAccount = magenta.user.getUser(target.uniqueId)
         if (!targetAccount.getAccount().getBoolean("teleportenabled") && !commandSender.hasPermission(Permissions.TELEPORT_EXEMPT))
@@ -103,12 +99,16 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (player.uniqueId == target.uniqueId)
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.error.yourself.same"))
 
-        player.teleport(target.location, PlayerTeleportEvent.TeleportCause.COMMAND)
+        if (location == null) {
+            player.teleport(target.location, PlayerTeleportEvent.TeleportCause.COMMAND)
 
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.success.to", TagResolver.resolver(
-            Placeholder.parsed("player", player.name),
-            Placeholder.parsed("target", target.name)
-        )))
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.success.to", TagResolver.resolver(
+                Placeholder.parsed("player", player.name),
+                Placeholder.parsed("target", target.name)
+            )))
+        } else {
+            player.teleport(location)
+        }
         player.sendMessage(magenta.locale.translation("magenta.command.tp.success.self", Placeholder.parsed("target", target.name)))
     }
 

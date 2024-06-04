@@ -5,9 +5,7 @@ import com.github.encryptsl.kmono.lib.utils.ItemBuilder
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
-import dev.triumphteam.gui.container.GuiContainer
-import dev.triumphteam.gui.item.GuiItem
-import dev.triumphteam.gui.paper.Gui
+import dev.triumphteam.gui.guis.BaseGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -23,59 +21,60 @@ class WarpGUI(private val magenta: Magenta) : Menu {
 
     override fun open(player: Player) {
         val rows = magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
-        val gui = Gui.of(rows).title(
+        val warps = magenta.warpModel.getWarps().get()
+
+        val gui = menuUI.paginatedBuilderGui(rows,
             ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.gui.display").toString(),
-                Placeholder.parsed("count", magenta.warpModel.getWarps().join().count().toString()))
+                Placeholder.parsed("count", warps.count().toString())),
+            magenta.homeMenuConfig.getConfig()
         )
 
+        menuUI.useAllFillers(gui, magenta.warpMenuConfig.getConfig())
 
-        gui.component { component ->
-            component.render { container, viewer ->
-                actionCustomButtons(viewer, container, magenta.warpMenuConfig.getConfig())
-            }
-            component.render { container, _ ->
-                menuUI.useAllFillers(rows, container, magenta.warpMenuConfig.getConfig())
-                val warps = magenta.warpModel.getWarps().join()
-                for (warp in warps.withIndex()) {
-                    val material = Material.getMaterial(warp.value.warpIcon) ?: Material.OAK_SIGN
+        if (!magenta.warpMenuConfig.getConfig().contains("menu.warp-info.display")) return
+        if (!magenta.warpMenuConfig.getConfig().contains("menu.warp-info.lore")) return
 
-                    if (!magenta.warpMenuConfig.getConfig().contains("menu.warp-info.display")) continue
-                    if (!magenta.warpMenuConfig.getConfig().contains("menu.warp-info.lore")) continue
+        for (warp in warps) {
+            val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
+            magenta.logger.info(warp.toString())
 
-                    val itemComponentName = ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
-                        Placeholder.parsed("warp", warp.value.warpName)
-                    )
+            val itemComponentName = ModernText.miniModernText(magenta.warpMenuConfig.getConfig().getString("menu.warp-info.display").toString(),
+                Placeholder.parsed("warp", warp.warpName)
+            )
 
-                    val lore = magenta.warpMenuConfig.getConfig()
-                        .getStringList("menu.warp-info.lore")
-                        .map { ModernText.miniModernText(it, TagResolver.resolver(
-                            Placeholder.parsed("owner", warp.value.owner),
-                            Placeholder.parsed("warp", warp.value.warpName),
-                            Placeholder.parsed("world", warp.value.world),
-                            Placeholder.parsed("x", warp.value.x.toString()),
-                            Placeholder.parsed("y", warp.value.y.toString()),
-                            Placeholder.parsed("z", warp.value.z.toString()),
-                            Placeholder.parsed("yaw", warp.value.yaw.toString()),
-                            Placeholder.parsed("pitch", warp.value.pitch.toString()),
-                        )) }
+            val lore = magenta.warpMenuConfig.getConfig()
+                .getStringList("menu.warp-info.lore")
+                .map { ModernText.miniModernText(it, TagResolver.resolver(
+                    Placeholder.parsed("owner", warp.owner),
+                    Placeholder.parsed("warp", warp.warpName),
+                    Placeholder.parsed("world", warp.world),
+                    Placeholder.parsed("x", warp.x.toString()),
+                    Placeholder.parsed("y", warp.y.toString()),
+                    Placeholder.parsed("z", warp.z.toString()),
+                    Placeholder.parsed("yaw", warp.yaw.toString()),
+                    Placeholder.parsed("pitch", warp.pitch.toString()),
+                    )) }
 
-                    val itemBuilder = ItemBuilder(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
+            val itemBuilder = ItemBuilder(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
 
-                    val item = dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemBuilder).asGuiItem { whoClicked, _ ->
-                        whoClicked.teleport(magenta.warpModel.toLocation(warp.value.warpName))
-                        return@asGuiItem
-                    }
-                    container.set(warp.index, item)
+            val item = dev.triumphteam.gui.builder.item.ItemBuilder.from(itemBuilder).asGuiItem { context ->
+                if (context.isLeftClick || context.isRightClick) {
+                    context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
+                    return@asGuiItem
                 }
             }
-        }.build().open(player)
+            gui.addItem(item)
+        }
+
+        menuUI.pagination(player, gui, magenta.warpMenuConfig.getConfig(), null)
+        actionCustomButtons(player, gui, magenta.warpMenuConfig.getConfig())
+        gui.open(player)
     }
 
 
     private fun actionCustomButtons(
-        player: Player, container: GuiContainer<Player, ItemStack>, config: FileConfiguration
+        player: Player, gui: BaseGui, config: FileConfiguration
     ) {
-
         for (el in config.getConfigurationSection("menu.items.buttons")?.getKeys(false)!!) {
             val material = Material.getMaterial(config.getString("menu.items.buttons.${el}.icon").toString()) ?: continue
             if (config.contains("menu.items.buttons.$el")) {
@@ -94,7 +93,7 @@ class WarpGUI(private val magenta: Magenta) : Menu {
 
                 val actionItem = getItem(itemStack, config, el)
 
-                container.set(config.getInt("menu.items.buttons.$el.positions.row"), config.getInt("menu.items.buttons.$el.positions.col"), actionItem)
+                gui.setItem(config.getInt("menu.items.buttons.$el.positions.row"), config.getInt("menu.items.buttons.$el.positions.col"), actionItem)
             }
         }
     }
@@ -103,9 +102,11 @@ class WarpGUI(private val magenta: Magenta) : Menu {
         itemStack: ItemStack,
         config: FileConfiguration,
         el: String
-    ): GuiItem<Player, ItemStack> {
-        return dev.triumphteam.gui.paper.builder.item.ItemBuilder.from(itemStack).asGuiItem { whoClicked, _ ->
-            openOwnerWarps(whoClicked, config, el)
+    ): dev.triumphteam.gui.guis.GuiItem {
+        return dev.triumphteam.gui.builder.item.ItemBuilder.from(itemStack).asGuiItem { context ->
+            if (context.isLeftClick) {
+                openOwnerWarps(context.whoClicked as Player, config, el)
+            }
         }
     }
 

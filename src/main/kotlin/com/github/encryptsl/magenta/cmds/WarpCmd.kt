@@ -67,7 +67,7 @@ class WarpCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command open warps gui or chat list")
     fun onWarps(commandSender: CommandSender) {
         if (commandSender is Player) {
-            //warpGUI.openMenu(commandSender)
+            warpGUI.open(commandSender)
         } else {
             magenta.pluginManager.callEvent(WarpInfoEvent(commandSender, null, InfoType.LIST))
         }
