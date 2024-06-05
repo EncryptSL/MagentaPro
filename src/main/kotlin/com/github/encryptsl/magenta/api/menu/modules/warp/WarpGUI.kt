@@ -1,10 +1,11 @@
 package com.github.encryptsl.magenta.api.menu.modules.warp
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.utils.ItemBuilder
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
+import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.BaseGui
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -55,8 +56,8 @@ class WarpGUI(private val magenta: Magenta) : Menu {
                     )) }
 
             gui.addItem(
-                dev.triumphteam.gui.builder.item.ItemBuilder.from(
-                    ItemBuilder(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
+                ItemBuilder.from(
+                    ItemCreator(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
                 ).asGuiItem { context ->
                     if (context.isLeftClick || context.isRightClick) {
                         context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
@@ -87,7 +88,7 @@ class WarpGUI(private val magenta: Magenta) : Menu {
                     .getStringList("menu.items.buttons.$el.lore")
                     .map { ModernText.miniModernText(it) }
 
-                val itemStack = ItemBuilder(material, 1)
+                val itemStack = ItemCreator(material, 1)
                     .setName(ModernText.miniModernText(config.getString("menu.items.buttons.${el}.name").toString()))
                     .addLore(lores.toMutableList()).create()
 
@@ -103,7 +104,7 @@ class WarpGUI(private val magenta: Magenta) : Menu {
         config: FileConfiguration,
         el: String
     ): dev.triumphteam.gui.guis.GuiItem {
-        return dev.triumphteam.gui.builder.item.ItemBuilder.from(itemStack).asGuiItem { context ->
+        return ItemBuilder.from(itemStack).asGuiItem { context ->
             if (context.isLeftClick) {
                 openOwnerWarps(context.whoClicked as Player, config, el)
             }

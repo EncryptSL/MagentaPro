@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.utils.ItemBuilder
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Color
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 
 class ItemFactory {
     fun item(material: Material, itemName: String, lores: List<String>, glowing: Boolean): ItemStack {
-        return ItemBuilder(material, 1)
+        return ItemCreator(material, 1)
             .setName(ModernText.miniModernText(itemName))
             .setGlowing(glowing)
             .addLore(lores.map { ModernText.miniModernText(it) }.toMutableList()).create()
@@ -25,10 +25,10 @@ class ItemFactory {
         sellPrice:Double,
         isBuyAllowed: Boolean,
         isSellAllowed: Boolean,
-        fileConfiguration: FileConfiguration
+        config: FileConfiguration
     ): ItemStack {
-        val itemStack = ItemBuilder(material, 1).setName(ModernText.miniModernText(itemName))
-        val lore = fileConfiguration.getStringList("menu.gui.item_lore")
+        val itemStack = ItemCreator(material, 1).setName(ModernText.miniModernText(itemName))
+        val lore = config.getStringList("menu.gui.item_lore")
 
         if (lore.isNotEmpty()) {
             val lores = lore.map {
@@ -48,9 +48,9 @@ class ItemFactory {
 
             itemStack.addLore(lores)
         }
-        if (fileConfiguration.contains("menu.items.${itemName}.options")) {
-            if (fileConfiguration.contains("menu.items.${itemName}.options.color")) {
-                val color: Color = Color.fromRGB(fileConfiguration.getInt("menu.items.${itemName}.options.color"))
+        if (config.contains("menu.items.${itemName}.options")) {
+            if (config.contains("menu.items.${itemName}.options.color")) {
+                val color: Color = Color.fromRGB(config.getInt("menu.items.${itemName}.options.color"))
                 itemStack.setPotion(true, color)
             }
         }
@@ -70,7 +70,7 @@ class ItemFactory {
         color: Int,
         lore: List<String>
     ): ItemStack {
-        val itemBuilder = ItemBuilder(material, quantity)
+        val itemBuilder = ItemCreator(material, quantity)
 
         itemBuilder.setName(ModernText.miniModernText(productName, TagResolver.resolver(
             Placeholder.parsed("quantity", quantity.toString())
@@ -96,11 +96,11 @@ class ItemFactory {
     }
 
     fun shopItem(material: Material, name: String): ItemStack {
-        return ItemBuilder(material, 1).setName(ModernText.miniModernText(name)).create()
+        return ItemCreator(material, 1).setName(ModernText.miniModernText(name)).create()
     }
 
     fun shopItem(material: Material, amount: Int, name: String): ItemStack {
-        return ItemBuilder(material, amount).setName(ModernText.miniModernText(name)).create()
+        return ItemCreator(material, amount).setName(ModernText.miniModernText(name)).create()
     }
 
 }

@@ -13,7 +13,8 @@ menu:
           col: 1
       close:
         item: BOOK
-        name: <green>Zavřít Menu
+        name: <green>Zpět do Menu
+        action: BACK
         positions:
           row: 6
           col: 5

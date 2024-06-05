@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.modules.milestones
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
@@ -28,10 +29,10 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
 
         for (key in section.withIndex()) {
             val material = Material.getMaterial(key.value) ?: continue
-            val itemStack = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
-            itemStack.setName(
+            val itemStack = ItemCreator(material, 1).setName(
                 ModernText.miniModernText(magenta.milestonesOres.getConfig().getString("menu.gui.item.display")
-                    ?: player.name, Placeholder.parsed("item", material.name)))
+                    ?: player.name, Placeholder.parsed("item", material.name))
+            )
             val requiredLevel = magenta.config.getInt("level.ores.${material.name}")
 
             if (getLevel.level < magenta.config.getInt("level.ores.${material.name}")) {

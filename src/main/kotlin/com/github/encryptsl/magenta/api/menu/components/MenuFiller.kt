@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta.api.menu.components
 
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import dev.triumphteam.gui.components.util.GuiFiller
 import dev.triumphteam.gui.guis.GuiItem
 import org.bukkit.Material
@@ -14,9 +15,11 @@ class MenuFiller(
         if (config.contains("menu.gui.fill.border")) {
             guiFiller.fillBorder(
                 GuiItem(
-                    Material.valueOf(
-                        config.getString("menu.gui.fill.border").toString()
-                    )
+                    ItemCreator(
+                        Material.valueOf(
+                            config.getString("menu.gui.fill.border").toString()
+                        )
+                    ).setGlowing(true).create()
                 )
             )
             return
@@ -27,9 +30,11 @@ class MenuFiller(
         if (config.contains("menu.gui.fill.top")) {
             guiFiller.fillTop(
                 GuiItem(
-                    Material.valueOf(
-                        config.getString("menu.gui.fill.top").toString()
-                    )
+                    ItemCreator(
+                        Material.valueOf(
+                            config.getString("menu.gui.fill.top").toString()
+                        )
+                    ).setGlowing(true).create()
                 )
             )
             return
@@ -40,9 +45,11 @@ class MenuFiller(
         if (config.contains("menu.gui.fill.bottom")) {
             guiFiller.fillBottom(
                 GuiItem(
-                    Material.valueOf(
-                        config.getString("menu.gui.fill.bottom").toString()
-                    )
+                    ItemCreator(
+                        Material.valueOf(
+                            config.getString("menu.gui.fill.bottom").toString()
+                        )
+                    ).setGlowing(true).create()
                 )
             )
             return
@@ -53,9 +60,11 @@ class MenuFiller(
         if (config.contains("menu.gui.fill.full")) {
             guiFiller.fill(
                 GuiItem(
-                    Material.valueOf(
-                        config.getString("menu.gui.fill.full").toString()
-                    )
+                    ItemCreator(
+                        Material.valueOf(
+                            config.getString("menu.gui.fill.full").toString()
+                        )
+                    ).setGlowing(true).create()
                 )
             )
             return

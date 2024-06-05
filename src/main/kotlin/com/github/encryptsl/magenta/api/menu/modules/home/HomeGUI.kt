@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.modules.home
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.MenuUI
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player
 
 class HomeGUI(private val magenta: Magenta) {
 
+    private val requiredContains: String = "menu.home-info"
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
     private val homeEditorGUI: HomeEditorGUI by lazy {
         HomeEditorGUI(magenta, this)
@@ -28,8 +30,9 @@ class HomeGUI(private val magenta: Magenta) {
 
         val homes = magenta.homeModel.getHomesByOwner(player.uniqueId).join()
 
-        if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.display")) return
-        if (!magenta.homeMenuConfig.getConfig().contains("menu.home-info.lore")) return
+        if (!magenta.homeMenuConfig.getConfig().contains(requiredContains)) return
+        if (!magenta.homeMenuConfig.getConfig().contains("$requiredContains.display")) return
+        if (!magenta.homeMenuConfig.getConfig().contains("$requiredContains.lore")) return
 
         for (home in homes) {
             val material = Material.getMaterial(home.homeIcon) ?: Material.RED_BED
@@ -51,7 +54,7 @@ class HomeGUI(private val magenta: Magenta) {
                 }
 
 
-            val itemBuilder = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
+            val itemBuilder = ItemCreator(material, 1)
                 .setName(itemNameComponent)
                 .addLore(loresComponents).create()
 

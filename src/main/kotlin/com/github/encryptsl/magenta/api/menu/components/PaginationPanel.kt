@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.components
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.PaginatedGui
@@ -29,7 +30,7 @@ class PaginationPanel(
 
             if (config.getString("menu.gui.button.previous.item").equals(material.name, true)) {
                 val guiItem = ItemBuilder.from(
-                    com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
+                    ItemCreator(material, 1)
                         .setName(ModernText.miniModernText(config.getString("menu.gui.button.previous.name").toString(), Placeholder.parsed("prev_page", gui.prevPageNum.toString()))).create()
                 ).asGuiItem {
                     gui.previous()
@@ -57,7 +58,7 @@ class PaginationPanel(
 
             if (config.getString("menu.gui.button.next.item").equals(material.name, true)) {
                 val guiItem = ItemBuilder.from(
-                    com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
+                    ItemCreator(material, 1)
                         .setName(ModernText.miniModernText(config.getString("menu.gui.button.next.name").toString(), Placeholder.parsed("next_page", gui.nextPageNum.toString()))).create()
                 ).asGuiItem {
                     gui.next()

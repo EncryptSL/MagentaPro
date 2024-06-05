@@ -5,6 +5,7 @@ import com.github.encryptsl.kmono.lib.extensions.createItem
 import com.github.encryptsl.kmono.lib.extensions.meta
 import com.github.encryptsl.kmono.lib.extensions.setLoreComponentList
 import com.github.encryptsl.kmono.lib.extensions.setNameComponent
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.builder.item.ItemBuilder
@@ -90,7 +91,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no")) {
             val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()) ?: return
 
-            val itemStack = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
+            val itemStack = ItemCreator(material, 1)
 
             if (!magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no.name")) return
 

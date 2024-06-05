@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.modules.milestones
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
@@ -32,8 +33,9 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
         menuUI.useAllFillers(gui, magenta.milestonesOres.getConfig())
         for (item in menuSection.withIndex()) {
             val material = Material.getMaterial(magenta.milestonesVotePass.getConfig().getString("menu.items.$item.item").toString()) ?: continue
-            val itemStack = com.github.encryptsl.kmono.lib.utils.ItemBuilder(material, 1)
-                .setName(ModernText.miniModernText(magenta.milestonesVotePass.getConfig().getString("menu.items.$item.name").toString()))
+            val itemStack = ItemCreator(material, 1).setName(
+                ModernText.miniModernText(magenta.milestonesVotePass.getConfig().getString("menu.items.$item.name").toString())
+            )
             val requiredVotes = magenta.milestonesVotePass.getConfig().getInt("menu.items.$item.required_votes").minus(playerVotes)
             val unlockedLores = magenta.milestonesVotePass.getConfig().getStringList("menu.items.$item.unlocked-lore")
                 .map { ModernText.miniModernText(it) }
