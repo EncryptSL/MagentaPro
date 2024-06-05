@@ -28,9 +28,11 @@ class CommandHelper(private val magenta: Magenta) {
             if (user.getPlayer()?.hasPermission(Permissions.VANISH_EXEMPT) == true) continue
             if (user.isVanished()) {
                 user.getPlayer()?.let { players.showPlayer(magenta, it) }
+                user.getPlayer()?.let { players.listPlayer(it) }
                 user.set("vanished", false)
             } else {
                 user.getPlayer()?.let { players.hidePlayer(magenta, it) }
+                user.getPlayer()?.let { players.unlistPlayer(it) }
                 user.set("vanished", true)
             }
         }
