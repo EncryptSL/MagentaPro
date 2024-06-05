@@ -4,7 +4,6 @@ import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationCommandRegister
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.cmds.*
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -29,7 +28,7 @@ class CommandManager(private val magenta: Magenta) {
         val commandManager = LegacyPaperCommandManager(
             magenta,
             ExecutionCoordinator.builder<CommandSender>().build(),
-            SenderMapper.identity<CommandSender>(),
+            SenderMapper.identity(),
         )
         if (commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             commandManager.registerBrigadier()
@@ -42,7 +41,7 @@ class CommandManager(private val magenta: Magenta) {
 
 
     private fun createAnnotationParser(commandManager: LegacyPaperCommandManager<CommandSender>): AnnotationParser<CommandSender> {
-        return AnnotationParser<CommandSender>(commandManager, CommandSender::class.java)
+        return AnnotationParser(commandManager, CommandSender::class.java)
     }
 
     private fun helpManager(commandManager: LegacyPaperCommandManager<CommandSender>) {
@@ -63,10 +62,14 @@ class CommandManager(private val magenta: Magenta) {
 
     private fun registerMinecraftExceptionHandler(commandManager: LegacyPaperCommandManager<CommandSender>) {
         MinecraftExceptionHandler.createNative<CommandSender>()
-            .defaultHandlers()
+            .defaultCommandExecutionHandler()
+            .defaultNoPermissionHandler()
+            .defaultArgumentParsingHandler()
+            .defaultInvalidSenderHandler()
+            .defaultInvalidSyntaxHandler()
             .decorator { component ->
                 ModernText.miniModernText(magenta.config.getString("prefix", "<red>[<bold>!</bold>]").toString())
-                    .append(Component.text())
+                    .appendSpace()
                     .append(component)
             }
             .registerTo(commandManager)

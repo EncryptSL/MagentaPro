@@ -12,6 +12,4 @@ object LevelFormula {
         return (Strings.repeat("" + completedColor + symbol, progressBars.toInt())
                 + Strings.repeat("" + notCompletedColor + symbol, totalBars - progressBars.toInt()))
     }
-    fun experienceFormula(level: Int): Int = (level * 800) + 100
-    fun levelProgress(level: Int, currentExp: Int): Int = ((currentExp.toDouble() / experienceFormula(level)) * 100).toInt()
 }

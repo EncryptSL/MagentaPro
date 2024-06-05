@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.common.hook.miniplaceholder
 
 import com.github.encryptsl.kmono.lib.api.hook.PluginHook
+import com.github.encryptsl.kmono.lib.extensions.levelProgress
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PluginPlaceholders
-import com.github.encryptsl.magenta.api.level.LevelFormula
 import io.github.miniplaceholders.kotlin.asInsertingTag
 import io.github.miniplaceholders.kotlin.expansion
 import net.kyori.adventure.text.Component
@@ -27,7 +27,7 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPl
             audiencePlaceholder("level_progress") { p, _, _ ->
                 val player  = p as Player
                 val levelEntity = magenta.virtualLevel.getLevel(player.uniqueId)
-                return@audiencePlaceholder Component.text(LevelFormula.levelProgress(levelEntity.level, levelEntity.experience)).asInsertingTag()
+                return@audiencePlaceholder Component.text(levelProgress(levelEntity.level, levelEntity.experience)).asInsertingTag()
             }
             audiencePlaceholder("socialspy") { p, _, _ ->
                 val player  = p as Player

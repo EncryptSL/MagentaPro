@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.common.hook.placeholderapi
 
+import com.github.encryptsl.kmono.lib.extensions.levelProgress
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.PluginPlaceholders
-import com.github.encryptsl.magenta.api.level.LevelFormula
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.OfflinePlayer
 
@@ -35,7 +35,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
         return when (identifier) {
             "afk" -> magenta.afk.isAfk(player.uniqueId).toString()
             "level" -> levelEntity.level.toString()
-            "level_progress" -> LevelFormula.levelProgress(levelEntity.level, levelEntity.experience).toString()
+            "level_progress" -> levelProgress(levelEntity.level, levelEntity.experience).toString()
             "socialspy" -> user.isSocialSpy().toString()
             "vanished" -> user.isVanished().toString()
             "votes" -> user.getVotes().toString()

@@ -1,8 +1,10 @@
 package com.github.encryptsl.magenta.common
 
+import com.github.encryptsl.kmono.lib.extensions.experienceFormula
+import com.github.encryptsl.kmono.lib.extensions.getProgressBar
+import com.github.encryptsl.kmono.lib.extensions.levelProgress
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
-import com.github.encryptsl.magenta.api.level.LevelFormula
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
@@ -25,7 +27,7 @@ class CommandHelper(private val magenta: Magenta) {
 
     fun doVanish(user: UserAccountImpl) {
         for (players in Bukkit.getOnlinePlayers()) {
-            if (user.getPlayer()?.hasPermission(Permissions.VANISH_EXEMPT) == true) continue
+            if (!players.hasPermission(Permissions.VANISH_EXEMPT)) continue
             if (user.isVanished()) {
                 user.getPlayer()?.let { players.showPlayer(magenta, it) }
                 user.getPlayer()?.let { players.listPlayer(it) }
@@ -118,9 +120,9 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun showLevelProgress(commandSender: CommandSender, level: Int, currentExp: Int) {
-        val needToLevelUp = LevelFormula.experienceFormula(level)
-        val percentageProgress = LevelFormula.levelProgress(level, currentExp)
-        val progressBar = LevelFormula.getProgressBar(
+        val needToLevelUp = experienceFormula(level)
+        val percentageProgress = levelProgress(level, currentExp)
+        val progressBar = getProgressBar(
             currentExp,
             needToLevelUp,
             magenta.config.getInt("level.progress_bar.total_bars", 20),

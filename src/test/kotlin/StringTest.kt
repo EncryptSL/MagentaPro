@@ -13,6 +13,29 @@ class StringTest {
 
     private val config = ConfigUtil(this.javaClass.getResource("string_ip_test.yml").path)
 
+    fun getProgressBar(current: Int, max: Int, totalBars: Int): String {
+        if (current < 0 || current > max || max <= 0 || totalBars <= 0) {
+            throw IllegalArgumentException("Invalid progress bar parameters")
+        }
+
+        val progressRatio = current.toDouble() / max
+        val completedBars = (progressRatio * totalBars).toInt()
+
+        val completedBar = CharArray(completedBars) { '⛆' }
+        val remainingBar = CharArray(totalBars - completedBars) { '⛆' }
+
+        return "${completedBar.concatToString()}${remainingBar.concatToString()}"
+    }
+    @Test
+    fun progressBarTest() {
+        // Example usage
+        val currentProgress = 42
+        val maxValue = 100
+        val totalProgressBarBars = 20
+        val progressBarString = getProgressBar(currentProgress, maxValue, totalProgressBarBars)
+        println(progressBarString)
+    }
+
     @Test
     fun expressionFormulaTest() {
         println(config.getConfig().getString("expression-formula", null))

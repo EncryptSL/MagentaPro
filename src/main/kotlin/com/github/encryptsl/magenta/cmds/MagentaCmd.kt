@@ -21,13 +21,12 @@ class MagentaCmd(private val magenta: Magenta) : AnnotationFeatures {
         annotationParser.parse(this)
     }
 
-    @Permission("magenta.plugin.help")
     @Command("help [query]")
+    @Permission("magenta.plugin.help")
     fun onHelp(
         commandSender: CommandSender,
         @Argument(value = "query", suggestions = "help_queries") @Greedy query: String?
     ) {
-
         val getQuery = query ?: ""
 
         magenta.commandManager.help?.queryCommands(getQuery, commandSender)
