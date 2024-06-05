@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.utils.ItemBuilder
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -117,7 +117,7 @@ class VoucherManager(private val magenta: Magenta) {
         val material = Material.getMaterial(materialName)
 
         val itemBuilder = material?.let {
-            ItemBuilder(it, count)
+            ItemCreator(it, count)
                 .setName(ModernText.miniModernText(item, Placeholder.parsed("sid", sid.toString())))
                 .addLore(lore.map {
                     ModernText.miniModernText(it)

@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.common.model
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.utils.ItemBuilder
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -33,7 +33,7 @@ class KitManager(private val magenta: Magenta) {
             else
                 emptyList()
 
-            val itemBuilder = ItemBuilder(material, count).setName(displayKitName).addLore(lore.toMutableList())
+            val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
             val enchantments = Registry.ENCHANTMENT.filter { magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${it.key().value()}") }
 
@@ -99,7 +99,7 @@ class KitManager(private val magenta: Magenta) {
                 else
                     emptyList()
 
-                val itemBuilder = ItemBuilder(material, count).setName(displayKitName).addLore(lore.toMutableList())
+                val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
                 val enchantments = Registry.ENCHANTMENT.filter { magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${it.key().value()}") }
 
