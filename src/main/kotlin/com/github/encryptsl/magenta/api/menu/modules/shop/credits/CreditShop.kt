@@ -88,7 +88,7 @@ class CreditShop(private val magenta: Magenta) : Menu {
 
         val rows = shopCategory.getConfig().getInt("menu.gui.size", 6)
 
-        val gui = menuUI.simpleBuilderGui(rows,
+        val gui = menuUI.paginatedBuilderGui(rows,
             ModernText.miniModernText(name, Placeholder.parsed("category", categoryName)),
             shopCategory.getConfig()
         )
@@ -161,6 +161,7 @@ class CreditShop(private val magenta: Magenta) : Menu {
             }
             gui.setItem(slot, guiItem)
         }
+        menuUI.pagination(player, gui, magenta.creditShopConfig.getConfig(), this)
         gui.open(player)
     }
 }

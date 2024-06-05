@@ -108,7 +108,7 @@ class VoucherManager(private val magenta: Magenta) {
         return itemStack == getVoucher(voucher, itemStack.amount)
     }
 
-    fun getVoucher(voucher: String, count: Int) : ItemStack? {
+    private fun getVoucher(voucher: String, count: Int) : ItemStack? {
         val materialName = magenta.vouchers.getConfig().getString("vouchers.$voucher.material").toString()
         val sid = magenta.vouchers.getConfig().getInt("vouchers.$voucher.sid")
         val item = magenta.vouchers.getConfig().getString("vouchers.$voucher.name").toString()
@@ -122,9 +122,9 @@ class VoucherManager(private val magenta: Magenta) {
                 .addLore(lore.map {
                     ModernText.miniModernText(it)
                 }.toMutableList()).setGlowing(isEnabledGlowing)
-        }
+        }?.create()
 
-        return itemBuilder?.create()
+        return itemBuilder
     }
 
     fun giveCommandItem(commandSender: CommandSender, voucher: String, count: Int, target: Player) {
