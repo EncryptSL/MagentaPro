@@ -46,7 +46,7 @@ object VoteHelper {
                 )
             )
 
-            if (timer == Int.MIN_VALUE) {
+            if (timer == 0) {
                 val players = Bukkit.getOnlinePlayers()
                 giveRewards(players, commands)
                 if (magenta.config.contains("votifier.voteparty.random")) {
