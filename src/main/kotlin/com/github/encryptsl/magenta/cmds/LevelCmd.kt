@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.utils.ComponentPaginator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -61,19 +62,33 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     @ProxiedBy("toplevels")
-    @Command("leveltop")
+    @Command("leveltop [page]")
     @Permission("magenta.level.top")
     @CommandDescription("This command send top players in levels")
-    fun onLevelTop(commandSender: CommandSender) {
+    fun onLevelTop(
+        commandSender: CommandSender,
+        @Argument(value = "page", description = "page of leaderboard") @Default("1") page: Int
+    ) {
         commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.header"))
 
         magenta.virtualLevel.getLevels(10).thenAccept { el ->
-            el.toList().positionIndexed { k, v ->
-                commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top", TagResolver.resolver(
+            val leaderBoard = el.toList().positionIndexed { k, v ->
+                magenta.locale.translation("magenta.command.level.top", TagResolver.resolver(
                     Placeholder.parsed("position", k.toString()),
                     Placeholder.parsed("player", v.first),
                     Placeholder.parsed("level", v.second.toString()),
-                )))
+                ))
+            }
+
+            val paginator = ComponentPaginator(leaderBoard).apply { page(page) }
+
+            if (!paginator.hasNextPage())
+                return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.pagination.error.maximum.pages",
+                    Placeholder.parsed("max_page", paginator.maxPages.toString())
+                ))
+
+            for (component in paginator.display()) {
+                commandSender.sendMessage(component)
             }
         }
         commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.footer"))

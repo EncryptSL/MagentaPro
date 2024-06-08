@@ -55,7 +55,7 @@ dependencies {
         exclude(group = "net.kyori")
         exclude(group = "org.incendo", module = "cloud-core")
     }
-    implementation("com.github.encryptsl:KMonoLib:1.0.0")
+    implementation("com.github.encryptsl:KMonoLib:1.0.1")
     implementation("com.tcoded:FoliaLib:0.3.1")
     implementation("dev.triumphteam:triumph-gui:3.1.9") {
         exclude("net.kyori")
@@ -103,11 +103,11 @@ tasks {
         manifest {
             attributes["paperweight-mappings-namespace"] = "mojang"
         }
+        relocate("com.tcoded", "magenta.folia-lib")
         minimize {
             relocate("org.incendo", "magenta.cloud-core")
             relocate("com.github.encryptsl.kmono.lib", "magenta.kmono")
             relocate("com.github.keelar", "magena.exprk")
-            relocate("fr.euphyllia.energie", "magenta.energie")
             relocate("dev.triumphteam.gui", "magenta.triumphteam")
         }
     }

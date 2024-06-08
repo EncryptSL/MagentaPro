@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.utils.ComponentPaginator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.modules.milestones.VoteMilestonesGUI
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
@@ -10,10 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.AnnotationParser
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
+import org.incendo.cloud.annotations.*
 import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
@@ -55,18 +53,31 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         voteMilestonesGUI.open(player)
     }
 
-    @Command("vote top")
+    @Command("vote top [page]")
     @Permission("magenta.vote.top")
     @CommandDescription("This command shows leaderboards in vote")
-    fun onVoteLeaderBoard(commandSender: CommandSender) {
+    fun onVoteLeaderBoard(commandSender: CommandSender, @Argument(value = "page", description = "page of leaderboard") @Default("1") page: Int) {
         commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.top.header"))
-        magenta.vote.votesLeaderBoard().toList().positionIndexed { k, v ->
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.top", TagResolver.resolver(
+
+        val leaderBoard = magenta.vote.votesLeaderBoard().toList().positionIndexed { k, v ->
+            magenta.locale.translation("magenta.command.vote.top", TagResolver.resolver(
                 Placeholder.parsed("position", k.toString()),
                 Placeholder.parsed("player", v.first),
-                Placeholder.parsed("votes", v.second.toString()),
-            )))
+                Placeholder.parsed("votes", v.second.toString())
+            ))
         }
+
+        val paginator = ComponentPaginator(leaderBoard).apply { page(page) }
+
+        if (!paginator.hasNextPage())
+            return commandSender.sendMessage(magenta.locale.translation("magenta.pagination.error.maximum.pages",
+                Placeholder.parsed("max_page", paginator.maxPages.toString())
+            ))
+
+        for (component in paginator.display()) {
+            commandSender.sendMessage(component)
+        }
+
         commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.top.footer"))
     }
 
