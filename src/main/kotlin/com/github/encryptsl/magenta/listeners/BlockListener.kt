@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionProcess
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
 import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
@@ -73,7 +73,7 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
             val moneyEarned = if (isHalloweenSeason()) magenta.config.getDouble("halloween.reward_multiplier") * defaultEarnMoney else defaultEarnMoney
             val transaction = EconomyDeposit(player, moneyEarned).transaction(magenta.vaultHook) ?: return
 
-            if (transaction == EconomyTransactionProcess.SUCCESS) {
+            if (transaction == EconomyTransactionResponse.SUCCESS) {
                 player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.earn_bar").toString(),
                     Placeholder.parsed("value", moneyEarned.toString())
                 ))

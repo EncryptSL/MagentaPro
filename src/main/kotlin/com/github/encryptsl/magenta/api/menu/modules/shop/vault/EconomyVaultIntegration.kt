@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 
 import com.github.encryptsl.kmono.lib.api.economy.EconomyService
-import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionProcess
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyPaymentAction
 import com.github.encryptsl.magenta.Magenta
@@ -21,11 +21,11 @@ class EconomyVaultIntegration(
     private val commands: List<String>
 ) : EconomyService {
 
-    override fun doTransaction(player: Player, process: EconomyTransactionProcess) {
-        if (process == EconomyTransactionProcess.ERROR_ENOUGH_BALANCE)
+    override fun doTransaction(player: Player, process: EconomyTransactionResponse) {
+        if (process == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE)
             return player.sendMessage(magenta.locale.translation("magenta.shop.error.not.enough.money"))
 
-        if (process == EconomyTransactionProcess.SUCCESS) {
+        if (process == EconomyTransactionResponse.SUCCESS) {
             val product = holder.product
             val itemStack = product.itemStack
             val price = product.productPrice

@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.listeners
 
 import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionProcess
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
 import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
@@ -57,7 +57,7 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
             val earnMoney = magenta.config.getDouble("halloween.reward_multiplier").times(magenta.config.getDouble("jobs.hunter.earn_money", 5.0))
             val transaction = EconomyDeposit(player, earnMoney).transaction(magenta.vaultHook) ?: return
 
-            if (transaction == EconomyTransactionProcess.SUCCESS) {
+            if (transaction == EconomyTransactionResponse.SUCCESS) {
                 player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.hunter.earn_bar").toString(),
                     Placeholder.parsed("value", earnMoney.toString())
                 ))
