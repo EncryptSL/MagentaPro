@@ -4,7 +4,6 @@ import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.chat.PlayerMentionEvent
 import com.github.encryptsl.magenta.common.PlayerBuilderAction
-import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -36,10 +35,9 @@ class MentionManager(private val magenta: Magenta) {
 
                     val mentioned = Bukkit.getPlayer(m.replace(magenta.config.getString("mentions.variable").toString(), "")) ?: return
 
-                    Magenta.scheduler.runTask(SchedulerType.SYNC) {
+                    Magenta.scheduler.impl.runNextTick {
                         magenta.pluginManager.callEvent(PlayerMentionEvent(player, mentioned))
                     }
-
                     PlayerBuilderAction.player(mentioned).sound(sound, volume, pitch).message(mentionedPlayer(player, "magenta.player.mentioned"))
                     chatEvent.message(
                         ModernText.miniModernText(message.replace(

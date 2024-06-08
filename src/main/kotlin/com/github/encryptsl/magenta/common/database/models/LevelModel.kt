@@ -4,7 +4,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.database.sql.LevelSQL
 import com.github.encryptsl.magenta.common.database.tables.LevelTable
-import fr.euphyllia.energie.model.SchedulerType
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
@@ -17,7 +16,7 @@ import java.util.concurrent.CompletableFuture
 
 class LevelModel : LevelSQL {
     override fun createAccount(levelEntity: LevelEntity) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction { LevelTable.insertIgnore {
                 it[username] = levelEntity.username
                 it[uuid] = levelEntity.uuid
@@ -34,7 +33,7 @@ class LevelModel : LevelSQL {
     }
 
     override fun addLevel(uuid: UUID, level: Int) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync  {
             transaction {
                 LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
                     it[LevelTable.level] = LevelTable.level plus level
@@ -44,7 +43,7 @@ class LevelModel : LevelSQL {
     }
 
     override fun addExperience(uuid: UUID, experience: Int) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync  {
             transaction {
                 LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
                     it[LevelTable.experience] = LevelTable.experience plus experience
@@ -54,7 +53,7 @@ class LevelModel : LevelSQL {
     }
 
     override fun setLevel(uuid: UUID, level: Int) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
                     it[LevelTable.level] = level
@@ -64,7 +63,7 @@ class LevelModel : LevelSQL {
     }
 
     override fun setExperience(uuid: UUID, experience: Int) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
                     it[LevelTable.experience] = experience

@@ -68,9 +68,7 @@ class CommandManager(private val magenta: Magenta) {
             .defaultInvalidSenderHandler()
             .defaultInvalidSyntaxHandler()
             .decorator { component ->
-                ModernText.miniModernText(magenta.config.getString("prefix", "<red>[<bold>!</bold>]").toString())
-                    .appendSpace()
-                    .append(component)
+                ModernText.miniModernText(magenta.config.getString("prefix", "<red>[<bold>!</bold>]").toString()).append(component)
             }
             .registerTo(commandManager)
     }

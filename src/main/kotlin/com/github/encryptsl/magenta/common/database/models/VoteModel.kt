@@ -8,7 +8,6 @@ import com.github.encryptsl.magenta.common.database.tables.VoteTable.last_vote
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.serviceName
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.uuid
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.vote
-import fr.euphyllia.energie.model.SchedulerType
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.minus
@@ -19,7 +18,7 @@ import java.util.concurrent.CompletableFuture
 
 class VoteModel : VoteSQL {
     override fun createAccount(voteImpl: VoteEntity) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 VoteTable.insertIgnore {
                     it[username] = voteImpl.username
@@ -53,7 +52,7 @@ class VoteModel : VoteSQL {
 
 
     override fun addVote(voteImpl: VoteEntity) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 VoteTable.update({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
                     it[vote] = vote.plus(voteImpl.vote)
@@ -64,7 +63,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun setVote(uuid: UUID, serviceName: String, amount: Int) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 VoteTable.update ({ (VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName) }) {
                     it[vote] = amount
@@ -74,7 +73,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun removeVote(uuid: UUID, serviceName: String, amount: Int) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 VoteTable.update ({ (VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName) }) {
                     it[vote] = vote.minus(amount)
@@ -107,7 +106,7 @@ class VoteModel : VoteSQL {
 
 
     override fun removeAccount(uuid: UUID) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 VoteTable.deleteWhere { (VoteTable.uuid eq uuid.toString()) }
             }
@@ -115,7 +114,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun resetVotes(uuid: UUID) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 VoteTable.update({ VoteTable.uuid eq uuid.toString() }) {
                     it[vote] = 0
@@ -125,7 +124,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun resetVotes() {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction { VoteTable.selectAll().forEach {
                 it[vote] = 0
             } }
@@ -133,7 +132,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun deleteAll() {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction { VoteTable.deleteAll() }
         }
     }

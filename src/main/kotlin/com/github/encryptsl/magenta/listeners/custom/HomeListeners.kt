@@ -6,7 +6,6 @@ import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.home.*
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.Permissions
-import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Location
@@ -90,16 +89,14 @@ class HomeListeners(private val magenta: Magenta) : Listener {
                     )
 
                 magenta.homeModel.getHome(homeName).thenAccept { home ->
-                    Magenta.scheduler.runTask(SchedulerType.SYNC) {
-                        player.sendMessage(ModernText.miniModernText(magenta.config.getStringList("home-info-format").toString(), TagResolver.resolver(
-                            Placeholder.parsed("home", home.homeName),
-                            Placeholder.parsed("owner", home.owner),
-                            Placeholder.parsed("world", home.world),
-                            Placeholder.parsed("x", home.x.toString()),
-                            Placeholder.parsed("y", home.y.toString()),
-                            Placeholder.parsed("z", home.z.toString()),
-                        )))
-                    }
+                    player.sendMessage(ModernText.miniModernText(magenta.config.getStringList("home-info-format").toString(), TagResolver.resolver(
+                        Placeholder.parsed("home", home.homeName),
+                        Placeholder.parsed("owner", home.owner),
+                        Placeholder.parsed("world", home.world),
+                        Placeholder.parsed("x", home.x.toString()),
+                        Placeholder.parsed("y", home.y.toString()),
+                        Placeholder.parsed("z", home.z.toString())
+                    )))
                 }
             }
         }

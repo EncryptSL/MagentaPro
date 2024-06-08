@@ -35,9 +35,7 @@ import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.CommandListener
 import com.github.encryptsl.magenta.listeners.custom.*
-import fr.euphyllia.energie.Energie
-import fr.euphyllia.energie.model.Scheduler
-import fr.euphyllia.energie.model.SchedulerType
+import com.tcoded.folialib.FoliaLib
 import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
@@ -50,7 +48,7 @@ open class Magenta : JavaPlugin() {
     lateinit var paperContainerProvider: PaperContainerProvider
 
     companion object {
-        lateinit var scheduler: Scheduler
+        lateinit var scheduler: FoliaLib
         lateinit var instance: Magenta
             private set
     }
@@ -106,7 +104,6 @@ open class Magenta : JavaPlugin() {
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     private val hookManger: HookManager by lazy { HookManager(this) }
     private val chatChecksManager: ChatChecksManager by lazy { ChatChecksManager(this) }
-    private val energie: Energie by lazy {Energie(this)}
 
     override fun onLoad() {
         instance = this
@@ -156,7 +153,7 @@ open class Magenta : JavaPlugin() {
     override fun onEnable() {
         val time = measureTime {
             isPaperServer()
-            scheduler = energie.minecraftScheduler
+            scheduler = FoliaLib(this)
             commandManager.registerCommands()
             newsQueueManager.loadQueue()
             registerTasks()
@@ -187,9 +184,9 @@ open class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        scheduler.runAtFixedRate(SchedulerType.SYNC, BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
-        scheduler.runAtFixedRate(SchedulerType.SYNC, JailCountDownTask(this), 20, 20)
-        scheduler.runAtFixedRate(SchedulerType.SYNC, LevelUpTask(this), 20, 1)
+        scheduler.impl.runTimer(BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
+        scheduler.impl.runTimer(JailCountDownTask(this), 20, 20)
+        scheduler.impl.runTimer(LevelUpTask(this), 20, 1)
     }
 
     private fun handlerListener() {

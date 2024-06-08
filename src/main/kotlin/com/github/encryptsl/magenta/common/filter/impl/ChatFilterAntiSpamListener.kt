@@ -13,11 +13,8 @@ class ChatFilterAntiSpamListener<K, V> : RemovalListener<K, V> {
 
         val cause = notification.cause
 
-        when (cause) {
-            RemovalCause.EXPIRED -> {
-                Magenta.instance.logger.info("${this.javaClass.simpleName} cache expired cache from uuid: $k")
-            }
-            else -> null
+        if (cause == RemovalCause.EXPIRED) {
+            Magenta.instance.logger.info("${this.javaClass.simpleName} cache expired cache from uuid: $k")
         }
     }
 

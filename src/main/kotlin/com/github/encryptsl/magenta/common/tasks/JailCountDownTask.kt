@@ -3,15 +3,14 @@ package com.github.encryptsl.magenta.common.tasks
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
 import com.github.encryptsl.magenta.common.extensions.formatFromSecondsTime
-import fr.euphyllia.energie.model.SchedulerCallBack
-import fr.euphyllia.energie.model.SchedulerTaskInter
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
+import org.bukkit.Bukkit
 import org.bukkit.Sound
 
-class JailCountDownTask(private val magenta: Magenta) : SchedulerCallBack {
-    override fun run(e: SchedulerTaskInter?) {
-        if (e == null) return
-        for (player in e.plugin.server.onlinePlayers) {
+class JailCountDownTask(private val magenta: Magenta) : Runnable {
+
+    override fun run() {
+        for (player in Bukkit.getOnlinePlayers()) {
             val account = magenta.user.getUser(player.uniqueId)
             val timeLeft = account.getRemainingJailTime()
             if (account.hasPunish()) {

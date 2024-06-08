@@ -16,6 +16,7 @@ repositories {
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.oraxen.com/releases")
+    maven("https://nexuslite.gcnt.net/repos/other/")
 }
 
 kotlin {
@@ -55,7 +56,7 @@ dependencies {
         exclude(group = "org.incendo", module = "cloud-core")
     }
     implementation("com.github.encryptsl:KMonoLib:1.0.0")
-    implementation("com.github.Euphillya:Energie:1.2.0")
+    implementation("com.tcoded:FoliaLib:0.3.1")
     implementation("dev.triumphteam:triumph-gui:3.1.9") {
         exclude("net.kyori")
     }

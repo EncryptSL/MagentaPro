@@ -6,7 +6,6 @@ import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.filter.impl.ChatFilters
-import fr.euphyllia.energie.model.SchedulerType
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -21,7 +20,7 @@ class ChatPunishManager(private val magenta: Magenta) {
     private fun kick(player: Player, actions: List<String>, score: Int, filterName: String) {
         if (actions.contains("kick")) {
             if (score >= 2) {
-                Magenta.scheduler.runTask(SchedulerType.SYNC) {
+                Magenta.scheduler.impl.runNextTick {
                     flagging.remove(player.uniqueId)
                     player.kick(magenta.locale.translation("magenta.filter.action.kick", Placeholder.parsed("reason", filterName)))
                 }

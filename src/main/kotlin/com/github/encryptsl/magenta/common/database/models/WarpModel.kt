@@ -6,7 +6,6 @@ import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.sql.WarpSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
 import com.github.encryptsl.magenta.common.database.tables.WarpTable
-import fr.euphyllia.energie.model.SchedulerType
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -20,7 +19,7 @@ import java.util.concurrent.CompletableFuture
 class WarpModel(private val plugin: Plugin) : WarpSQL {
 
     override fun creteWarp(player: Player, location: Location, warpName: String) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 WarpTable.insertIgnore {
                     it[username] = player.name
@@ -38,19 +37,19 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun deleteWarp(warpName: String) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction { WarpTable.deleteWhere { WarpTable.warpName eq warpName } }
         }
     }
 
     override fun deleteWarp(uuid: UUID, warpName: String) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction { WarpTable.deleteWhere { (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName) } }
         }
     }
 
     override fun moveWarp(warpName: String, location: Location) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction { WarpTable.update( { WarpTable.warpName eq warpName }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -63,7 +62,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun moveWarp(uuid: UUID, warpName: String, location: Location) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction { WarpTable.update( { (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -76,7 +75,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun renameWarp(oldWarpName: String, newWarpName: String) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 WarpTable.update({ WarpTable.warpName eq oldWarpName }) {
                     it[warpName] = newWarpName
@@ -86,7 +85,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun renameWarp(uuid: UUID, oldWarpName: String, newWarpName: String) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 WarpTable.update({ (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq oldWarpName) }) {
                     it[warpName] = newWarpName
@@ -96,7 +95,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun setWarpIcon(uuid: UUID, warpName: String, icon: String) {
-        Magenta.scheduler.runTask(SchedulerType.ASYNC) {
+        Magenta.scheduler.impl.runAsync {
             transaction {
                 WarpTable.update({(WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName)}) {
                     it[warpIcon] = icon
@@ -117,14 +116,14 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
         val future = CompletableFuture<Boolean>()
 
         if (player.hasPermission(Permissions.WARPS_UNLIMITED)) {
-            return CompletableFuture.completedFuture<Boolean>(true)
+            return CompletableFuture.completedFuture(true)
         }
 
-        val section = plugin.config.getConfigurationSection("warps.groups") ?: return CompletableFuture.completedFuture<Boolean>(false)
+        val section = plugin.config.getConfigurationSection("warps.groups") ?: return CompletableFuture.completedFuture(false)
 
-        val max = section.getKeys(false).filter { player.hasPermission(Permissions.WARPS_LIMIT.format("$it")) }.map { section.getInt(it) }.first()
+        val max = section.getKeys(false).filter { player.hasPermission(Permissions.WARPS_LIMIT.format(it)) }.map { section.getInt(it) }.first()
 
-        if (max == -1) return CompletableFuture.completedFuture<Boolean>(true)
+        if (max == -1) return CompletableFuture.completedFuture(true)
 
         val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
 

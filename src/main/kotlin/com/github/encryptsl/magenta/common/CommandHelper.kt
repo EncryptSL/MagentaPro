@@ -26,15 +26,15 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun doVanish(user: UserAccountImpl) {
-        for (players in Bukkit.getOnlinePlayers()) {
-            if (!players.hasPermission(Permissions.VANISH_EXEMPT)) continue
+        for (onlinePlayers in Bukkit.getOnlinePlayers()) {
+            if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) continue
             if (user.isVanished()) {
-                user.getPlayer()?.let { players.showPlayer(magenta, it) }
-                user.getPlayer()?.let { players.listPlayer(it) }
+                user.getPlayer()?.let { onlinePlayers.showPlayer(magenta, it) }
+                user.getPlayer()?.let { onlinePlayers.listPlayer(it) }
                 user.set("vanished", false)
             } else {
-                user.getPlayer()?.let { players.hidePlayer(magenta, it) }
-                user.getPlayer()?.let { players.unlistPlayer(it) }
+                user.getPlayer()?.let { onlinePlayers.hidePlayer(magenta, it) }
+                user.getPlayer()?.let { onlinePlayers.unlistPlayer(it) }
                 user.set("vanished", true)
             }
         }

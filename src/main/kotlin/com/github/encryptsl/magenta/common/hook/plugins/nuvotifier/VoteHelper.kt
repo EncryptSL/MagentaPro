@@ -7,7 +7,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
 import com.github.encryptsl.magenta.common.extensions.datetime
-import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -39,32 +38,32 @@ object VoteHelper {
         countdown: Int
     ) {
         var timer = countdown
-        Magenta.scheduler.runAtFixedRate(SchedulerType.ASYNC, { e ->
+
+        Magenta.scheduler.impl.runTimer({ e ->
             broadcastActionBar(
                 magenta.locale.translation("magenta.votifier.voteparty.broadcast",
                     Placeholder.parsed("delay", timer.toString())
                 )
             )
-            if (timer == 0) {
-                Magenta.scheduler.runTask(SchedulerType.SYNC) {
-                    val players = Bukkit.getOnlinePlayers()
-                    giveRewards(players, commands)
-                    if (magenta.config.contains("votifier.voteparty.random")) {
-                        val player = players.random()
-                        giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
-                        magenta.voteParty.partyFinished(player.name)
-                        magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
-                        magenta.notification.addEmbed {
-                            setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
-                            setThumbnailUrl(player.uniqueId.toMinecraftAvatar())
-                            setColor(0xa730c2)
-                            addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
-                        }?.let { magenta.notification.client.send(it) }
-                    }
+
+            if (timer == Int.MIN_VALUE) {
+                val players = Bukkit.getOnlinePlayers()
+                giveRewards(players, commands)
+                if (magenta.config.contains("votifier.voteparty.random")) {
+                    val player = players.random()
+                    giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
+                    magenta.voteParty.partyFinished(player.name)
+                    magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
+                    magenta.notification.addEmbed {
+                        setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
+                        setThumbnailUrl(player.uniqueId.toMinecraftAvatar())
+                        setColor(0xa730c2)
+                        addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
+                    }?.let { magenta.notification.client.send(it) }
                 }
-                broadcast(magenta.locale.translation("magenta.votifier.voteparty.success"))
-                e?.cancel()
+                e.cancel()
             }
+            broadcast(magenta.locale.translation("magenta.votifier.voteparty.success"))
             timer--
         }, 20, 20)
     }

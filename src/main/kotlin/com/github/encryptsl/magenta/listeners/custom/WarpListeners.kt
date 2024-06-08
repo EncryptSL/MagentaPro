@@ -5,7 +5,6 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.warp.*
 import com.github.encryptsl.magenta.common.Permissions
-import fr.euphyllia.energie.model.SchedulerType
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Location
@@ -78,18 +77,15 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                     )
 
                 magenta.warpModel.getWarp(warpName).thenAccept { warp ->
-                    Magenta.scheduler.runTask(SchedulerType.SYNC) {
-                        for (s in magenta.config.getStringList("warp-info-format")) {
-                            commandSender.sendMessage(ModernText.miniModernText(s, TagResolver.resolver(
-                                Placeholder.parsed("warp", warp.warpName),
-                                Placeholder.parsed("owner", warp.owner),
-                                Placeholder.parsed("world", warp.world),
-                                Placeholder.parsed("x", warp.x.toString()),
-                                Placeholder.parsed("y", warp.y.toString()),
-                                Placeholder.parsed("z", warp.z.toString()),
-                            )))
-                        }
-                    }
+                    val warpInfoFormat = magenta.config.getString("warp-info-format").toString()
+                    commandSender.sendMessage(ModernText.miniModernText(warpInfoFormat, TagResolver.resolver(
+                        Placeholder.parsed("warp", warp.warpName),
+                        Placeholder.parsed("owner", warp.owner),
+                        Placeholder.parsed("world", warp.world),
+                        Placeholder.parsed("x", warp.x.toString()),
+                        Placeholder.parsed("y", warp.y.toString()),
+                        Placeholder.parsed("z", warp.z.toString()))
+                    ))
                 }
             }
         }
