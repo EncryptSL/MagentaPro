@@ -69,7 +69,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
 
         val paginator = ComponentPaginator(leaderBoard).apply { page(page) }
 
-        if (!paginator.hasNextPage())
+        if (paginator.isAboveMaxPage(page))
             return commandSender.sendMessage(magenta.locale.translation("magenta.pagination.error.maximum.pages",
                 Placeholder.parsed("max_page", paginator.maxPages.toString())
             ))

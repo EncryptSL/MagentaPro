@@ -151,9 +151,9 @@ open class Magenta : JavaPlugin() {
     }
 
     override fun onEnable() {
+        scheduler = FoliaLib(this)
         val time = measureTime {
             isPaperServer()
-            scheduler = FoliaLib(this)
             commandManager.registerCommands()
             newsQueueManager.loadQueue()
             registerTasks()

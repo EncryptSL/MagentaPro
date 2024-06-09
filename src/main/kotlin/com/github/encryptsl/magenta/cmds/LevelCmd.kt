@@ -72,6 +72,8 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.header"))
 
         magenta.virtualLevel.getLevels(10).thenAccept { el ->
+            if (el.isEmpty()) return@thenAccept
+
             val leaderBoard = el.toList().positionIndexed { k, v ->
                 magenta.locale.translation("magenta.command.level.top", TagResolver.resolver(
                     Placeholder.parsed("position", k.toString()),
@@ -82,7 +84,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
 
             val paginator = ComponentPaginator(leaderBoard).apply { page(page) }
 
-            if (!paginator.hasNextPage())
+            if (paginator.isAboveMaxPage(page))
                 return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.pagination.error.maximum.pages",
                     Placeholder.parsed("max_page", paginator.maxPages.toString())
                 ))
