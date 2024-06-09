@@ -67,6 +67,8 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
             ))
         }
 
+        if (leaderBoard.isEmpty()) return
+        
         val paginator = ComponentPaginator(leaderBoard).apply { page(page) }
 
         if (paginator.isAboveMaxPage(page))
