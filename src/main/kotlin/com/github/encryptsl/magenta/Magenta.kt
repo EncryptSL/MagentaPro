@@ -209,10 +209,8 @@ open class Magenta : JavaPlugin() {
         )
 
         val time = measureTime {
-            if (list.isEmpty()) {
-                logger.info("Registering list of listeners is empty !")
-            }
-            for (e in list) {pluginManager.registerEvents(e, this)}
+            val iterator = list.iterator()
+            while (iterator.hasNext()) { pluginManager.registerEvents(iterator.next(), this) }
         }
 
         logger.info("Bukkit listeners registered (${list.size}) in time ${time.inWholeSeconds}")

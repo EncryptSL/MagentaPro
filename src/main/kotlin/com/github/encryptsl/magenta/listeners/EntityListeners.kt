@@ -71,7 +71,7 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
         if (isHalloweenSeason() || isHalloweenDay()) {
             val equipment = event.entity.equipment ?: return
             if (event.entityType == EntityType.ZOMBIE) {
-                if (equipment.getItem(EquipmentSlot.HEAD).isEmpty == true) {
+                if (equipment.getItem(EquipmentSlot.HEAD).isEmpty) {
                     if (random.nextFloat() < 0.25F) {
                         val helmet = if (random.nextFloat() < 0.1F) Material.JACK_O_LANTERN else Material.CARVED_PUMPKIN
                         equipment.setItem(EquipmentSlot.HEAD, ItemStack(helmet, 1))
@@ -80,7 +80,7 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
             }
 
             if (event.entityType == EntityType.SKELETON) {
-                if (equipment.getItem(EquipmentSlot.HEAD).isEmpty == true) {
+                if (equipment.getItem(EquipmentSlot.HEAD).isEmpty) {
                     if (random.nextFloat() < 0.25F) {
                         val helmet = if (random.nextFloat() < 0.1F) Material.JACK_O_LANTERN else Material.CARVED_PUMPKIN
                         equipment.setItem(EquipmentSlot.HEAD, ItemStack(helmet, 1))
