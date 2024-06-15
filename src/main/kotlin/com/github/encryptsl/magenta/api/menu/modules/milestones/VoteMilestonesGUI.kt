@@ -19,7 +19,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
         if (!magenta.milestonesVotePass.getConfig().contains("menu.items") && !magenta.config.contains("votifier.cumulative"))
             return player.sendMessage(ModernText.miniModernText("<red>Milníky nejsou nastavené !"))
 
-        val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
+        val playerVotes = magenta.vote.getUserVotesByUUID(player.uniqueId).join()
         val rows = magenta.milestonesVotePass.getConfig().getInt("menu.gui.size", 6)
 
         val gui = menuUI.paginatedBuilderGui(rows,

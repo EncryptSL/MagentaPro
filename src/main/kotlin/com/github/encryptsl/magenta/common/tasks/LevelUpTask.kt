@@ -9,9 +9,10 @@ class LevelUpTask(private val magenta: Magenta) : Runnable {
 
     override fun run() {
         for (player in Bukkit.getOnlinePlayers()) {
-            val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
-            if (experience >= experienceFormula(level)) {
-                magenta.pluginManager.callEvent(VirtualLevelUpEvent(player, level, experience, experienceFormula(level.plus(1))))
+            magenta.virtualLevel.getUserByUUID(player.uniqueId).thenAccept {
+                if (it.experience >= experienceFormula(it.level)) {
+                    magenta.pluginManager.callEvent(VirtualLevelUpEvent(player, it.level, it.experience, experienceFormula(it.level.plus(1))))
+                }
             }
         }
     }

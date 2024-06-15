@@ -87,7 +87,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
     }
 
     private fun processCumulativeVote(serviceName: String, player: OfflinePlayer) {
-        val playerVotes = magenta.vote.getPlayerVote(player.uniqueId)
+        val playerVotes = magenta.vote.getUserVotesByUUID(player.uniqueId).join()
 
         if (!magenta.config.contains("votifier.cumulative.${playerVotes}")) return
 

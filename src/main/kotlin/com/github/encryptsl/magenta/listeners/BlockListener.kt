@@ -109,20 +109,21 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
 
         if (player.gameMode == GameMode.CREATIVE) return
         if (player.hasPermission(Permissions.LEVEL_MINE_BYPASS)) return
-        val (_, _, level, _) = magenta.virtualLevel.getLevel(uuid)
         if (!magenta.config.contains("level.ores.${block.type.name}")) return
 
         if (!magenta.stringUtils.inInList("level.worlds", player.world.name)) return
 
         val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
-        if (requiredLevel < level) return
+        magenta.virtualLevel.getUserByUUID(player.uniqueId).thenAccept {
+            if (requiredLevel < it.level) return@thenAccept
 
-        player.sendMessage(magenta.locale.translation("magenta.mining.level.required", TagResolver.resolver(
-            Placeholder.parsed("block", block.type.name),
-            Placeholder.parsed("level", level.toString()),
-            Placeholder.parsed("required_level", requiredLevel.toString()))
-        ))
-        event.isCancelled = true
+            player.sendMessage(magenta.locale.translation("magenta.mining.level.required", TagResolver.resolver(
+                Placeholder.parsed("block", block.type.name),
+                Placeholder.parsed("level", it.level.toString()),
+                Placeholder.parsed("required_level", requiredLevel.toString()))
+            ))
+            event.isCancelled = true
+        }
     }
 
     @EventHandler

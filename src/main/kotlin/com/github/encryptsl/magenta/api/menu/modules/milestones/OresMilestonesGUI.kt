@@ -22,7 +22,7 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
             magenta.milestonesOres.getConfig()
         )
 
-        val getLevel = magenta.virtualLevel.getLevel(player.uniqueId)
+        val getLevel = magenta.virtualLevel.getUserByUUID(player.uniqueId).join()
         val section = magenta.config.getConfigurationSection("level.ores")?.getKeys(false) ?: return
 
         menuUI.useAllFillers(gui, magenta.milestonesOres.getConfig())
