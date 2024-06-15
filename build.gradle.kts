@@ -26,7 +26,7 @@ kotlin {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     compileOnly(kotlin("stdlib", "1.9.23"))
     compileOnly("org.jetbrains.exposed:exposed-core:0.49.0")
     compileOnly("org.jetbrains.exposed:exposed-jdbc:0.49.0")

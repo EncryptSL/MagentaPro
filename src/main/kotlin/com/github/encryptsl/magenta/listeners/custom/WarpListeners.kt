@@ -21,15 +21,14 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val location: Location = event.location
         magenta.warpModel.getWarpByName(warpName).thenApply { magenta.warpModel.canSetWarp(player) }.whenComplete { result, throwable ->
             if (throwable != null) {
-                when(result.join()) {
-                    true -> {
-                        magenta.warpModel.creteWarp(player, location, warpName)
-                        player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
-                    }
-                    false -> player.sendMessage(magenta.locale.translation("magenta.command.warp.error.limit"))
+                return@whenComplete player.sendMessage(magenta.locale.translation("magenta.command.warp.error.exist", Placeholder.parsed("warp", warpName)))
+            }
+            when(result.join()) {
+                true -> {
+                    magenta.warpModel.creteWarp(player, location, warpName)
+                    player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
                 }
-            } else {
-                player.sendMessage(magenta.locale.translation("magenta.command.warp.error.exist", Placeholder.parsed("warp", warpName)))
+                false -> player.sendMessage(magenta.locale.translation("magenta.command.warp.error.limit"))
             }
         }
     }
