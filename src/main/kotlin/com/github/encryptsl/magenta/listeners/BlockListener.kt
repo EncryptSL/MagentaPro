@@ -104,7 +104,6 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreakLevelOre(event: BlockBreakEvent) {
         val player = event.player
-        val uuid = player.uniqueId
         val block = event.block
 
         if (player.gameMode == GameMode.CREATIVE) return
