@@ -34,8 +34,7 @@ class VoteModel : VoteSQL {
     override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
         val boolean = transaction { !VoteTable.select(VoteTable.uuid).where(VoteTable.uuid eq uuid.toString()).empty() }
-        future.completeAsync { boolean }
-        return future
+        return future.completeAsync { boolean }
     }
 
     override fun hasAccount(uuid: UUID, serviceName: String): CompletableFuture<Boolean> {
@@ -46,8 +45,7 @@ class VoteModel : VoteSQL {
                 .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
                 .empty()
         }
-        future.completeAsync { boolean }
-        return future
+        return future.completeAsync { boolean }
     }
 
 
@@ -82,28 +80,28 @@ class VoteModel : VoteSQL {
         }
     }
 
-    override fun getPlayerVote(uuid: UUID): CompletableFuture<Int> {
-        val future = CompletableFuture<Int>()
-        val user = transaction {
-           VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString()).groupBy(vote).sumOf { row -> row[vote] }
-        }
-        future.completeAsync { user }
-        return future
-    }
-
-    override fun getPlayerVote(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity?> {
-        val future = CompletableFuture<VoteEntity?>()
-
-        val data = transaction {
+    override fun getUserVotesByUUIDAndService(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity> {
+        val future = CompletableFuture<VoteEntity>()
+        transaction {
             val row = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
                 .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
                 .firstOrNull()
-            row?.let { VoteEntity(it[VoteTable.username], UUID.fromString(it[VoteTable.uuid]), it[vote], it[VoteTable.serviceName], it[last_vote]) }
+            if (row == null) {
+                future.completeExceptionally(RuntimeException("Votes by service and uuid not found !"))
+            } else {
+                future.completeAsync { VoteEntity(row[VoteTable.username], UUID.fromString(row[VoteTable.uuid]), row[vote], row[VoteTable.serviceName], row[last_vote]) }
+            }
         }
-        future.completeAsync { data }
         return future
     }
 
+    override fun getUserVotesByUUID(uuid: UUID): CompletableFuture<Int> {
+        val future = CompletableFuture<Int>()
+        val user = transaction {
+            VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString()).groupBy(vote).sumOf { row -> row[vote] }
+        }
+        return future.completeAsync { user }
+    }
 
     override fun removeAccount(uuid: UUID) {
         Magenta.scheduler.impl.runAsync {
@@ -139,13 +137,12 @@ class VoteModel : VoteSQL {
     override fun totalVotes(): CompletableFuture<Int> {
         val future = CompletableFuture<Int>()
         val int = transaction { VoteTable.selectAll().sumOf { row -> row[vote] } }
-        future.completeAsync { int }
-        return future
+        return future.completeAsync { int }
     }
 
     override fun topVotes(): MutableMap<String, Int> = transaction {
         VoteTable.selectAll().orderBy(vote, SortOrder.DESC).associate {
-            it[VoteTable.username] to getPlayerVote(UUID.fromString(it[uuid])).join()
+            it[VoteTable.username] to getUserVotesByUUID(UUID.fromString(it[uuid])).join()
         }.toMutableMap()
     }
 }

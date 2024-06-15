@@ -41,19 +41,20 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
-        if (!magenta.vote.hasAccount(target.uniqueId, service))
-            return commandSender.sendMessage(
-                magenta.locale.translation("magenta.command.vote.error.not.player.exist", TagResolver.resolver(
-                Placeholder.parsed("player", target.name.toString()),
-                Placeholder.parsed("service", service)
+        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
+            magenta.vote.addVote(VoteEntity(target.name.toString(), target.uniqueId, amount, service, Instant.fromEpochMilliseconds(System.currentTimeMillis())))
+            commandSender.sendMessage(
+                magenta.locale.translation("magenta.command.votes.success.add", TagResolver.resolver(
+                    Placeholder.parsed("service", service),
+                    Placeholder.parsed("player", target.name.toString()),
+                    Placeholder.parsed("amount", amount.toString())
+                )))
+        }.exceptionally {
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.error.not.player.exist", TagResolver.resolver(
+                    Placeholder.parsed("player", target.name.toString()),
+                    Placeholder.parsed("service", service)
             )))
-        magenta.vote.addVote(VoteEntity(target.name.toString(), target.uniqueId, amount, service, Instant.fromEpochMilliseconds(System.currentTimeMillis())))
-        commandSender.sendMessage(
-            magenta.locale.translation("magenta.command.votes.success.add", TagResolver.resolver(
-            Placeholder.parsed("service", service),
-            Placeholder.parsed("player", target.name.toString()),
-            Placeholder.parsed("amount", amount.toString())
-        )))
+        }
     }
 
     @Command("votes set <service> <player> <amount>")
@@ -65,19 +66,21 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
-        if (!magenta.vote.hasAccount(target.uniqueId, service))
-            return commandSender.sendMessage(
+        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
+            magenta.vote.setVote(target.uniqueId, service, amount)
+            commandSender.sendMessage(
+                magenta.locale.translation("magenta.command.votes.success.set", TagResolver.resolver(
+                    Placeholder.parsed("service", service),
+                    Placeholder.parsed("player", target.name.toString()),
+                    Placeholder.parsed("amount", amount.toString())
+                )))
+        }.exceptionally {
+            commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.vote.error.not.player.exist", TagResolver.resolver(
                     Placeholder.parsed("player", target.name.toString()),
                     Placeholder.parsed("service", service)
                 )))
-        magenta.vote.setVote(target.uniqueId, service, amount)
-        commandSender.sendMessage(
-            magenta.locale.translation("magenta.command.votes.success.set", TagResolver.resolver(
-                Placeholder.parsed("service", service),
-                Placeholder.parsed("player", target.name.toString()),
-                Placeholder.parsed("amount", amount.toString())
-            )))
+        }
     }
 
     @Command("votes reset player <player>")
@@ -87,19 +90,19 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
     ) {
-
-        if (magenta.vote.hasAccount(target.uniqueId))
-            return commandSender.sendMessage(
+        magenta.vote.getUserVotesByUUID(target.uniqueId).thenApply {
+            magenta.vote.resetVotes(target.uniqueId)
+            commandSender.sendMessage(
+                magenta.locale.translation("magenta.command.votes.success.reset",
+                    Placeholder.parsed("player", target.name.toString())
+                ))
+        }.exceptionally {
+            commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.vote.error.not.player.exist", TagResolver.resolver(
                     Placeholder.parsed("player", target.name.toString()),
                     Placeholder.parsed("service", "")
                 )))
-
-        magenta.vote.resetVotes(target.uniqueId)
-        commandSender.sendMessage(
-            magenta.locale.translation("magenta.command.votes.success.reset",
-                Placeholder.parsed("player", target.name.toString())
-            ))
+        }
     }
 
     @Command("votes reset all")
@@ -120,20 +123,21 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
-        if (!magenta.vote.hasAccount(target.uniqueId, service))
-            return commandSender.sendMessage(
+        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
+            magenta.vote.removeVote(target.uniqueId, service, amount)
+            commandSender.sendMessage(
+                magenta.locale.translation("magenta.command.votes.success.remove", TagResolver.resolver(
+                    Placeholder.parsed("service", service),
+                    Placeholder.parsed("player", target.name.toString()),
+                    Placeholder.parsed("amount", amount.toString())
+                )))
+        }.exceptionally {
+            commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.vote.error.player.not.exist", TagResolver.resolver(
-                Placeholder.parsed("player", target.name.toString()),
-                Placeholder.parsed("service", service)
-            )))
-
-        magenta.vote.removeVote(target.uniqueId, service, amount)
-        commandSender.sendMessage(
-            magenta.locale.translation("magenta.command.votes.success.remove", TagResolver.resolver(
-            Placeholder.parsed("service", service),
-            Placeholder.parsed("player", target.name.toString()),
-            Placeholder.parsed("amount", amount.toString())
-        )))
+                    Placeholder.parsed("player", target.name.toString()),
+                    Placeholder.parsed("service", service)
+                )))
+        }
     }
 
     @Command("votes remove all")

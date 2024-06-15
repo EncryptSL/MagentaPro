@@ -18,6 +18,7 @@ interface HomeSQL {
     fun canSetHome(player: Player): CompletableFuture<Boolean>
 
     fun getHome(home: String): CompletableFuture<HomeEntity>
+    fun getHomeByNameAndUUID(uuid: UUID, home: String): CompletableFuture<HomeEntity>
 
     fun getHomesByOwner(uuid: UUID): CompletableFuture<List<HomeEntity>>
 

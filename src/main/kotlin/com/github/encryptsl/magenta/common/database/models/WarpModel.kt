@@ -108,8 +108,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     override fun getWarpExist(warpName: String): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
         val boolean = transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
-        future.completeAsync { boolean }
-        return future
+        return future.completeAsync { boolean }
     }
 
     override fun canSetWarp(player: Player): CompletableFuture<Boolean> {
@@ -150,15 +149,13 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     override fun getWarpsByOwner(uuid: UUID): CompletableFuture<List<WarpEntity>> {
         val future = CompletableFuture<List<WarpEntity>>()
         val map = transaction { WarpTable.selectAll().where(WarpTable.uuid eq uuid.toString()).mapNotNull { rowResultToWarpEntity(it) } }
-        future.completeAsync { map }
-        return future
+        return future.completeAsync { map }
     }
 
     override fun getWarps(): CompletableFuture<List<WarpEntity>> {
         val future = CompletableFuture<List<WarpEntity>>()
         val map = transaction { WarpTable.selectAll().mapNotNull {rowResultToWarpEntity(it)} }
-        future.completeAsync { map }
-        return future
+        return future.completeAsync { map }
     }
 
     private fun rowResultToWarpEntity(row: ResultRow): WarpEntity {

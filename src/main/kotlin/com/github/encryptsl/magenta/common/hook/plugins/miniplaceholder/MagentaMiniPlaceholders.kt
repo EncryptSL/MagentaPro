@@ -22,11 +22,11 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPl
             }
             audiencePlaceholder("level") { p, _, _ ->
                 val player  = p as Player
-                return@audiencePlaceholder Component.text(magenta.virtualLevel.getLevel(player.uniqueId).level).asInsertingTag()
+                return@audiencePlaceholder Component.text(magenta.virtualLevel.getUserByUUID(player.uniqueId).join().level).asInsertingTag()
             }
             audiencePlaceholder("level_progress") { p, _, _ ->
                 val player  = p as Player
-                val levelEntity = magenta.virtualLevel.getLevel(player.uniqueId)
+                val levelEntity = magenta.virtualLevel.getUserByUUID(player.uniqueId).join()
                 return@audiencePlaceholder Component.text(levelProgress(levelEntity.level, levelEntity.experience)).asInsertingTag()
             }
             audiencePlaceholder("socialspy") { p, _, _ ->
@@ -42,7 +42,7 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPl
                 return@audiencePlaceholder Component.text(magenta.user.getUser(player.uniqueId).getVotes()).asInsertingTag()
             }
             globalPlaceholder("votes") { _, _ ->
-                return@globalPlaceholder Component.text(magenta.vote.totalVotes()).asInsertingTag()
+                return@globalPlaceholder Component.text(magenta.vote.totalVotes().join()).asInsertingTag()
             }
             globalPlaceholder("voteparty_now") { _, _ ->
                 return@globalPlaceholder Component.text(magenta.voteParty.getVoteParty().currentVotes).asInsertingTag()

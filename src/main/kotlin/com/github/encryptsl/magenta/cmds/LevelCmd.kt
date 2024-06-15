@@ -28,9 +28,14 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send your level progress")
     fun onLevel(player: Player) {
         try {
-            val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(player.uniqueId)
-            magenta.commandHelper.showLevelProgress(player, level, experience)
-        } catch (e : IllegalArgumentException) {
+            magenta.virtualLevel.getUserByUUID(player.uniqueId).thenApply {
+                magenta.commandHelper.showLevelProgress(player, it.level, it.experience)
+            }.exceptionally {
+                player.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
+                    Placeholder.parsed("player", player.name)
+                ))
+            }
+        } catch (e : Exception) {
             player.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
             ))
@@ -45,14 +50,14 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
     ) {
-        if (!magenta.virtualLevel.hasAccount(target.uniqueId))
-            return commandSender.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
-                Placeholder.parsed("player", target.name.toString())
-            ))
-
         try {
-            val (_: String, _: String, level: Int, experience: Int) = magenta.virtualLevel.getLevel(target.uniqueId)
-            magenta.commandHelper.showLevelProgress(commandSender, level, experience)
+            magenta.virtualLevel.getUserByUUID(target.uniqueId).thenApply {
+                magenta.commandHelper.showLevelProgress(commandSender, it.level, it.experience)
+            }.exceptionally {
+                commandSender.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
+                    Placeholder.parsed("player", target.name.toString())
+                ))
+            }
         } catch (e : IllegalArgumentException) {
             commandSender.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -71,7 +76,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.header"))
 
-        magenta.virtualLevel.getLevels(10).thenAccept { el ->
+        magenta.virtualLevel.getLevels().thenAccept { el ->
             if (el.isEmpty()) return@thenAccept
 
             val leaderBoard = el.toList().positionIndexed { k, v ->

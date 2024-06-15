@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.votes
 
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 interface VoteAPI {
     fun addVote(voteImpl: VoteEntity)
@@ -10,12 +11,12 @@ interface VoteAPI {
 
     fun hasAccount(uuid: UUID): Boolean
     fun hasAccount(uuid: UUID, serviceName: String): Boolean
-    fun getPlayerVote(uuid: UUID): Int
-    fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity?
+    fun getUserVotesByUUID(uuid: UUID): CompletableFuture<Int>
+    fun getUserVotesByUUIDAndService(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity>
     fun removeAccount(uuid: UUID)
     fun resetVotes(uuid: UUID)
     fun resetVotes()
     fun deleteAll()
-    fun totalVotes(): Int
+    fun totalVotes(): CompletableFuture<Int>
     fun votesLeaderBoard(): Map<String, Int>
 }

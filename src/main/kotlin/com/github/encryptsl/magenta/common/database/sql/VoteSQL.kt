@@ -6,13 +6,13 @@ import java.util.concurrent.CompletableFuture
 
 interface VoteSQL {
     fun createAccount(voteImpl: VoteEntity)
+    fun getUserVotesByUUIDAndService(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity>
+    fun getUserVotesByUUID(uuid: UUID): CompletableFuture<Int>
     fun hasAccount(uuid: UUID): CompletableFuture<Boolean>
     fun hasAccount(uuid: UUID, serviceName: String): CompletableFuture<Boolean>
     fun addVote(voteImpl: VoteEntity)
     fun setVote(uuid: UUID, serviceName: String, amount: Int)
     fun removeVote(uuid: UUID, serviceName: String, amount: Int)
-    fun getPlayerVote(uuid: UUID): CompletableFuture<Int>
-    fun getPlayerVote(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity?>
     fun removeAccount(uuid: UUID)
     fun resetVotes(uuid: UUID)
     fun resetVotes()

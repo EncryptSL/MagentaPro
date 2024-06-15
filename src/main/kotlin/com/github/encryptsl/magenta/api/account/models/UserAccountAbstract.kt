@@ -79,11 +79,11 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
     }
 
     override fun getVotes(): Int {
-        return voteAPI.getPlayerVote(uuid)
+        return voteAPI.getUserVotesByUUID(uuid).join()
     }
 
     override fun getVotesByService(serviceName: String): Int {
-        return voteAPI.getPlayerVote(uuid, serviceName)?.vote ?: 0
+        return Optional.of(voteAPI.getUserVotesByUUIDAndService(uuid, serviceName).join().vote).orElse(0)
     }
 
     override fun getVotifierRewards(): MutableList<String> {

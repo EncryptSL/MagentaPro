@@ -11,7 +11,6 @@ interface LevelAPI {
     fun addExperience(uuid: UUID, experience: Int)
     fun setExperience(uuid: UUID, experience: Int)
     fun hasAccount(uuid: UUID): Boolean
-    fun getLevel(uuid: UUID): LevelEntity
-    fun getLevels(top: Int): CompletableFuture<MutableMap<String, Int>>
-    fun getLevels(): Map<String, Int>
+    fun getUserByUUID(uuid: UUID): CompletableFuture<LevelEntity>
+    fun getLevels(): CompletableFuture<MutableMap<String, Int>>
 }

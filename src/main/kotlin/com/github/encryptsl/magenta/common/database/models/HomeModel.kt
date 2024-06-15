@@ -73,33 +73,40 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun getHomeExist(uuid: UUID, home: String): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
         val boolean = transaction { !HomeTable.select(HomeTable.home).where(HomeTable.uuid eq uuid and (HomeTable.home eq home)).empty() }
-        future.completeAsync { boolean }
-        return future
+        return future.completeAsync { boolean }
     }
 
     override fun canSetHome(player: Player):  CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
 
         if (player.hasPermission("magenta.homes.unlimited"))
-            return CompletableFuture.completedFuture<Boolean>(true)
+            return CompletableFuture.completedFuture(true)
 
-        val section = plugin.config.getConfigurationSection("homes.groups") ?: return CompletableFuture.completedFuture<Boolean>(false)
+        val section = plugin.config.getConfigurationSection("homes.groups") ?: return CompletableFuture.completedFuture(false)
 
         val max = section.getKeys(false).filter { player.hasPermission("magenta.homes.$it") }.firstNotNullOf { section.getInt(it) }
 
-
-        if (max == -1) return CompletableFuture.completedFuture<Boolean>(true)
+        if (max == -1) return CompletableFuture.completedFuture(true)
 
         val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() >= max }
-        future.completeAsync { boolean }
 
-        return future
+        return future.completeAsync { boolean }
     }
 
     override fun getHome(home: String): CompletableFuture<HomeEntity> {
         val future = CompletableFuture<HomeEntity>()
         val homeRow = transaction { HomeTable.selectAll().where( HomeTable.home eq home).first() }
-        future.completeAsync { rowResultToHomeEntity(homeRow) }
+        return future.completeAsync { rowResultToHomeEntity(homeRow) }
+    }
+
+    override fun getHomeByNameAndUUID(uuid: UUID, home: String): CompletableFuture<HomeEntity> {
+        val future = CompletableFuture<HomeEntity>()
+        val homeRow = transaction { HomeTable.selectAll().where( HomeTable.home eq home and (HomeTable.uuid eq uuid)).firstOrNull() }
+        if (homeRow == null) {
+            future.completeExceptionally(RuntimeException())
+        } else {
+            future.completeAsync { rowResultToHomeEntity(homeRow) }
+        }
         return future
     }
 
@@ -107,8 +114,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
         val future = CompletableFuture<List<HomeEntity>>()
 
         val homes = transaction { HomeTable.selectAll().where(HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
-        future.completeAsync { homes }
-        return future
+        return future.completeAsync { homes }
     }
 
     override fun toLocation(player: Player, home: String): Location {
@@ -119,8 +125,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun getHomes(): CompletableFuture<List<HomeEntity>> {
         val future = CompletableFuture<List<HomeEntity>>()
         val homes = transaction { HomeTable.selectAll().mapNotNull {rowResultToHomeEntity(it)} }
-        future.completeAsync { homes }
-        return future
+        return future.completeAsync { homes }
     }
 
     private fun rowResultToHomeEntity(row: ResultRow): HomeEntity {

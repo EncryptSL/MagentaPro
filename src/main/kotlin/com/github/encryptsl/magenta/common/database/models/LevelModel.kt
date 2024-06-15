@@ -72,24 +72,16 @@ class LevelModel : LevelSQL {
         }
     }
 
-    override fun getLevel(uuid: UUID): CompletableFuture<LevelEntity> {
+    override fun getUserByUUID(uuid: UUID): CompletableFuture<LevelEntity> {
         val future = CompletableFuture<LevelEntity>()
-        val entity = transaction {
-           val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).first()
-           return@transaction LevelEntity(user[LevelTable.username], user[LevelTable.uuid], user[LevelTable.level], user[LevelTable.experience])
+        transaction {
+            val user = LevelTable.selectAll().where(LevelTable.uuid eq uuid.toString()).firstOrNull()
+            if (user == null) {
+                future.completeExceptionally(RuntimeException())
+            } else {
+                future.completeAsync { LevelEntity(user[LevelTable.username], user[LevelTable.uuid], user[LevelTable.level], user[LevelTable.experience]) }
+            }
         }
-        future.completeAsync { entity }
-        return future
-    }
-
-    override fun getLevels(top: Int):  CompletableFuture<MutableMap<String, Int>> {
-        val future = CompletableFuture<MutableMap<String, Int>>()
-        val map = transaction {
-            LevelTable.selectAll().limit(top).orderBy(LevelTable.level, SortOrder.DESC).associate {
-                it[LevelTable.username] to it[LevelTable.level]
-            }.toMutableMap()
-        }
-        future.completeAsync { map }
         return future
     }
 
@@ -100,7 +92,6 @@ class LevelModel : LevelSQL {
                 it[LevelTable.username] to it[LevelTable.level]
             }.toMutableMap()
         }
-        future.completeAsync { map }
-        return future
+        return future.completeAsync { map }
     }
 }

@@ -3,8 +3,9 @@ package com.github.encryptsl.magenta.api.votes
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.models.VoteModel
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
-class MagentaVoteAPI() : VoteAPI {
+class MagentaVoteAPI : VoteAPI {
 
 
     private val voteModel: VoteModel by lazy { VoteModel() }
@@ -30,12 +31,13 @@ class MagentaVoteAPI() : VoteAPI {
     override fun hasAccount(uuid: UUID, serviceName: String): Boolean {
         return voteModel.hasAccount(uuid, serviceName).join()
     }
-    override fun getPlayerVote(uuid: UUID): Int {
-        return voteModel.getPlayerVote(uuid).join()
+
+    override fun getUserVotesByUUID(uuid: UUID): CompletableFuture<Int> {
+        return voteModel.getUserVotesByUUID(uuid)
     }
 
-    override fun getPlayerVote(uuid: UUID, serviceName: String): VoteEntity? {
-        return voteModel.getPlayerVote(uuid, serviceName).join()
+    override fun getUserVotesByUUIDAndService(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity> {
+        return voteModel.getUserVotesByUUIDAndService(uuid, serviceName)
     }
 
     override fun removeAccount(uuid: UUID) {
@@ -54,8 +56,8 @@ class MagentaVoteAPI() : VoteAPI {
         voteModel.deleteAll()
     }
 
-    override fun totalVotes(): Int {
-        return voteModel.totalVotes().join()
+    override fun totalVotes(): CompletableFuture<Int> {
+        return voteModel.totalVotes()
     }
 
     override fun votesLeaderBoard(): MutableMap<String, Int> {

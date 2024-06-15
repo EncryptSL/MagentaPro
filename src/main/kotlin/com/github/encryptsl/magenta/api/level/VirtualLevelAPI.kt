@@ -32,15 +32,11 @@ class VirtualLevelAPI(private val magenta: Magenta) : LevelAPI {
         return magenta.levelModel.hasAccount(uuid).join()
     }
 
-    override fun getLevel(uuid: UUID): LevelEntity {
-        return magenta.levelModel.getLevel(uuid).join()
+    override fun getUserByUUID(uuid: UUID): CompletableFuture<LevelEntity> {
+        return magenta.levelModel.getUserByUUID(uuid)
     }
 
-    override fun getLevels(top: Int): CompletableFuture<MutableMap<String, Int>> {
-        return magenta.levelModel.getLevels(top)
-    }
-
-    override fun getLevels(): Map<String, Int> {
-        return magenta.levelModel.getLevels().join()
+    override fun getLevels(): CompletableFuture<MutableMap<String, Int>> {
+        return magenta.levelModel.getLevels()
     }
 }
