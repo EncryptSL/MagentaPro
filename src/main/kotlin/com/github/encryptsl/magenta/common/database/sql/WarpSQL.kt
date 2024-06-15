@@ -18,7 +18,7 @@ interface WarpSQL {
     fun setWarpIcon(uuid: UUID, warpName: String, icon: String)
     fun getWarpExist(warpName: String): CompletableFuture<Boolean>
     fun canSetWarp(player: Player): CompletableFuture<Boolean>
-    fun getWarp(warpName: String): CompletableFuture<WarpEntity>
+    fun getWarpByName(warpName: String): CompletableFuture<WarpEntity>
     fun toLocation(warpName: String): Location
     fun getWarpsByOwner(uuid: UUID): CompletableFuture<List<WarpEntity>>
     fun getWarps(): CompletableFuture<List<WarpEntity>>
