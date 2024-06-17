@@ -358,9 +358,9 @@ votifier:
       - 'give {player} minecraft:experience_bottle 32'
       - 'crazycrates give physical votebox 3 {player}'
       - 'eco add {player} 1000'
-    format:
-      - '<color:#32C4FF>Ve voteparty je aktuálně <color:#0581B3><current_votes>'
-      - '<color:#32C4FF>zbývá tedy <color:#0581B3><remaining_votes> hlasů ze <color:#0581B3><start_at> <color:#32C4FF>hlasů'
+    format: -|
+      <color:#32C4FF>Ve voteparty je aktuálně <color:#0581B3><current_votes>
+      <color:#32C4FF>zbývá tedy <color:#0581B3><remaining_votes> hlasů ze <color:#0581B3><start_at> <color:#32C4FF>hlasů
 
 # Cumulative is vote rewarding system based on count of saved
 # player votes in database, if player hit with 10 votes can have reward from this list

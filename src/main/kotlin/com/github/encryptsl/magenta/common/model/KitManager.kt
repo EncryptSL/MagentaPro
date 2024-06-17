@@ -36,12 +36,11 @@ class KitManager(private val magenta: Magenta) {
             val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
             val enchantments = Registry.ENCHANTMENT.filter { magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${it.key().value()}") }
-
-            for (enchantment in enchantments) {
-                val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}"
-                itemBuilder.addEnchantment(enchantment, magenta.kitConfig.getConfig().getInt(enchant))
+            val enchantmentsIterator = enchantments.iterator()
+            while(enchantmentsIterator.hasNext()) {
+                val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantmentsIterator.next().key().value()}"
+                itemBuilder.addEnchantment(enchantmentsIterator.next(), magenta.kitConfig.getConfig().getInt(enchant))
             }
-
             inv.addItem(itemBuilder.create())
         }
     }
@@ -103,9 +102,10 @@ class KitManager(private val magenta: Magenta) {
 
                 val enchantments = Registry.ENCHANTMENT.filter { magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${it.key().value()}") }
 
-                for (enchantment in enchantments) {
-                    val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}"
-                    itemBuilder.addEnchantment(enchantment, magenta.kitConfig.getConfig().getInt(enchant))
+                val enchantmentsIterator = enchantments.iterator()
+                while(enchantmentsIterator.hasNext()) {
+                    val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantmentsIterator.next().key().value()}"
+                    itemBuilder.addEnchantment(enchantmentsIterator.next(), magenta.kitConfig.getConfig().getInt(enchant))
                 }
                 val itemStack = itemBuilder.create()
                 commandSender.sendMessage(ModernText.miniModernText("<hover:show_text:'<meta>'><green><items></hover>", TagResolver.resolver(

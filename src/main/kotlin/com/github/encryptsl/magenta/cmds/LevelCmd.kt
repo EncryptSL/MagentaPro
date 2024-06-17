@@ -1,7 +1,7 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
-import com.github.encryptsl.kmono.lib.utils.ComponentPaginator
+import com.github.encryptsl.kmono.lib.utils.pagination.ComponentPaginator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -84,7 +84,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("position", k.toString()),
                     Placeholder.parsed("player", v.first),
                     Placeholder.parsed("level", v.second.toString()),
-                ))
+                )).appendNewline().append(magenta.locale.translation("magenta.command.level.top.footer"))
             }
 
             val paginator = ComponentPaginator(leaderBoard).apply { page(page) }
@@ -98,7 +98,6 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
                 commandSender.sendMessage(component)
             }
         }
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.footer"))
     }
 
 }

@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
-import com.github.encryptsl.kmono.lib.utils.ComponentPaginator
+import com.github.encryptsl.kmono.lib.utils.pagination.ComponentPaginator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.modules.milestones.VoteMilestonesGUI
 import com.github.encryptsl.magenta.common.extensions.positionIndexed
@@ -64,7 +64,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("position", k.toString()),
                 Placeholder.parsed("player", v.first),
                 Placeholder.parsed("votes", v.second.toString())
-            ))
+            )).appendNewline().append(magenta.locale.translation("magenta.command.vote.top.footer"))
         }
 
         if (leaderBoard.isEmpty()) return
@@ -79,8 +79,6 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         for (component in paginator.display()) {
             commandSender.sendMessage(component)
         }
-
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.top.footer"))
     }
 
     @Command("vote claim rewards")
@@ -106,16 +104,14 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.error"))
 
-        val format = magenta.config.getStringList("votifier.voteparty.format")
+        val format = magenta.config.getString("votifier.voteparty.format") ?: return
 
-        for (message in format) {
-            commandSender.sendMessage(ModernText.miniModernText(message, TagResolver.resolver(
-                Placeholder.parsed("remaining_votes", startAt.minus(currentVotes).toString()),
-                Placeholder.parsed("current_votes", currentVotes.toString()),
-                Placeholder.parsed("start_at", startAt.toString()),
-                Placeholder.parsed("last_party", lastParty.toString()),
-                Placeholder.parsed("last_winner", lastWinner ?: "Nobody"),
-            )))
-        }
+        commandSender.sendMessage(ModernText.miniModernText(format, TagResolver.resolver(
+            Placeholder.parsed("remaining_votes", startAt.minus(currentVotes).toString()),
+            Placeholder.parsed("current_votes", currentVotes.toString()),
+            Placeholder.parsed("start_at", startAt.toString()),
+            Placeholder.parsed("last_party", lastParty.toString()),
+            Placeholder.parsed("last_winner", lastWinner ?: "Nobody"),
+        )))
     }
 }
