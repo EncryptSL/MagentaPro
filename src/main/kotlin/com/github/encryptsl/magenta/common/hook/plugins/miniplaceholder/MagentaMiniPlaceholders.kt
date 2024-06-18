@@ -45,13 +45,13 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPl
                 return@globalPlaceholder Component.text(magenta.vote.totalVotes().join()).asInsertingTag()
             }
             globalPlaceholder("voteparty_now") { _, _ ->
-                return@globalPlaceholder Component.text(magenta.voteParty.getVoteParty().currentVotes).asInsertingTag()
+                return@globalPlaceholder Component.text(magenta.voteParty.getVoteParty().join().currentVotes).asInsertingTag()
             }
             globalPlaceholder("voteparty_max") { _, _ ->
                 return@globalPlaceholder Component.text(magenta.config.getInt("votifier.voteparty.start_at")).asInsertingTag()
             }
             globalPlaceholder("voteparty_last_winner") { _, _ ->
-                return@globalPlaceholder Component.text(magenta.voteParty.getVoteParty().lastWinnerOfParty ?: "NEVER").asInsertingTag()
+                return@globalPlaceholder Component.text(magenta.voteParty.getVoteParty().join().lastWinnerOfParty ?: "NEVER").asInsertingTag()
             }
             globalPlaceholder("top_vote") { _, _ ->
                 return@globalPlaceholder Component.text(pluginPlaceholders.topVoteNameByRank(1)).asInsertingTag()

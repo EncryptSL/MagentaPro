@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.api.votes
 
 import com.github.encryptsl.magenta.common.database.entity.VotePartyEntity
+import java.util.concurrent.CompletableFuture
 
 interface VotePartyAPI {
     fun createTable()
@@ -8,5 +9,5 @@ interface VotePartyAPI {
     fun partyFinished(winner: String)
     fun resetParty()
     fun getExistTable(): Boolean
-    fun getVoteParty(): VotePartyEntity
+    fun getVoteParty(): CompletableFuture<VotePartyEntity>
 }

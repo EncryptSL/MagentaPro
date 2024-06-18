@@ -98,7 +98,6 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.voteparty")
     @CommandDescription("This command send information about vote party")
     fun onVoteParty(commandSender: CommandSender) {
-        val (currentVotes, lastParty, lastWinner) = magenta.voteParty.getVoteParty()
         val startAt = magenta.config.getInt("votifier.voteparty.start_at")
 
         if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
@@ -106,12 +105,17 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
 
         val format = magenta.config.getString("votifier.voteparty.format") ?: return
 
-        commandSender.sendMessage(ModernText.miniModernText(format, TagResolver.resolver(
-            Placeholder.parsed("remaining_votes", startAt.minus(currentVotes).toString()),
-            Placeholder.parsed("current_votes", currentVotes.toString()),
-            Placeholder.parsed("start_at", startAt.toString()),
-            Placeholder.parsed("last_party", lastParty.toString()),
-            Placeholder.parsed("last_winner", lastWinner ?: "Nobody"),
-        )))
+        magenta.voteParty.getVoteParty().thenApply { voteParty ->
+            commandSender.sendMessage(ModernText.miniModernText(format, TagResolver.resolver(
+                Placeholder.parsed("remaining_votes", startAt.minus(voteParty.currentVotes).toString()),
+                Placeholder.parsed("current_votes", voteParty.currentVotes.toString()),
+                Placeholder.parsed("start_at", startAt.toString()),
+                Placeholder.parsed("last_party", voteParty.lastVoteParty.toString()),
+                Placeholder.parsed("last_winner", voteParty.lastWinnerOfParty ?: "Nobody"),
+            )))
+        }.exceptionally { ex ->
+            commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", ex.message ?: ex.localizedMessage)))
+            magenta.logger.severe(ex.message ?: ex.localizedMessage)
+        }
     }
 }

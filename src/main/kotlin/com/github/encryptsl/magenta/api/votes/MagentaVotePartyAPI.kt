@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api.votes
 
 import com.github.encryptsl.magenta.common.database.entity.VotePartyEntity
 import com.github.encryptsl.magenta.common.database.models.VotePartyModel
+import java.util.concurrent.CompletableFuture
 
 class MagentaVotePartyAPI(private val votePartyModel: VotePartyModel) : VotePartyAPI {
     override fun createTable() {
@@ -22,7 +23,7 @@ class MagentaVotePartyAPI(private val votePartyModel: VotePartyModel) : VotePart
     override fun resetParty() {
         votePartyModel.resetParty()
     }
-    override fun getVoteParty(): VotePartyEntity {
-        return votePartyModel.getVoteParty().join()
+    override fun getVoteParty(): CompletableFuture<VotePartyEntity> {
+        return votePartyModel.getVoteParty()
     }
 }
