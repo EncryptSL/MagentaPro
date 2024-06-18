@@ -55,7 +55,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))
-        } catch (e : Exception) { commandSender.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
+        } catch (e : Exception) { commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage))) }
     }
 
     @EventHandler

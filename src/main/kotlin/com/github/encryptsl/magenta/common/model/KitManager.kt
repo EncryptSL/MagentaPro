@@ -24,7 +24,7 @@ class KitManager(private val magenta: Magenta) {
         for (material in Material.entries) {
             if (!magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) continue
 
-            val count: Int = magenta.kitConfig.getConfig().getInt(("kits.$kitName.items.${material.name.lowercase()}.amount"), 1)
+            val count: Int = magenta.kitConfig.getConfig().getInt("kits.$kitName.items.${material.name.lowercase()}.amount", 1)
             val displayKitName = ModernText.miniModernText(magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName") ?: material.name)
 
             val lore = if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore"))
@@ -35,11 +35,16 @@ class KitManager(private val magenta: Magenta) {
 
             val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
-            val enchantments = Registry.ENCHANTMENT.filter { magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${it.key().value()}") }
-            val enchantmentsIterator = enchantments.iterator()
-            while(enchantmentsIterator.hasNext()) {
-                val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantmentsIterator.next().key().value()}"
-                itemBuilder.addEnchantment(enchantmentsIterator.next(), magenta.kitConfig.getConfig().getInt(enchant))
+            if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants")) {
+                val enchantments = Registry.ENCHANTMENT.iterator()
+                while (enchantments.hasNext()) {
+                    val enchantment = enchantments.next()
+                    if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")) {
+                        val level = magenta.kitConfig.getConfig().getInt("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")
+                        itemBuilder.addEnchantment(enchantment, level)
+                        continue
+                    }
+                }
             }
             inv.addItem(itemBuilder.create())
         }
@@ -100,12 +105,16 @@ class KitManager(private val magenta: Magenta) {
 
                 val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
-                val enchantments = Registry.ENCHANTMENT.filter { magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${it.key().value()}") }
-
-                val enchantmentsIterator = enchantments.iterator()
-                while(enchantmentsIterator.hasNext()) {
-                    val enchant = "kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantmentsIterator.next().key().value()}"
-                    itemBuilder.addEnchantment(enchantmentsIterator.next(), magenta.kitConfig.getConfig().getInt(enchant))
+                if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants")) {
+                    val enchantments = Registry.ENCHANTMENT.iterator()
+                    while (enchantments.hasNext()) {
+                        val enchantment = enchantments.next()
+                        if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")) {
+                            val level = magenta.kitConfig.getConfig().getInt("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")
+                            itemBuilder.addEnchantment(enchantment, level)
+                            continue
+                        }
+                    }
                 }
                 val itemStack = itemBuilder.create()
                 commandSender.sendMessage(ModernText.miniModernText("<hover:show_text:'<meta>'><green><items></hover>", TagResolver.resolver(
@@ -116,5 +125,5 @@ class KitManager(private val magenta: Magenta) {
         }
     }
 
-    inner class KitNotFoundException(message: String) : Exception(message)
+    inner class KitNotFoundException(message: String) : RuntimeException(message)
 }

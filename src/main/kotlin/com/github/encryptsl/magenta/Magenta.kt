@@ -146,7 +146,7 @@ open class Magenta : JavaPlugin() {
             config.getString("database.username", "root").toString(),
             config.getString("database.password", "admin").toString()
         )
-        geoMaxMind.initGeoMaxMind("maxmind-url")
+        geoMaxMind.initGeoMaxMind(config.getString("maxmind-url", "https://git.io/GeoLite2-Country.mmdb").toString())
         voteParty.createTable()
     }
 
