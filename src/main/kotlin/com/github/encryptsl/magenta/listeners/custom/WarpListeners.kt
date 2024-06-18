@@ -14,11 +14,17 @@ import org.bukkit.event.Listener
 
 class WarpListeners(private val magenta: Magenta) : Listener {
 
+    private val blockUtils = com.github.encryptsl.kmono.lib.utils.BlockUtils()
+
     @EventHandler
     fun onCreateWarp(event: WarpCreateEvent) {
         val warpName = event.warpName
         val player: Player = event.player
         val location: Location = event.location
+
+        if (!blockUtils.isLocationSafe(location))
+            return player.sendMessage("Warp není bezpečný proto ho nemůžeš vytvořit !")
+
         magenta.warpModel.getWarpByName(warpName).thenApply { magenta.warpModel.canSetWarp(player) }.whenComplete { result, throwable ->
             if (throwable != null) {
                 return@whenComplete player.sendMessage(magenta.locale.translation("magenta.command.warp.error.exist", Placeholder.parsed("warp", warpName)))
@@ -97,6 +103,9 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val location: Location = player.location
         val warpName: String = event.warpName
 
+        if (!blockUtils.isLocationSafe(location))
+            return player.sendMessage("Warp na tomto místě není bezpečný proto ho nemůžeš přemístit !")
+
         magenta.warpModel.getWarpByName(warpName).thenApply {
             if (player.hasPermission(Permissions.WARPS_MOVE_OTHER))
                 magenta.warpModel.moveWarp(warpName, location)
@@ -153,6 +162,9 @@ class WarpListeners(private val magenta: Magenta) : Listener {
 
             if (commandSender is Player) {
                 if (target == null) {
+                    if (!blockUtils.isLocationSafe(magenta.warpModel.toLocation(warpName)))
+                        return@thenApply commandSender.sendMessage("Nemůžeš se teleportovat na tento warp je nebezpečný !")
+
                     commandSender.teleport(location)
                     commandSender.sendMessage(teleportSelfMessage)
                     return@thenApply
@@ -160,12 +172,18 @@ class WarpListeners(private val magenta: Magenta) : Listener {
 
                 if (!commandSender.hasPermission(Permissions.WARP_TELEPORT_OTHER)) return@thenApply
 
+                if (!blockUtils.isLocationSafe(magenta.warpModel.toLocation(warpName)))
+                    return@thenApply commandSender.sendMessage("Nemůžeš teleportovat ${target.name} na tento warp je nebezpečný !")
+
                 target.teleport(location)
                 target.sendMessage(teleportSelfMessage)
                 return@thenApply commandSender.sendMessage(teleportMessageTo)
             }
 
             if (target != null) {
+                if (!blockUtils.isLocationSafe(magenta.warpModel.toLocation(warpName)))
+                    return@thenApply commandSender.sendMessage("Nemůžeš teleportovat ${target.name} na tento warp je nebezpečný !")
+
                 target.teleport(location)
                 target.sendMessage(teleportSelfMessage)
             }
