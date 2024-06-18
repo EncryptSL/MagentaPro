@@ -24,6 +24,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.*
+import kotlin.jvm.optionals.getOrNull
 
 
 class PlayerListener(private val magenta: Magenta) : Listener {
@@ -166,19 +167,17 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         if (!itemInHand.hasItemMeta()) return
 
         val vouchers = magenta.vouchers.getConfig().getConfigurationSection("vouchers")?.getKeys(false) ?: return
-        val voucher = vouchers.stream().filter { el -> voucherManager.isItemVoucherInHand(itemInHand, el) }.findFirst()
+        val voucher = vouchers.stream().filter { el -> voucherManager.isItemVoucherInHand(itemInHand, el) }.findFirst().getOrNull() ?: return
 
-        if (voucherManager.isItemVoucherInHand(itemInHand, voucher.get())) {
-            if (event.action.isRightClick) {
-                val command = magenta.vouchers.getConfig().getString(("vouchers." + voucher.get()) + ".command").toString()
-                console(command, player)
-                if (itemInHand.amount > 1) {
-                    itemInHand.amount -= 1
-                } else {
-                    inventory.remove(itemInHand)
-                }
-                event.isCancelled = true
+        if (event.action.isRightClick) {
+            val command = magenta.vouchers.getConfig().getString(("vouchers." + voucher) + ".command").toString()
+            console(command, player)
+            if (itemInHand.amount > 1) {
+                itemInHand.amount -= 1
+            } else {
+                inventory.remove(itemInHand)
             }
+            event.isCancelled = true
         }
     }
 
