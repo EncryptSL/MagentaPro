@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.23" apply true
-    id("io.github.goooler.shadow") version "8.1.7"
+    id("io.github.goooler.shadow") version "8.1.8"
 }
 
 group = "com.github.encryptsl"
@@ -28,9 +28,9 @@ kotlin {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     compileOnly(kotlin("stdlib", "1.9.23"))
-    compileOnly("org.jetbrains.exposed:exposed-core:0.49.0")
-    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.49.0")
-    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.49.0")
+    compileOnly("org.jetbrains.exposed:exposed-core:0.52.0")
+    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.52.0")
+    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.52.0")
     compileOnly("com.github.ben-manes.caffeine:caffeine:3.1.8") {
         exclude("com.google")
     }
