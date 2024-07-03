@@ -1,6 +1,9 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.specifier.Greedy
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.kmono.lib.extensions.colorize
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.Permissions
@@ -11,9 +14,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotation.specifier.Greedy
-import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")

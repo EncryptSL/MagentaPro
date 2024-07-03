@@ -1,15 +1,15 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.AnnotationParser
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.Command
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.CommandDescription
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.Permission
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.modules.milestones.OresMilestonesGUI
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.AnnotationParser
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.CommandDescription
-import org.incendo.cloud.annotations.Permission
-import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 class OresCmd(private val magenta: Magenta) : AnnotationFeatures {

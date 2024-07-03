@@ -2,6 +2,10 @@ package com.github.encryptsl.magenta.cmds
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.specifier.Greedy
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.suggestion.Suggestion
 import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
@@ -12,10 +16,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotation.specifier.Greedy
-import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.LegacyPaperCommandManager
-import org.incendo.cloud.suggestion.Suggestion
 import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")

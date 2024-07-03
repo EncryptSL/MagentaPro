@@ -1,16 +1,16 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.specifier.Greedy
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.specifier.Range
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.suggestion.Suggestion
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.model.VoucherManager
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotation.specifier.Greedy
-import org.incendo.cloud.annotation.specifier.Range
-import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.LegacyPaperCommandManager
-import org.incendo.cloud.suggestion.Suggestion
 import java.util.concurrent.CompletableFuture
 
 @Suppress("UNUSED")

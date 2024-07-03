@@ -1,11 +1,11 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.magenta.Magenta
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED", "UNUSED_PARAMETER")
 class AfkCmd(private val magenta: Magenta) : AnnotationFeatures {

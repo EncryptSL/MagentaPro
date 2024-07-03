@@ -9,7 +9,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.time.Duration
-import java.util.UUID
+import java.util.*
 
 class PlayerCacheManager(private val magenta: Magenta) {
     val reply: Cache<Player, Player> = Caffeine.newBuilder().expireAfterWrite(Duration.ofMinutes(5)).build()

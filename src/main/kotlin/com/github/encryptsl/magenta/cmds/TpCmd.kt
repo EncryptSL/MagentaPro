@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.teleport.TpaAcceptEvent
 import com.github.encryptsl.magenta.api.events.teleport.TpaDenyEvent
@@ -16,8 +18,6 @@ import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
-import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 class TpCmd(private val magenta: Magenta) : AnnotationFeatures {

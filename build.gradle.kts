@@ -46,17 +46,6 @@ dependencies {
     compileOnly("io.th0rgal:oraxen:1.174.0") {
         exclude(group = "dev.triumphteam")
     }
-
-    implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT") {
-        exclude(group = "net.kyori")
-    }
-    implementation("org.incendo:cloud-annotations:2.0.0-SNAPSHOT") {
-        exclude(group = "org.incendo", module = "cloud-core")
-    }
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-SNAPSHOT") {
-        exclude(group = "net.kyori")
-        exclude(group = "org.incendo", module = "cloud-core")
-    }
     implementation("com.github.encryptsl:KMonoLib:1.0.1") {
         exclude(group = "net.kyori")
     }

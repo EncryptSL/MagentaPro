@@ -9,6 +9,7 @@ import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.math.BigDecimal
 
 class ItemFactory {
     fun item(material: Material, itemName: String, lores: List<String>, glowing: Boolean): ItemStack {
@@ -21,8 +22,8 @@ class ItemFactory {
     fun shopItem(
         itemName: String,
         material: Material,
-        buyPrice:Double,
-        sellPrice:Double,
+        buyPrice: BigDecimal,
+        sellPrice: BigDecimal,
         isBuyAllowed: Boolean,
         isSellAllowed: Boolean,
         config: FileConfiguration

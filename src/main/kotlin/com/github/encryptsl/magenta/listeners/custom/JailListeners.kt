@@ -3,12 +3,7 @@ package com.github.encryptsl.magenta.listeners.custom
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
-import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
-import com.github.encryptsl.magenta.api.events.jail.JailCreateEvent
-import com.github.encryptsl.magenta.api.events.jail.JailDeleteEvent
-import com.github.encryptsl.magenta.api.events.jail.JailEvent
-import com.github.encryptsl.magenta.api.events.jail.JailInfoEvent
-import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
+import com.github.encryptsl.magenta.api.events.jail.*
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -172,7 +167,7 @@ class JailListeners(private val magenta: Magenta) : Listener {
 
         commandSender.sendMessage(ModernText.miniModernText(magenta.config.getString("jail-info-format").toString(), TagResolver.resolver(
             Placeholder.parsed("jail", jailName),
-            Placeholder.parsed("world", location.world.name.toString()),
+            Placeholder.parsed("world", location.world.name),
             Placeholder.parsed("x", location.x().toString()),
             Placeholder.parsed("y", location.y().toString()),
             Placeholder.parsed("z", location.z().toString()),

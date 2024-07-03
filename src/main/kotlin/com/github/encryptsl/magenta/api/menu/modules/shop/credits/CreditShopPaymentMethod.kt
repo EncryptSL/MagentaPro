@@ -21,7 +21,7 @@ class CreditShopPaymentMethod(private val magenta: Magenta) {
         config: FileConfiguration,
         isBuyAllowed: Boolean
     ) {
-        val price = config.getDouble("menu.items.$item.buy.price")
+        val price = config.getInt("menu.items.$item.buy.price").toBigDecimal()
         val quantity = config.getInt("menu.items.$item.buy.quantity")
         val commands = config.getStringList("menu.items.$item.commands")
 

@@ -6,33 +6,34 @@ import com.github.encryptsl.kmono.lib.api.economy.MissingEconomyException
 import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
 import org.bukkit.OfflinePlayer
+import java.math.BigDecimal
 
 class CreditLiteHook(private val magenta: Magenta) : PluginHook("CreditLite"), Economy {
 
-    override fun hasBalance(player: OfflinePlayer, value: Double): Boolean {
+    override fun hasBalance(player: OfflinePlayer, value: BigDecimal): Boolean {
         if (!isPluginEnabled())
             throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
-        return CreditEconomy.has(player, value.toBigDecimal())
+        return CreditEconomy.has(player, value)
     }
 
-    override fun deposit(player: OfflinePlayer, value: Double) {
+    override fun deposit(player: OfflinePlayer, value: BigDecimal) {
         if (!isPluginEnabled())
             throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
-        CreditEconomy.deposit(player, value.toBigDecimal())
+        CreditEconomy.deposit(player, value)
     }
 
-    override fun withdraw(player: OfflinePlayer, value: Double) {
+    override fun withdraw(player: OfflinePlayer, value: BigDecimal) {
         if (!isPluginEnabled())
             throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
-        CreditEconomy.withdraw(player, value.toBigDecimal())
+        CreditEconomy.withdraw(player, value)
     }
 
-    override fun getBalance(player: OfflinePlayer): Double {
-        if (!isPluginEnabled()) return Double.MIN_VALUE
+    override fun getBalance(player: OfflinePlayer): BigDecimal {
+        if (!isPluginEnabled()) return BigDecimal.ZERO
 
-        return CreditEconomy.getBalance(player).toDouble()
+        return CreditEconomy.getBalance(player)
     }
 }

@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
+import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -9,8 +11,6 @@ import org.apache.commons.lang3.time.DateFormatUtils
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.incendo.cloud.annotations.*
-import org.incendo.cloud.paper.LegacyPaperCommandManager
 
 @Suppress("UNUSED")
 @CommandDescription("Provided by plugin MagentaPro")

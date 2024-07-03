@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.Magenta
 import net.milkbowl.vault.economy.Economy
 import org.bukkit.OfflinePlayer
 import org.bukkit.plugin.ServicesManager
+import java.math.BigDecimal
 
 class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), com.github.encryptsl.kmono.lib.api.economy.Economy {
 
@@ -25,31 +26,31 @@ class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), com.github.
         return false
     }
 
-    override fun hasBalance(player: OfflinePlayer, value: Double): Boolean {
+    override fun hasBalance(player: OfflinePlayer, value: BigDecimal): Boolean {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        return eco!!.has(player, value)
+        return eco!!.has(player, value.toDouble())
     }
 
-    override fun deposit(player: OfflinePlayer, value: Double) {
+    override fun deposit(player: OfflinePlayer, value: BigDecimal) {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        eco!!.depositPlayer(player, value)
+        eco!!.depositPlayer(player, value.toDouble())
     }
 
-    override fun withdraw(player: OfflinePlayer, value: Double) {
+    override fun withdraw(player: OfflinePlayer, value: BigDecimal) {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        eco!!.withdrawPlayer(player, value)
+        eco!!.withdrawPlayer(player, value.toDouble())
     }
 
-    override fun getBalance(player: OfflinePlayer): Double {
+    override fun getBalance(player: OfflinePlayer): BigDecimal {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        return eco!!.getBalance(player)
+        return BigDecimal.valueOf(eco!!.getBalance(player))
     }
 }

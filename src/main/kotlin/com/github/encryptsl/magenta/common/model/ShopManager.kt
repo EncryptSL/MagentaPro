@@ -3,14 +3,15 @@ package com.github.encryptsl.magenta.common.model
 import com.github.encryptsl.magenta.Magenta
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
+import java.math.BigDecimal
 
 class ShopManager(private val magenta: Magenta) {
 
     data class ShopProduct(
         val name: String?,
         val material: Material,
-        val buyPrice: Double,
-        val sellPrice: Double,
+        val buyPrice: BigDecimal,
+        val sellPrice: BigDecimal,
         val isBuyAllowed: Boolean = true,
         val isSellAllowed: Boolean = false,
         val commands: List<String>
@@ -29,8 +30,8 @@ class ShopManager(private val magenta: Magenta) {
             } ?: continue
 
             val itemName = config.getString("menu.items.${product}.name")
-            val buyPrice = config.getDouble("menu.items.${product}.buy.price")
-            val sellPrice = config.getDouble("menu.items.${product}.sell.price")
+            val buyPrice = config.getInt("menu.items.${product}.buy.price").toBigDecimal()
+            val sellPrice = config.getInt("menu.items.${product}.sell.price").toBigDecimal()
 
             val isBuyAllowed = config.contains("menu.items.${product}.buy.price")
             val isSellAllowed = config.contains("menu.items.${product}.sell.price")

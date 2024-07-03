@@ -14,6 +14,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.math.BigDecimal
 
 class VaultShop(private val magenta: Magenta) : Menu {
 
@@ -133,7 +134,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
    private fun buy(
        player: Player,
        material: Material,
-       buyPrice: Double,
+       buyPrice: BigDecimal,
        counts: Int,
        itemName: String,
        commands: List<String>,
@@ -150,7 +151,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
    private fun sell(
        player: Player,
        material: Material,
-       sellPrice: Double,
+       sellPrice: BigDecimal,
        counts: Int,
        itemName: String,
        commands: List<String>,
@@ -165,8 +166,8 @@ class VaultShop(private val magenta: Magenta) : Menu {
    private fun getShopProduct(
        itemName: String,
        material: Material,
-       buyPrice: Double,
-       sellPrice: Double,
+       buyPrice: BigDecimal,
+       sellPrice: BigDecimal,
        isBuyAllowed: Boolean,
        isSellAllowed: Boolean
    ): ItemStack {
