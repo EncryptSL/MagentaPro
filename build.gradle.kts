@@ -17,6 +17,7 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.oraxen.com/releases")
     maven("https://nexuslite.gcnt.net/repos/other/")
+    maven("https://repo.codemc.org/repository/maven-public") //VaultUnlockedAPI
 }
 
 kotlin {
@@ -39,6 +40,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
+    compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.1")
     compileOnly("com.github.encryptsl:CreditLite:1.1.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4")

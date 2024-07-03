@@ -21,6 +21,7 @@ import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
 import com.github.encryptsl.magenta.common.filter.ChatChecksManager
 import com.github.encryptsl.magenta.common.hook.HookManager
+import com.github.encryptsl.magenta.common.hook.plugins.vaultunlocked.VaultUnlockedHook
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import com.github.encryptsl.magenta.common.model.*
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
@@ -93,6 +94,7 @@ open class Magenta : JavaPlugin() {
 
     val playerCacheManager by lazy { PlayerCacheManager(this) }
     val vaultHook by lazy { VaultHook(this) }
+    val vaultUnlockedHook by lazy { VaultUnlockedHook(this) }
 
     val commandManager: CommandManager by lazy { CommandManager(this) }
     val geoMaxMind: GeoMaxMindDatabase by lazy { GeoMaxMindDatabase(this) }
