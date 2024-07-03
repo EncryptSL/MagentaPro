@@ -41,7 +41,7 @@ class MentionManager(private val magenta: Magenta) {
                     PlayerBuilderAction.player(mentioned).sound(sound, volume, pitch).message(mentionedPlayer(player, "magenta.player.mentioned"))
                     chatEvent.message(
                         ModernText.miniModernText(message.replace(
-                            m, magenta.config.getString("mentions.formats.player").toString().replace("[player]", mentioned.name.lowercase())
+                            m, magenta.config.getString("mentions.formats.player").toString().replace("[player]", magenta.config.getString("mentions.variable").toString() + mentioned.name.lowercase())
                         ))
                     )
                 }

@@ -17,9 +17,6 @@ dependencies:
     Vault:
       required: false
       join-classpath: true
-    VaultUnlocked:
-      required: false
-      join-classpath: true
     Votifier:
       required: false
       join-classpath: true

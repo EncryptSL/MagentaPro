@@ -30,8 +30,8 @@ class ShopManager(private val magenta: Magenta) {
             } ?: continue
 
             val itemName = config.getString("menu.items.${product}.name")
-            val buyPrice = config.getInt("menu.items.${product}.buy.price").toBigDecimal()
-            val sellPrice = config.getInt("menu.items.${product}.sell.price").toBigDecimal()
+            val buyPrice = config.getDouble("menu.items.${product}.buy.price").toBigDecimal()
+            val sellPrice = config.getDouble("menu.items.${product}.sell.price").toBigDecimal()
 
             val isBuyAllowed = config.contains("menu.items.${product}.buy.price")
             val isSellAllowed = config.contains("menu.items.${product}.sell.price")

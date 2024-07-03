@@ -8,13 +8,13 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.plugin.ServicesManager
 import java.math.BigDecimal
 
-class VaultUnlockedHook(private val magenta: Magenta) : PluginHook("VaultUnlocked"), Economy {
+class VaultUnlockedHook(private val magenta: Magenta) : PluginHook("Vault"), Economy {
 
     private var eco: net.milkbowl.vault2.economy.Economy? = null
     private val exception = magenta.locale.getMessage("magenta.missing.vault.economy")
 
     override fun isPluginEnabled(): Boolean {
-        if (magenta.pluginManager.getPlugin("VaultUnlocked") != null) {
+        if (magenta.pluginManager.getPlugin("Vault") != null) {
             val sm: ServicesManager = magenta.server.servicesManager
             val rsp = sm.getRegistration(net.milkbowl.vault2.economy.Economy::class.java)
             if (rsp != null) {

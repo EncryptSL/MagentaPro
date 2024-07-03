@@ -14,8 +14,8 @@ discord:
 
 newbies:
   # Announcement to player who first join on server.
-  announcement: "<color:#FBC688>Přivítejme hráče <color:#FA8B07><player> <color:#FBC688>na
-    serveru, přivítalo k nám již <color:#FA8B07><joined><color:#FBC688>x hráčů."
+  announcement: '<color:#FBC688>Přivítejme hráče <color:#FA8B07><player> <color:#FBC688>na
+    serveru, přivítalo k nám již <color:#FA8B07><joined><color:#FBC688>x hráčů.'
 
   # We teleport player on first join on spawnpoint.
   # for not spawn on point set spawnpoint: none
@@ -28,7 +28,7 @@ newbies:
 #########################################################
 #                 MAGENTA PRO (GLOBAL)                  #
 #########################################################
-prefix: "<gray>(<light_purple><bold>MAGENTAPRO</bold><gray>)"
+prefix: "<dark_gray>[<red>Server<dark_gray>] <dark_green>»"
 
 maxmind-url: "https://git.io/GeoLite2-Country.mmdb"
 
@@ -196,21 +196,19 @@ news:
 # There you can set your messages, for broadcast
 # Messages supporting base
   messages:
-    - <gray>Chceš si koupit vip a nevíš jak napiš <yellow>/vip<gray> a zde uvidíš seznam
-      !
-    - <color:#05B5FC>Ještě jsi dneska nehlasoval ?</color>, <color:#69D0FA>Napiš /vote
-      !</color>
-    - <gray>Náš server nabízí i těžební svět <red>/mineworld <gray>který se resetuje
-      každý měsíc !
+    - <gray>Podpoř server zakoupením výhod napiš /vip !
+    - <color:#05B5FC>Ještě jsi nehlasoval ?</color>, <color:#69D0FA>Napiš /vote !</color>
+    - <gray>Zkus jít také těžit na těžební svět <red>/mineworld
     - <gray>Magické truhly nalezneš na <yellow>/crates<gray> !
-    - <gray>Do přírody se dostaneš pomocí <yellow>/priroda<gray> !
-    - <gray>Na serveru je pro zkrácení chvíle mob aréna připojíš se pomocí <green>/ma
-      join<gray> !
+    - <gray>Příroda se nachází na <yellow>/priroda<gray> !
+    - <gray>Na serveru se nachází mob aréna zkus si jí zahrát <red>/ma join
+    - <gray>Mob aréna nabízí upravené odměny zkus je získat.
     - <gray>Hlavní boss se spawnuje vždy kolem <yellow>20:00 <gray>a <yellow>21:00 /warp
       hlboss
     - <gray>Na serveru můžeš vždy kolem <yellow>18:00 <gray>a <yellow>19:00 zabít vedlejší
       bossy na /warp dungeon.
-    - <gray>Věděl jsi že zabíjením bossů můžeš získat zdarma kredity ?
+    - <gray>Kredity zdarma můžeš získat z bossů nebo z galaxy trhly
+    - <gray>Vyzvedni si svou denní odměnu, <green>/warp odmena
 
 
 #########################################################
@@ -223,7 +221,8 @@ homes:
 # with permission magenta.homes.player can have player 3 homes.
   groups:
     player: 3
-    vip: 4
+    tempHome: 5
+    vip: 10
     moderator: -1
     admin: -1
 
@@ -243,7 +242,7 @@ warps:
 # limit of warps what can be created,
 # with permission magenta.warps.vip can have vip player 3 warps.
   groups:
-    vip: 4
+    vip: 14
     moderator: -1
     admin: -1
 
@@ -340,10 +339,24 @@ votifier:
 #    link: "<hover:show_text><click:open_url:'voting_url'>Vote awesome url click and vote</click></hover>"
 #    in link you can set <username> and this is a placeholder replaced to real player name.
   services:
-    default:
-      service: default
+    Czech-Craft_eu:
+      link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/neveland/vote/?user=<username>'><bold><aqua>|</bold>
+        <yellow>czech-craft.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - 'give {player} minecraft:experience_bottle 5'
+        - give {player} minecraft:experience_bottle 5
+        - cc give p basicbox 1 {player}
+        - cc give p votebox 1 {player}
+        - eco add {player} 200 -s
+        - levels add {player} points 35 -s
+    Craftlist_org:
+      link: <hover:show_text:'<hover>'><click:open_url:'https://craftlist.org/neverland?nick=<username>'><bold><aqua>|</bold>
+        <yellow>craftlist.org</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
+      rewards:
+        - give {player} minecraft:experience_bottle 5
+        - cc give p basicbox 1 {player}
+        - cc give p votebox 1 {player}
+        - eco add {player} 200 -s
+        - levels add {player} points 35 -s
 
 # Voteparty is disabled by default, this reward in based on saved votes in party.
 # rewards from voteparty can receive only online players in game.
@@ -367,20 +380,84 @@ votifier:
 # supported is only command and placeholder {player} and in broadcast <player> with minimessage format.
   cumulative:
     '10':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 10 hlasů proto dostal bonusovou odměnu !</color>'
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        10 hlasů a proto dostal bonusovou odměnu !</color>
       rewards:
-        - 'eco add {player} 500'
-        - 'crazycrates give physical votecrate 1 {player}'
+        - eco add {player} {expression_reward} -s
+        - levels add {player} 150 points -s
     '30':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 30 hlasů proto dostal bonusovou odměnu !</color>'
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        30 hlasů a proto dostal bonusovou odměnu a 250 Exp + 1 vote klíč !</color>
       rewards:
-        - 'eco add {player} 1500'
-        - 'crazycrates give physical votecrate 1 {player}'
+        - eco add {player} {expression_reward} -s
+        - levels add {player} 250 points -s
+        - crazycrates give physical votecrate 1 {player}
     '50':
-      broadcast: '<color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl 50 hlasů proto dostal bonusovou odměnu !</color>'
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        50 hlasů a proto dostal bonusovou odměnu a 2 vote líče !</color>
       rewards:
-        - 'eco add {player} 3500'
-        - 'crazycrates give physical votecrate 2 {player}'
+        - eco add {player} {expression_reward}
+        - levels add {player} 350 points -s
+        - crazycrates give physical votecrate 2 {player}
+    '100':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        100 hlasů a proto dostal bonusovou odměnu a VIP na 10 dní !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - levels add {player} 400 points -s
+        - cc give p GalaxyBox 1 {player}
+        - skulls give {player} random 1
+        - lp user {player} parent addtemp vip 10d
+    '150':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        150 hlasů a proto dostal bonusovou odměnu a 560 exp !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - skulls give {player} random 3
+        - levels add {player} 560 points -s
+        - random world tickets {player} 2
+    '200':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        200 hlasů a proto dostal bonusovou odměnu a 600 exp !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - levels add {player} 600 points -s
+    '250':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        250 hlasů a proto dostal bonusovou odměnu a 750 exp !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - skulls give {player} random 5
+        - levels add {player} 750 points -s
+    '300':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        300 hlasů a proto dostal bonusovou odměnu a 950 exp !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - cc give p {player} galaxybox 2
+        - levels add {player} 950 points -s
+    '350':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        350 hlasů a proto dostal bonusovou odměnu a 1050 exp !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - random world tickets 3 {player}
+        - levels add {player} 1050 points -s
+    '400':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        400 hlasů a proto dostal bonusovou odměnu a 1250 exp !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - levels add {player} 1250 points -s
+    '500':
+      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
+        500 hlasů a proto dostal bonusovou odměnu a 1500 exp !</color>
+      rewards:
+        - eco add {player} {expression_reward}
+        - levels add {player} 1500 points -s
+        - skulls give {player} random 5
+        - random world tickets 5 {player}
+        - lp user {player} parent addtemp vip 31d
 
 #########################################################
 #                     Chat Section                      #

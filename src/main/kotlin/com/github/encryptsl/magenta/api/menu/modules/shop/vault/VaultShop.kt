@@ -116,7 +116,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
                 }
                 // SELL BY STACK = 64
                 if (context.isShiftClick && context.isRightClick) {
-                    val itemFromInv = context.whoClicked.inventory.storageContents.first { el -> el?.type == material }
+                    val itemFromInv = context.whoClicked.inventory.storageContents.firstOrNull { el -> el?.type == material }
                     itemFromInv?.let { return@asGuiItem sell(context.whoClicked as Player, material, sellPrice, it.amount, itemName, commands, isSellAllowed) }
                 }
                 // SELL BY ONE ITEM = 1
