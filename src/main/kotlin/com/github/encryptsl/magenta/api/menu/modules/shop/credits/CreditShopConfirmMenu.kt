@@ -55,7 +55,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         isBuyAllowed: Boolean
     ) {
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok")) {
-            val material = Material.getMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.icon").toString()) ?: return
+            val material = Material.matchMaterial(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.icon").toString()) ?: return
 
             if (!magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok.name"))
                 return

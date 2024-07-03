@@ -32,9 +32,9 @@ class CreditShop(private val magenta: Magenta) : Menu {
         menuUI.useAllFillers(gui, magenta.creditShopConfig.getConfig())
 
         for (category in magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
-            val material = Material.getMaterial(
-                magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString()
-            ) ?: continue
+            val material = Material.entries.firstOrNull {
+                    el -> el.name.equals(magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString(), true)
+            } ?: continue
 
             if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.name"))
                 return player.sendMessage(

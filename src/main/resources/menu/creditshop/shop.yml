@@ -12,7 +12,7 @@ menu:
       - '<color:#004c9e>Cena <color:#037cff><price> kreditů'
       - '<color:#004c9e>Ty máš <color:#037cff><credits>'
   categories:
-    super_box_keys:
+    galaxy_box_keys:
         icon: 'TRIPWIRE_HOOK'
         slot: 10
         name: '<blue>Galaxy Klíče'

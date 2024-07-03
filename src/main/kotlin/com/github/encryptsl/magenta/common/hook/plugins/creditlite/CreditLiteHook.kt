@@ -13,26 +13,26 @@ class CreditLiteHook(private val magenta: Magenta) : PluginHook("CreditLite"), E
         if (!isPluginEnabled())
             throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
-        return CreditEconomy.has(player.uniqueId, value)
+        return CreditEconomy.has(player, value.toBigDecimal())
     }
 
     override fun deposit(player: OfflinePlayer, value: Double) {
         if (!isPluginEnabled())
             throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
-        CreditEconomy.deposit(player.uniqueId, value)
+        CreditEconomy.deposit(player, value.toBigDecimal())
     }
 
     override fun withdraw(player: OfflinePlayer, value: Double) {
         if (!isPluginEnabled())
             throw MissingEconomyException(magenta.locale.getMessage("magenta.missing.credits.economy"))
 
-        CreditEconomy.withdraw(player.uniqueId, value)
+        CreditEconomy.withdraw(player, value.toBigDecimal())
     }
 
     override fun getBalance(player: OfflinePlayer): Double {
         if (!isPluginEnabled()) return Double.MIN_VALUE
 
-        return CreditEconomy.getBalance(player.uniqueId)
+        return CreditEconomy.getBalance(player).toDouble()
     }
 }

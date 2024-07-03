@@ -29,12 +29,16 @@ class CommandHelper(private val magenta: Magenta) {
         for (onlinePlayers in Bukkit.getOnlinePlayers()) {
             if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) continue
             if (user.isVanished()) {
-                user.getPlayer()?.let { onlinePlayers.showPlayer(magenta, it) }
-                user.getPlayer()?.let { onlinePlayers.listPlayer(it) }
+                user.getPlayer()?.let {
+                    onlinePlayers.showPlayer(magenta, it)
+                    onlinePlayers.listPlayer(it)
+                }
                 user.set("vanished", false)
             } else {
-                user.getPlayer()?.let { onlinePlayers.hidePlayer(magenta, it) }
-                user.getPlayer()?.let { onlinePlayers.unlistPlayer(it) }
+                user.getPlayer()?.let {
+                    onlinePlayers.hidePlayer(magenta, it)
+                    onlinePlayers.unlistPlayer(it)
+                }
                 user.set("vanished", true)
             }
         }
@@ -105,8 +109,8 @@ class CommandHelper(private val magenta: Magenta) {
         }
     }
 
-    fun isVanished(boolean: Boolean): String {
-        return if (boolean) "viditelný" else "skryt"
+    fun isVanished(user: UserAccountImpl): String {
+        return if (user.isVanished()) "skryt" else "viditelný"
     }
 
     fun isMsgToggled(user: UserAccountImpl): Boolean {

@@ -29,9 +29,9 @@ class VaultShop(private val magenta: Magenta) : Menu {
         )
         menuUI.useAllFillers(gui, magenta.shopConfig.getConfig())
         for (category in shopManager.getShopCategories()) {
-            val material = Material.getMaterial(
-                magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString()
-            ) ?: continue
+            val material = Material.entries.firstOrNull {
+                el -> el.name.equals(magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString(), true)
+            } ?: continue
 
             if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
                 return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
@@ -87,18 +87,20 @@ class VaultShop(private val magenta: Magenta) : Menu {
            shopCategory.getConfig()
        )
 
-       val products = shopManager.getShopProducts(shopCategory.getConfig())
+       val products = shopManager.getShopProducts(shopCategory.getConfig()).iterator()
 
         menuUI.useAllFillers(gui, shopCategory.getConfig())
 
-        for (product in products.withIndex()) {
-            val itemName = product.value.name ?: product.value.material.name
-            val material = product.value.material
-            val buyPrice = product.value.buyPrice
-            val sellPrice = product.value.sellPrice
-            val isBuyAllowed = product.value.isBuyAllowed
-            val isSellAllowed = product.value.isSellAllowed
-            val commands = product.value.commands
+        while (products.hasNext()) {
+            val product = products.next()
+
+            val itemName = product.name ?: product.material.name
+            val material = product.material
+            val buyPrice = product.buyPrice
+            val sellPrice = product.sellPrice
+            val isBuyAllowed = product.isBuyAllowed
+            val isSellAllowed = product.isSellAllowed
+            val commands = product.commands
 
             val itemStack = getShopProduct(itemName, material, buyPrice, sellPrice, isBuyAllowed, isSellAllowed)
 
@@ -113,7 +115,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
                 }
                 // SELL BY STACK = 64
                 if (context.isShiftClick && context.isRightClick) {
-                    val itemFromInv = context.whoClicked.inventory.storageContents.filter { el -> el?.type == material }.first()
+                    val itemFromInv = context.whoClicked.inventory.storageContents.first { el -> el?.type == material }
                     itemFromInv?.let { return@asGuiItem sell(context.whoClicked as Player, material, sellPrice, it.amount, itemName, commands, isSellAllowed) }
                 }
                 // SELL BY ONE ITEM = 1

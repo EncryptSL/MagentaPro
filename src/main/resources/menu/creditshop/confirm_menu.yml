@@ -11,7 +11,7 @@ menu:
         action: BACK
         name: <green>Zpět do menu
         positions:
-          row: 6
+          row: 3
           col: 5
   confirm_ok:
     icon: "GREEN_GLASS_TABLE_PAIN"

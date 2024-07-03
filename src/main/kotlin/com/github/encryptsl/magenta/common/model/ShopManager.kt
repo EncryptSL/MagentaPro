@@ -6,15 +6,27 @@ import org.bukkit.configuration.file.FileConfiguration
 
 class ShopManager(private val magenta: Magenta) {
 
+    data class ShopProduct(
+        val name: String?,
+        val material: Material,
+        val buyPrice: Double,
+        val sellPrice: Double,
+        val isBuyAllowed: Boolean = true,
+        val isSellAllowed: Boolean = false,
+        val commands: List<String>
+    )
+
     fun getShopProducts(config: FileConfiguration): Set<ShopProduct> {
         val menuItems = config.getConfigurationSection("menu.items")?.getKeys(false) ?: return emptySet()
         val products = mutableSetOf<ShopProduct>()
+        val iterator = menuItems.iterator()
 
-        for (product in menuItems) {
+        while (iterator.hasNext()) {
+            val product = iterator.next()
             if (!config.contains("menu.items.${product}")) continue
-            val material = Material.getMaterial(
-                config.getString("menu.items.${product}.icon").toString()
-            ) ?: continue
+            val material = Material.entries.firstOrNull {
+                    el -> el.name.equals(config.getString("menu.items.${product}.icon").toString(), true)
+            } ?: continue
 
             val itemName = config.getString("menu.items.${product}.name")
             val buyPrice = config.getDouble("menu.items.${product}.buy.price")
@@ -47,14 +59,4 @@ class ShopManager(private val magenta: Magenta) {
             .getConfigurationSection("menu.categories")
             ?.getKeys(false) ?: emptySet()
     }
-
-    data class ShopProduct(
-        val name: String?,
-        val material: Material,
-        val buyPrice: Double,
-        val sellPrice: Double,
-        val isBuyAllowed: Boolean = true,
-        val isSellAllowed: Boolean = false,
-        val commands: List<String>
-    )
 }

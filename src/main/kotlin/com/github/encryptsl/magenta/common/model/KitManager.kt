@@ -3,11 +3,13 @@ package com.github.encryptsl.magenta.common.model
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Material
-import org.bukkit.Registry
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -36,13 +38,13 @@ class KitManager(private val magenta: Magenta) {
             val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
             if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants")) {
-                val enchantments = Registry.ENCHANTMENT.iterator()
+                val enchantments = magenta.kitConfig.getConfig().getStringList("kits.$kitName.items.${material.name.lowercase()}.enchants").iterator()
                 while (enchantments.hasNext()) {
-                    val enchantment = enchantments.next()
-                    if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")) {
-                        val level = magenta.kitConfig.getConfig().getInt("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")
-                        itemBuilder.addEnchantment(enchantment, level)
-                        continue
+                    val split = enchantments.next().split(":")
+                    val enchantment = split[0]
+                    val level = split[1]
+                    RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(Key.key(enchantment))?.let {
+                        itemBuilder.addEnchantment(it, level.toInt())
                     }
                 }
             }
@@ -106,13 +108,13 @@ class KitManager(private val magenta: Magenta) {
                 val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
                 if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants")) {
-                    val enchantments = Registry.ENCHANTMENT.iterator()
+                    val enchantments = magenta.kitConfig.getConfig().getStringList("kits.$kitName.items.${material.name.lowercase()}.enchants").iterator()
                     while (enchantments.hasNext()) {
-                        val enchantment = enchantments.next()
-                        if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")) {
-                            val level = magenta.kitConfig.getConfig().getInt("kits.$kitName.items.${material.name.lowercase()}.enchants.${enchantment.key().value()}")
-                            itemBuilder.addEnchantment(enchantment, level)
-                            continue
+                        val split = enchantments.next().split(":")
+                        val enchantment = split[0]
+                        val level = split[1]
+                        RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(Key.key(enchantment))?.let {
+                            itemBuilder.addEnchantment(it, level.toInt())
                         }
                     }
                 }

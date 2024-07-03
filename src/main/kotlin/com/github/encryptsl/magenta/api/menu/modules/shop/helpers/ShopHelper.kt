@@ -7,7 +7,9 @@ import org.bukkit.Bukkit
 object ShopHelper {
     @JvmStatic
     fun giveRewards(commands: List<String>, username: String, quantity: Int) {
-        commands.forEach { command ->
+        val iterator = commands.iterator()
+        while (iterator.hasNext()) {
+            val command = iterator.next()
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
                 .replace("{player}", username)
                 .replace("%player%", username)
@@ -20,30 +22,27 @@ object ShopHelper {
     @JvmStatic
     fun reloadShopConfigs(magenta: Magenta) {
         val shopConfig = magenta.shopConfig.getConfig()
-        val shopCategories = shopConfig.getConfigurationSection("menu.categories")?.getKeys(false)
-
-        if (shopCategories != null) {
-            for (category in shopCategories) {
+        shopConfig.getConfigurationSection("menu.categories")?.getKeys(false)?.let {
+            for (category in it) {
                 val categoryConfig = UniversalConfig("${magenta.dataFolder}/menu/shop/categories/$category.yml")
                 if (!categoryConfig.exists()) continue
 
                 categoryConfig.reload()
                 categoryConfig.save()
             }
-            magenta.logger.info("VaultShop are reloaded with ${shopCategories.size} configs !")
+            magenta.logger.info("VaultShop are reloaded with ${it.size} configs !")
         }
-        
+
         val creditConfig = magenta.creditShopConfig.getConfig()
-        val creditShopCategories = creditConfig.getConfigurationSection("menu.categories")?.getKeys(false)
-        if (creditShopCategories != null) {
-            for (category in creditShopCategories) {
+        creditConfig.getConfigurationSection("menu.categories")?.getKeys(false)?.let {
+            for (category in it) {
                 val categoryConfig = UniversalConfig("${magenta.dataFolder}/menu/creditshop/categories/$category.yml")
                 if (!categoryConfig.exists()) continue
 
                 categoryConfig.reload()
                 categoryConfig.save()
             }
-            magenta.logger.info("CreditShop are reloaded with ${creditShopCategories.size} configs !")
+            magenta.logger.info("CreditShop are reloaded with ${it.size} configs !")
         }
     }
 }
