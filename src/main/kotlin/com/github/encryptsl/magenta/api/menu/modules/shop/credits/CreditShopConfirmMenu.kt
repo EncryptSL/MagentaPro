@@ -40,7 +40,7 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         menuUI.useAllFillers(gui, magenta.creditShopConfirmMenuConfig.getConfig())
         confirmPay(item, category, gui, creditShop, categoryConfig, creditShopPaymentMethod, displayName, isBuyAllowed)
         cancelPay(category, gui, creditShop)
-        close(player, gui, magenta.creditShopConfirmMenuConfig.getConfig())
+        close(player, gui, magenta.creditShopConfirmMenuConfig.getConfig(), creditShop)
 
         gui.open(player)
     }
@@ -115,9 +115,9 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         }
     }
 
-    private fun close(player: Player, gui: Gui, fileConfiguration: FileConfiguration) {
+    private fun close(player: Player, gui: Gui, fileConfiguration: FileConfiguration, creditShop: CreditShop) {
         for (material in Material.entries) {
-            menuUI.closeMenuOrBack(player, material, gui, fileConfiguration, null)
+            menuUI.closeMenuOrBack(player, material, gui, fileConfiguration, creditShop)
         }
     }
 

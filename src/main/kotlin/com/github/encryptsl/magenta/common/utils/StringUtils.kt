@@ -1,4 +1,3 @@
-@file:Suppress("DEPRECATION")
 package com.github.encryptsl.magenta.common.utils
 
 import com.github.encryptsl.magenta.Magenta
@@ -18,7 +17,7 @@ class StringUtils(private val magenta: Magenta) {
             .replace("{level}", getLevel.level.toString())
             .replace("{exp}", getLevel.experience.toString())
             .replace("{votes}", magenta.vote.getUserVotesByUUID(player.uniqueId).join().toString())
-            .replace("{money}", magenta.vaultHook.getBalance(player).toString())
+            .replace("{money}", magenta.vaultUnlockedHook.getBalance(player).toString())
             .replace("{value}", value.toString())
 
         return evaluate(expressFormula).toInt().toString()

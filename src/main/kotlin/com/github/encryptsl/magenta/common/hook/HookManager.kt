@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.common.hook
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import com.github.encryptsl.magenta.common.hook.miniplaceholder.MagentaMiniPlaceholders
 import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobsListener
@@ -9,7 +8,6 @@ import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.oraxen.OraxenListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
 import com.github.encryptsl.magenta.common.hook.plugins.vaultunlocked.VaultUnlockedHook
-import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import org.bukkit.Bukkit
 
 class HookManager(private val magenta: Magenta) {
@@ -36,20 +34,10 @@ class HookManager(private val magenta: Magenta) {
         }.runIfElse {
             magenta.logger.warning("LuckPerms not found please use vault plugin.")
         }
-        VaultHook(magenta).runIfSuccess {
-            magenta.logger.info("Vault found hook success !")
-        }.runIfElse {
-            magenta.logger.warning("Vault not found, please download !")
-        }
         VaultUnlockedHook(magenta).runIfSuccess {
             magenta.logger.info("VaultUnlocked found hook success !")
         }.runIfElse {
             magenta.logger.warning("VaultUnlocked not found, please download !")
-        }
-        CreditLiteHook(magenta).runIfSuccess {
-            magenta.logger.info("CreditLite found hook success !")
-        }.runIfElse {
-            magenta.logger.warning("CreditLite not found, you can't use credit economy !")
         }
         MagentaMiniPlaceholders(magenta).runIfSuccess {
             magenta.logger.info("MiniPlaceholders found, placeholders are registered !")

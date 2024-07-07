@@ -56,7 +56,7 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
             if (!magenta.config.contains("jobs.hunter") || !magenta.config.contains("jobs.hunter.earn_money")) return
 
             val earnMoney = magenta.config.getDouble("halloween.reward_multiplier").times(magenta.config.getDouble("jobs.hunter.earn_money", 5.0))
-            val transaction = EconomyDeposit(player, BigDecimal.valueOf(earnMoney)).transaction(magenta.vaultHook) ?: return
+            val transaction = EconomyDeposit(player, price = BigDecimal.valueOf(earnMoney)).transaction(magenta.vaultUnlockedHook) ?: return
 
             if (transaction == EconomyTransactionResponse.SUCCESS) {
                 player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.hunter.earn_bar").toString(),

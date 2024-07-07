@@ -144,7 +144,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
        val itemStack = magenta.itemFactory.shopItem(material, counts, itemName)
 
        vaultShopPaymentMethods.buy(player, EconomyDataPayment(
-           Product(itemStack, itemStack.displayName(), buyPrice, counts)), isBuyAllowed, commands)
+           Product(itemStack, itemStack.displayName(), buyPrice.times(counts.toBigDecimal()), counts)), isBuyAllowed, commands)
    }
 
 
@@ -160,7 +160,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
        val itemStack = magenta.itemFactory.shopItem(material, counts, itemName)
 
        vaultShopPaymentMethods.sell(player, EconomyDataPayment(
-           Product(itemStack, itemStack.displayName(), sellPrice, counts)), isSellAllowed, commands)
+           Product(itemStack, itemStack.displayName(), sellPrice.times(counts.toBigDecimal()), counts)), isSellAllowed, commands)
    }
 
    private fun getShopProduct(

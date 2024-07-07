@@ -19,7 +19,8 @@ class VaultShopPaymentMethods(private val magenta: Magenta)  {
     ) {
         val economyUniversalBuilder = EconomyUniversalBuilder(player)
 
-        val withdraw = EconomyWithdraw(player, holder.product.productPrice).transaction(magenta.vaultHook) ?: EconomyWithdraw(player, holder.product.productPrice).transaction(magenta.vaultUnlockedHook) ?: return
+        val withdraw = EconomyWithdraw(player,  "dollars", holder.product.productPrice)
+            .transaction(magenta.vaultUnlockedHook) ?: return
 
         economyUniversalBuilder.setEconomyProvider(withdraw).setEconomyIntegration(EconomyVaultIntegration(
             magenta, "magenta.shop.success.buy", EconomyPaymentAction.BUY, holder, commands
@@ -34,7 +35,7 @@ class VaultShopPaymentMethods(private val magenta: Magenta)  {
     ) {
         val economyUniversalBuilder = EconomyUniversalBuilder(player)
 
-        val deposit = EconomyDeposit(player, holder.product.productPrice).transaction(magenta.vaultHook) ?: EconomyDeposit(player, holder.product.productPrice).transaction(magenta.vaultHook) ?: return
+        val deposit = EconomyDeposit(player, "dollars", holder.product.productPrice).transaction(magenta.vaultUnlockedHook) ?: return
 
         economyUniversalBuilder.setEconomyProvider(deposit).setEconomyIntegration(EconomyVaultIntegration(
             magenta, "magenta.shop.success.sell", EconomyPaymentAction.SELL, holder, commands

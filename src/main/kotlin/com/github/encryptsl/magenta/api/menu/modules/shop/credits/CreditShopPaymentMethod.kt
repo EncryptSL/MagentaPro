@@ -5,7 +5,7 @@ import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.modules.shop.Product
-import com.github.encryptsl.magenta.common.hook.creditlite.CreditLiteHook
+import com.github.encryptsl.magenta.common.hook.plugins.vaultunlocked.VaultUnlockedHook
 import net.kyori.adventure.text.Component
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
@@ -27,7 +27,7 @@ class CreditShopPaymentMethod(private val magenta: Magenta) {
 
         val product: EconomyDataPayment<Product> = EconomyDataPayment(Product(itemStack, displayName, price, quantity))
 
-        val withdraw = EconomyWithdraw(player, product.product.productPrice).transaction(CreditLiteHook(magenta)) ?: return
+        val withdraw = EconomyWithdraw(player, "credits", product.product.productPrice).transaction(VaultUnlockedHook(magenta)) ?: return
 
         val economyUniversalBuilder = EconomyUniversalBuilder(player)
         economyUniversalBuilder.setEconomyProvider(withdraw).setEconomyIntegration(EconomyCreditIntegration(

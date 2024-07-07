@@ -12,6 +12,7 @@ class VaultUnlockedHook(private val magenta: Magenta) : PluginHook("Vault"), Eco
 
     private var eco: net.milkbowl.vault2.economy.Economy? = null
     private val exception = magenta.locale.getMessage("magenta.missing.vault.economy")
+    private val pluginName = magenta.name
 
     override fun isPluginEnabled(): Boolean {
         if (magenta.pluginManager.getPlugin("Vault") != null) {
@@ -26,32 +27,32 @@ class VaultUnlockedHook(private val magenta: Magenta) : PluginHook("Vault"), Eco
         return false
     }
 
-    override fun hasBalance(player: OfflinePlayer, value: BigDecimal): Boolean {
+    override fun hasBalance(player: OfflinePlayer, currency: String, value: BigDecimal): Boolean {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        return eco!!.has(null, player.uniqueId, value)
+        return eco!!.has(pluginName, player.uniqueId, null, currency, value)
     }
 
 
-    override fun deposit(player: OfflinePlayer, value: BigDecimal) {
+    override fun deposit(player: OfflinePlayer, currency: String, value: BigDecimal) {
         if (!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        eco!!.deposit(null, player.uniqueId, value)
+        eco!!.deposit(pluginName, player.uniqueId, null, currency, value)
     }
 
-    override fun withdraw(player: OfflinePlayer, value: BigDecimal) {
+    override fun withdraw(player: OfflinePlayer, currency: String, value: BigDecimal) {
         if (!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        eco!!.withdraw(null, player.uniqueId, value)
+        eco!!.withdraw(pluginName, player.uniqueId, null, currency, value)
     }
 
-    override fun getBalance(player: OfflinePlayer): BigDecimal {
+    override fun getBalance(player: OfflinePlayer, currency: String): BigDecimal {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
-        return eco!!.getBalance(null, player.uniqueId)
+        return eco!!.getBalance(pluginName, player.uniqueId, null, currency)
     }
 }

@@ -72,7 +72,7 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
 
             val defaultEarnMoney = magenta.config.getDouble("jobs.miner.earn_money", 408.0)
             val moneyEarned = if (isHalloweenSeason()) magenta.config.getDouble("halloween.reward_multiplier") * defaultEarnMoney else defaultEarnMoney
-            val transaction = EconomyDeposit(player, BigDecimal.valueOf(moneyEarned)).transaction(magenta.vaultHook) ?: return
+            val transaction = EconomyDeposit(player, price = BigDecimal.valueOf(moneyEarned)).transaction(magenta.vaultUnlockedHook) ?: return
 
             if (transaction == EconomyTransactionResponse.SUCCESS) {
                 player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.earn_bar").toString(),
