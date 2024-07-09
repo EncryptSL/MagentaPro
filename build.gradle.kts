@@ -58,6 +58,7 @@ dependencies {
     implementation("io.github.miniplaceholders:miniplaceholders-kotlin-ext:2.2.3")
     testImplementation(kotlin("test"))
     testImplementation("org.bspfsystems:yamlconfiguration:2.0.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
 }
 
 sourceSets {

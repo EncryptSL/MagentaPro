@@ -1,8 +1,8 @@
 package com.github.encryptsl.magenta.common.tasks
 
+import com.github.encryptsl.kmono.lib.extensions.formatFromSecondsTime
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailPardonEvent
-import com.github.encryptsl.magenta.common.extensions.formatFromSecondsTime
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 import org.bukkit.Sound

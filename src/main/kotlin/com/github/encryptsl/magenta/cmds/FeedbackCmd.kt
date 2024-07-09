@@ -5,9 +5,9 @@ import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.specifier.Greedy
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
+import com.github.encryptsl.kmono.lib.extensions.now
 import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.extensions.now
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

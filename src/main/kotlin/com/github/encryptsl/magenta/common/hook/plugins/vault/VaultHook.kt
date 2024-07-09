@@ -26,28 +26,28 @@ class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), com.github.
         return false
     }
 
-    override fun hasBalance(player: OfflinePlayer, value: BigDecimal): Boolean {
+    override fun hasBalance(player: OfflinePlayer, currency: String, value: BigDecimal): Boolean {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
         return eco!!.has(player, value.toDouble())
     }
 
-    override fun deposit(player: OfflinePlayer, value: BigDecimal) {
+    override fun deposit(player: OfflinePlayer, currency: String, value: BigDecimal) {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
         eco!!.depositPlayer(player, value.toDouble())
     }
 
-    override fun withdraw(player: OfflinePlayer, value: BigDecimal) {
+    override fun withdraw(player: OfflinePlayer, currency: String, value: BigDecimal) {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 
         eco!!.withdrawPlayer(player, value.toDouble())
     }
 
-    override fun getBalance(player: OfflinePlayer): BigDecimal {
+    override fun getBalance(player: OfflinePlayer, currency: String): BigDecimal {
         if(!isPluginEnabled())
             throw MissingEconomyException(exception)
 

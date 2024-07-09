@@ -2,11 +2,11 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.config.locale.Locale
+import com.github.encryptsl.kmono.lib.extensions.datetime
 import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
-import com.github.encryptsl.magenta.common.extensions.datetime
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component

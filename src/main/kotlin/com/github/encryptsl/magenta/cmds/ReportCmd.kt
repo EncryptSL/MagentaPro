@@ -6,10 +6,10 @@ import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.spec
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.suggestion.Suggestion
+import com.github.encryptsl.kmono.lib.extensions.now
 import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.report.ReportCategories
-import com.github.encryptsl.magenta.common.extensions.now
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
