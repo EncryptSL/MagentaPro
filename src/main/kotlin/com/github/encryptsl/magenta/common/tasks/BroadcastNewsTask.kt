@@ -34,12 +34,5 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
             Audience.audience(Bukkit.getOnlinePlayers())
                 .sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", message)))
         }
-
-        if (magenta.config.getBoolean("news.options.broadcast")) {
-            Audience.audience(Bukkit.getOnlinePlayers()).sendMessage(
-                ModernText.miniModernText(
-                format, Placeholder.parsed("message", message)
-            ))
-        }
     }
 }

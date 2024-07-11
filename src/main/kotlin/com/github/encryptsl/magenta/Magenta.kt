@@ -179,7 +179,11 @@ open class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        scheduler.impl.runTimer(BroadcastNewsTask(this), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(), Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong())
+        scheduler.impl.runTimer(
+            BroadcastNewsTask(this),
+            Tick.tick().fromDuration(Duration.ofMinutes(config.getLong("news.delay"))).toLong(),
+            Tick.tick().fromDuration(Duration.ofSeconds(config.getLong("news.period", 10))).toLong()
+        )
         scheduler.impl.runTimer(JailCountDownTask(this), 20, 20)
         scheduler.impl.runTimer(LevelUpTask(this), 20, 1)
     }

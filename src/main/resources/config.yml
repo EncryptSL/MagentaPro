@@ -188,9 +188,9 @@ news:
 # You can set your custom delay between next message.
 # delay is based on minutes.
   delay: 5
+  period: 10
 
   options:
-    broadcast: false
     actionbar: true
 
 # There you can set your messages, for broadcast

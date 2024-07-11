@@ -21,6 +21,7 @@ interface Account {
     fun resetDelay(type: String)
     fun setJailTimeout(seconds: Long)
     fun setOnlineTime(millis: Long)
+    fun forceVanish()
     fun save()
     fun isJailed(): Boolean
     fun isSocialSpy(): Boolean

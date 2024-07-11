@@ -53,7 +53,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         }
 
         safeFly(player)
-        magenta.commandHelper.doVanish(user)
+        user.forceVanish()
 
         magenta.earnBlocksProgressManager.syncInitData(player.uniqueId, user.getAccount().getInt("mined.blocks", 0))
 

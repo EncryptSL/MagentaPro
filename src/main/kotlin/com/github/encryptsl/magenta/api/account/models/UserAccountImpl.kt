@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.api.account.models
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.Permissions
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.time.Duration
 import java.time.Instant
@@ -35,6 +37,18 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
         getAccount().set("timestamps.logout", System.currentTimeMillis())
         saveLastLocation(player)
         save()
+    }
+
+    override fun forceVanish() {
+        for (onlinePlayers in Bukkit.getOnlinePlayers()) {
+            if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) continue
+            if (isVanished()) {
+                getPlayer()?.let {
+                    onlinePlayers.hidePlayer(Magenta.instance, it)
+                    onlinePlayers.unlistPlayer(it)
+                }
+            }
+        }
     }
 
     override fun addToIgnore(uuid: UUID) {
