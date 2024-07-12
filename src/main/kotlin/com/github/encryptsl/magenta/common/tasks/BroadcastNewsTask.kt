@@ -10,6 +10,7 @@ import java.util.*
 class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
 
     override fun run() {
+        if (!magenta.config.getBoolean("news.enable", false)) return
         if (!magenta.config.contains("news")) return
         if (magenta.newsQueueManager.isQueueEmpty()) return
 
@@ -33,6 +34,10 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
         if (magenta.config.getBoolean("news.options.actionbar")) {
             Audience.audience(Bukkit.getOnlinePlayers())
                 .sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", message)))
+        }
+        if (magenta.config.getBoolean("news.options.broadcast")) {
+            Audience.audience(Bukkit.getOnlinePlayers())
+                .sendMessage(ModernText.miniModernText(format, Placeholder.parsed("message", message)))
         }
     }
 }

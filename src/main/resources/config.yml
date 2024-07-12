@@ -177,21 +177,24 @@ msg:
 #                   Broadcast news                      #
 #########################################################
 news:
-# You can set custom prefix for your broadcast scheduled
-# messages, format supporting minimessage.
+  enable: false
+
+  # You can set custom prefix for your broadcast scheduled
+  # messages, format supporting minimessage.
   format: '<gray>[</gray><red>TIP<gray>]</gray> <message>'
 
-# Random is settings for selecting messages from list
-# randomized based on size in list and random number.
+  # Random is settings for selecting messages from list
+  # randomized based on size in list and random number.
   random: true
 
-# You can set your custom delay between next message.
-# delay is based on minutes.
-  delay: 5
+  # You can set your custom delay between next message.
+  # delay is based on seconds.
+  delay: 30
   period: 10
 
   options:
     actionbar: true
+    broadcast: false
 
 # There you can set your messages, for broadcast
 # Messages supporting base
