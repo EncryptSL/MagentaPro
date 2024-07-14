@@ -151,7 +151,12 @@ class MenuUI(private val magenta: Magenta) {
             val glowing = config.getBoolean("menu.custom-items.$item.options.glowing")
             val lore = config.getStringList("menu.custom-items.$item.lore")
 
-            gui.setItem(slot, ItemBuilder.from(magenta.itemFactory.item(material, itemName, lore, glowing)).asGuiItem())
+            gui.setItem(slot, ItemBuilder.from(
+                ItemCreator(material)
+                    .setName(ModernText.miniModernText(itemName))
+                    .setGlowing(glowing)
+                    .addLore(lore.map { ModernText.miniModernText(it) }.toMutableList()).create()
+            ).asGuiItem())
         }
     }
 

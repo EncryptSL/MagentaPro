@@ -60,19 +60,5 @@ class TpaManager(private val magenta: Magenta) {
         magenta.playerCacheManager.teleportRequest.asMap().remove(player.uniqueId)
     }
 
-    /*
-    fun killRequest(player: Player) {
-        if (!magenta.playerCacheManager.teleportRequest.asMap().containsKey(player.uniqueId)) return
-
-        val expire = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
-        expire?.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.expired"))
-        PlayerBuilderAction
-            .player(player)
-            .message(magenta.locale.translation("magenta.command.tpa.error.request.expired.to",
-                Placeholder.parsed("player", Bukkit.getOfflinePlayer(UUID.fromString(magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId].toString())).name.toString())
-            )).sound("block.note_block.bass", 1.5F, 1.5F)
-        magenta.playerCacheManager.teleportRequest.asMap().remove(player.uniqueId)
-    }*/
-
     data class TpaRequest(val from: UUID, val to: UUID)
 }

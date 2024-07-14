@@ -14,6 +14,6 @@ abstract class HalloweenAPI : Halloween {
 
     override fun isHalloweenDay(): Boolean {
         val localDate: LocalDate = LocalDate.now()
-        return localDate.getMonthValue() == 10 && localDate.getDayOfMonth() == 31
+        return localDate.monthValue == 10 && localDate.dayOfMonth == 31
     }
 }

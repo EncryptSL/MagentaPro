@@ -12,12 +12,6 @@ import org.bukkit.inventory.ItemStack
 import java.math.BigDecimal
 
 class ItemFactory {
-    fun item(material: Material, itemName: String, lores: List<String>, glowing: Boolean): ItemStack {
-        return ItemCreator(material, 1)
-            .setName(ModernText.miniModernText(itemName))
-            .setGlowing(glowing)
-            .addLore(lores.map { ModernText.miniModernText(it) }.toMutableList()).create()
-    }
 
     fun shopItem(
         itemName: String,
@@ -95,13 +89,4 @@ class ItemFactory {
 
         return itemBuilder.create()
     }
-
-    fun shopItem(material: Material, name: String): ItemStack {
-        return ItemCreator(material, 1).setName(ModernText.miniModernText(name)).create()
-    }
-
-    fun shopItem(material: Material, amount: Int, name: String): ItemStack {
-        return ItemCreator(material, amount).setName(ModernText.miniModernText(name)).create()
-    }
-
 }

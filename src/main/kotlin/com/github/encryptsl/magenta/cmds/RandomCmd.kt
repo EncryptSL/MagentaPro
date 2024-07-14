@@ -6,7 +6,7 @@ import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.suggestion.Suggestion
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.extensions.console
+import com.github.encryptsl.magenta.common.extensions.sendConsoleCommand
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
@@ -43,7 +43,7 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         val randomKey = tickets.random().replace("%amount%", amount.toString())
         magenta.logger.info("Hráč ${target.name} dostal náhodnou vstupenku !")
 
-        console(randomKey, target)
+        sendConsoleCommand(randomKey, target)
 
         target.sendMessage(magenta.locale.translation("magenta.command.random.world.ticket.success.player",
             Placeholder.parsed("amount", amount.toString())
@@ -65,14 +65,14 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         val tags: List<String> = magenta.randomConfig.getConfig().getStringList("tags.$type")
         val randomTag = tags.random()
         if (!target.hasPermission(randomTag)) {
-            console("lp user %player% permission set $randomTag", target)
+            sendConsoleCommand("lp user %player% permission set $randomTag", target)
             return target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
                 Placeholder.parsed("category", type)
             ))
         }
 
         magenta.logger.info("Hráč ${target.name} již $randomTag oprávnění vlastní proto mu byl nabídnut jiný tag !")
-        console("lp user %player% permission set $randomTag", target)
+        sendConsoleCommand("lp user %player% permission set $randomTag", target)
         target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
             Placeholder.parsed("category", type)
         ))

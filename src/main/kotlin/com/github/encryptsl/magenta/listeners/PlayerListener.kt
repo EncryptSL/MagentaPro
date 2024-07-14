@@ -8,7 +8,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.jail.JailCheckEvent
 import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
-import com.github.encryptsl.magenta.common.extensions.console
+import com.github.encryptsl.magenta.common.extensions.sendConsoleCommand
 import com.github.encryptsl.magenta.common.model.VoucherManager
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -43,7 +43,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
 
-        if (!magenta.config.getString("custom-join-message").equals("none", ignoreCase = true)) {
+        if (!magenta.config.getString("custom-join-message").equals("none", true)) {
             if (user.isVanished())
                 event.joinMessage(null)
             else
@@ -105,7 +105,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         val player = event.player
         val user = magenta.user.getUser(player.uniqueId)
 
-        if (!magenta.config.getString("custom-quit-message").equals("none", ignoreCase = true)) {
+        if (!magenta.config.getString("custom-quit-message").equals("none", true)) {
             if (user.isVanished())
                 event.quitMessage(null)
             else
@@ -171,7 +171,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
         if (event.action.isRightClick) {
             val command = magenta.vouchers.getConfig().getString(("vouchers." + voucher) + ".command").toString()
-            console(command, player)
+            sendConsoleCommand(command, player)
             if (itemInHand.amount > 1) {
                 itemInHand.amount -= 1
             } else {

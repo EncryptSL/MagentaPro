@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.api.menu.modules.shop.vault
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
 import com.github.encryptsl.kmono.lib.api.economy.models.EconomyDataPayment
+import com.github.encryptsl.kmono.lib.utils.ItemCreator
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
@@ -51,7 +52,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
 
             val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
             val item = ItemBuilder.from(
-                magenta.itemFactory.shopItem(material, name)
+                ItemCreator(material, 1).setName(ModernText.miniModernText(name)).create()
             ).asGuiItem { context ->
                 return@asGuiItem openCategory(context.whoClicked as Player, category)
             }
@@ -141,7 +142,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
        isBuyAllowed: Boolean
    ) {
 
-       val itemStack = magenta.itemFactory.shopItem(material, counts, itemName)
+       val itemStack = ItemCreator(material, counts).setName(ModernText.miniModernText(itemName)).create()
 
        vaultShopPaymentMethods.buy(player, EconomyDataPayment(
            Product(itemStack, itemStack.displayName(), buyPrice.times(counts.toBigDecimal()), counts)), isBuyAllowed, commands)
@@ -157,7 +158,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
        commands: List<String>,
        isSellAllowed: Boolean
    ) {
-       val itemStack = magenta.itemFactory.shopItem(material, counts, itemName)
+       val itemStack = ItemCreator(material, counts).setName(ModernText.miniModernText(itemName)).create()
 
        vaultShopPaymentMethods.sell(player, EconomyDataPayment(
            Product(itemStack, itemStack.displayName(), sellPrice.times(counts.toBigDecimal()), counts)), isSellAllowed, commands)

@@ -40,7 +40,7 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
     }
 
     override fun forceVanish() {
-        for (onlinePlayers in Bukkit.getOnlinePlayers()) {
+        for (onlinePlayers in Bukkit.getOnlinePlayers().filter { p -> p != getPlayer() }) {
             if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) continue
             if (isVanished()) {
                 getPlayer()?.let {

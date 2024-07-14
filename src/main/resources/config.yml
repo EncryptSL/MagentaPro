@@ -187,17 +187,20 @@ news:
   # randomized based on size in list and random number.
   random: true
 
+  # Show Time is in seconds
+  show_time: 3
+
   # You can set your custom delay between next message.
   # delay is based on seconds.
   delay: 30
-  period: 10
+  period: 1
 
   options:
     actionbar: true
     broadcast: false
 
-# There you can set your messages, for broadcast
-# Messages supporting base
+  # There you can set your messages, for broadcast
+  # Messages supporting base
   messages:
     - <gray>Podpoř server zakoupením výhod napiš /vip !
     - <color:#05B5FC>Ještě jsi nehlasoval ?</color>, <color:#69D0FA>Napiš /vote !</color>
