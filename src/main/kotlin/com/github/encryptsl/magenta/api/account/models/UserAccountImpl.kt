@@ -40,12 +40,20 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
     }
 
     override fun forceVanish() {
+        if (!Magenta.instance.config.getBoolean("vanish_on_join")) return
+
+        if (isVanished() && getPlayer()?.hasPermission(Permissions.VANISH_USE) != true) {
+            set("vanished", false)
+            return
+        }
+
         for (onlinePlayers in Bukkit.getOnlinePlayers().filter { p -> p != getPlayer() }) {
-            if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) continue
-            if (isVanished()) {
-                getPlayer()?.let {
-                    onlinePlayers.hidePlayer(Magenta.instance, it)
-                    onlinePlayers.unlistPlayer(it)
+            if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) {
+                if (isVanished()) {
+                    getPlayer()?.let {
+                        onlinePlayers.hidePlayer(Magenta.instance, it)
+                        onlinePlayers.unlistPlayer(it)
+                    }
                 }
             }
         }

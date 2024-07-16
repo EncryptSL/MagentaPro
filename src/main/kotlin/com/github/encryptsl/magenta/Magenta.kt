@@ -26,6 +26,7 @@ import com.github.encryptsl.magenta.common.model.*
 import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.tasks.LevelUpTask
+import com.github.encryptsl.magenta.common.tasks.VanishAnnouncerTask
 import com.github.encryptsl.magenta.common.utils.AfkUtils
 import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
@@ -186,6 +187,7 @@ open class Magenta : JavaPlugin() {
         )
         scheduler.impl.runTimer(JailCountDownTask(this), 20, 20)
         scheduler.impl.runTimer(LevelUpTask(this), 20, 1)
+        scheduler.impl.runTimer(VanishAnnouncerTask(this), 20, 40)
     }
 
     private fun handlerListener() {

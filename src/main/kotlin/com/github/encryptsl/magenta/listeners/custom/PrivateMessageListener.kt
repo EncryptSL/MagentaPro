@@ -25,9 +25,8 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
         if (commandSender.name == receiver.name)
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error.yourself"))
 
-        val receiverUser = magenta.user.getUser(receiver.uniqueId)
-
         if (commandSender is Player) {
+            val receiverUser = magenta.user.getUser(receiver.uniqueId)
             val whisper = magenta.user.getUser(commandSender.uniqueId)
 
             val receiverHasBlockedWhisper = receiverUser.isPlayerIgnored(commandSender.uniqueId)

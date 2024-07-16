@@ -7,7 +7,6 @@ import java.util.concurrent.CompletableFuture
 class MagentaVotePartyAPI(private val votePartyModel: VotePartyModel) : VotePartyAPI {
     override fun createTable() {
         if (getExistTable()) return
-
         votePartyModel.createTable()
     }
     override fun getExistTable(): Boolean {

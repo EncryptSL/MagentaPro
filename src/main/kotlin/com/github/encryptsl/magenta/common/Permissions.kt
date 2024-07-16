@@ -18,6 +18,8 @@ object Permissions {
     const val CHAT_FILTER_BYPASS_SWEAR: String = "magenta.chat.filter.bypass.swear"
     const val CHAT_FILTER_BYPASS_WEBSITES: String = "magenta.chat.filter.bypass.websites"
 
+    const val NEWS_VISIBLE_EXEMPT: String = "magenta.news.visible.exempt"
+
     const val SILKY_SPAWNER: String = "magenta.silkyspawner"
 
     const val SOCIAL_SPY: String = "magenta.social.spy"
@@ -59,5 +61,6 @@ object Permissions {
     const val PORTAL_BLACKLIST_BYPASS: String = "magenta.portal.blacklist.bypass"
 
     const val HOME_WHITELIST_EXEMPT: String = "magenta.home.whitelist.exempt"
+    const val VANISH_USE: String = "magenta.vanish"
     const val VANISH_EXEMPT: String = "magenta.vanish.exempt"
 }

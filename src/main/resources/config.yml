@@ -35,16 +35,26 @@ maxmind-url: "https://git.io/GeoLite2-Country.mmdb"
 # A list of users who can't be reported or ignored !
 exempt-blacklist: ["EncryptSL", "a_patress_o", "WZarek775"]
 
+# Cooldown in seconds for teleport commands, warps, tpa, and others..
 teleport-cooldown: 30
 
+# Cooldown in seconds for heal command.
 heal-cooldown: 60
 
+# Time to accept teleport request after expire.
 tpa-accept-cancellation: 120
 
 custom-join-message: "<gray>[<green>+<gray>] <gold><player> <gray>se připojil !"
 
 custom-quit-message: "<gray>[<red>-<gray>] <gold><player> <gray>se odpojil !"
 
+# Enable vanish, for users who have enabled vanish and have required.
+# Permission: mangenta.vanish
+vanish_on_join: false
+
+vanish_action_bar: '<green>Jsi aktuálně neviditelný [!]'
+
+# Enable online jail time, time is counted only when is player online !
 online-jail-time: true
 
 jail-info-format: |-
