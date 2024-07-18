@@ -6,12 +6,13 @@ import com.github.encryptsl.magenta.common.Permissions
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
-import java.util.concurrent.TimeUnit
 
 
-class BroadcastNewsTask(private val magenta: Magenta) {
+class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
 
-    fun run() {
+    private var timeTask = 0
+
+    override fun run() {
         if (!magenta.config.getBoolean("news.enable", false)) return
         if (!magenta.config.contains("news")) return
         if (magenta.newsQueueManager.isQueueEmpty()) return
@@ -19,36 +20,40 @@ class BroadcastNewsTask(private val magenta: Magenta) {
         val isRandomEnabled = magenta.config.getBoolean("news.random", false)
 
         val format = magenta.config.getString("news.format").toString()
-        when(isRandomEnabled) {
-            true -> {
-                sendBroadcastMessage(format, magenta.newsQueueManager.news.random())
-                sendActionBar(format)
-            }
-            false -> {
-                val poolMessage = magenta.newsQueueManager.news.poll()
-                sendBroadcastMessage(format, poolMessage)
-                magenta.newsQueueManager.enqueue(poolMessage)
-            }
-        }
+        sendActionBar(format, isRandomEnabled)
     }
 
-    private fun sendActionBar(format: String) {
+    private fun getMessage(): String {
+       val isRandomEnabled = magenta.config.getBoolean("news.random", false)
+        return if (isRandomEnabled) magenta.newsQueueManager.news.random() else magenta.newsQueueManager.news.poll()
+    }
+
+    private fun sendActionBar(format: String, isRandomEnable: Boolean) {
         if (magenta.config.getBoolean("news.options.actionbar")) {
-            val durationInSeconds = magenta.config.getInt("news.show_time")
-
-            val audience = Audience.audience(Bukkit.getOnlinePlayers()
-                .filter { p -> !magenta.user.getUser(p.uniqueId).isVanished() || !p.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
-
-           Magenta.scheduler.impl.runTimer(Runnable {
-                audience.sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", magenta.newsQueueManager.news.random())))
-           }, 0L, durationInSeconds.toLong(), TimeUnit.SECONDS)
-        }
-    }
-
-    private fun sendBroadcastMessage(format: String, message: String) {
-        if (magenta.config.getBoolean("news.options.broadcast")) {
-            Audience.audience(Bukkit.getOnlinePlayers().filter { !it.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
-                .sendMessage(ModernText.miniModernText(format, Placeholder.parsed("message", message)))
+            if (isRandomEnable) {
+                val durationInSeconds = magenta.config.getInt("news.show_time")
+                var currentMessage = getMessage()
+                val audience = Audience.audience(Bukkit.getOnlinePlayers()
+                    .filter { p -> !magenta.user.getUser(p.uniqueId).isVanished() || !p.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
+                if (timeTask >= durationInSeconds) {
+                    currentMessage = getMessage()
+                    timeTask = 0
+                }
+                audience.sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", currentMessage)))
+                timeTask++
+            } else {
+                val durationInSeconds = magenta.config.getInt("news.show_time")
+                var currentMessage = getMessage()
+                val audience = Audience.audience(Bukkit.getOnlinePlayers()
+                    .filter { p -> !magenta.user.getUser(p.uniqueId).isVanished() || !p.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
+                if (timeTask >= durationInSeconds) {
+                    currentMessage = getMessage()
+                    timeTask = 0
+                }
+                audience.sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", currentMessage)))
+                magenta.newsQueueManager.enqueue(currentMessage)
+                timeTask++
+            }
         }
     }
 }

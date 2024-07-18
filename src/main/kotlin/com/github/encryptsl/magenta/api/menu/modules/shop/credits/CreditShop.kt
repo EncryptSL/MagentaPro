@@ -11,6 +11,8 @@ import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import com.github.encryptsl.magenta.common.Permissions
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -32,8 +34,8 @@ class CreditShop(private val magenta: Magenta) : Menu {
         menuUI.useAllFillers(gui, magenta.creditShopConfig.getConfig())
 
         for (category in magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
-            val material = Material.entries.firstOrNull {
-                    el -> el.name.equals(magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString(), true)
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
+                    el ->  el.key().value().equals(magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString(), true)
             } ?: continue
 
             if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.name"))
@@ -54,7 +56,7 @@ class CreditShop(private val magenta: Magenta) : Menu {
             val glowing = magenta.creditShopConfig.getConfig().getBoolean("menu.categories.$category.glowing")
 
             val item = ItemBuilder.from(
-                createItem(material) {
+                createItem(material.createItemStack()) {
                     amount = 1
                     meta {
                         setNameComponent = ModernText.miniModernText(nameString)
@@ -103,7 +105,9 @@ class CreditShop(private val magenta: Magenta) : Menu {
 
         for (item in items) {
             if (!shopCategory.getConfig().contains("menu.items.$item")) continue
-            val material = Material.getMaterial(shopCategory.getConfig().getString("menu.items.$item.icon").toString()) ?: continue
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
+                    el ->  el.key().value().equals(shopCategory.getConfig().getString("menu.items.$item.icon").toString(), true)
+            } ?: continue
 
             if (!shopCategory.getConfig().contains("menu.items.$item.name"))
                 return player.sendMessage(
@@ -138,9 +142,8 @@ class CreditShop(private val magenta: Magenta) : Menu {
 
             val itemStack = magenta.itemFactory
                 .creditShopItem(
-                    player, material, itemName, quantity, buyPrice, glowing, hasOptions, isPotion, hasColor, color,
-                    magenta.creditShopConfig.getConfig().getStringList("menu.gui.item_lore"
-                    )
+                    player, material.createItemStack().type, itemName, quantity, buyPrice, glowing, hasOptions, isPotion, hasColor, color,
+                    magenta.creditShopConfig.getConfig().getStringList("menu.gui.item_lore")
                 )
             val guiItem = ItemBuilder.from(itemStack).asGuiItem { context ->
                 if (!magenta.creditShopConfig.getConfig().getBoolean("menu.gui.confirm_required")) {

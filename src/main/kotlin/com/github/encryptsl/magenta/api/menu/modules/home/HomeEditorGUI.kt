@@ -10,6 +10,9 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.Gui
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -41,7 +44,10 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         menu.useAllFillers(gui, magenta.homeEditorConfig.getConfig())
 
         for (el in menuSection) {
-            val material = Material.getMaterial(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()) ?: continue
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(
+                Key.key(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString())
+            ) ?: return
+
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el")) continue
 
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el.name"))
@@ -59,7 +65,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                     Placeholder.parsed("category", magenta.homeEditorConfig.getConfig().name)
                 ))
 
-            val itemStack = createItem(material) {
+            val itemStack = createItem(material.createItemStack()) {
                 amount = 1
                 meta {
                     setNameComponent = ModernText.miniModernText(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString())
@@ -123,7 +129,8 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
     ) {
         val itemName = fileConfiguration.getString("menu.icon.name")
 
-        val icons: Set<String> = fileConfiguration.getStringList("menu.icons").filter { m -> Material.getMaterial(m) != null }.map { it }.toSet()
+        val icons: Set<String> = fileConfiguration.getStringList("menu.icons")
+            .filter { m -> RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(m)) != null }.map { it }.toSet()
 
         if (clicked) return
 
@@ -144,10 +151,10 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         materialName: String,
         lore: MutableList<Component>
     ) {
-        val material = Material.getMaterial(materialName)!!
+        val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(materialName)) ?: return
         gui.addItem(
             ItemBuilder.from(
-                ItemCreator(material, 1)
+                ItemCreator(material.createItemStack().type, 1)
                     .setName(ModernText.miniModernText(itemName,
                         Placeholder.parsed("icon", materialName))
                     ).addLore(lore)

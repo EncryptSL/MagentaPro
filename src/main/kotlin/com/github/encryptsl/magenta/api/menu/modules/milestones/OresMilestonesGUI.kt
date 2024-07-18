@@ -6,6 +6,9 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
+import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -28,7 +31,7 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
         menuUI.useAllFillers(gui, magenta.milestonesOres.getConfig())
 
         for (key in section.withIndex()) {
-            val material = Material.getMaterial(key.value) ?: continue
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(key.value))?.createItemStack()?.type ?: continue
             val itemStack = ItemCreator(material, 1).setName(
                 ModernText.miniModernText(magenta.milestonesOres.getConfig().getString("menu.gui.item.display")
                     ?: player.name, Placeholder.parsed("item", material.name))

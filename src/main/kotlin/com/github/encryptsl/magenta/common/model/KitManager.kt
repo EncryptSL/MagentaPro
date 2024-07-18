@@ -23,7 +23,8 @@ class KitManager(private val magenta: Magenta) {
         if (!magenta.kitConfig.getConfig().contains("kits.$kitName"))
             throw KitNotFoundException(magenta.locale.getMessage("magenta.command.kit.error.not.exist"))
 
-        for (material in Material.entries) {
+        for (key in RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)) {
+            val material = key.createItemStack().type
             if (!magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) continue
 
             val count: Int = magenta.kitConfig.getConfig().getInt("kits.$kitName.items.${material.name.lowercase()}.amount", 1)

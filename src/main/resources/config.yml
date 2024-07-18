@@ -207,7 +207,6 @@ news:
 
   options:
     actionbar: true
-    broadcast: false
 
   # There you can set your messages, for broadcast
   # Messages supporting base
