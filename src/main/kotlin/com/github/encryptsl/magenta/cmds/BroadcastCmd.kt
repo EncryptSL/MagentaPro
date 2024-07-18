@@ -6,9 +6,10 @@ import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.spec
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.magenta.Magenta
-import net.kyori.adventure.text.Component
+import com.github.encryptsl.magenta.common.utils.ActionTitleManager
+import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import net.kyori.adventure.title.TitlePart
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 
 @Suppress("UNUSED")
@@ -40,7 +41,8 @@ class BroadcastCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandSender: CommandSender,
         @Greedy @Argument(value = "message") message: String,
     ) {
-        commandSender.server.sendTitlePart<Component>(TitlePart.TITLE, ModernText.miniModernText(magenta.config.getString("prefix").toString()))
-        commandSender.server.sendTitlePart<Component>(TitlePart.SUBTITLE, ModernText.miniModernText(message))
+        ActionTitleManager.sendTitleAndSubtitle(Audience.audience(Bukkit.getOnlinePlayers()),
+            ModernText.miniModernText(magenta.config.getString("prefix").toString()),
+            ModernText.miniModernText(message), 30, 30, 30)
     }
 }

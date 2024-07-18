@@ -32,11 +32,10 @@ import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
 import com.tcoded.folialib.FoliaLib
-import io.papermc.paper.util.Tick
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import java.time.Duration
 import java.util.concurrent.ThreadLocalRandom
+import java.util.concurrent.TimeUnit
 import kotlin.time.measureTime
 
 open class Magenta : JavaPlugin() {
@@ -180,10 +179,8 @@ open class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        scheduler.impl.runTimer(
-            BroadcastNewsTask(this),
-            Tick.tick().fromDuration(Duration.ofSeconds(config.getLong("news.delay"))).toLong(),
-            Tick.tick().fromDuration(Duration.ofSeconds(config.getLong("news.period", 1))).toLong()
+        scheduler.impl.runTimer(Runnable { BroadcastNewsTask(this).run() },
+            config.getLong("news.delay", 1), config.getLong("news.period", 1), TimeUnit.SECONDS
         )
         scheduler.impl.runTimer(JailCountDownTask(this), 20, 20)
         scheduler.impl.runTimer(LevelUpTask(this), 20, 1)

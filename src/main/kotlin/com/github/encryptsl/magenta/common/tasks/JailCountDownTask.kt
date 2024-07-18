@@ -10,18 +10,23 @@ import org.bukkit.Sound
 class JailCountDownTask(private val magenta: Magenta) : Runnable {
 
     override fun run() {
-        for (player in Bukkit.getOnlinePlayers()) {
-            val account = magenta.user.getUser(player.uniqueId)
-            val timeLeft = account.getRemainingJailTime()
-            if (account.hasPunish()) {
+        val jailedPlayers = Bukkit.getOnlinePlayers().filter { magenta.user.getUser(it.uniqueId).isJailed() }.map { magenta.user.getUser(it.uniqueId) }
+
+        val iterator = jailedPlayers.iterator()
+        while (iterator.hasNext()) {
+            val user = iterator.next()
+            val timeLeft = user.getRemainingJailTime()
+            val player = user.getPlayer()
+            if (user.hasPunish()) {
                 if (timeLeft == 0L) {
-                    magenta.pluginManager.callEvent(JailPardonEvent(player))
+                    magenta.pluginManager.callEvent(JailPardonEvent(user.getOfflinePlayer()))
                 }
-                account.setOnlineTime(timeLeft)
-                player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1.15f, 1.15f)
-                player.sendActionBar(magenta.locale.translation("magenta.command.jail.success.remaining",
-                    Placeholder.parsed("remaining", formatFromSecondsTime(timeLeft))
-                ))
+                user.setOnlineTime(timeLeft)
+                player?.let { it.playSound(it, Sound.BLOCK_NOTE_BLOCK_BASS, 1.15f, 1.15f) }
+                player?.sendActionBar(
+                    magenta.locale.translation("magenta.command.jail.success.remaining",
+                        Placeholder.parsed("remaining", formatFromSecondsTime(timeLeft)))
+                )
             }
         }
     }
