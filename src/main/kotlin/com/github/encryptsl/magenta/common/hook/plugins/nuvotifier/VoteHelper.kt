@@ -40,11 +40,13 @@ object VoteHelper {
         var timer = countdown
 
         Magenta.scheduler.impl.runTimer({ e ->
-            broadcastActionBar(
-                magenta.locale.translation("magenta.votifier.voteparty.broadcast",
-                    Placeholder.parsed("delay", timer.toString())
+            if (magenta.config.getIntegerList("votifier.voteparty.countdown_at").contains(timer)) {
+                broadcastActionBar(
+                    magenta.locale.translation("magenta.votifier.voteparty.broadcast",
+                        Placeholder.parsed("delay", timer.toString())
+                    )
                 )
-            )
+            }
 
             if (timer == 0) {
                 val players = Bukkit.getOnlinePlayers()
@@ -100,9 +102,11 @@ object VoteHelper {
 
     @JvmStatic
     fun giveRewards(players: Collection<Player>, commands: MutableList<String>) {
-        for (it in players) {
-            giveRewards(commands, it.name)
-            Bukkit.getPluginManager().callEvent(VotePartyEvent(it, Bukkit.getOnlinePlayers().size, datetime()))
+        val iterator = players.iterator()
+        while (iterator.hasNext()) {
+            val player = iterator.next()
+            giveRewards(commands, player.name)
+            Bukkit.getPluginManager().callEvent(VotePartyEvent(player, players.size, datetime()))
         }
     }
     @JvmStatic

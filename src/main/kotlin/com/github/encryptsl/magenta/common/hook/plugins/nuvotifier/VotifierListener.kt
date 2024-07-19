@@ -92,7 +92,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
         if (!magenta.config.contains("votifier.cumulative.${playerVotes}")) return
 
         if (magenta.config.contains("votifier.cumulative.${playerVotes}.broadcast")) {
-            VoteHelper.broadcast(magenta.locale, "votifier.cumulative.$playerVotes}.broadcast", player.name.toString(), serviceName)
+            VoteHelper.broadcast(magenta.locale, "votifier.cumulative.$playerVotes.broadcast", player.name.toString(), serviceName)
         }
         val rewards: MutableList<String> = magenta.config.getStringList("votifier.cumulative.${playerVotes}.rewards")
         val expressionFormula = expressionFormula(player, playerVotes)

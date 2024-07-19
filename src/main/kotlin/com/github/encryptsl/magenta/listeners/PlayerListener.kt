@@ -78,6 +78,10 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             return
         }
 
+        magenta.spawnConfig.getConfig().getLocation(magenta.config.getString("spawnpoint").toString())?.let {
+            player.teleportAsync(it)
+        }
+
         magenta.kitManager.giveKit(player, magenta.config.getString("newbies.kit").toString())
 
         Bukkit.broadcast(ModernText.miniModernText(magenta.config.getString("newbies.announcement").toString(), TagResolver.resolver(

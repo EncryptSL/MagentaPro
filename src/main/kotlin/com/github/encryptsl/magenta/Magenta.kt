@@ -23,7 +23,7 @@ import com.github.encryptsl.magenta.common.filter.ChatChecksManager
 import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.hook.plugins.vaultunlocked.VaultUnlockedHook
 import com.github.encryptsl.magenta.common.model.*
-import com.github.encryptsl.magenta.common.tasks.BroadcastNewsTask
+import com.github.encryptsl.magenta.common.tasks.ActionBarNewsTask
 import com.github.encryptsl.magenta.common.tasks.JailCountDownTask
 import com.github.encryptsl.magenta.common.tasks.LevelUpTask
 import com.github.encryptsl.magenta.common.tasks.VanishAnnouncerTask
@@ -83,6 +83,7 @@ open class Magenta : JavaPlugin() {
     val warpEditorConfig: UniversalConfig by lazy { UniversalConfig("${path}/menu/warp/editor/warp_editor.yml") }
     val chatControl: UniversalConfig by lazy { UniversalConfig("${path}/chatcontrol/filter.yml") }
     val oraxenControl: UniversalConfig by lazy { UniversalConfig("${path}/oraxen/config.yml") }
+    val spawnConfig: UniversalConfig by lazy { UniversalConfig("$path/spawn.yml") }
     val serverFeedback: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.server_feedback").toString()) }
     val notification: DiscordWebhook by lazy { DiscordWebhook(config.getString("discord.webhooks.notifications").toString()) }
     val jailManager: JailManager by lazy { JailManager(this) }
@@ -179,7 +180,7 @@ open class Magenta : JavaPlugin() {
     }
 
     private fun registerTasks() {
-        scheduler.impl.runTimer(Runnable { BroadcastNewsTask(this).run() },
+        scheduler.impl.runTimer(ActionBarNewsTask(this),
             config.getLong("news.delay", 1), config.getLong("news.period", 1), TimeUnit.SECONDS
         )
         scheduler.impl.runTimer(JailCountDownTask(this), 20, 20)

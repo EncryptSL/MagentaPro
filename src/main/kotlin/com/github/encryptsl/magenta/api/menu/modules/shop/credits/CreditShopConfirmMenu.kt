@@ -12,7 +12,6 @@ import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.Gui
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
-import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
@@ -58,7 +57,9 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         isBuyAllowed: Boolean
     ) {
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok")) {
-            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.icon").toString())) ?: return
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull { el ->
+                el.key().value().equals((magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_ok.icon").toString()), true)
+            } ?: return
 
             if (!magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_ok.name"))
                 return
@@ -92,9 +93,9 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
 
     private fun cancelPay(category: String, gui: Gui, creditShop: CreditShop) {
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no")) {
-            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(
-                magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()
-            )) ?: return
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull { el ->
+                el.key().value().equals((magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()), true)
+            } ?: return
 
             val itemStack = ItemCreator(material.createItemStack().type, 1)
 

@@ -139,6 +139,7 @@ class CommandManager(private val magenta: Magenta) {
                 ReportCmd(magenta),
                 ShopCmd(magenta),
                 SocialSpyCmd(magenta),
+                SpawnCmd(magenta),
                 SpawnerCmd(magenta),
                 TpCmd(magenta),
                 VanishCmd(magenta),

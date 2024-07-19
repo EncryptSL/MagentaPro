@@ -7,10 +7,10 @@ import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
 
+class ActionBarNewsTask(private val magenta: Magenta) : Runnable {
 
-class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
-
-    private var timeTask = 0
+    private var timeTask: Int = 0
+    private var currentMessage: String = magenta.newsQueueManager.news.random()
 
     override fun run() {
         if (!magenta.config.getBoolean("news.enable", false)) return
@@ -20,34 +20,26 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
         val isRandomEnabled = magenta.config.getBoolean("news.random", false)
 
         val format = magenta.config.getString("news.format").toString()
-        sendActionBar(format, isRandomEnabled)
-    }
-
-    private fun getMessage(): String {
-       val isRandomEnabled = magenta.config.getBoolean("news.random", false)
-        return if (isRandomEnabled) magenta.newsQueueManager.news.random() else magenta.newsQueueManager.news.poll()
-    }
-
-    private fun sendActionBar(format: String, isRandomEnable: Boolean) {
         if (magenta.config.getBoolean("news.options.actionbar")) {
-            if (isRandomEnable) {
+            if (isRandomEnabled) {
                 val durationInSeconds = magenta.config.getInt("news.show_time")
-                var currentMessage = getMessage()
-                val audience = Audience.audience(Bukkit.getOnlinePlayers()
-                    .filter { p -> !magenta.user.getUser(p.uniqueId).isVanished() || !p.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
+                val audience = Audience.audience(
+                    Bukkit.getOnlinePlayers()
+                        .filter { p -> !magenta.user.getUser(p.uniqueId).isVanished() || !p.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
                 if (timeTask >= durationInSeconds) {
-                    currentMessage = getMessage()
+                    currentMessage = magenta.newsQueueManager.news.random()
                     timeTask = 0
                 }
                 audience.sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", currentMessage)))
                 timeTask++
             } else {
                 val durationInSeconds = magenta.config.getInt("news.show_time")
-                var currentMessage = getMessage()
-                val audience = Audience.audience(Bukkit.getOnlinePlayers()
-                    .filter { p -> !magenta.user.getUser(p.uniqueId).isVanished() || !p.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
+                var currentMessage = magenta.newsQueueManager.news.poll()
+                val audience = Audience.audience(
+                    Bukkit.getOnlinePlayers()
+                        .filter { p -> !magenta.user.getUser(p.uniqueId).isVanished() || !p.hasPermission(Permissions.NEWS_VISIBLE_EXEMPT) })
                 if (timeTask >= durationInSeconds) {
-                    currentMessage = getMessage()
+                    currentMessage = magenta.newsQueueManager.news.poll()
                     timeTask = 0
                 }
                 audience.sendActionBar(ModernText.miniModernText(format, Placeholder.parsed("message", currentMessage)))
@@ -55,5 +47,6 @@ class BroadcastNewsTask(private val magenta: Magenta) : Runnable {
                 timeTask++
             }
         }
+
     }
 }

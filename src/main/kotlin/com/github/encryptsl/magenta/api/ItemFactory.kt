@@ -2,6 +2,7 @@ package com.github.encryptsl.magenta.api
 
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.utils.ItemCreator
+import com.github.encryptsl.magenta.Magenta
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Color
@@ -75,6 +76,7 @@ class ItemFactory {
             val lores = lore.map {
                 ModernText.miniModernText(player, it, TagResolver.resolver(
                     Placeholder.parsed("price", buyPrice.toString()),
+                    Placeholder.parsed("credits", Magenta.instance.vaultUnlockedHook.getBalance(player, "credits").toPlainString())
                 ))
             }.toMutableList()
             itemBuilder.addLore(lores)

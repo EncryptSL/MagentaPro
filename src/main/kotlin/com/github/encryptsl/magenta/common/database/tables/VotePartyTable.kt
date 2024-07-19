@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
 object VotePartyTable : Table("magenta_voteparty") {
     private val id = integer("id").autoIncrement()
-    val voteParty = varchar("party_name", 16)
+    val voteParty = varchar("party_name", 16).uniqueIndex()
     val currentVotes = integer("current_votes")
     val lastVoteParty: Column<Instant?> = timestamp("last_party").nullable()
     val lastWinnerOfParty = varchar("last_winner", 16).nullable()

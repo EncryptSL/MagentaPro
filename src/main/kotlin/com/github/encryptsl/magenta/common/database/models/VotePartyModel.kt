@@ -18,10 +18,12 @@ class VotePartyModel : VotePartySQL {
     private val fieldPartyName = "vote_party"
 
     override fun createTable() {
-        VotePartyTable.insert {
-            it[voteParty] = fieldPartyName
-            it[currentVotes] = 0
-            it[lastVoteParty] = null
+        transaction {
+            VotePartyTable.insert {
+                it[voteParty] = fieldPartyName
+                it[currentVotes] = 0
+                it[lastVoteParty] = null
+            }
         }
     }
 
@@ -62,9 +64,9 @@ class VotePartyModel : VotePartySQL {
     override fun getVoteParty(): CompletableFuture<VotePartyEntity> {
         val future = CompletableFuture<VotePartyEntity>()
         transaction {
-            val partyData = VotePartyTable.selectAll().firstOrNull()
+            val partyData = VotePartyTable.selectAll().where { VotePartyTable.voteParty eq fieldPartyName }.firstOrNull()
             if (partyData == null) {
-                future.completeExceptionally(RuntimeException("Vote Party not created or table is empty :'( !"))
+                future.completeExceptionally(Exception("Vote Party not created or table is empty :'( !"))
             } else {
                 future.completeAsync { VotePartyEntity(partyData[VotePartyTable.currentVotes], partyData[VotePartyTable.lastVoteParty]?.toEpochMilliseconds() ?: 0L, partyData[VotePartyTable.lastWinnerOfParty] ?: "NEVER") }
             }
