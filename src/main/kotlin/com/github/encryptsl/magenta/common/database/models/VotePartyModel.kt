@@ -27,10 +27,10 @@ class VotePartyModel : VotePartySQL {
         }
     }
 
-    override fun updateParty() {
+    override fun updateParty(vote: Int) {
         Magenta.scheduler.impl.runAsync {
             transaction { VotePartyTable.update({ VotePartyTable.voteParty eq fieldPartyName }) {
-                it[currentVotes] = currentVotes.plus(1)
+                it[currentVotes] = currentVotes.plus(vote)
             } }
         }
     }

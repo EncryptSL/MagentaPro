@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.listeners
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
 import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
+import com.github.encryptsl.kmono.lib.extensions.playSound
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -21,6 +22,24 @@ import java.math.BigDecimal
 import java.util.concurrent.ThreadLocalRandom
 
 class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
+
+    @EventHandler
+    fun onEntityFallDamage(event: EntityDamageEvent) {
+        if (event.entity is Player) {
+            val player: Player = event.entity as Player
+            if (!magenta.config.getBoolean("void_spawn.enable") || !magenta.stringUtils.inInList("void_spawn.worlds", player.world.name)) return
+
+            if (event.cause == EntityDamageEvent.DamageCause.VOID) {
+                magenta.spawnConfig.getConfig().getLocation("spawn")?.let {
+                    Magenta.scheduler.impl.teleportAsync(player, it).thenAccept {
+                        playSound(player, magenta.config.getString("void_spawn.sound").toString(), 5f, 1f)
+                    }
+                }
+                event.isCancelled = true
+            }
+        }
+    }
+
 
     @EventHandler
     fun onEntityAttack(event: EntityDamageByEntityEvent) {

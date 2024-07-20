@@ -106,11 +106,14 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
     private fun checkVoteParty(player: OfflinePlayer) {
         if (!magenta.config.contains("votifier.voteparty.rewards")) return
 
-        if (magenta.voteParty.getVoteParty().join().currentVotes != magenta.config.getInt("votifier.voteparty.start_at")) return
-
-        val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
-        magenta.pluginManager.callEvent(VotePartyPlayerStartedEvent(player.name.toString()))
-        VoteHelper.startVoteParty(magenta, rewards, magenta.config.getInt("votifier.voteparty.countdown"))
+        magenta.voteParty.getVoteParty().thenAccept {
+            if (it.currentVotes == magenta.config.getInt("votifier.voteparty.start_at")) {
+                val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
+                magenta.pluginManager.callEvent(VotePartyPlayerStartedEvent(player.name.toString()))
+                VoteHelper.startVoteParty(magenta, rewards)
+                magenta.logger.info("DEBUG: VoteParty started")
+            }
+        }
     }
 
     private fun addVote(p: OfflinePlayer, serviceName: String, timestamp: Long) {

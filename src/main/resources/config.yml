@@ -344,15 +344,15 @@ votifier:
 # If you need enable expression-rewarding you must add {expression_reward}
   expression-formula: '{money} * ({level} / 2) + {value}'
 
-# In services, you can set page where you have your server connected with votifier plugin.
-# services are represented by key services.$your_service, is name of responded from page.
-# services:
-#    default:
-#      service: default, is name of the service this is only for broadcast.
-#    rewards: are in list only working with commands placeholder is {player} replaced to real player name.
-#      - 'give {player} minecraft:experience_bottle 5'
-#    link: "<hover:show_text><click:open_url:'voting_url'>Vote awesome url click and vote</click></hover>"
-#    in link you can set <username> and this is a placeholder replaced to real player name.
+  # In services, you can set page where you have your server connected with votifier plugin.
+  # services are represented by key services.$your_service, is name of responded from page.
+  # services:
+  #    default:
+  #      service: default, is name of the service this is only for broadcast.
+  #    rewards: are in list only working with commands placeholder is {player} replaced to real player name.
+  #      - 'give {player} minecraft:experience_bottle 5'
+  #    link: "<hover:show_text><click:open_url:'voting_url'>Vote awesome url click and vote</click></hover>"
+  #    in link you can set <username> and this is a placeholder replaced to real player name.
   services:
     Czech-Craft_eu:
       link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/neveland/vote/?user=<username>'><bold><aqua>|</bold>
@@ -491,3 +491,18 @@ chat:
 
   group-formats:
   #  default: <gray><name> <dark_gray>» <white><message>
+
+#########################################################
+#                     Void Spawn                        #
+#########################################################
+void_spawn:
+  # This settings enable function called void spawn.
+  # While player fall into void, plugin teleport him back to spawn.
+  enable: true
+
+  # Sound is played when player is teleported back.
+  sound: 'entity.enderman.teleport'
+
+  # World list where is void spawn allowed.....
+  worlds:
+    - spawn

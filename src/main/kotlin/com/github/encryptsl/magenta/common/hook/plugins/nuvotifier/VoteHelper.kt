@@ -1,12 +1,10 @@
 package com.github.encryptsl.magenta.common.hook.nuvotifier
 
-import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.config.locale.Locale
 import com.github.encryptsl.kmono.lib.extensions.datetime
-import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
-import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerWinner
+import com.github.encryptsl.magenta.common.tasks.VotePartyTask
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -35,39 +33,8 @@ object VoteHelper {
     fun startVoteParty(
         magenta: Magenta,
         commands: MutableList<String>,
-        countdown: Int
     ) {
-        var timer = countdown
-
-        Magenta.scheduler.impl.runTimer({ e ->
-            if (magenta.config.getIntegerList("votifier.voteparty.countdown_at").contains(timer)) {
-                broadcastActionBar(
-                    magenta.locale.translation("magenta.votifier.voteparty.broadcast",
-                        Placeholder.parsed("delay", timer.toString())
-                    )
-                )
-            }
-
-            if (timer == 0) {
-                val players = Bukkit.getOnlinePlayers()
-                giveRewards(players, commands)
-                if (magenta.config.contains("votifier.voteparty.random")) {
-                    val player = players.random()
-                    giveRewards(magenta.config.getStringList("votifier.voteparty.random"), player.name)
-                    magenta.voteParty.partyFinished(player.name)
-                    magenta.pluginManager.callEvent(VotePartyPlayerWinner(player.name))
-                    magenta.notification.addEmbed {
-                        setTitle(WebhookEmbed.EmbedTitle("VoteParty", null))
-                        setThumbnailUrl(player.uniqueId.toMinecraftAvatar())
-                        setColor(0xa730c2)
-                        addField(WebhookEmbed.EmbedField(false, "Výherce", player.name))
-                    }?.let { magenta.notification.client.send(it) }
-                }
-                e.cancel()
-            }
-            broadcast(magenta.locale.translation("magenta.votifier.voteparty.success"))
-            timer--
-        }, 20, 20)
+        Magenta.scheduler.impl.runTimer(VotePartyTask(magenta, commands), 20, 20)
     }
 
     @JvmStatic

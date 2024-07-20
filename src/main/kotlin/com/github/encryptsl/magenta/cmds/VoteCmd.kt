@@ -94,7 +94,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         user.set("votifier.rewards", null)
     }
 
-    @Command("voteparty|vparty")
+    @Command("voteparty|vparty|vp")
     @Permission("magenta.voteparty")
     @CommandDescription("This command send information about vote party")
     fun onVoteParty(commandSender: CommandSender) {
@@ -113,6 +113,38 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("last_party", voteParty.lastVoteParty.toString()),
                 Placeholder.parsed("last_winner", voteParty.lastWinnerOfParty ?: "Nobody"),
             )))
+        }.exceptionally { ex ->
+            commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", ex.message ?: ex.localizedMessage)))
+            magenta.logger.severe(ex.message ?: ex.localizedMessage)
+        }
+    }
+
+    @Command("voteparty|vparty|vp set <votes>")
+    @Permission("magenta.voteparty.set")
+    @CommandDescription("This command manage voteparty votes.")
+    fun onVotePartySet(commandSender: CommandSender, @Argument("votes") votes: Int) {
+        if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.error"))
+
+        magenta.voteParty.getVoteParty().thenApply {
+            magenta.voteParty.updateParty(votes)
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.success.set", Placeholder.parsed("votes", votes.toString())))
+        }.exceptionally { ex ->
+            commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", ex.message ?: ex.localizedMessage)))
+            magenta.logger.severe(ex.message ?: ex.localizedMessage)
+        }
+    }
+
+    @Command("voteparty|vparty|vp reset")
+    @Permission("magenta.voteparty.reset")
+    @CommandDescription("This command can reset voteparty.")
+    fun onVotePartySet(commandSender: CommandSender) {
+        if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.error"))
+
+        magenta.voteParty.getVoteParty().thenApply {
+            magenta.voteParty.resetParty()
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.success.reset"))
         }.exceptionally { ex ->
             commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", ex.message ?: ex.localizedMessage)))
             magenta.logger.severe(ex.message ?: ex.localizedMessage)

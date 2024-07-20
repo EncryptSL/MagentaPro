@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture
 
 interface VotePartyAPI {
     fun createTable()
-    fun updateParty()
+    fun updateParty(vote: Int = 1)
     fun partyFinished(winner: String)
     fun resetParty()
     fun getExistTable(): Boolean

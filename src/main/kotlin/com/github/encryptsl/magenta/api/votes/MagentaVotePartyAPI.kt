@@ -19,8 +19,8 @@ class MagentaVotePartyAPI(private val votePartyModel: VotePartyModel) : VotePart
     override fun getExistTable(): Boolean {
         return votePartyModel.getExistTable().join()
     }
-    override fun updateParty() {
-        votePartyModel.updateParty()
+    override fun updateParty(vote: Int) {
+        votePartyModel.updateParty(vote)
     }
 
     override fun partyFinished(winner: String) {

@@ -16,6 +16,11 @@ object ActionTitleManager {
         sendSubtitle(audience, subtitle)
     }
 
+    fun sendTitleAndSubtitle(audience: Audience, title: Component, subtitle: Component) {
+        sendTitle(audience, title)
+        sendSubtitle(audience, subtitle)
+    }
+
     fun sendTitle(audience: Audience, title: Component) {
         audience.sendTitlePart(TitlePart.TITLE, title)
     }

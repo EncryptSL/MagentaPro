@@ -381,6 +381,12 @@ permissions:
       magenta.votes.reset.all: true
       magenta.votes.remove: true
       magenta.votes.remove.all: true
+  magenta.voteparty.*:
+    description: Permissions of manage vote party
+    default: false
+    children:
+      magenta.voteparty.set: true
+      magenta.voteparty.reset: true
   magenta.warp.*:
     description: Permissions for all warp commands
     default: false
