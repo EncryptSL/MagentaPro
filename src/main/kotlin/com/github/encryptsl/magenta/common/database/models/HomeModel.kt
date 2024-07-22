@@ -1,6 +1,7 @@
 package com.github.encryptsl.magenta.common.database.models
 
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.database.entity.HomeEntity
 import com.github.encryptsl.magenta.common.database.sql.HomeSQL
 import com.github.encryptsl.magenta.common.database.tables.HomeTable
@@ -79,16 +80,16 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     override fun canSetHome(player: Player):  CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
 
-        if (player.hasPermission("magenta.homes.unlimited"))
-            return CompletableFuture.completedFuture(true)
+        if (player.hasPermission(Permissions.HOME_UNLIMITED))
+            return future.completeAsync { true }
 
         val section = plugin.config.getConfigurationSection("homes.groups") ?: return CompletableFuture.completedFuture(false)
 
         val max = section.getKeys(false).filter { player.hasPermission("magenta.homes.$it") }.firstNotNullOf { section.getInt(it) }
 
-        if (max == -1) return CompletableFuture.completedFuture(true)
+        if (max == -1) return future.completeAsync { true }
 
-        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() >= max }
+        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
 
         return future.completeAsync { boolean }
     }
