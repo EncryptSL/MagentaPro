@@ -7,7 +7,7 @@ import com.github.encryptsl.kmono.lib.api.discord.DiscordWebhook
 import com.github.encryptsl.magenta.api.ItemFactory
 import com.github.encryptsl.magenta.api.account.User
 import com.github.encryptsl.magenta.api.containers.PaperContainerProvider
-import com.github.encryptsl.magenta.api.level.VirtualLevelAPI
+import com.github.encryptsl.magenta.api.level.LevelAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVoteAPI
 import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
 import com.github.encryptsl.magenta.common.CommandHelper
@@ -55,7 +55,7 @@ open class Magenta : JavaPlugin() {
     val user: User by lazy { User() }
     val vote: MagentaVoteAPI by lazy { MagentaVoteAPI() }
     val voteParty: MagentaVotePartyAPI by lazy { MagentaVotePartyAPI(VotePartyModel()) }
-    val virtualLevel: VirtualLevelAPI by lazy { VirtualLevelAPI(this) }
+    val levelAPI: LevelAPI by lazy { LevelAPI(this) }
     val stringUtils: StringUtils by lazy { StringUtils(this) }
     val homeModel: HomeModel by lazy { HomeModel(this) }
     val warpModel: WarpModel by lazy { WarpModel(this) }
@@ -203,7 +203,7 @@ open class Magenta : JavaPlugin() {
             KitListeners(this),
             SocialSpyListener(this),
             TpaListener(this),
-            VirtualPlayerLevelListener(this),
+            PlayerLevelUpListener(this),
             WarpListeners(this)
         )
 
