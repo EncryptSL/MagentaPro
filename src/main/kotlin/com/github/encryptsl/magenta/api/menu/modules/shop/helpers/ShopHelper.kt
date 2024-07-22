@@ -23,7 +23,9 @@ object ShopHelper {
     fun reloadShopConfigs(magenta: Magenta) {
         val shopConfig = magenta.shopConfig.getConfig()
         shopConfig.getConfigurationSection("menu.categories")?.getKeys(false)?.let {
-            for (category in it) {
+            val iterator = it.iterator()
+            while(iterator.hasNext()) {
+                val category = iterator.next()
                 val categoryConfig = UniversalConfig("${magenta.dataFolder}/menu/shop/categories/$category.yml")
                 if (!categoryConfig.exists()) continue
 
@@ -35,7 +37,9 @@ object ShopHelper {
 
         val creditConfig = magenta.creditShopConfig.getConfig()
         creditConfig.getConfigurationSection("menu.categories")?.getKeys(false)?.let {
-            for (category in it) {
+            val iterator = it.iterator()
+            while (iterator.hasNext()) {
+                val category = iterator.next()
                 val categoryConfig = UniversalConfig("${magenta.dataFolder}/menu/creditshop/categories/$category.yml")
                 if (!categoryConfig.exists()) continue
 
