@@ -25,16 +25,16 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         if (!blockUtils.isLocationSafe(location))
             return player.sendMessage("Warp není bezpečný proto ho nemůžeš vytvořit !")
 
-        magenta.warpModel.getWarpByName(warpName).thenApply { magenta.warpModel.canSetWarp(player) }.whenComplete { result, throwable ->
-            if (throwable != null) {
-                return@whenComplete player.sendMessage(magenta.locale.translation("magenta.command.warp.error.exist", Placeholder.parsed("warp", warpName)))
-            }
-            when(result.join()) {
-                true -> {
+        magenta.warpModel.getWarpByName(warpName).thenApply {
+            player.sendMessage(magenta.locale.translation("magenta.command.warp.error.exist", Placeholder.parsed("warp", warpName)))
+        }.exceptionally {
+            magenta.warpModel.canSetWarp(player).thenAccept { canSetWarp ->
+                if (!canSetWarp) {
+                    player.sendMessage(magenta.locale.translation("magenta.command.warp.error.limit"))
+                } else {
                     magenta.warpModel.creteWarp(player, location, warpName)
                     player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
                 }
-                false -> player.sendMessage(magenta.locale.translation("magenta.command.warp.error.limit"))
             }
         }
     }
