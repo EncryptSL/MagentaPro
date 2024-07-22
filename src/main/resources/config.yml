@@ -101,6 +101,7 @@ auto-afk: 5
 # There you can block creating of portals.
 # Methods https://jd.papermc.io/paper/1.20/org/bukkit/event/world/PortalCreateEvent.CreateReason.html
 portal:
+  enabled: false
   blacklist: [NETHER_PAIR, END_PLATFORM, FIRE]
 
 # Change world settings
@@ -231,19 +232,18 @@ news:
 # permission: magenta.homes.<group>                     #
 #########################################################
 homes:
-# You can set your own group and this group have your own
-# limit of homes what can be created,
-# with permission magenta.homes.player can have player 3 homes.
+  # You can set your own group and this group have your own
+  # limit of homes what can be created,
+  # with permission magenta.homes.player can have player 3 homes.
   groups:
     player: 3
-    tempHome: 5
     vip: 10
     moderator: -1
     admin: -1
 
-# You can whitelist worlds
-# where can be created home or teleport to home
-# with permission magenta.home.whitelist.exempt you can bypass this whitelist.
+  # You can whitelist worlds
+  # where can be created home or teleport to home
+  # with permission magenta.home.whitelist.exempt you can bypass this whitelist.
   whitelist:
     - world
     - world_nether
@@ -253,17 +253,17 @@ homes:
 # permission: magenta.warps.<group>                     #
 #########################################################
 warps:
-# You can set your own group and this group have your own
-# limit of warps what can be created,
-# with permission magenta.warps.vip can have vip player 3 warps.
+  # You can set your own group and this group have your own
+  # limit of warps what can be created,
+  # with permission magenta.warps.vip can have vip player 3 warps.
   groups:
     vip: 14
     moderator: -1
     admin: -1
 
-# You can whitelist worlds
-# where can be created warp or teleport to warp
-# with permission magenta.warp.whitelist.exempt you can bypass this whitelist.
+  # You can whitelist worlds
+  # where can be created warp or teleport to warp
+  # with permission magenta.warp.whitelist.exempt you can bypass this whitelist.
   whitelist:
     - world
     - world_nether
@@ -326,22 +326,22 @@ jobs:
 #              Configuration for rewards                 #
 # ########################################################
 votifier:
-# Minecraft sounds list - https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
-# You can set your sound what, can be hearing when player
-# send message to another player.
+  # Minecraft sounds list - https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
+  # You can set your sound what, can be hearing when player
+  # send message to another player.
   sound: 'block.note_block.pling'
 
-# You can set your own volume of sound
-# this value is accept float.
+  # You can set your own volume of sound
+  # this value is accept float.
   volume: 3.5F
 
 
-# You can set your own pitch of sound
-# this value is accept float.
+  # You can set your own pitch of sound
+  # this value is accept float.
   pitch: 10.5F
 
-# Expression rewarding is arithmetic calculation
-# If you need enable expression-rewarding you must add {expression_reward}
+  # Expression rewarding is arithmetic calculation
+  # If you need enable expression-rewarding you must add {expression_reward}
   expression-formula: '{money} * ({level} / 2) + {value}'
 
   # In services, you can set page where you have your server connected with votifier plugin.
