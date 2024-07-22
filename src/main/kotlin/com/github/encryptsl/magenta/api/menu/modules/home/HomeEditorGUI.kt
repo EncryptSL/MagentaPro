@@ -12,11 +12,9 @@ import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.Gui
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
-import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
@@ -44,9 +42,9 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         menu.useAllFillers(gui, magenta.homeEditorConfig.getConfig())
 
         for (el in menuSection) {
-            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(
-                Key.key(magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString())
-            ) ?: return
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
+                magenta.homeEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString().equals(it.key().value(), true)
+            } ?: return
 
             if (!magenta.homeEditorConfig.getConfig().contains("menu.items.buttons.$el")) continue
 
@@ -129,8 +127,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
     ) {
         val itemName = fileConfiguration.getString("menu.icon.name")
 
-        val icons: Set<String> = fileConfiguration.getStringList("menu.icons")
-            .filter { m -> RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(m)) != null }.map { it }.toSet()
+        val icons: Set<String> = fileConfiguration.getStringList("menu.icons").map { it }.toSet()
 
         if (clicked) return
 
@@ -151,7 +148,9 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         materialName: String,
         lore: MutableList<Component>
     ) {
-        val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(materialName)) ?: return
+        val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
+            materialName.equals(it.key().value(), true)
+        } ?: return
         gui.addItem(
             ItemBuilder.from(
                 ItemCreator(material.createItemStack().type, 1)
