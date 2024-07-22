@@ -14,6 +14,7 @@ class PortalListener(private val magenta: Magenta) : Listener {
     fun onPortalListener(event: PortalCreateEvent) {
         if (event.entity is Player) {
             val player = event.entity as Player
+            if (!magenta.config.getBoolean("portal.enabled")) return
             if (player.gameMode == GameMode.CREATIVE) return
             if (player.hasPermission(Permissions.PORTAL_BLACKLIST_BYPASS)) return
 
