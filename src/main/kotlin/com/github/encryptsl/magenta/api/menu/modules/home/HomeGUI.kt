@@ -21,14 +21,16 @@ class HomeGUI(private val magenta: Magenta) {
 
     fun openHomeGUI(player: Player) {
         val rows = magenta.homeMenuConfig.getConfig().getInt("menu.gui.size", 6)
+        val homes = magenta.homeModel.getHomesByOwner(player.uniqueId).join()
+
         val gui = menuUI.paginatedBuilderGui(rows,
-            ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.gui.display").toString()),
+            ModernText.miniModernText(magenta.homeMenuConfig.getConfig().getString("menu.gui.display").toString(),
+                Placeholder.parsed("homes", homes.size.toString())
+            ),
             magenta.homeEditorConfig.getConfig()
         )
 
         menuUI.useAllFillers(gui, magenta.homeMenuConfig.getConfig())
-
-        val homes = magenta.homeModel.getHomesByOwner(player.uniqueId).join()
 
         if (!magenta.homeMenuConfig.getConfig().contains(requiredContains)) return
         if (!magenta.homeMenuConfig.getConfig().contains("$requiredContains.display")) return
