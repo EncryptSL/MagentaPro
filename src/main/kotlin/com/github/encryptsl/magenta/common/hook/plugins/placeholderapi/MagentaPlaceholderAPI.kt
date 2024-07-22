@@ -25,7 +25,7 @@ class MagentaPlaceholderAPI(private val magenta: Magenta, private val version: S
         val string = args.getOrNull(1)?.toString()
         val rank = args.getOrNull(3)?.toIntOrNull()
         val user = magenta.user.getUser(player.uniqueId)
-        val levelEntity = magenta.virtualLevel.getUserByUUID(player.uniqueId).join()
+        val levelEntity = magenta.levelAPI.getUserByUUID(player.uniqueId).join()
 
 
         if (identifier.startsWith("votes_")) {

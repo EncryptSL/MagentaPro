@@ -22,11 +22,11 @@ class MagentaMiniPlaceholders(private val magenta: Magenta) : PluginHook("MiniPl
             }
             audiencePlaceholder("level") { p, _, _ ->
                 val player  = p as Player
-                return@audiencePlaceholder Component.text(magenta.virtualLevel.getUserByUUID(player.uniqueId).join().level).asInsertingTag()
+                return@audiencePlaceholder Component.text(magenta.levelAPI.getUserByUUID(player.uniqueId).join().level).asInsertingTag()
             }
             audiencePlaceholder("level_progress") { p, _, _ ->
                 val player  = p as Player
-                val levelEntity = magenta.virtualLevel.getUserByUUID(player.uniqueId).join()
+                val levelEntity = magenta.levelAPI.getUserByUUID(player.uniqueId).join()
                 return@audiencePlaceholder Component.text(levelProgress(levelEntity.level, levelEntity.experience)).asInsertingTag()
             }
             audiencePlaceholder("socialspy") { p, _, _ ->
