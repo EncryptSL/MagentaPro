@@ -14,7 +14,6 @@ import dev.triumphteam.gui.builder.item.ItemBuilder
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
-import org.bukkit.Material
 import org.bukkit.entity.Player
 
 class CreditShop(private val magenta: Magenta) : Menu {
@@ -34,8 +33,8 @@ class CreditShop(private val magenta: Magenta) : Menu {
         menuUI.useAllFillers(gui, magenta.creditShopConfig.getConfig())
 
         for (category in magenta.creditShopConfig.getConfig().getConfigurationSection("menu.categories")?.getKeys(false)!!) {
-            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
-                    el ->  el.key().value().equals(magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString(), true)
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull { el ->
+                magenta.creditShopConfig.getConfig().getString("menu.categories.$category.icon").toString().equals(el.key().value(), true)
             } ?: continue
 
             if (!magenta.creditShopConfig.getConfig().contains("menu.categories.$category.name"))
@@ -107,7 +106,7 @@ class CreditShop(private val magenta: Magenta) : Menu {
             if (!shopCategory.getConfig().contains("menu.items.$item")) continue
             val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
                     el ->  el.key().value().equals(shopCategory.getConfig().getString("menu.items.$item.icon").toString(), true)
-            } ?: continue
+            }?.createItemStack()?.type ?: continue
 
             if (!shopCategory.getConfig().contains("menu.items.$item.name"))
                 return player.sendMessage(
@@ -142,7 +141,7 @@ class CreditShop(private val magenta: Magenta) : Menu {
 
             val itemStack = magenta.itemFactory
                 .creditShopItem(
-                    player, material.createItemStack().type, itemName, quantity, buyPrice, glowing, hasOptions, isPotion, hasColor, color,
+                    player, material, itemName, quantity, buyPrice, glowing, hasOptions, isPotion, hasColor, color,
                     magenta.creditShopConfig.getConfig().getStringList("menu.gui.item_lore")
                 )
             val guiItem = ItemBuilder.from(itemStack).asGuiItem { context ->

@@ -95,9 +95,9 @@ class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: Me
         if (magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no")) {
             val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull { el ->
                 el.key().value().equals((magenta.creditShopConfirmMenuConfig.getConfig().getString("menu.confirm_no.icon").toString()), true)
-            } ?: return
+            }?.createItemStack()?.type ?: return
 
-            val itemStack = ItemCreator(material.createItemStack().type, 1)
+            val itemStack = ItemCreator(material, 1)
 
             if (!magenta.creditShopConfirmMenuConfig.getConfig().contains("menu.confirm_no.name")) return
 
