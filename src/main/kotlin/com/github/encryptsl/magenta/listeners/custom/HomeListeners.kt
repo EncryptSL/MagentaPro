@@ -28,19 +28,18 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
-        magenta.homeModel.getHomeByNameAndUUID(player.uniqueId, homeName).thenApply { magenta.homeModel.canSetHome(player) }
-            .whenComplete { result, throwable ->
-                if (throwable != null) {
-                    return@whenComplete player.sendMessage(magenta.locale.translation("magenta.command.home.error.exist", Placeholder.parsed("home", homeName)))
-                }
-                when(result.join()) {
-                    true -> {
-                        magenta.homeModel.createHome(player, location, homeName)
-                        player.sendMessage(magenta.locale.translation("magenta.command.home.success.created", Placeholder.parsed("home", homeName)))
-                    }
-                    false -> player.sendMessage(magenta.locale.translation("magenta.command.home.error.limit"))
+        magenta.homeModel.getHomeByNameAndUUID(player.uniqueId, homeName).thenApply {
+            player.sendMessage(magenta.locale.translation("magenta.command.home.error.exist", Placeholder.parsed("home", homeName)))
+        }.exceptionally {
+            magenta.homeModel.canSetHome(player).thenAccept { canSetHome ->
+                if (!canSetHome) {
+                    player.sendMessage(magenta.locale.translation("magenta.command.home.error.limit"))
+                } else {
+                    magenta.homeModel.createHome(player, location, homeName)
+                    player.sendMessage(magenta.locale.translation("magenta.command.home.success.created", Placeholder.parsed("home", homeName)))
                 }
             }
+        }
     }
 
     @EventHandler
