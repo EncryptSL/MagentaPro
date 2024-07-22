@@ -4,6 +4,7 @@ import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.jail.*
+import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.hook.luckperms.LuckPermsAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -25,7 +26,7 @@ class JailListeners(private val magenta: Magenta) : Listener {
         val reason = event.reason
         val user = magenta.user.getUser(target.uniqueId)
 
-        if (luckPerms.hasPermission(target,"magenta.jail.exempt")) return
+        if (luckPerms.hasPermission(target,Permissions.JAIL_PLAYER_EXEMPT)) return
 
         if (magenta.jailConfig.getConfig().getConfigurationSection("jails.$jailName") == null)
             return commandManager.sendMessage(magenta.locale.translation("magenta.command.jail.error.exist",
