@@ -114,7 +114,7 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
         if (!magenta.stringUtils.inInList("level.worlds", player.world.name)) return
 
         val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
-        magenta.virtualLevel.getUserByUUID(player.uniqueId).thenAccept {
+        magenta.levelAPI.getUserByUUID(player.uniqueId).thenAccept {
             if (requiredLevel < it.level) return@thenAccept
 
             player.sendMessage(magenta.locale.translation("magenta.mining.level.required", TagResolver.resolver(

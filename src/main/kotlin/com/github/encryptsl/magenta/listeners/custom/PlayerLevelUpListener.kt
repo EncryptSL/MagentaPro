@@ -3,21 +3,21 @@ package com.github.encryptsl.magenta.listeners.custom
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.extensions.playSound
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.api.events.level.VirtualLevelUpEvent
+import com.github.encryptsl.magenta.api.events.level.LevelUpEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class VirtualPlayerLevelListener(private val magenta: Magenta) : Listener {
+class PlayerLevelUpListener(private val magenta: Magenta) : Listener {
     @EventHandler
-    fun onLevelUp(event: VirtualLevelUpEvent) {
+    fun onLevelUp(event: LevelUpEvent) {
         val offlinePlayer = event.offlinePlayer
         val level = event.newLevel.plus(1)
         val currentExp = event.currentExp
         val expToLevel = event.experienceToLevel
 
-        magenta.virtualLevel.addLevel(offlinePlayer.uniqueId, 1)
+        magenta.levelAPI.addLevel(offlinePlayer.uniqueId, 1)
         offlinePlayer.player?.let {
             playSound(it,
                 magenta.config.getString("level.effect.sound").toString(),
@@ -33,7 +33,7 @@ class VirtualPlayerLevelListener(private val magenta: Magenta) : Listener {
                 ))
             }
         }
-        magenta.virtualLevel.setExperience(offlinePlayer.uniqueId, 0)
+        magenta.levelAPI.setExperience(offlinePlayer.uniqueId, 0)
     }
 
 }

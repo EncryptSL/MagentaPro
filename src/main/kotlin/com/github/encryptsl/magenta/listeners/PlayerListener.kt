@@ -35,7 +35,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     fun onAsyncLogin(event: AsyncPlayerPreLoginEvent) {
         val uuid = event.uniqueId
         if (event.loginResult != AsyncPlayerPreLoginEvent.Result.ALLOWED) return
-        magenta.virtualLevel.createAccount(LevelEntity(event.name, uuid.toString(), 1, 0))
+        magenta.levelAPI.createAccount(LevelEntity(event.name, uuid.toString(), 1, 0))
     }
 
     @EventHandler

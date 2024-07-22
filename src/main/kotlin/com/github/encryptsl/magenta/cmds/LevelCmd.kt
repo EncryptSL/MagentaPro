@@ -28,7 +28,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send your level progress")
     fun onLevel(player: Player) {
         try {
-            magenta.virtualLevel.getUserByUUID(player.uniqueId).thenApply {
+            magenta.levelAPI.getUserByUUID(player.uniqueId).thenApply {
                 magenta.commandHelper.showLevelProgress(player, it.level, it.experience)
             }.exceptionally {
                 player.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
@@ -51,7 +51,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
     ) {
         try {
-            magenta.virtualLevel.getUserByUUID(target.uniqueId).thenApply {
+            magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
                 magenta.commandHelper.showLevelProgress(commandSender, it.level, it.experience)
             }.exceptionally {
                 commandSender.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
@@ -76,7 +76,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         commandSender.sendMessage(magenta.locale.translation("magenta.command.level.top.header"))
 
-        magenta.virtualLevel.getLevels().thenAccept { el ->
+        magenta.levelAPI.getLevels().thenAccept { el ->
             if (el.isEmpty()) return@thenAccept
 
             val leaderBoard = el.toList().positionIndexed { k, v ->

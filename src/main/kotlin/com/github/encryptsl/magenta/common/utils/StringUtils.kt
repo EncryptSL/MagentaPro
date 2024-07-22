@@ -11,7 +11,7 @@ class StringUtils(private val magenta: Magenta) {
         = magenta.config.getStringList(key).contains(value)
 
     fun arithmeticExpression(player: OfflinePlayer, config: FileConfiguration, path: String, value: Int = 0): String {
-        val getLevel = magenta.virtualLevel.getUserByUUID(player.uniqueId).join()
+        val getLevel = magenta.levelAPI.getUserByUUID(player.uniqueId).join()
 
         val expressFormula = config.getString(path).toString()
             .replace("{level}", getLevel.level.toString())

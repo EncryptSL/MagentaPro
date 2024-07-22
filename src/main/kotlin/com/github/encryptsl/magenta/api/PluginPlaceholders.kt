@@ -54,7 +54,7 @@ class PluginPlaceholders(private val magenta: Magenta) {
 
     private fun topLevels(): Map<String, Int>
     {
-        return magenta.virtualLevel.getLevels().join()
+        return magenta.levelAPI.getLevels().join()
     }
 
     private fun topVotes(): Map<String, Int> {
