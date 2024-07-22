@@ -19,6 +19,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.math.BigDecimal
 
+@Suppress("UnstableApiUsage")
 class VaultShop(private val magenta: Magenta) : Menu {
 
     private val vaultShopPaymentMethods: VaultShopPaymentMethods by lazy { VaultShopPaymentMethods(magenta) }

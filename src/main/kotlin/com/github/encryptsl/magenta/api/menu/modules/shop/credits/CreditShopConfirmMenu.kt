@@ -18,6 +18,7 @@ import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
+@Suppress("UnstableApiUsage")
 class CreditShopConfirmMenu(private val magenta: Magenta, private val menuUI: MenuUI) {
 
     fun openConfirmMenu(

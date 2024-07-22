@@ -10,6 +10,8 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.BaseGui
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -43,9 +45,9 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         menu.useAllFillers(gui, magenta.warpEditorConfig.getConfig())
 
         for (el in buttons.getKeys(false)) {
-            val material = Material.getMaterial(
-                magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.icon").toString()
-            ) ?: continue
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
+                magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.$el.icon").equals(it.key().value())
+            } ?: continue
             if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}")) {
                 if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}.name"))
                     return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
@@ -70,7 +72,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                     .map { ModernText.miniModernText(it) }
                     .toMutableList()
 
-                val itemStack = createItem(material) {
+                val itemStack = createItem(material.createItemStack()) {
                     amount = 1
                     meta {
                         setNameComponent = ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString())

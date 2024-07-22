@@ -18,6 +18,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
+@Suppress("UnstableApiUsage")
 class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) {
 
     enum class BUTTON_ACTION { BACK_TO_MENU, SET_HOME, SET_ICON, DELETE_HOME }

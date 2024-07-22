@@ -12,6 +12,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.entity.Player
 
+@Suppress("UnstableApiUsage")
 class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
 
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }

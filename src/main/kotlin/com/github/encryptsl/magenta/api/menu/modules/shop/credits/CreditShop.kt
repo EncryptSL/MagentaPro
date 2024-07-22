@@ -16,8 +16,8 @@ import io.papermc.paper.registry.RegistryKey
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 
+@Suppress("UnstableApiUsage")
 class CreditShop(private val magenta: Magenta) : Menu {
-
 
     private val creditShopPaymentMethod: CreditShopPaymentMethod by lazy { CreditShopPaymentMethod(magenta) }
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }
