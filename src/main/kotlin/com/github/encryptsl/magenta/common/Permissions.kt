@@ -32,6 +32,9 @@ object Permissions {
 
     const val REPAIR_DELAY_EXEMPT: String = "magenta.repair.delay.exempt"
 
+    const val HOME_UNLIMITED: String = "magenta.homes.unlimited"
+    const val HOME_WHITELIST_EXEMPT: String = "magenta.home.whitelist.exempt"
+
     const val WARP_SIGN_PLACE: String = "magenta.warp.sign.place"
     const val WARP_SIGN_BREAK: String = "magenta.warp.sign.break"
     const val WARP_TELEPORT_OTHER: String = "magenta.warp.other"
@@ -58,9 +61,10 @@ object Permissions {
     const val INVSEE_PREVENT_MODIFY: String = "magenta.invsee.prevent.modify"
     const val INVSEE_PREVENT_MODIFY_EXEMPT: String = "magenta.invsee.prevent.modify.exempt"
 
+    const val JAIL_PLAYER_EXEMPT: String = "magenta.jail.exempt"
+
     const val PORTAL_BLACKLIST_BYPASS: String = "magenta.portal.blacklist.bypass"
 
-    const val HOME_WHITELIST_EXEMPT: String = "magenta.home.whitelist.exempt"
     const val VANISH_USE: String = "magenta.vanish"
     const val VANISH_EXEMPT: String = "magenta.vanish.exempt"
 }
