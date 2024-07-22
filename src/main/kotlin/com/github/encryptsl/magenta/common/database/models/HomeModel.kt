@@ -89,7 +89,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
 
         if (max == -1) return future.completeAsync { true }
 
-        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
+        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() <= max }
 
         return future.completeAsync { boolean }
     }

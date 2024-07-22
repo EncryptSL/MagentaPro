@@ -124,7 +124,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
 
         if (max == -1) return CompletableFuture.completedFuture(true)
 
-        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() < max }
+        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() <= max }
 
         return future.completeAsync { boolean }
     }
