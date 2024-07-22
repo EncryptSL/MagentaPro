@@ -8,10 +8,8 @@ import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
-import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import org.bukkit.Material
 import org.bukkit.entity.Player
 
 class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
@@ -35,9 +33,9 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
 
         menuUI.useAllFillers(gui, magenta.milestonesOres.getConfig())
         for (item in menuSection.withIndex()) {
-            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).get(Key.key(
-                magenta.milestonesVotePass.getConfig().getString("menu.items.$item.item").toString()
-            ))?.createItemStack()?.type ?: continue
+            val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
+                    el -> el.key().value().equals(magenta.milestonesVotePass.getConfig().getString("menu.items.$item.item").toString(), true)
+            }?.createItemStack()?.type ?: continue
 
             val itemStack = ItemCreator(material, 1).setName(
                 ModernText.miniModernText(magenta.milestonesVotePass.getConfig().getString("menu.items.$item.name").toString())

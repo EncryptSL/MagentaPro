@@ -13,10 +13,8 @@ import com.github.encryptsl.magenta.common.model.ShopManager
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
-import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Material
-import org.bukkit.Registry
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.math.BigDecimal
@@ -37,7 +35,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
         for (category in shopManager.getShopCategories()) {
             val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
                 el ->  el.key().value().equals(magenta.shopConfig.getConfig().getString("menu.categories.$category.icon").toString(), true)
-            } ?: continue
+            }?.createItemStack()?.type ?: continue
 
             if (!magenta.shopConfig.getConfig().contains("menu.categories.$category.name"))
                 return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
@@ -56,7 +54,7 @@ class VaultShop(private val magenta: Magenta) : Menu {
 
             val name = magenta.shopConfig.getConfig().getString("menu.categories.$category.name").toString()
             val item = ItemBuilder.from(
-                ItemCreator(material.createItemStack().type, 1).setName(ModernText.miniModernText(name)).create()
+                ItemCreator(material, 1).setName(ModernText.miniModernText(name)).create()
             ).asGuiItem { context ->
                 return@asGuiItem openCategory(context.whoClicked as Player, category)
             }
