@@ -11,6 +11,7 @@ import io.papermc.paper.registry.RegistryKey
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.entity.Player
 
+@Suppress("UnstableApiUsage")
 class OresMilestonesGUI(private val magenta: Magenta) : Menu {
 
     private val menuUI: MenuUI by lazy { MenuUI(magenta) }

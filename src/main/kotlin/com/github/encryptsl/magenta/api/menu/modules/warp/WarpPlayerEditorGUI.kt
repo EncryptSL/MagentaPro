@@ -19,9 +19,10 @@ import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
+@Suppress("UnstableApiUsage")
 class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
-    enum class BUTTON_ACTION { BACK_TO_MENU, SET_WARP, SET_ICON, DELETE_WARP }
+    enum class ButtonAction { BACK_TO_MENU, SET_WARP, SET_ICON, DELETE_WARP }
 
     private val menu: MenuUI by lazy { MenuUI(magenta) }
     private val warpPlayerGUI: WarpPlayerGUI by lazy { WarpPlayerGUI(magenta, WarpGUI(magenta), this) }
@@ -96,14 +97,14 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         el: String,
         gui: BaseGui
     ) {
-        val action = BUTTON_ACTION.valueOf(config.getString("menu.items.buttons.$el.action").toString())
+        val action = ButtonAction.valueOf(config.getString("menu.items.buttons.$el.action").toString())
 
         when(action) {
-            BUTTON_ACTION.BACK_TO_MENU -> {
+            ButtonAction.BACK_TO_MENU -> {
                 clicked = false
                 warpPlayerGUI.open(player)
             }
-            BUTTON_ACTION.SET_WARP -> {
+            ButtonAction.SET_WARP -> {
                 clicked = false
                 clearIcons(gui)
                 magenta.warpModel.moveWarp(player.uniqueId, warpName, player.location)
@@ -114,10 +115,10 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                     Placeholder.parsed("z", player.location.z.toInt().toString())
                 )))
             }
-            BUTTON_ACTION.SET_ICON -> {
+            ButtonAction.SET_ICON -> {
                 loadIcons(player, gui, warpName, config)
             }
-            BUTTON_ACTION.DELETE_WARP -> {
+            ButtonAction.DELETE_WARP -> {
                 clicked = false
                 magenta.warpModel.deleteWarp(player.uniqueId, warpName)
                 player.closeInventory()
