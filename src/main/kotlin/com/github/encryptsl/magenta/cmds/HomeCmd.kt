@@ -40,14 +40,14 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.home")
     @CommandDescription("This command teleport you into your home")
     fun onHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        magenta.server.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
+        magenta.pluginManager.callEvent(HomeTeleportEvent(player, home, magenta.config.getLong("teleport-cooldown")))
     }
 
     @Command("sethome <home>")
     @Permission("magenta.sethome")
     @CommandDescription("This command create your home where you stand.")
     fun onSetHome(player: Player, @Argument(value = "home") home: String) {
-        magenta.server.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
+        magenta.pluginManager.callEvent(HomeCreateEvent(player, player.location, home))
     }
 
     @Command("sethomeicon|sethicon <home> <icon>")
@@ -66,21 +66,21 @@ class HomeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.movehome")
     @CommandDescription("This command move your home to location where you stand.")
     fun onMoveHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        magenta.server.pluginManager.callEvent(HomeMoveLocationEvent(player, player.location, home))
+        magenta.pluginManager.callEvent(HomeMoveLocationEvent(player, player.location, home))
     }
 
     @Command("delhome|dhome <home>")
     @Permission("magenta.delhome")
     @CommandDescription("This command delete your home.")
     fun onDeleteHome(player: Player, @Argument(value = "home", suggestions = "homes") home: String) {
-        magenta.server.pluginManager.callEvent(HomeDeleteEvent(player, home))
+        magenta.pluginManager.callEvent(HomeDeleteEvent(player, home))
     }
 
     @Command("renamehome|rhome <oldName> <newName>")
     @Permission("magenta.rename.home")
     @CommandDescription("This command rename your home.")
     fun onRenameHome(player: Player, @Argument(value = "oldName") oldName: String, @Argument(value = "newName") newName: String) {
-        magenta.server.pluginManager.callEvent(HomeRenameEvent(player, oldName, newName))
+        magenta.pluginManager.callEvent(HomeRenameEvent(player, oldName, newName))
     }
 
     @Command("homes|homelist")
