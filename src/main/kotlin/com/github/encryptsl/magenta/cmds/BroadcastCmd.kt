@@ -40,9 +40,12 @@ class BroadcastCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onBroadcastTitle(
         commandSender: CommandSender,
         @Greedy @Argument(value = "message") message: String,
+        @Flag("fadeIn") @Default("1") fadeIn: Int,
+        @Flag("stay") @Default("2") stay: Int,
+        @Flag("fadeOut") @Default("1") fadeOut: Int,
     ) {
         ActionTitleManager.sendTitleAndSubtitle(Audience.audience(Bukkit.getOnlinePlayers()),
             ModernText.miniModernText(magenta.config.getString("prefix").toString()),
-            ModernText.miniModernText(message), 30, 30, 30)
+            ModernText.miniModernText(message), fadeIn.toLong(), stay.toLong(), fadeOut.toLong())
     }
 }

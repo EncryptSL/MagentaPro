@@ -33,6 +33,7 @@ object Permissions {
     const val REPAIR_DELAY_EXEMPT: String = "magenta.repair.delay.exempt"
 
     const val HOME_UNLIMITED: String = "magenta.homes.unlimited"
+    const val HOME_DELAY_EXEMPT: String = "magenta.home.delay.exempt"
     const val HOME_WHITELIST_EXEMPT: String = "magenta.home.whitelist.exempt"
 
     const val WARP_SIGN_PLACE: String = "magenta.warp.sign.place"

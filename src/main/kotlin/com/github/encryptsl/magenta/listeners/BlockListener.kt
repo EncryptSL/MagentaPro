@@ -1,8 +1,5 @@
 package com.github.encryptsl.magenta.listeners
 
-import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
-import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
 import com.github.encryptsl.magenta.common.Permissions
@@ -19,7 +16,6 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import java.math.BigDecimal
 
 class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
     @EventHandler(priority = EventPriority.MONITOR)
@@ -47,39 +43,6 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
             return player.sendMessage(magenta.locale.translation("magenta.silky.spawner.error.permissions"))
 
         BlockUtils.dropSpawner(block, magenta.config.getString("silky_spawners.spawner_name").toString())
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    fun onBlockBreakEarnMoney(event: BlockBreakEvent) {
-        val player = event.player
-        val block = event.block
-        val material = block.type
-        if (!magenta.stringUtils.inInList("jobs.whitelist_world", player.world.name)) return
-        if (!magenta.config.contains("jobs.miner")) return
-
-        if (!magenta.stringUtils.inInList("jobs.miner.blocks", material.name)) return
-
-        val currentProgress = magenta.earnBlocksProgressManager.updateProgress(player.uniqueId, 1)
-
-        player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.action_bar").toString(), TagResolver.resolver(
-            Placeholder.parsed("current_progress", currentProgress.toString()),
-            Placeholder.parsed("max_progress", magenta.config.getInt("jobs.miner.max_progress").toString()),
-        )))
-
-        if (currentProgress >= magenta.config.getInt("jobs.miner.max_progress")) {
-            magenta.earnBlocksProgressManager.earnBlocksProgress[player.uniqueId] = 0
-            if (!magenta.config.contains("jobs.miner.earn_money")) return
-
-            val defaultEarnMoney = magenta.config.getDouble("jobs.miner.earn_money", 408.0)
-            val moneyEarned = if (isHalloweenSeason()) magenta.config.getDouble("halloween.reward_multiplier") * defaultEarnMoney else defaultEarnMoney
-            val transaction = EconomyDeposit(player, price = BigDecimal.valueOf(moneyEarned)).transaction(magenta.vaultUnlockedHook) ?: return
-
-            if (transaction == EconomyTransactionResponse.SUCCESS) {
-                player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.miner.earn_bar").toString(),
-                    Placeholder.parsed("value", moneyEarned.toString())
-                ))
-            }
-        }
     }
 
     @EventHandler

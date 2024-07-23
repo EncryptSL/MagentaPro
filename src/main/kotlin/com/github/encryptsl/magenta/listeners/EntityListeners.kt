@@ -1,8 +1,5 @@
 package com.github.encryptsl.magenta.listeners
 
-import com.github.encryptsl.kmono.lib.api.ModernText
-import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
-import com.github.encryptsl.kmono.lib.api.economy.components.EconomyDeposit
 import com.github.encryptsl.kmono.lib.extensions.playSound
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
@@ -18,7 +15,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import java.math.BigDecimal
 import java.util.concurrent.ThreadLocalRandom
 
 class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
@@ -64,24 +60,6 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
 
             player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "útočit")))
             event.isCancelled = true
-        }
-    }
-
-    @EventHandler
-    fun onPlayerAttackEntity(event: EntityDamageByEntityEvent) {
-        if (event.damager is Player && isHalloweenDay()) {
-            val player = event.damager as Player
-
-            if (!magenta.config.contains("jobs.hunter") || !magenta.config.contains("jobs.hunter.earn_money")) return
-
-            val earnMoney = magenta.config.getDouble("halloween.reward_multiplier").times(magenta.config.getDouble("jobs.hunter.earn_money", 5.0))
-            val transaction = EconomyDeposit(player, price = BigDecimal.valueOf(earnMoney)).transaction(magenta.vaultUnlockedHook) ?: return
-
-            if (transaction == EconomyTransactionResponse.SUCCESS) {
-                player.sendActionBar(ModernText.miniModernText(magenta.config.getString("jobs.hunter.earn_bar").toString(),
-                    Placeholder.parsed("value", earnMoney.toString())
-                ))
-            }
         }
     }
 

@@ -37,6 +37,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
                 } else {
                     magenta.homeModel.createHome(player, location, homeName)
                     player.sendMessage(magenta.locale.translation("magenta.command.home.success.created", Placeholder.parsed("home", homeName)))
+                    player.sendMessage("DEBUG: $canSetHome")
                 }
             }
         }
@@ -130,17 +131,16 @@ class HomeListeners(private val magenta: Magenta) : Listener {
 
         val timeLeft: Duration = user.getRemainingCooldown("home")
 
-        if (user.hasDelay("home") && !player.hasPermission("magenta.home.delay.exempt")) {
+        if (user.hasDelay("home") && !player.hasPermission(Permissions.HOME_DELAY_EXEMPT)) {
             return commandHelper.delayMessage(player, "magenta.command.home.error.delay", timeLeft)
         }
 
-        if (delay != 0L && delay != -1L || !player.hasPermission("magenta.home.delay.exempt")) {
+        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HOME_DELAY_EXEMPT)) {
             user.setDelay(Duration.ofSeconds(delay), "home")
         }
 
         magenta.homeModel.getHomeByNameAndUUID(player.uniqueId, homeName).thenApply {
-            player.teleport(magenta.homeModel.toLocation(player, it.homeName))
-
+            player.teleportAsync(magenta.homeModel.toLocation(player, it.homeName))
             player.sendMessage(magenta.locale.translation("magenta.command.home.success.teleport", Placeholder.parsed("home", it.homeName)))
         }.exceptionally {
             player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))

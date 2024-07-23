@@ -1,22 +1,22 @@
 package com.github.encryptsl.magenta.common.hook.vault
 
+import com.github.encryptsl.kmono.lib.api.economy.Economy
 import com.github.encryptsl.kmono.lib.api.economy.MissingEconomyException
 import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
-import net.milkbowl.vault.economy.Economy
 import org.bukkit.OfflinePlayer
 import org.bukkit.plugin.ServicesManager
 import java.math.BigDecimal
 
-class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), com.github.encryptsl.kmono.lib.api.economy.Economy {
+class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), Economy {
 
-    private var eco: Economy? = null
+    private var eco: net.milkbowl.vault.economy.Economy? = null
     private val exception = magenta.locale.getMessage("magenta.missing.vault.economy")
 
     override fun isPluginEnabled(): Boolean {
         if (magenta.pluginManager.getPlugin("Vault") != null) {
             val sm: ServicesManager = magenta.server.servicesManager
-            val rsp = sm.getRegistration(Economy::class.java)
+            val rsp = sm.getRegistration(net.milkbowl.vault.economy.Economy::class.java)
             if (rsp != null) {
                 eco = rsp.provider
                 return true

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 object ActionTitleManager {
 
-    fun sendTitleAndSubtitle(audience: Audience, title: Component, subtitle: Component, fadeIn: Long, stay: Long, fadeOut: Long) {
+    fun sendTitleAndSubtitle(audience: Audience, title: Component, subtitle: Component, fadeIn: Long = 1, stay: Long = 2, fadeOut: Long = 1) {
         audience.sendTitlePart(TitlePart.TIMES, Title.Times.times(Duration.ofSeconds(fadeIn), Duration.ofSeconds(stay), Duration.ofSeconds(fadeOut)))
         sendTitle(audience, title)
         sendSubtitle(audience, subtitle)

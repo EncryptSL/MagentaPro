@@ -114,6 +114,8 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     override fun canSetWarp(player: Player): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
 
+        val createdWarpsCount = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() }
+
         if (player.hasPermission(Permissions.WARPS_UNLIMITED)) {
             return CompletableFuture.completedFuture(true)
         }
@@ -124,9 +126,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
 
         if (max == -1) return CompletableFuture.completedFuture(true)
 
-        val boolean = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() <= max }
-
-        return future.completeAsync { boolean }
+        return future.completeAsync { !(createdWarpsCount >= max) }
     }
 
     override fun getWarpByName(warpName: String): CompletableFuture<WarpEntity> {

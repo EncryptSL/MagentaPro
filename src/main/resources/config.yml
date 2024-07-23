@@ -109,11 +109,6 @@ portal:
 # true = enabled, false = disabled.
 change-world-message: true
 
-# Halloween's settings
-# Halloween is event of double rewards of money and experience.
-halloween:
-  reward_multiplier: 2
-
 # Settings for Level UP notifications
 # You can set sound effect when player have level up
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
@@ -283,43 +278,6 @@ silky_spawners:
     - IRON_PICKAXE
     - DIAMOND_PICKAXE
     - NETHERITE_PICKAXE
-
-
-
-# ########################################################
-#                   JOBS - EARN SYSTEM                   #
-#                 Configuration for JOBS                 #
-# ########################################################
-jobs:
-  whitelist_world:
-    - mineworld
-  hunter:
-    earn_bar: '<gray>+ <green>5 $'
-    earn_money: 5
-  miner:
-    max_progress: 1000
-    action_bar: '<yellow>Progress: <gold><current_progress>/<max_progress>'
-    earn_bar: '<gray>+ <green>408 $'
-    earn_money: 408
-    blocks:
-      - STONE
-      - COAL_ORE
-      - DEEPSLATE_COAL_ORE
-      - IRON_ORE
-      - DEEPSLATE_IRON_ORE
-      - COOPER_ORE
-      - DEEPSLATE_COOPER_ORE
-      - GOLD_ORE
-      - DEEPSLATE_GOLD_ORE
-      - REDSTONE_ORE
-      - DEEPSLATE_REDSTONE_ORE
-      - EMERALD_ORE
-      - DEEPSLATE_EMERALD_ORE
-      - LAPIS_ORE
-      - DEEPSLATE_LAPIS_ORE
-      - DIAMOND_ORE
-      - DEEPSLATE_DIAMOND_ORE
-
 
 # ########################################################
 #                      VOTIFIER                          #
