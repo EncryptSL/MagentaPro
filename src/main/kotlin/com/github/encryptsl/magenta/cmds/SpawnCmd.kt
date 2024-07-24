@@ -43,8 +43,8 @@ class SpawnCmd(private val magenta: Magenta) : AnnotationFeatures {
         }
 
         magenta.spawnConfig.getConfig().getLocation("spawn")?.let { target.teleportAsync(it) }
-        target.sendMessage(magenta.locale.translation("magenta.command.spawn.success.teleport.to"))
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.spawn.success.teleport.other",
+        target.sendMessage(magenta.locale.translation("magenta.command.spawn.success.teleport.target"))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.spawn.success.teleport.self.other",
             Placeholder.parsed("target", target.name)))
     }
 

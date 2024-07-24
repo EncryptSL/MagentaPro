@@ -33,6 +33,10 @@ object ActionTitleManager {
         audience.sendActionBar(component)
     }
 
+    fun sendBroadcast(audience: Audience, component: Component) {
+        audience.sendMessage(component)
+    }
+
     fun sendTimedActionBar(audience: Audience, component: Component, durationInSeconds: Int) {
         // Repeating task to keep sending the message
         val task = Magenta.scheduler.impl.runTimer(Runnable {

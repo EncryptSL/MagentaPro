@@ -83,7 +83,7 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
     }
 
     private fun sendMessage(commandSender: CommandSender, receiver: Player, message: String) {
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.success.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.success.self.to", TagResolver.resolver(
             Placeholder.parsed("player", receiver.name),
             Placeholder.parsed("message", message)
         )))

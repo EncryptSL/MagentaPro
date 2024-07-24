@@ -51,7 +51,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
         try {
             kitManager.giveKit(target, kitName)
             target.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.to", TagResolver.resolver(
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.self.other", TagResolver.resolver(
                 Placeholder.parsed("username", target.name),
                 Placeholder.parsed("kit", kitName)
             )))

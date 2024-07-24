@@ -33,38 +33,38 @@ kits:
     items:
       iron_helmet:
         amount: 1
-        enchants:
+        enchantments:
           - 'protection:3'
         meta:
           displayName: <yellow>VIP KIT
       iron_chestplate:
         amount: 1
-        enchants:
+        enchantments:
           - 'protection:3'
         meta:
           displayName: <yellow>VIP KIT
       iron_leggings:
         amount: 1
-        enchants:
+        enchantments:
           - 'protection:3'
         meta:
           displayName: <yellow>VIP KIT
       iron_boots:
         amount: 1
-        enchants:
+        enchantments:
           - 'feather_falling:2'
           - 'protection:3'
         meta:
           displayName: <yellow>VIP KIT
       iron_pickaxe:
         amount: 1
-        enchants:
+        enchantments:
           - 'efficiency:2'
         meta:
           displayName: <yellow>VIP KIT
       iron_sword:
         amount: 1
-        enchants:
+        enchantments:
           - 'fire_aspect:1'
           - 'knockback:1'
           - 'sharpness:2'
@@ -72,19 +72,19 @@ kits:
           displayName: <yellow>VIP KIT
       iron_axe:
         amount: 1
-        enchants:
+        enchantments:
           - 'efficiency:2'
         meta:
           displayName: <yellow>VIP KIT
       iron_shovel:
         amount: 1
-        enchants:
+        enchantments:
           - 'efficiency:2'
         meta:
           displayName: <yellow>VIP KIT
       iron_hoe:
         amount: 1
-        enchants:
+        enchantments:
           - 'efficiency:2'
         meta:
           displayName: <yellow>VIP KIT

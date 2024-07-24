@@ -28,7 +28,7 @@ class PlayerCacheManager(private val magenta: Magenta) {
                 sender?.let {
                     PlayerBuilderAction
                         .player(sender)
-                        .message(magenta.locale.translation("magenta.command.tpa.error.request.expired.to",
+                        .message(magenta.locale.translation("magenta.command.tpa.error.request.expired.self",
                             Placeholder.parsed("player", Bukkit.getOfflinePlayer(value.to).name.toString())
                         )).sound("block.note_block.bass", 1.5F, 1.5F)
                 }

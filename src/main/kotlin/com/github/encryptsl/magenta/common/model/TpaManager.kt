@@ -26,10 +26,10 @@ class TpaManager(private val magenta: Magenta) {
             return player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.not.exist"))
         }
 
-        val target = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
+        val requester = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.to?.let { Bukkit.getPlayer(it) }
             ?: return player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.accept"))
 
-        val user = magenta.user.getUser(target.uniqueId)
+        val user = magenta.user.getUser(requester.uniqueId)
         val delay = magenta.config.getLong("teleport-cooldown", 0)
 
         if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.TPA_DELAY_EXEMPT)) {
@@ -38,13 +38,13 @@ class TpaManager(private val magenta: Magenta) {
 
         player.sendMessage(magenta.locale.translation("magenta.command.tpa.success.request.accepted"))
         PlayerBuilderAction
-            .player(target)
-            .message(magenta.locale.translation("magenta.command.tpa.success.request.accepted.to",
+            .player(requester)
+            .message(magenta.locale.translation("magenta.command.tpa.success.request.accepted.from",
                 TagResolver.resolver(
-                    Placeholder.parsed("player", target.name)
+                    Placeholder.parsed("player", requester.name)
                 )
             )).sound("block.note_block.pling", 1.5F, 1.5F)
-        target.teleport(player)
+        requester.teleport(player)
         magenta.playerCacheManager.teleportRequest.asMap().remove(player.uniqueId)
     }
 
@@ -55,7 +55,7 @@ class TpaManager(private val magenta: Magenta) {
 
         val sender = magenta.playerCacheManager.teleportRequest.asMap()[player.uniqueId]?.from?.let { Bukkit.getPlayer(it) }
         sender?.playSound(sender, Sound.BLOCK_NOTE_BLOCK_BASS, 1.5F, 1.5F)
-        sender?.sendMessage(magenta.locale.translation("magenta.command.tpa.error.denied.to"))
+        sender?.sendMessage(magenta.locale.translation("magenta.command.tpa.error.denied.by.target"))
         player.sendMessage(magenta.locale.translation("magenta.command.tpa.error.denied"))
         magenta.playerCacheManager.teleportRequest.asMap().remove(player.uniqueId)
     }

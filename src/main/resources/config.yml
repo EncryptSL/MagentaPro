@@ -121,32 +121,71 @@ level:
     sound: "ui.toast_challenger.complete"
     volume: 5.5f
     pitch: 1.2f
+
+  # Formatting of showed level progress bar.
+  # This bar is showed with command /level or /level [player]
   progress_bar:
     barSymbol: ⛆
     total_bars: 20
     completed_fields: "<green>"
     not_completed_fields: "<gray>"
-  format:
-    - ""
-    - "<gold><bold>LevelUp"
-    - "Dosahl jsi levelu <yellow><bold><level>"
-    - "Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>"
-    - ""
-  worlds: [world, world_nether, mineworld]
-  ores:
-    COAL_ORE: 2
-    DEEPSLATE_COAL_ORE: 2
-    IRON_ORE: 3
-    DEEPSLATE_IRON_ORE: 3
-    REDSTONE_ORE: 4
-    DEEPSLATE_REDSTONE_ORE: 4
-    GOLD_ORE: 5
-    DEEPSLATE_GOLD_ORE: 5
-    DIAMOND_ORE: 10
-    DEEPSLATE_DIAMOND_ORE: 10
-    EMERALD_ORE: 11
-    DEEPSLATE_EMERALD_ORE: 11
-    ANCIENT_DEBRIS: 12
+
+  # Formatting of showed levelup message
+  format: -|
+    <gold><bold>LevelUp</bold></gold>
+    
+    Dosahl jsi levelu <yellow><bold><level>
+    Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>
+
+  level-up-progress:
+    # Enable or disable rewards for levelup.
+    enabled: false
+
+    # Configuration for rewarding player when reach level point from config.
+    # You can easier add commands for rewarding player.
+    # For celebratory with players you can add broadcast.
+    # Key represent player level to reach.
+    level-up-rewards:
+      5:
+        broadcast: '<gray>Hráč <yellow><player> <gray>dosáhl levelu 5 nebo <level>, a dostal něco...'
+        commands:
+          - 'eco add %player% 50 -s'
+      # 10:
+      #   commands:
+      #     - ''
+      # 20:
+      #   commands:
+      #     - ''
+      # 30:
+      #   commands:
+      #     - ''
+
+
+  # Locked progress behind level.
+  locked-progress:
+    # Locked progress enabled in this worlds !
+    worlds: [world, world_nether, mineworld]
+
+    # Locked progress for mining ores.
+    # Showcase how working locking ores behind level.
+    # ores:
+    #   COAL_ORE: <required_level_to_unlock_mining>
+    mining:
+      enabled: true
+      ores:
+        COAL_ORE: 2
+        DEEPSLATE_COAL_ORE: 2
+        IRON_ORE: 3
+        DEEPSLATE_IRON_ORE: 3
+        REDSTONE_ORE: 4
+        DEEPSLATE_REDSTONE_ORE: 4
+        GOLD_ORE: 5
+        DEEPSLATE_GOLD_ORE: 5
+        DIAMOND_ORE: 10
+        DEEPSLATE_DIAMOND_ORE: 10
+        EMERALD_ORE: 11
+        DEEPSLATE_EMERALD_ORE: 11
+        ANCIENT_DEBRIS: 12
 
 #########################################################
 #                    MENTIONS                           #
@@ -231,7 +270,7 @@ homes:
   # limit of homes what can be created,
   # with permission magenta.homes.player can have player 3 homes.
   groups:
-    player: 3
+    default: 3
     vip: 10
     moderator: -1
     admin: -1
@@ -272,7 +311,7 @@ warps:
 # ########################################################
 silky_spawners:
   enabled: true
-  spawner_name: "<red>SPAWNER <yellow><spawner>"
+  spawner_name: "<red>SPAWNER <yellow><entity>"
   tools:
     - GOLD_PICKAXE
     - IRON_PICKAXE

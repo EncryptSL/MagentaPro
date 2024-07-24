@@ -38,8 +38,8 @@ class KitManager(private val magenta: Magenta) {
 
             val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
-            if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants")) {
-                val enchantments = magenta.kitConfig.getConfig().getStringList("kits.$kitName.items.${material.name.lowercase()}.enchants").iterator()
+            if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchantments")) {
+                val enchantments = magenta.kitConfig.getConfig().getStringList("kits.$kitName.items.${material.name.lowercase()}.enchantments").iterator()
                 while (enchantments.hasNext()) {
                     val split = enchantments.next().split(":")
                     val enchantment = split[0]
@@ -68,7 +68,7 @@ class KitManager(private val magenta: Magenta) {
             val itemType = item.type
             kitSection.set("items.${itemType.name.lowercase()}.amount", item.amount)
             for (enchant in item.enchantments) {
-                kitSection.set("items.${itemType.name.lowercase()}.enchants.${enchant.key.key().value()}", enchant.value)
+                kitSection.set("items.${itemType.name.lowercase()}.enchantments.${enchant.key.key().value()}", enchant.value)
             }
 
             if (item.hasItemMeta()) {
@@ -108,8 +108,8 @@ class KitManager(private val magenta: Magenta) {
 
                 val itemBuilder = ItemCreator(material, count).setName(displayKitName).addLore(lore.toMutableList())
 
-                if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchants")) {
-                    val enchantments = magenta.kitConfig.getConfig().getStringList("kits.$kitName.items.${material.name.lowercase()}.enchants").iterator()
+                if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.enchantments")) {
+                    val enchantments = magenta.kitConfig.getConfig().getStringList("kits.$kitName.items.${material.name.lowercase()}.enchantments").iterator()
                     while (enchantments.hasNext()) {
                         val split = enchantments.next().split(":")
                         val enchantment = split[0]

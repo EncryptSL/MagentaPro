@@ -37,7 +37,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                         Placeholder.parsed("level", amount.toString()),
                     )))
             commandSender.sendMessage(
-                magenta.locale.translation("magenta.command.levels.success.level.add.to",
+                magenta.locale.translation("magenta.command.levels.success.level.add.self.other",
                     TagResolver.resolver(
                         Placeholder.parsed("player", target.name.toString()),
                         Placeholder.parsed("level", amount.toString()),
@@ -74,7 +74,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                         Placeholder.parsed("level", amount.toString()),
                     )))
             commandSender.sendMessage(
-                magenta.locale.translation("magenta.command.levels.success.level.set.to",
+                magenta.locale.translation("magenta.command.levels.success.level.set.self.other",
                     TagResolver.resolver(
                         Placeholder.parsed("player", target.name.toString()),
                         Placeholder.parsed("level", amount.toString()),
@@ -104,7 +104,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
             magenta.levelAPI.addExperience(target.uniqueId, amount)
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.success.experience.add.to", TagResolver.resolver(
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.success.experience.add.self.other", TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
                 Placeholder.parsed("experience", amount.toString()))
             ))
@@ -147,7 +147,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                         Placeholder.parsed("experience", amount.toString()),
                     )))
             commandSender.sendMessage(
-                magenta.locale.translation("magenta.command.levels.success.experience.set.to",
+                magenta.locale.translation("magenta.command.levels.success.experience.set.self.other",
                     TagResolver.resolver(
                         Placeholder.parsed("player", target.name.toString()),
                         Placeholder.parsed("experience", amount.toString()),

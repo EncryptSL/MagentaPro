@@ -132,7 +132,7 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
 
     private fun sendMessages(commandSender: CommandSender, player: Player, gameMode: GameMode) {
         player.sendMessage(magenta.locale.translation("magenta.command.gamemode", Placeholder.parsed("gamemode", gameMode.name)))
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.gamemode.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.gamemode.self.other", TagResolver.resolver(
             Placeholder.parsed("player", player.name),
             Placeholder.parsed("gamemode", gameMode.name)
         )))

@@ -71,7 +71,7 @@ class CommandHelper(private val magenta: Magenta) {
                 magenta.user.getUser(player.uniqueId).set("flying", false)
                 player.sendMessage(magenta.locale.translation("magenta.command.fly.success.deactivated"))
                 commandSender?.sendMessage(
-                    magenta.locale.translation("magenta.command.fly.success.deactivated.to",
+                    magenta.locale.translation("magenta.command.fly.success.deactivated.self.other",
                         Placeholder.parsed("player", player.name)
                     )
                 )
@@ -81,7 +81,7 @@ class CommandHelper(private val magenta: Magenta) {
                 magenta.user.getUser(player.uniqueId).set("flying", true)
                 player.sendMessage(magenta.locale.translation("magenta.command.fly.success.activated"))
                 commandSender?.sendMessage(
-                    magenta.locale.translation("magenta.command.fly.success.activated.to", Placeholder.parsed("player", player.name))
+                    magenta.locale.translation("magenta.command.fly.success.activated.self.other", Placeholder.parsed("player", player.name))
                 )
             }
         }

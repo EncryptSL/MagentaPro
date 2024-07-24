@@ -50,7 +50,7 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
         target.sendMessage(magenta.locale.translation("magenta.command.heal"))
         target.health = 20.0
         target.foodLevel = 20
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.heal.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.heal.self.other", TagResolver.resolver(
             Placeholder.parsed("player", target.name)
         )))
     }

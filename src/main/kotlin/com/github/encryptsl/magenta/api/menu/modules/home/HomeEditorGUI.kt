@@ -21,7 +21,7 @@ import org.bukkit.entity.Player
 @Suppress("UnstableApiUsage")
 class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) {
 
-    enum class BUTTON_ACTION { BACK_TO_MENU, SET_HOME, SET_ICON, DELETE_HOME }
+    enum class ButtonAction { BACK_TO_MENU, SET_HOME, SET_ICON, DELETE_HOME }
 
     private val menu: MenuUI by lazy { MenuUI(magenta) }
     private val ignoreSlots = listOf(17, 18, 26, 27, 35, 36, 44)
@@ -90,14 +90,14 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
         el: String,
         gui: Gui
     ) {
-        val action = BUTTON_ACTION.valueOf(config.getString("menu.items.buttons.$el.action").toString())
+        val action = ButtonAction.valueOf(config.getString("menu.items.buttons.$el.action").toString())
 
         when(action) {
-            BUTTON_ACTION.BACK_TO_MENU -> {
+            ButtonAction.BACK_TO_MENU -> {
                 clicked = false
                 homeGUI.openHomeGUI(player)
             }
-            BUTTON_ACTION.SET_HOME -> {
+            ButtonAction.SET_HOME -> {
                 clicked = false
                 clearIcons(gui)
                 magenta.homeModel.moveHome(player.uniqueId, warpName, player.location)
@@ -108,10 +108,10 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                     Placeholder.parsed("z", player.location.z.toInt().toString())
                 )))
             }
-           BUTTON_ACTION.SET_ICON -> {
+           ButtonAction.SET_ICON -> {
                setNewIcon(gui, warpName, config)
-            }
-            BUTTON_ACTION.DELETE_HOME -> {
+           }
+            ButtonAction.DELETE_HOME -> {
                 clicked = false
                 magenta.homeModel.deleteHome(player.uniqueId, warpName)
                 player.closeInventory()

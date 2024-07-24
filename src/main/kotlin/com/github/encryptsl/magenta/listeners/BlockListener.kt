@@ -1,9 +1,9 @@
 package com.github.encryptsl.magenta.listeners
 
+import com.github.encryptsl.kmono.lib.utils.BlockUtils
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.utils.BlockUtils
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.GameMode
@@ -18,6 +18,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 
 class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
+
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreakJail(event: BlockBreakEvent) {
         val player = event.player
@@ -70,13 +71,14 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
         val player = event.player
         val block = event.block
 
+        if (!magenta.config.getBoolean("level.locked-progress.mining.enabled")) return
         if (player.gameMode == GameMode.CREATIVE) return
         if (player.hasPermission(Permissions.LEVEL_MINE_BYPASS)) return
-        if (!magenta.config.contains("level.ores.${block.type.name}")) return
+        if (!magenta.config.contains("level.locked-progress.mining.ores.${block.type.name}")) return
 
-        if (!magenta.stringUtils.inInList("level.worlds", player.world.name)) return
+        if (!magenta.stringUtils.inInList("level.locked-progress.worlds", player.world.name)) return
 
-        val requiredLevel = magenta.config.getInt("level.ores.${block.type.name}")
+        val requiredLevel = magenta.config.getInt("level.locked-progress.mining.ores.${block.type.name}")
         magenta.levelAPI.getUserByUUID(player.uniqueId).thenAccept {
             if (requiredLevel < it.level) return@thenAccept
 
@@ -92,13 +94,16 @@ class BlockListener(private val magenta: Magenta) : HalloweenAPI(), Listener {
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent) {
         val player = event.player
+        val block = event.blockPlaced
 
         if (magenta.user.getUser(player.uniqueId).isJailed()) {
             player.sendMessage(magenta.locale.translation("magenta.command.jail.error.event", Placeholder.parsed("action", "pokládat bloky")))
             event.isCancelled = true
         }
 
-        BlockUtils.updateSpawner(event.block, player)
+        if (magenta.config.getBoolean("silky_spawners.enabled") && BlockUtils.isBlockSpawner(block)) {
+            BlockUtils.updateSpawner(event.block, player)
+        }
     }
 
 }

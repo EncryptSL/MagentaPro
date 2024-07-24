@@ -34,15 +34,15 @@ class BroadcastCmd(private val magenta: Magenta) : AnnotationFeatures {
     }
 
     @ProxiedBy("bctitle")
-    @Command("broadcast title <message>")
+    @Command("broadcast title <fadeIn> <stay> <fadeOut> <message>")
     @Permission("magenta.broadcast")
     @CommandDescription("This command send title broadcast message to every one.")
     fun onBroadcastTitle(
         commandSender: CommandSender,
+        @Argument("fadeIn") @Default("1") fadeIn: Int,
+        @Argument("stay") @Default("2") stay: Int,
+        @Argument("fadeOut") @Default("1") fadeOut: Int,
         @Greedy @Argument(value = "message") message: String,
-        @Flag("fadeIn") @Default("1") fadeIn: Int,
-        @Flag("stay") @Default("2") stay: Int,
-        @Flag("fadeOut") @Default("1") fadeOut: Int,
     ) {
         ActionTitleManager.sendTitleAndSubtitle(Audience.audience(Bukkit.getOnlinePlayers()),
             ModernText.miniModernText(magenta.config.getString("prefix").toString()),

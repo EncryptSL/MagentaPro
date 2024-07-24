@@ -102,7 +102,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (location == null) {
             player.teleport(target.location, PlayerTeleportEvent.TeleportCause.COMMAND)
 
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.success.to", TagResolver.resolver(
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.success.self.other", TagResolver.resolver(
                 Placeholder.parsed("player", player.name),
                 Placeholder.parsed("target", target.name)
             )))

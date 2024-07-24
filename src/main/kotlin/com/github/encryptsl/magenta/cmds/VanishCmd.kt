@@ -42,7 +42,7 @@ class VanishCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         target.sendMessage(magenta.locale.translation("magenta.command.vanish.success.vanish", Placeholder.parsed("mode", mode)))
 
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.vanish.success.vanish.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.vanish.success.vanish.self.other", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("mode", mode)
         )))

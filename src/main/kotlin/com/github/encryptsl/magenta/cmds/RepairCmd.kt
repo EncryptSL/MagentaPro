@@ -82,7 +82,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         target.sendMessage(magenta.locale.translation("magenta.command.repair.success.all"))
         commandSender.sendMessage(
-            magenta.locale.translation("magenta.command.repair.success.all.to", TagResolver.resolver(
+            magenta.locale.translation("magenta.command.repair.success.all.self.other", TagResolver.resolver(
                     Placeholder.parsed("player", target.name)
                 )
             )

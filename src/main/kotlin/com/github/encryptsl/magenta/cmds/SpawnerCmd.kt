@@ -76,7 +76,7 @@ class SpawnerCmd(private val magenta: Magenta) : AnnotationFeatures {
             Placeholder.parsed("amount", amount.toString())
         )))
 
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.spawner.success.given.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.spawner.success.given.self.other", TagResolver.resolver(
             Placeholder.parsed("type", entity.name),
             Placeholder.parsed("amount", amount.toString()),
             Placeholder.parsed("player", target.name)

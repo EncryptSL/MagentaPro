@@ -38,7 +38,7 @@ class BackCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onBack(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: Player) {
         try {
             onBack(target)
-            commandSender.sendMessage(magenta.locale.translation("magenta.command.back.success.to",
+            commandSender.sendMessage(magenta.locale.translation("magenta.command.back.success.self.other",
                 Placeholder.parsed("player", target.name)
             ))
         } catch (e : Exception) {

@@ -28,11 +28,11 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
             ModernText.miniModernText(
                 magenta.milestonesVotePass.getConfig().getString("menu.items.gui.display") ?: player.name
             ),
-            magenta.milestonesOres.getConfig()
+            magenta.milestonesVotePass.getConfig()
         )
         val menuSection = magenta.milestonesVotePass.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
 
-        menuUI.useAllFillers(gui, magenta.milestonesOres.getConfig())
+        menuUI.useAllFillers(gui, magenta.milestonesVotePass.getConfig())
         for (item in menuSection.withIndex()) {
             val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
                     el -> el.key().value().equals(magenta.milestonesVotePass.getConfig().getString("menu.items.$item.item").toString(), true)

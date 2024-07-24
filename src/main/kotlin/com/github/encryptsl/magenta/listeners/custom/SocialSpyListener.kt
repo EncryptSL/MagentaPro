@@ -50,7 +50,7 @@ class SocialSpyListener(private val magenta: Magenta) : Listener {
         target.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle",
             Placeholder.parsed("value", value.toString())
         ))
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle.to",
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.social.spy.success.toggle.self.other",
             TagResolver.resolver(
                 Placeholder.parsed("player", target.name),
                 Placeholder.parsed("value", value.toString())

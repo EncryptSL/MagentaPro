@@ -25,7 +25,7 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
         )
 
         val getLevel = magenta.levelAPI.getUserByUUID(player.uniqueId).join()
-        val section = magenta.config.getConfigurationSection("level.ores")?.getKeys(false) ?: return
+        val section = magenta.config.getConfigurationSection("level.locked-progress.mining.ores")?.getKeys(false) ?: return
 
         menuUI.useAllFillers(gui, magenta.milestonesOres.getConfig())
 

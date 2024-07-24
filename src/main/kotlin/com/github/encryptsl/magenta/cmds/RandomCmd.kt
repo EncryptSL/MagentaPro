@@ -48,7 +48,7 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         target.sendMessage(magenta.locale.translation("magenta.command.random.world.ticket.success.player",
             Placeholder.parsed("amount", amount.toString())
         ))
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.random.world.ticket.success.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.random.world.ticket.success.self.other", TagResolver.resolver(
             Placeholder.parsed("player", target.name),
             Placeholder.parsed("amount", amount.toString())
         )))
@@ -76,7 +76,7 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
         target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
             Placeholder.parsed("category", type)
         ))
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.to", TagResolver.resolver(
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.self.other", TagResolver.resolver(
             Placeholder.parsed("category", type),
             Placeholder.parsed("tag", randomTag)
         )))
