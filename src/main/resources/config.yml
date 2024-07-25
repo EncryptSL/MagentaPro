@@ -30,6 +30,10 @@ newbies:
 #########################################################
 prefix: "<dark_gray>[<red>Server<dark_gray>] <dark_green>»"
 
+# This time format is used everywhere.
+time-format: "EEEE, dd. MMMM yyyy HH:mm:ss"
+
+# URL for Download database with ip address and countries.
 maxmind-url: "https://git.io/GeoLite2-Country.mmdb"
 
 # A list of users who can't be reported or ignored !
