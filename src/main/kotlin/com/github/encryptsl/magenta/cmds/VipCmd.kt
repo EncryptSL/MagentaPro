@@ -41,7 +41,7 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
                 ?: return player.sendMessage(magenta.locale.translation("magenta.command.vip.error.expired"))
 
             player.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time", TagResolver.resolver(
-                Placeholder.parsed("expire", convertInstant(time, dateTimeFormat)),
+                Placeholder.parsed("expire", convertInstant(time, magenta.config.getString("time-format").toString())),
                 Placeholder.parsed("days", Clock.System.now().daysUntil(time.toKotlinInstant(), TimeZone.currentSystemDefault()).toString())
             )))
         } catch (e : Exception) {
@@ -57,15 +57,14 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send information about other player vip expiration")
     fun onVIPExpireOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
         try {
-            val time = luckPermsAPI.getExpireGroup(target, group)
-                ?: return commandSender.sendMessage(
-                    magenta.locale.translation("magenta.command.vip.error.expired.other",
+            val time = luckPermsAPI.getExpireGroup(target, group) ?: return commandSender.sendMessage(
+                magenta.locale.translation("magenta.command.vip.error.expired.other",
                         Placeholder.parsed("player", target.name.toString())
-                    ))
+                ))
 
             commandSender.sendMessage(magenta.locale.translation("magenta.command.vip.success.expire.time.other", TagResolver.resolver(
                 Placeholder.parsed("player", target.name.toString()),
-                Placeholder.parsed("expire", DateFormatUtils.format(time.toEpochMilli(), dateTimeFormat))))
+                Placeholder.parsed("expire", DateFormatUtils.format(time.toEpochMilli(), magenta.config.getString("time-format").toString()))))
             )
         } catch (e : Exception) {
             commandSender.sendMessage(magenta.locale.translation("magenta.exception",
