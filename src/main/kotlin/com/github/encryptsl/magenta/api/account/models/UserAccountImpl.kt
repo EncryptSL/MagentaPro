@@ -12,9 +12,9 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
 
     override fun createDefaultData(player: Player) {
         getAccount().set("teleportenabled", true)
-        getAccount().set("godmode", false)
         getAccount().set("jailed", false)
         getAccount().set("afk", false)
+        getAccount().set("vanished", false)
         getAccount().set("ip-address", player.address.address.hostAddress)
         getAccount().set("socialspy", false)
         getAccount().set("timestamps.lastteleport", 0)
