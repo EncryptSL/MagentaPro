@@ -32,33 +32,33 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
         val user = magenta.user.getUser(target.uniqueId)
 
         try {
-            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.username"), user)
+            sendMessage(commandSender, "magenta.command.whois.username", user)
 
-            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.geolocation"), user)
+            sendMessage(commandSender, "magenta.command.whois.geolocation", user)
 
             if (target.isOnline || target.isConnected) {
-                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.health"), user)
-                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.hunger"), user)
+                sendMessage(commandSender,"magenta.command.whois.health", user)
+                sendMessage(commandSender,"magenta.command.whois.hunger", user)
             }
 
-            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.gamemode"), user)
+            sendMessage(commandSender, "magenta.command.whois.gamemode", user)
 
             if (user.getFlying()) {
-                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.flying"), user)
+                sendMessage(commandSender, "magenta.command.whois.flying", user)
             }
 
-            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.lastLogin"), user)
-            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.lastSeen"), user)
+            sendMessage(commandSender, "magenta.command.whois.lastLogin", user)
+            sendMessage(commandSender, "magenta.command.whois.lastSeen", user)
 
-            sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.votes"), user)
+            sendMessage(commandSender,"magenta.command.whois.votes", user)
             if (user.isAfk()) {
-                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.isAfk"), user)
+                sendMessage(commandSender, "magenta.command.whois.isAfk", user)
             }
             if (user.isSocialSpy()) {
-                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.isSocialSpy"), user)
+                sendMessage(commandSender, "magenta.command.whois.isSocialSpy", user)
             }
             if (user.isVanished()) {
-                sendMessage(commandSender, magenta.locale.getMessage("magenta.command.whois.isVanished"), user)
+                sendMessage(commandSender, "magenta.command.whois.isVanished", user)
             }
         } catch(e : Exception) {
             magenta.logger.severe(e.stackTraceToString())
@@ -70,6 +70,7 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
         val ip = user.getAccount().getString("ip-address").toString()
         val maxmind = magenta.geoMaxMind.getGeoMaxMing()
         val country = maxmind.country(InetAddress.getByName(ip)).country
+        val timeFormat = magenta.config.getString("time-format").toString()
 
         val playerIP = if (commandSender.hasPermission(Permissions.WHOIS_IP)) ip else ip.censorIpAddress()
 
@@ -81,8 +82,8 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
             Placeholder.parsed("gamemode", user.getGameMode().name),
             Placeholder.parsed("flying", user.getFlying().toString()),
             Placeholder.parsed("ip_address", playerIP),
-            Placeholder.parsed("last_seen", convertFromMillis(user.getOfflinePlayer().lastSeen)),
-            Placeholder.parsed("last_login", convertFromMillis(user.getOfflinePlayer().lastLogin)),
+            Placeholder.parsed("last_seen", convertFromMillis(timeFormat, user.getOfflinePlayer().lastSeen)),
+            Placeholder.parsed("last_login", convertFromMillis(timeFormat, user.getOfflinePlayer().lastLogin)),
             Placeholder.parsed("remaining_jail_time", user.getRemainingJailTime().toString()),
             Placeholder.parsed("is_afk", user.isAfk().toString()),
             Placeholder.parsed("is_socialspy", user.isSocialSpy().toString()),
