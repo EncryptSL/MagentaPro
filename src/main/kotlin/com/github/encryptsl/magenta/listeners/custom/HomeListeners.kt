@@ -131,7 +131,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
 
         val timeLeft: Duration = user.getRemainingCooldown("home")
 
-        if (user.hasDelay("home") && !player.hasPermission(Permissions.HOME_DELAY_EXEMPT)) {
+        if (user.hasDelay("home") && !player.hasPermission(Permissions.HOME_DELAY_EXEMPT) && delay != 0L) {
             return commandHelper.delayMessage(player, "magenta.command.home.error.delay", timeLeft)
         }
 

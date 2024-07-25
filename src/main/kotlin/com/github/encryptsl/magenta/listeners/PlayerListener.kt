@@ -13,6 +13,7 @@ import com.github.encryptsl.magenta.common.model.VoucherManager
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.block.Sign
 import org.bukkit.block.sign.Side
 import org.bukkit.entity.HumanEntity
@@ -21,6 +22,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.*
@@ -217,6 +219,17 @@ class PlayerListener(private val magenta: Magenta) : Listener {
 
         player.teleport(magenta.warpModel.toLocation(convertedWarpName))
         event.isCancelled = true
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    fun onPlayerDeathEvent(event: PlayerDeathEvent) {
+        val player = event.player
+        magenta.homeModel.getHomesByOwner(player.uniqueId).thenApply { homes ->
+            val home = homes.firstOrNull()
+            home?.let { Bukkit.getWorld(home.world)?.let { player.teleportAsync(Location(it, home.x.toDouble(), home.y.toDouble(), home.z.toDouble(), home.yaw, home.pitch)) } }
+        }.exceptionally {
+            magenta.spawnConfig.getConfig().getLocation("spawn")?.let { player.teleportAsync(it) }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)

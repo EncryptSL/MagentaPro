@@ -115,7 +115,7 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
                 clicked = false
                 magenta.homeModel.deleteHome(player.uniqueId, warpName)
                 player.closeInventory()
-                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("home", warpName)))
+                player.sendMessage(magenta.locale.translation("magenta.command.home.success.deleted", Placeholder.parsed("home", warpName)))
             }
         }
     }

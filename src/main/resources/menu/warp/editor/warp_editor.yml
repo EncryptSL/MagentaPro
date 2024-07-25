@@ -30,11 +30,11 @@ menu:
         action: "SET_ICON"
         lore:
           - "<gray>Klikni pro nastavení ikony."
-      delete_home:
+      delete_warp:
         name: "<red>Smazat Warp"
         icon: BARRIER
         slot: 8
-        action: "DELETE_HOME"
+        action: "DELETE_WARP"
   icons:
     - RED_BED
     - NAME_TAG

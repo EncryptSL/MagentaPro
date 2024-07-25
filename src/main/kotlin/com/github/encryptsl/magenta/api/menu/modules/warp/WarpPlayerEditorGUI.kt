@@ -41,14 +41,14 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             ), magenta.warpEditorConfig.getConfig()
         )
 
-        val buttons = magenta.warpEditorConfig.getConfig().getConfigurationSection("menu.items.buttons") ?: return
+        val buttons = magenta.warpEditorConfig.getConfig().getConfigurationSection("menu.items.buttons")?.getKeys(false) ?: return
 
         menu.useAllFillers(gui, magenta.warpEditorConfig.getConfig())
 
-        for (el in buttons.getKeys(false)) {
+        for (el in buttons) {
             val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
-                magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.$el.icon").equals(it.key().value())
-            } ?: continue
+                magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.$el.icon").equals(it.key().value(), true)
+            } ?: return
             if (magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}")) {
                 if (!magenta.warpEditorConfig.getConfig().contains("menu.items.buttons.${el}.name"))
                     return player.sendMessage(magenta.locale.translation("magenta.menu.error.not.defined.name",
@@ -67,17 +67,15 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
                 val slot = magenta.warpEditorConfig.getConfig().getInt("menu.items.buttons.${el}.slot")
 
-                val lore = magenta.warpEditorConfig
-                    .getConfig()
-                    .getStringList("menu.items.buttons.$el.lore")
-                    .map { ModernText.miniModernText(it) }
-                    .toMutableList()
-
                 val itemStack = createItem(material.createItemStack()) {
                     amount = 1
                     meta {
                         setNameComponent = ModernText.miniModernText(magenta.warpEditorConfig.getConfig().getString("menu.items.buttons.${el}.name").toString())
-                        setLoreComponentList = lore
+                        setLoreComponentList = magenta.warpEditorConfig
+                            .getConfig()
+                            .getStringList("menu.items.buttons.$el.lore")
+                            .map { ModernText.miniModernText(it) }
+                            .toMutableList()
                     }
                 }
 
@@ -122,7 +120,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
                 clicked = false
                 magenta.warpModel.deleteWarp(player.uniqueId, warpName)
                 player.closeInventory()
-                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("home", warpName)))
+                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
             }
         }
     }
