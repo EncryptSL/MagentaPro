@@ -17,6 +17,7 @@ class DatabaseConnector(private val magenta: Magenta) : DatabaseConnectorProvide
             .setJdbc(jdbcHost)
             .setUser(user)
             .setPassword(pass)
+            .setConnectionPoolName(magenta.javaClass.simpleName)
             .setConnectionPool(10)
             .setLogger(magenta.slF4JLogger)
             .setDatasource(HikariDataSource())
