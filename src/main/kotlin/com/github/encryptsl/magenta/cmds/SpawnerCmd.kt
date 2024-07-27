@@ -26,10 +26,6 @@ class SpawnerCmd(private val magenta: Magenta) : AnnotationFeatures {
         annotationParser: AnnotationParser<CommandSender>,
         commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
-        commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
-            return@registerSuggestionProvider CompletableFuture
-                .completedFuture(EntityType.entries.map { Suggestion.suggestion(it.name) })
-        }
         annotationParser.parse(this)
     }
 

@@ -26,22 +26,22 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun toggleVanish(user: UserAccountImpl) {
-        for (onlinePlayers in Bukkit.getOnlinePlayers().filter { user.getPlayer() != it }) {
-            when(user.isVanished()) {
-                true -> {
-                    user.set("vanished", false)
-                    user.getPlayer()?.let {
-                        onlinePlayers.showPlayer(magenta, it)
-                        onlinePlayers.listPlayer(it)
-                    }
+        val isUserVanished = user.isVanished()
+
+        if (isUserVanished) { user.set("vanished", false) } else { user.set("vanished", true) }
+
+        for (onlinePlayers in Bukkit.getOnlinePlayers()) {
+            if (onlinePlayers.equals(user.getPlayer())) continue
+            if (isUserVanished) {
+                user.getPlayer()?.let {
+                    onlinePlayers.showPlayer(magenta, it)
+                    onlinePlayers.listPlayer(it)
                 }
-                false -> {
-                    user.set("vanished", true)
-                    if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) {
-                        user.getPlayer()?.let {
-                            onlinePlayers.hidePlayer(magenta, it)
-                            onlinePlayers.unlistPlayer(it)
-                        }
+            } else {
+                if (!onlinePlayers.hasPermission(Permissions.VANISH_EXEMPT)) {
+                    user.getPlayer()?.let {
+                        onlinePlayers.hidePlayer(magenta, it)
+                        onlinePlayers.unlistPlayer(it)
                     }
                 }
             }
@@ -65,11 +65,11 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun allowFly(commandSender: CommandSender?, player: Player) {
-
+        val user = magenta.user.getUser(player.uniqueId)
         when(player.allowFlight) {
             true -> {
                 player.allowFlight = false
-                magenta.user.getUser(player.uniqueId).set("flying", false)
+                user.set("flying", false)
                 player.sendMessage(magenta.locale.translation("magenta.command.fly.success.deactivated"))
                 commandSender?.sendMessage(
                     magenta.locale.translation("magenta.command.fly.success.deactivated.self.other",
@@ -79,7 +79,7 @@ class CommandHelper(private val magenta: Magenta) {
             }
             false -> {
                 player.allowFlight = true
-                magenta.user.getUser(player.uniqueId).set("flying", true)
+                user.set("flying", true)
                 player.sendMessage(magenta.locale.translation("magenta.command.fly.success.activated"))
                 commandSender?.sendMessage(
                     magenta.locale.translation("magenta.command.fly.success.activated.self.other", Placeholder.parsed("player", player.name))
@@ -92,11 +92,15 @@ class CommandHelper(private val magenta: Magenta) {
         val inventory = player.inventory
         val item = inventory.itemInMainHand
         val itemMeta = item.itemMeta
-        if (itemMeta is Damageable) {
-            if (!itemMeta.hasDamage()) return
-            itemMeta.damage = 0
-            item.setItemMeta(itemMeta)
-            player.updateInventory()
+
+        if (itemMeta != null) {
+            if (!magenta.config.getBoolean("repair-enchanted") && itemMeta.hasEnchants() || !player.hasPermission(Permissions.REPAIR_ENCHANTED)) return
+            if (itemMeta is Damageable) {
+                if (!itemMeta.hasDamage()) return
+                itemMeta.damage = 0
+                item.setItemMeta(itemMeta)
+                player.updateInventory()
+            }
         }
         player.sendMessage(magenta.locale.translation("magenta.command.repair.success.item"))
     }
@@ -105,10 +109,13 @@ class CommandHelper(private val magenta: Magenta) {
         val inventory = player.inventory
         for (item in inventory) {
             val itemMeta = item.itemMeta
-            if (itemMeta is Damageable) {
-                itemMeta.damage = 0
-                item.setItemMeta(itemMeta)
-                player.updateInventory()
+            if (itemMeta != null) {
+                if (!magenta.config.getBoolean("repair-enchanted") && itemMeta.hasEnchants() || !player.hasPermission(Permissions.REPAIR_ENCHANTED)) continue
+                if (itemMeta is Damageable) {
+                    itemMeta.damage = 0
+                    item.setItemMeta(itemMeta)
+                    player.updateInventory()
+                }
             }
         }
     }

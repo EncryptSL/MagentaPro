@@ -40,7 +40,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
                 processDefaultReward(serviceName, player, timestamp.toLong())
             }
 
-            if (magenta.config.contains("votifier.cumulative")) {
+            if (magenta.config.contains("votifier.cumulative") && !magenta.config.getBoolean("votifier.disable-cumulative-rewards")) {
                 processCumulativeVote(serviceName, player)
             }
 

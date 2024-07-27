@@ -1,7 +1,8 @@
-#########################################################
-#                     MAGENTA PRO                       #
-#               DEVELOPED BY ENCRYPTSL                  #
-#########################################################
+############################################################
+# +------------------------------------------------------+ #
+# |                     MagentaPro                       | #
+# +------------------------------------------------------+ #
+############################################################
 database:
   host: 'jdbc:sqlite:plugins/MagentaPro/database.db'
   username: root
@@ -12,22 +13,12 @@ discord:
     server_feedback: ""
     notifications: ""
 
-newbies:
-  # Announcement to player who first join on server.
-  announcement: '<color:#FBC688>Přivítejme hráče <color:#FA8B07><player> <color:#FBC688>na
-    serveru, přivítalo k nám již <color:#FA8B07><joined><color:#FBC688>x hráčů.'
-
-  # We teleport player on first join on spawnpoint.
-  # for not spawn on point set spawnpoint: none
-  spawnpoint: spawn
-
-  # We want give newbie player someone kit ? To disable set to kit: ''
-  # Kit will be free, without cost and delay.
-  kit: tools
-
-#########################################################
-#                 MAGENTA PRO (GLOBAL)                  #
-#########################################################
+############################################################
+# +------------------------------------------------------+ #
+# |                     MagentaPro                       | #
+# |                  Global Settings                     | #
+# +------------------------------------------------------+ #
+############################################################
 prefix: "<dark_gray>[<red>Server<dark_gray>] <dark_green>»"
 
 # This time format is used everywhere.
@@ -54,12 +45,15 @@ custom-quit-message: "<gray>[<red>-<gray>] <gold><player> <gray>se odpojil !"
 
 # Enable vanish, for users who have enabled vanish and have required.
 # Permission: mangenta.vanish
-vanish_on_join: false
+vanish-on-join: false
 
-vanish_action_bar: '<green>Jsi aktuálně neviditelný [!]'
+vanish-action-bar: '<green>Jsi aktuálně neviditelný [!]'
 
 # Enable online jail time, time is counted only when is player online !
 online-jail-time: true
+
+# Mob limit on the /spawnmob command per execution.
+spawnmob-limit: 10
 
 jail-info-format: |-
   <gray>Cela <green><jail>
@@ -81,7 +75,7 @@ warp-info-format: |-
   <gray>Svět <green><world>
   <green>/warp <warp>
 
-socialspy-format: <color:#009EFF>[SOCIALSPY] <color:#4AAEFC><player> <color:#90D2FA><message>
+socialspy-format: <color:#009EFF>[SCP] <color:#4AAEFC><player> <color:#90D2FA><message>
 
 # These commands will be shown to players with socialSpy enabled.
 # You can add commands from other plugins you may want to track or
@@ -94,12 +88,28 @@ socialspy-commands:
   - tell
   - pm
 
+# Disabling commands here will prevent MagentaPro handling the command, this will not affect command conflicts.
+disabled-commands:
+#  - nick
+#  - clear
+
 # Auto-AFK
 # After this timeout in seconds, the user will be set as AFK.
 # This feature requires the player to have magenta.afk.auto node.
 # Set to -1 for no timeout.
 auto-afk: 5
 
+# Allow repair of enchanted weapons and armor.
+# If you set this to false, you can still allow it for certain players using the permission.
+# magenta.repair.enchanted
+repair-enchanted: true
+
+# Toggles whether the fly status message should be sent to players on join
+send-fly-enable-on-join: true
+
+# When a player changes world, should MagentaPro reset their flight?
+# This will disable flight if the player does not have magenta.fly.
+world-change-fly-reset: true
 
 # Portal Section
 # There you can block creating of portals.
@@ -265,10 +275,11 @@ news:
     - <gray>Vyzvedni si svou denní odměnu, <green>/warp odmena
 
 
-#########################################################
-#                       HOMES                           #
-# permission: magenta.homes.<group>                     #
-#########################################################
+############################################################
+# +------------------------------------------------------+ #
+# |                        Homes                         | #
+# +------------------------------------------------------+ #
+############################################################
 homes:
   # You can set your own group and this group have your own
   # limit of homes what can be created,
@@ -286,16 +297,21 @@ homes:
     - world
     - world_nether
 
-#########################################################
-#                       WARPS                           #
-# permission: magenta.warps.<group>                     #
-#########################################################
+  # If no home is set, would you like to send the player to spawn?
+  # If set to false, players will not be teleported when they run /home without setting a home first.
+  spawn-if-no-home: true
+
+############################################################
+# +------------------------------------------------------+ #
+# |                        WARPS                         | #
+# +------------------------------------------------------+ #
+############################################################
 warps:
   # You can set your own group and this group have your own
   # limit of warps what can be created,
   # with permission magenta.warps.vip can have vip player 3 warps.
   groups:
-    vip: 14
+    vip: 3
     moderator: -1
     admin: -1
 
@@ -392,9 +408,13 @@ votifier:
       <color:#32C4FF>Ve voteparty je aktuálně <color:#0581B3><current_votes>
       <color:#32C4FF>zbývá tedy <color:#0581B3><remaining_votes> hlasů ze <color:#0581B3><start_at> <color:#32C4FF>hlasů
 
-# Cumulative is vote rewarding system based on count of saved
-# player votes in database, if player hit with 10 votes can have reward from this list
-# supported is only command and placeholder {player} and in broadcast <player> with minimessage format.
+  # Cumulative is vote rewarding system based on count of saved
+  # player votes in database, if player hit with 10 votes can have reward from this list
+  # supported is only command and placeholder {player} and in broadcast <player> with minimessage format.
+
+  # This settings can disable cumulative-rewards
+  disable-cumulative-rewards: false
+
   cumulative:
     '10':
       broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
@@ -409,76 +429,12 @@ votifier:
         - eco add {player} {expression_reward} -s
         - levels add {player} 250 points -s
         - crazycrates give physical votecrate 1 {player}
-    '50':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        50 hlasů a proto dostal bonusovou odměnu a 2 vote líče !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - levels add {player} 350 points -s
-        - crazycrates give physical votecrate 2 {player}
-    '100':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        100 hlasů a proto dostal bonusovou odměnu a VIP na 10 dní !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - levels add {player} 400 points -s
-        - cc give p GalaxyBox 1 {player}
-        - skulls give {player} random 1
-        - lp user {player} parent addtemp vip 10d
-    '150':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        150 hlasů a proto dostal bonusovou odměnu a 560 exp !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - skulls give {player} random 3
-        - levels add {player} 560 points -s
-        - random world tickets {player} 2
-    '200':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        200 hlasů a proto dostal bonusovou odměnu a 600 exp !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - levels add {player} 600 points -s
-    '250':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        250 hlasů a proto dostal bonusovou odměnu a 750 exp !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - skulls give {player} random 5
-        - levels add {player} 750 points -s
-    '300':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        300 hlasů a proto dostal bonusovou odměnu a 950 exp !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - cc give p {player} galaxybox 2
-        - levels add {player} 950 points -s
-    '350':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        350 hlasů a proto dostal bonusovou odměnu a 1050 exp !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - random world tickets 3 {player}
-        - levels add {player} 1050 points -s
-    '400':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        400 hlasů a proto dostal bonusovou odměnu a 1250 exp !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - levels add {player} 1250 points -s
-    '500':
-      broadcast: <color:#006afc><player></color> <color:#83b6fc>hlasoval a dosáhl
-        500 hlasů a proto dostal bonusovou odměnu a 1500 exp !</color>
-      rewards:
-        - eco add {player} {expression_reward}
-        - levels add {player} 1500 points -s
-        - skulls give {player} random 5
-        - random world tickets 5 {player}
-        - lp user {player} parent addtemp vip 31d
 
-#########################################################
-#                     Chat Section                      #
-#########################################################
+############################################################
+# +------------------------------------------------------+ #
+# |                        Chat                          | #
+# +------------------------------------------------------+ #
+############################################################
 chat:
   suggestCommand: '/msg {name} '
   hoverText: |-
@@ -487,19 +443,20 @@ chat:
     <gray>
     <dark_gray>▪ <white>Peníze: <yellow>%vault_eco_balance_formatted%
     <dark_gray>▪ <white>Online: <green>%statistic_time_played%
-    <dark_gray>▪ <white>Vyhrané Reakce: <red>%chatgames_points%
   default-format: <prefix> <name> <gray>» <white><message>
 
   group-formats:
   #  default: <gray><name> <dark_gray>» <white><message>
 
-#########################################################
-#                     Void Spawn                        #
-#########################################################
-void_spawn:
+############################################################
+# +------------------------------------------------------+ #
+# |                      Void Spawn                      | #
+# +------------------------------------------------------+ #
+############################################################
+void-spawn:
   # This settings enable function called void spawn.
   # While player fall into void, plugin teleport him back to spawn.
-  enable: true
+  enabled: true
 
   # Sound is played when player is teleported back.
   sound: 'entity.enderman.teleport'
@@ -507,3 +464,28 @@ void_spawn:
   # World list where is void spawn allowed.....
   worlds:
     - spawn
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  MagentaPro Spawn                    | #
+# +------------------------------------------------------+ #
+############################################################
+newbies:
+  # Announcement to player who first join on server.
+  announcement: '<color:#FBC688>Přivítejme hráče <color:#FA8B07><player> <color:#FBC688>na
+    serveru, přivítalo k nám již <color:#FA8B07><joined><color:#FBC688>x hráčů.'
+
+  # We teleport player on first join on spawnpoint.
+  # for not spawn on point set spawnpoint: none
+  spawnpoint: spawn
+
+  # When users die, should they respawn at their first home or bed, instead of the spawnpoint?
+  respawn-at-home: false
+
+  # When users die, should they respawn at their bed instead of the spawnpoint?
+  # The value of respawn-at-home (above) has to be true.
+  respawn-at-home-bed: true
+
+  # We want give newbie player someone kit ? To disable set to kit: ''
+  # Kit will be free, without cost and delay.
+  kit: tools

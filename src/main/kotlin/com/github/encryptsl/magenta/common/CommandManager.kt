@@ -17,6 +17,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.EntityType
 import java.util.concurrent.CompletableFuture
 
 
@@ -97,6 +98,10 @@ class CommandManager(private val magenta: Magenta) {
             return@registerSuggestionProvider CompletableFuture
                 .completedFuture(Bukkit.getWorlds().map { Suggestion.suggestion(it.name) })
         }
+        commandManager.parserRegistry().registerSuggestionProvider("mobs") {_, _ ->
+            return@registerSuggestionProvider CompletableFuture
+                .completedFuture(EntityType.entries.map { Suggestion.suggestion(it.name) })
+        }
     }
 
     fun registerCommands() {
@@ -141,6 +146,7 @@ class CommandManager(private val magenta: Magenta) {
                 SocialSpyCmd(magenta),
                 SpawnCmd(magenta),
                 SpawnerCmd(magenta),
+                SpawnMobCmd(magenta),
                 TpCmd(magenta),
                 VanishCmd(magenta),
                 VipCmd(magenta),

@@ -75,6 +75,7 @@ permissions:
       magenta.social.spy.*: true
       magenta.spawn.*: true
       magenta.spawner.*: true
+      magenta.spawnmob.*: true
       magenta.tpa.*: true
       magenta.vanish.*: true
       magenta.votes.*: true
@@ -316,6 +317,7 @@ permissions:
       magenta.repair.item: true
       magenta.repair.all: true
       magenta.repair.all.other: true
+      magenta.repair.enchanted: true
       magenta.repair.delay.exempt: true
   magenta.report.*:
     description: Permissions for report
@@ -356,6 +358,11 @@ permissions:
     children:
       magenta.spawner.set: true
       magenta.spawner.give: true
+  magenta.spawnmob.*:
+    description: Permissions for spawning mobs.
+    default: false
+    children:
+      magenta.spawnmob: true
   magenta.tpa.*:
     description: Permissions for tpa
     default: false

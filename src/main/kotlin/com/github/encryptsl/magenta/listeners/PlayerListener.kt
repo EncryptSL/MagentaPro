@@ -80,11 +80,15 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             return
         }
 
-        magenta.spawnConfig.getConfig().getLocation(magenta.config.getString("spawnpoint").toString())?.let {
-            player.teleportAsync(it)
+        if (magenta.config.getString("newbies.spawnpoint").equals("spawnpoint", true)) {
+            magenta.spawnManager.spawn(player)
+        } else {
+            player.teleportAsync(player.world.spawnLocation)
         }
 
-        magenta.kitManager.giveKit(player, magenta.config.getString("newbies.kit").toString())
+        if (magenta.config.getString("newbies.kit")?.isNullOrEmpty() != true) {
+            magenta.kitManager.giveKit(player, magenta.config.getString("newbies.kit").toString())
+        }
 
         Bukkit.broadcast(ModernText.miniModernText(magenta.config.getString("newbies.announcement").toString(), TagResolver.resolver(
             Placeholder.parsed("player", player.name),
@@ -99,7 +103,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     }
 
     private fun safeFly(player: Player) {
-        if (!player.hasPermission(Permissions.FLY_SAFE_LOGIN)) return
+        if (!player.hasPermission(Permissions.FLY_SAFE_LOGIN) || !magenta.config.getBoolean("send-fly-enable-on-join")) return
 
         player.fallDistance = 0F
         player.allowFlight = true
@@ -225,16 +229,41 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     fun onPlayerDeathEvent(event: PlayerDeathEvent) {
         val player = event.player
         magenta.homeModel.getHomesByOwner(player.uniqueId).thenApply { homes ->
-            val home = homes.firstOrNull()
-            home?.let { Bukkit.getWorld(home.world)?.let { player.teleportAsync(Location(it, home.x.toDouble(), home.y.toDouble(), home.z.toDouble(), home.yaw, home.pitch)) } }
+            if (!magenta.config.getBoolean("newbies.respawn-at-home-bed") && magenta.config.getBoolean("newbies.respawn-at-home")) {
+                val home = homes.firstOrNull()
+                home?.let { Bukkit.getWorld(home.world)?.let { player.teleportAsync(Location(it, home.x.toDouble(), home.y.toDouble(), home.z.toDouble(), home.yaw, home.pitch)) } }
+            } else if (magenta.config.getBoolean("newbies.respawn-at-home-bed") && magenta.config.getBoolean("newbies.respawn-at-home")) {
+                try {
+                    player.teleportAsync(player.bedLocation)
+                } catch (e : IllegalStateException) {
+                    magenta.spawnManager.spawn(player)
+                }
+            } else {
+                magenta.spawnManager.spawn(player)
+            }
         }.exceptionally {
-            magenta.spawnConfig.getConfig().getLocation("spawn")?.let { player.teleportAsync(it) }
+            if (magenta.config.getBoolean("newbies.respawn-at-home-bed") && magenta.config.getBoolean("newbies.respawn-at-home")) {
+                try {
+                    return@exceptionally player.teleportAsync(player.bedLocation)
+                } catch (e : IllegalStateException) {
+                    magenta.spawnManager.spawn(player)
+                }
+            }
+            magenta.spawnManager.spawn(player)
         }
     }
 
     @EventHandler(priority = EventPriority.LOW)
     fun onPlayerChangeWorld(event: PlayerChangedWorldEvent) {
         val player = event.player
+        val user = magenta.user.getUser(player.uniqueId)
+
+        if (magenta.config.getBoolean("world-change-fly-reset")) {
+            if (!player.hasPermission(Permissions.FLY_USE)) {
+                player.allowFlight = false
+                user.set("flying", false)
+            }
+        }
 
         if (!magenta.config.getBoolean("change-world-message")) return
 

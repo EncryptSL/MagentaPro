@@ -13,6 +13,6 @@ class VanishAnnouncerTask(
         val audience = Audience.audience(
             Bukkit.getOnlinePlayers().filter { magenta.user.getUser(it.uniqueId).isVanished() }
         )
-        ActionTitleManager.sendActionBar(audience, ModernText.miniModernText(magenta.config.getString("vanish_action_bar").toString()))
+        ActionTitleManager.sendActionBar(audience, ModernText.miniModernText(magenta.config.getString("vanish-action-bar").toString()))
     }
 }

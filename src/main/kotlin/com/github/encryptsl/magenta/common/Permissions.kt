@@ -30,6 +30,7 @@ object Permissions {
     const val TPA_DELAY_EXEMPT: String = "magenta.tpa.delay.exempt"
     const val TELEPORT_EXEMPT: String = "magenta.tp.exempt"
 
+    const val REPAIR_ENCHANTED: String = "magenta.repair.enchanted"
     const val REPAIR_DELAY_EXEMPT: String = "magenta.repair.delay.exempt"
 
     const val HOME_UNLIMITED: String = "magenta.homes.unlimited"
@@ -52,6 +53,7 @@ object Permissions {
     const val KITS = "magenta.kits.%s"
     const val KIT_DELAY_EXEMPT: String = "magenta.kit.delay.exempt"
 
+    const val FLY_USE: String = "magenta.fly"
     const val FLY_SAFE_LOGIN: String = "magenta.fly.safelogin"
     const val FLY_MODIFY_EXEMPT: String = "magenta.fly.modify.exempt"
 

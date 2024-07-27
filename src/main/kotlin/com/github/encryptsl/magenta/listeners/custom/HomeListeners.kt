@@ -37,7 +37,6 @@ class HomeListeners(private val magenta: Magenta) : Listener {
                 } else {
                     magenta.homeModel.createHome(player, location, homeName)
                     player.sendMessage(magenta.locale.translation("magenta.command.home.success.created", Placeholder.parsed("home", homeName)))
-                    player.sendMessage("DEBUG: $canSetHome")
                 }
             }
         }
@@ -121,7 +120,6 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val location: Location = player.location
         val user = magenta.user.getUser(player.uniqueId)
 
-
         val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", location.world.name)
         val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
@@ -143,6 +141,9 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             player.teleportAsync(magenta.homeModel.toLocation(player, it.homeName))
             player.sendMessage(magenta.locale.translation("magenta.command.home.success.teleport", Placeholder.parsed("home", it.homeName)))
         }.exceptionally {
+            if (magenta.config.getBoolean("homes.spawn-if-no-home"))
+                return@exceptionally magenta.spawnConfig.getConfig().getLocation("spawn")?.let { player.teleportAsync(it) }
+
             player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
         }
     }

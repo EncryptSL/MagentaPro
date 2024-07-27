@@ -27,14 +27,25 @@ class CommandListener(private val magenta: Magenta) : Listener {
         if (!isListed) return
 
         for (p in Bukkit.getOnlinePlayers()) {
-            if (!magenta.user.getUser(p.uniqueId).isSocialSpy() && !player.hasPermission(Permissions.SOCIAL_SPY)) continue
-            if (!p.canSee(player)) continue
+            if (!player.hasPermission(Permissions.SOCIAL_SPY)) {
+                p.sendMessage(ModernText.miniModernText(
+                    magenta.config.getString("socialspy-format").toString(), TagResolver.resolver(
+                        Placeholder.parsed("player", player.name), Placeholder.parsed("message", message)
+                    )
+                ))
+            }
+        }
+    }
 
-            p.sendMessage(ModernText.miniModernText(
-                magenta.config.getString("socialspy-format").toString(), TagResolver.resolver(
-                    Placeholder.parsed("player", player.name), Placeholder.parsed("message", message)
-                )
-            ))
+    @EventHandler(priority = EventPriority.HIGH)
+    fun onBlockedCommandsPreprocess(
+        event: PlayerCommandPreprocessEvent
+    ) {
+        val message = event.message
+        val command = message.split(" ")[0].replace("/", "").lowercase()
+        if (magenta.stringUtils.inInList("disabled-commands", command)) {
+            event.player.sendMessage(magenta.locale.translation("magenta.blocked.commands", Placeholder.parsed("command", command)))
+            event.isCancelled = true
         }
     }
 }

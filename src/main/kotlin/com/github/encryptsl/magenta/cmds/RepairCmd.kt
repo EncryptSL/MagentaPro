@@ -34,7 +34,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
             return player.sendMessage(magenta.locale.translation("magenta.command.repair.error.empty.hand"))
 
         val timeLeft = user.getRemainingCooldown("repair")
-        if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT))
+        if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT) && delay != 0L)
             return magenta.commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
         if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT)) {

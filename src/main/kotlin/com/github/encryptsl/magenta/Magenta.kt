@@ -61,6 +61,7 @@ open class Magenta : JavaPlugin() {
     val warpModel: WarpModel by lazy { WarpModel(this) }
     val levelModel: LevelModel by lazy { LevelModel() }
     val kitManager: KitManager by lazy { KitManager(this) }
+    val spawnManager: SpawnManager by lazy { SpawnManager(this) }
     val tpaManager: TpaManager by lazy { TpaManager(this) }
     val afk: AfkUtils by lazy { AfkUtils(this) }
     val itemFactory: ItemFactory by lazy { ItemFactory() }
