@@ -23,7 +23,25 @@ import java.util.concurrent.CompletableFuture
 
 class CommandManager(private val magenta: Magenta) {
 
+    private val messages = mutableMapOf<String, String>()
+
     var help: MinecraftHelp<CommandSender>? = null
+
+    init {
+        messages.put("help", "MagentaPro Příkazy")
+        messages.put("command", "Příkaz")
+        messages.put("description", "Popisek")
+        messages.put("no_description", "Není žádný popisek..")
+        messages.put("arguments", "Argumenty")
+        messages.put("optional", "Volitelné")
+        messages.put("showing_results_for_query", "Zobrazené výsledky")
+        messages.put("no_results_for_query", "Žádné výsledky...")
+        messages.put("available_commands", "Dostupné příkazy")
+        messages.put("click_to_show_help", "Klikni pro podrobnosti")
+        messages.put("page_out_of_range", "<red>[<bold>!</bold>] <red>Chyba: <gray>Stránka <yellow><page><gray> je nad limitem. Musí být v rozsahu <yellow>[1, <max_pages>]")
+        messages.put("click_for_next_page", "Klikni na další stránku")
+        messages.put("click_for_previous_page", "Klikni pro předchozí stránku")
+    }
 
     private fun createCommandManager(): LegacyPaperCommandManager<CommandSender> {
         val commandManager = LegacyPaperCommandManager(
@@ -50,6 +68,7 @@ class CommandManager(private val magenta: Magenta) {
                 .commandManager(commandManager)
                 .audienceProvider(AudienceProvider.nativeAudience())
                 .commandPrefix("/magenta help")
+                .messages(messages)
                 .colors(
                     MinecraftHelp.helpColors(
                         NamedTextColor.GREEN,
@@ -58,7 +77,8 @@ class CommandManager(private val magenta: Magenta) {
                         NamedTextColor.GRAY,
                         NamedTextColor.WHITE
                     )
-                ).build()
+                )
+                .build()
     }
 
     private fun registerMinecraftExceptionHandler(commandManager: LegacyPaperCommandManager<CommandSender>) {
@@ -69,7 +89,7 @@ class CommandManager(private val magenta: Magenta) {
             .defaultInvalidSenderHandler()
             .defaultInvalidSyntaxHandler()
             .decorator { component ->
-                ModernText.miniModernText(magenta.config.getString("prefix", "<red>[<bold>!</bold>]").toString()).append(component)
+                ModernText.miniModernText(magenta.config.getString("prefix", "<red>[<bold>!</bold>]</red>").toString()).append(component)
             }
             .registerTo(commandManager)
     }

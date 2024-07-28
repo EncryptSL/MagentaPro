@@ -84,7 +84,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("position", k.toString()),
                     Placeholder.parsed("player", v.first),
                     Placeholder.parsed("level", v.second.toString()),
-                )).appendNewline().append(magenta.locale.translation("magenta.command.level.top.footer"))
+                ))
             }
 
             val paginator = ComponentPaginator(leaderBoard).apply { page(page) }
@@ -94,10 +94,17 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("max_page", paginator.maxPages.toString())
                 ))
 
+            commandSender.sendMessage(
+                magenta.locale.translation("magenta.command.level.top.header")
+            )
+
             for (component in paginator.display()) {
                 commandSender.sendMessage(component)
             }
         }
+        commandSender.sendMessage(
+            magenta.locale.translation("magenta.command.level.top.footer")
+        )
     }
 
 }
