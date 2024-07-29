@@ -80,7 +80,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             return
         }
 
-        if (magenta.config.getString("newbies.spawnpoint").equals("spawnpoint", true)) {
+        if (magenta.config.getString("newbies.spawnpoint").equals("spawn", true)) {
             magenta.spawnManager.spawn(player)
         } else {
             player.teleportAsync(player.world.spawnLocation)
@@ -225,34 +225,6 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         event.isCancelled = true
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    fun onPlayerDeathEvent(event: PlayerDeathEvent) {
-        val player = event.player
-        magenta.homeModel.getHomesByOwner(player.uniqueId).thenApply { homes ->
-            if (!magenta.config.getBoolean("newbies.respawn-at-home-bed") && magenta.config.getBoolean("newbies.respawn-at-home")) {
-                val home = homes.firstOrNull()
-                home?.let { Bukkit.getWorld(home.world)?.let { player.teleportAsync(Location(it, home.x.toDouble(), home.y.toDouble(), home.z.toDouble(), home.yaw, home.pitch)) } }
-            } else if (magenta.config.getBoolean("newbies.respawn-at-home-bed") && magenta.config.getBoolean("newbies.respawn-at-home")) {
-                try {
-                    player.teleportAsync(player.bedLocation)
-                } catch (e : IllegalStateException) {
-                    magenta.spawnManager.spawn(player)
-                }
-            } else {
-                magenta.spawnManager.spawn(player)
-            }
-        }.exceptionally {
-            if (magenta.config.getBoolean("newbies.respawn-at-home-bed") && magenta.config.getBoolean("newbies.respawn-at-home")) {
-                try {
-                    return@exceptionally player.teleportAsync(player.bedLocation)
-                } catch (e : IllegalStateException) {
-                    magenta.spawnManager.spawn(player)
-                }
-            }
-            magenta.spawnManager.spawn(player)
-        }
-    }
-
     @EventHandler(priority = EventPriority.LOW)
     fun onPlayerChangeWorld(event: PlayerChangedWorldEvent) {
         val player = event.player
@@ -271,5 +243,44 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             magenta.locale.translation("magenta.player.change.world",
                 Placeholder.parsed("world", player.world.name))
         )
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    fun onPlayerRespawnEvent(event: PlayerRespawnEvent) {
+        val player = event.player
+        val bedLocation = player.potentialBedLocation
+
+        val home = magenta.homeModel.getHomesByOwner(player.uniqueId).join().firstOrNull()
+
+        if (magenta.config.getString("newbies.spawnpoint").equals("spawn", true) && !magenta.config.getBoolean("newbies.respawn-at-home") && !magenta.config.getBoolean("newbies.respawn-at-home-bed")) {
+            magenta.spawnManager.geSpawntLocation()?.let {
+                event.respawnLocation = it
+            }
+        }
+
+        if (magenta.config.getBoolean("newbies.respawn-at-home")) {
+            if (home != null) {
+                val world = Bukkit.getWorld(home.world)
+                if (world != null) {
+                    event.respawnLocation = Location(world, home.x.toDouble(), home.y.toDouble(), home.z.toDouble(), home.yaw, home.pitch)
+                } else {
+                    magenta.spawnManager.geSpawntLocation()?.let { event.respawnLocation = it }
+                }
+            } else {
+                if (bedLocation != null) {
+                    event.respawnLocation = bedLocation
+                } else {
+                    magenta.spawnManager.geSpawntLocation()?.let { event.respawnLocation = it }
+                }
+            }
+
+            if (magenta.config.getBoolean("newbies.respawn-at-home-bed")) {
+                if (bedLocation != null) {
+                    event.respawnLocation = bedLocation
+                } else {
+                    magenta.spawnManager.geSpawntLocation()?.let { event.respawnLocation = it }
+                }
+            }
+        }
     }
 }

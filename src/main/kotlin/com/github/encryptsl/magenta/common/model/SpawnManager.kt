@@ -15,7 +15,7 @@ class SpawnManager(private val magenta: Magenta) {
         return geSpawntLocation()?.let { Magenta.scheduler.impl.teleportAsync(player, it) }
     }
 
-    private fun geSpawntLocation(): Location? {
+    fun geSpawntLocation(): Location? {
         return magenta.spawnConfig.getConfig().getLocation("spawn")
     }
 

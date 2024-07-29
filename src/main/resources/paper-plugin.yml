@@ -10,7 +10,7 @@ website: https://encryptsl.github.io/
 loader: com.github.encryptsl.magenta.MagentaLoader
 has-open-classloader: false
 
-load: STARTUP
+load: POSTWORLD
 
 dependencies:
   server:

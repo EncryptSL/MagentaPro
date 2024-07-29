@@ -25,7 +25,9 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
             val player: Player = event.entity as Player
             if (!magenta.config.getBoolean("void-spawn.enabled") || !magenta.stringUtils.inInList("void-spawn.worlds", player.world.name)) return
 
-            if (event.cause == EntityDamageEvent.DamageCause.VOID || event.cause == EntityDamageEvent.DamageCause.FALL) {
+            if (event.cause == EntityDamageEvent.DamageCause.VOID) {
+                player.fallDistance = 0F
+                player.damage(0.0)
                 magenta.spawnManager.spawnAsync(player)?.thenAccept {
                     playSound(player, magenta.config.getString("void-spawn.sound").toString(), 5f, 1f)
                 }
