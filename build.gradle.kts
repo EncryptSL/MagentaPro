@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.23" apply true
+    kotlin("jvm") version "2.0.10" apply true
     id("io.github.goooler.shadow") version "8.1.8"
 }
 
@@ -27,11 +27,11 @@ kotlin {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
-    compileOnly(kotlin("stdlib", "1.9.23"))
-    compileOnly("org.jetbrains.exposed:exposed-core:0.52.0")
-    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.52.0")
-    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.52.0")
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly(kotlin("stdlib", "2.0.10"))
+    compileOnly("org.jetbrains.exposed:exposed-core:0.53.0")
+    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.53.0")
+    compileOnly("org.jetbrains.exposed:exposed-kotlin-datetime:0.53.0")
     compileOnly("com.github.ben-manes.caffeine:caffeine:3.1.8") {
         exclude("com.google")
     }
@@ -41,7 +41,6 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.1")
-    compileOnly("com.github.encryptsl:CreditLite:1.1.0")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4")
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
