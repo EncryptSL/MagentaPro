@@ -167,12 +167,14 @@ class CommandManager(private val magenta: Magenta) {
                 SpawnCmd(magenta),
                 SpawnerCmd(magenta),
                 SpawnMobCmd(magenta),
+                SpeedCmd(magenta),
                 TpCmd(magenta),
                 VanishCmd(magenta),
                 VipCmd(magenta),
                 VoteCmd(magenta),
                 VotesCmd(magenta),
                 WarpCmd(magenta),
+                WeatherCmd(magenta),
                 WhoisCmd(magenta)
             )
         } catch (e : NoClassDefFoundError) {

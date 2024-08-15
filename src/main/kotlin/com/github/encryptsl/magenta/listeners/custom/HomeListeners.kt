@@ -141,8 +141,10 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             player.teleportAsync(magenta.homeModel.toLocation(player, it.homeName))
             player.sendMessage(magenta.locale.translation("magenta.command.home.success.teleport", Placeholder.parsed("home", it.homeName)))
         }.exceptionally {
-            if (magenta.config.getBoolean("homes.spawn-if-no-home"))
-                return@exceptionally magenta.spawnConfig.getConfig().getLocation("spawn")?.let { player.teleportAsync(it) }
+            if (magenta.config.getBoolean("homes.spawn-if-no-home")) {
+                magenta.spawnConfig.getConfig().getLocation("spawn")?.let { player.teleportAsync(it) }
+                return@exceptionally
+            }
 
             player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
         }

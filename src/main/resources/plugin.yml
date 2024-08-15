@@ -59,10 +59,12 @@ permissions:
       magenta.spawn.*: true
       magenta.spawner.*: true
       magenta.spawnmob.*: true
+      magenta.speed.*: true
       magenta.tpa.*: true
       magenta.vanish.*: true
       magenta.votes.*: true
       magenta.warp.*: true
+      magenta.weather: true
       magenta.whois.*: true
       magenta.vip.expire.other: true
       magenta.signs.*: true
@@ -84,6 +86,7 @@ permissions:
       magenta.shop.*: true
       magenta.social.spy: true
       magenta.vote.expire.other: true
+      magenta.weather: true
       magenta.whois.*: true
       magenta.chat.filter.bypass.*: true
   magenta.player:
@@ -346,6 +349,12 @@ permissions:
     default: false
     children:
       magenta.spawnmob: true
+  magenta.speed.*:
+    description: Permissions for managing speed.
+    default: false
+    children:
+      magenta.speed: true
+      magenta.speed.other: true
   magenta.tpa.*:
     description: Permissions for tpa
     default: false
