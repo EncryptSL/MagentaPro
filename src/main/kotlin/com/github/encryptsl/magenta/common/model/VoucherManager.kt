@@ -104,11 +104,11 @@ class VoucherManager(private val magenta: Magenta) {
         return magenta.vouchers.getConfig().contains("vouchers.$voucher.command")
     }
 
-    fun isItemVoucherInHand(itemStack: ItemStack, voucher: String): Boolean {
-        return itemStack == getVoucher(voucher, itemStack.amount)
+    fun isItemVoucherInHand(player: Player, itemStack: ItemStack, voucher: String): Boolean {
+        return itemStack == getVoucher(player, voucher, itemStack.amount)
     }
 
-    private fun getVoucher(voucher: String, count: Int) : ItemStack? {
+    private fun getVoucher(player: Player, voucher: String, count: Int) : ItemStack? {
         val materialName = magenta.vouchers.getConfig().getString("vouchers.$voucher.material").toString()
         val sid = magenta.vouchers.getConfig().getInt("vouchers.$voucher.sid")
         val item = magenta.vouchers.getConfig().getString("vouchers.$voucher.name").toString()
@@ -120,7 +120,7 @@ class VoucherManager(private val magenta: Magenta) {
             ItemCreator(it, count)
                 .setName(ModernText.miniModernText(item, Placeholder.parsed("sid", sid.toString())))
                 .addLore(lore.map {
-                    ModernText.miniModernText(it)
+                    ModernText.miniModernText(ModernText.papi(player, it))
                 }.toMutableList()).setGlowing(isEnabledGlowing)
         }?.create()
 
@@ -154,7 +154,7 @@ class VoucherManager(private val magenta: Magenta) {
             ))
 
 
-        val itemStack = getVoucher(voucher, count) ?: return
+        val itemStack = getVoucher(target, voucher, count) ?: return
 
         target.inventory.addItem(itemStack)
 

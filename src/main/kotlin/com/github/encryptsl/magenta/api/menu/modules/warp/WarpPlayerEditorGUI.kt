@@ -23,6 +23,7 @@ import org.bukkit.entity.Player
 class WarpPlayerEditorGUI(private val magenta: Magenta) {
 
     enum class ButtonAction { BACK_TO_MENU, SET_WARP, SET_ICON, DELETE_WARP }
+    enum class CALLBACK { CLOSE_INVENTORY, BACK_TO_MENU }
 
     private val menu: MenuUI by lazy { MenuUI(magenta) }
     private val warpPlayerGUI: WarpPlayerGUI by lazy { WarpPlayerGUI(magenta, WarpGUI(magenta), this) }
@@ -96,6 +97,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
         gui: BaseGui
     ) {
         val action = ButtonAction.valueOf(config.getString("menu.items.buttons.$el.action").toString())
+        val callback = CALLBACK.valueOf(config.getString("menu.items.buttons.$el.callback").toString())
 
         when(action) {
             ButtonAction.BACK_TO_MENU -> {
@@ -119,7 +121,7 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             ButtonAction.DELETE_WARP -> {
                 clicked = false
                 magenta.warpModel.deleteWarp(player.uniqueId, warpName)
-                player.closeInventory()
+                callBack(player, warpPlayerGUI, callback)
                 player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
             }
         }
@@ -178,6 +180,13 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             if (!ignoreSlots.contains(i)) {
                 gui.removeItem(i)
             }
+        }
+    }
+
+    private fun callBack(player: Player, playerGUI: WarpPlayerGUI, callback: CALLBACK) {
+        when(callback) {
+            CALLBACK.CLOSE_INVENTORY -> player.closeInventory()
+            CALLBACK.BACK_TO_MENU -> playerGUI.open(player)
         }
     }
 }

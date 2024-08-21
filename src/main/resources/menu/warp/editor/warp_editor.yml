@@ -35,6 +35,7 @@ menu:
         icon: BARRIER
         slot: 8
         action: "DELETE_WARP"
+        callback: "BACK_TO_MENU"
   icons:
     - RED_BED
     - NAME_TAG

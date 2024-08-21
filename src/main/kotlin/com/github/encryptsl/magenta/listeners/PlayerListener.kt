@@ -177,7 +177,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         if (!itemInHand.hasItemMeta()) return
 
         val vouchers = magenta.vouchers.getConfig().getConfigurationSection("vouchers")?.getKeys(false) ?: return
-        val voucher = vouchers.stream().filter { el -> voucherManager.isItemVoucherInHand(itemInHand, el) }.findFirst().getOrNull() ?: return
+        val voucher = vouchers.stream().filter { el -> voucherManager.isItemVoucherInHand(player, itemInHand, el) }.findFirst().getOrNull() ?: return
 
         if (event.action.isRightClick) {
             val command = magenta.vouchers.getConfig().getString(("vouchers." + voucher) + ".command").toString()

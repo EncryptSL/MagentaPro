@@ -28,11 +28,11 @@ class KitManager(private val magenta: Magenta) {
             if (!magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}")) continue
 
             val count: Int = magenta.kitConfig.getConfig().getInt("kits.$kitName.items.${material.name.lowercase()}.amount", 1)
-            val displayKitName = ModernText.miniModernText(magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName") ?: material.name)
+            val displayKitName = ModernText.miniModernText(ModernText.papi(player, magenta.kitConfig.getConfig().getString("kits.$kitName.items.${material.name.lowercase()}.meta.displayName") ?: material.name))
 
             val lore = if (magenta.kitConfig.getConfig().contains("kits.$kitName.items.${material.name.lowercase()}.meta.lore"))
                 magenta.kitConfig.getConfig()
-                    .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore").map { ModernText.miniModernText(it) }
+                    .getStringList("kits.$kitName.items.${material.name.lowercase()}.meta.lore").map { ModernText.miniModernText(ModernText.papi(player, it)) }
             else
                 emptyList()
 
