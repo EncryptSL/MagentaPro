@@ -42,7 +42,7 @@ class PlayerLevelUpListener(private val magenta: Magenta) : Listener {
                 magenta.config.getString("level.effect.volume").toString().toFloat(),
                 magenta.config.getString("level.effect.pitch").toString().toFloat()
             )
-            it.sendMessage(ModernText.miniModernText(magenta.config.getString("level.format").toString(), TagResolver.resolver(
+            it.sendMessage(ModernText.miniModernTextCenter(magenta.config.getString("level.format").toString(), TagResolver.resolver(
                 Placeholder.parsed("level", level.toString()),
                 Placeholder.parsed("current_exp", currentExp.toString()),
                 Placeholder.parsed("exp_to_level", expToLevel.toString())
