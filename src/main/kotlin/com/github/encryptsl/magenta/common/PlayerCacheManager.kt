@@ -2,7 +2,7 @@ package com.github.encryptsl.magenta.common
 
 import com.github.benmanes.caffeine.cache.*
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.filter.impl.ChatFilterAntiSpamListener
+import com.github.encryptsl.magenta.common.chat.control.impl.ChatFilterAntiSpamListener
 import com.github.encryptsl.magenta.common.model.TpaManager
 import com.google.common.cache.CacheBuilder
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder

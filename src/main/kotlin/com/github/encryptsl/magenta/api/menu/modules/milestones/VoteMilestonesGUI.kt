@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.guis.GuiItem
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -33,6 +34,13 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
         val menuSection = magenta.milestonesVotePass.getConfig().getConfigurationSection("menu.items")?.getKeys(false) ?: return
 
         menuUI.useAllFillers(gui, magenta.milestonesVotePass.getConfig())
+
+        if (magenta.config.getBoolean("votifier.disable-cumulative-rewards")) {
+            gui.setItem(22, GuiItem(menuUI.isEmptyItem()))
+            gui.open(player)
+            return
+        }
+
         for (item in menuSection.withIndex()) {
             val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {
                     el -> el.key().value().equals(magenta.milestonesVotePass.getConfig().getString("menu.items.$item.item").toString(), true)

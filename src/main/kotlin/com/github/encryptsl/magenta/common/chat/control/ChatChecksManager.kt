@@ -1,7 +1,7 @@
-package com.github.encryptsl.magenta.common.filter
+package com.github.encryptsl.magenta.common.chat.control
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.filter.modules.*
+import com.github.encryptsl.magenta.common.chat.control.modules.*
 
 class ChatChecksManager(private val magenta: Magenta) {
 

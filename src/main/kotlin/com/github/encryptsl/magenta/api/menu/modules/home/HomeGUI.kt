@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.home.HomeTeleportEvent
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.guis.GuiItem
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -35,6 +36,12 @@ class HomeGUI(private val magenta: Magenta) {
         if (!magenta.homeMenuConfig.getConfig().contains(requiredContains)) return
         if (!magenta.homeMenuConfig.getConfig().contains("$requiredContains.display")) return
         if (!magenta.homeMenuConfig.getConfig().contains("$requiredContains.lore")) return
+
+        if (homes.isNullOrEmpty()) {
+            gui.setItem(22, GuiItem(menuUI.isEmptyItem()))
+            gui.open(player)
+            return
+        }
 
         for (home in homes) {
             val material = Material.getMaterial(home.homeIcon) ?: Material.RED_BED

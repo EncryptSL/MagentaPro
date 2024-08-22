@@ -114,7 +114,9 @@ class HomeEditorGUI(private val magenta: Magenta, private val homeGUI: HomeGUI) 
             ButtonAction.DELETE_HOME -> {
                 clicked = false
                 magenta.homeModel.deleteHome(player.uniqueId, warpName)
-                homeGUI.openHomeGUI(player)
+                Magenta.scheduler.impl.runLater(Runnable {
+                    homeGUI.openHomeGUI(player)
+                }, 40)
                 player.sendMessage(magenta.locale.translation("magenta.command.home.success.deleted", Placeholder.parsed("home", warpName)))
             }
         }

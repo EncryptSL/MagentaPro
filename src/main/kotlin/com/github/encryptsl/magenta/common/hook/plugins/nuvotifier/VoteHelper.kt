@@ -18,7 +18,7 @@ import org.bukkit.entity.Player
 object VoteHelper {
 
     @JvmStatic
-    fun saveOfflineReward(magenta: Magenta, offlinePlayer: OfflinePlayer, rewards: MutableList<String>, expressionFormula: String = "") {
+    fun saveToDepositBox(magenta: Magenta, offlinePlayer: OfflinePlayer, rewards: MutableList<String>, expressionFormula: String = "") {
         rewards.replaceAll { s -> s
             .replace("{player}", offlinePlayer.name.toString())
             .replace("%player%", offlinePlayer.name.toString())
@@ -26,7 +26,7 @@ object VoteHelper {
         }
 
         val userAccount = magenta.user.getUser(offlinePlayer.uniqueId)
-        userAccount.set("votifier.rewards", rewards)
+        userAccount.set("depositbox.rewards", rewards)
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
     }
     @JvmStatic

@@ -35,6 +35,12 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
         if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.display")) return
         if (!magenta.warpPlayerMenuConfig.getConfig().contains("menu.warp-info.lore")) return
 
+        if (playerWarps.isNullOrEmpty()) {
+            gui.setItem(22, GuiItem(menuUI.isEmptyItem()))
+            gui.open(player)
+            return
+        }
+
         while (warpsIterator.hasNext()) {
             val warp = warpsIterator.next()
             val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN

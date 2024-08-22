@@ -1,6 +1,6 @@
-package com.github.encryptsl.magenta.common.filter.impl
+package com.github.encryptsl.magenta.common.chat.control.impl
 
-import com.github.encryptsl.magenta.common.filter.ChatPunishManager
+import com.github.encryptsl.magenta.common.chat.control.ChatPunishManager
 import io.papermc.paper.event.player.AsyncChatEvent
 import org.bukkit.entity.Player
 

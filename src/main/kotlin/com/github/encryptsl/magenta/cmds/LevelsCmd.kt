@@ -25,7 +25,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command add to other player levels")
     fun onLevelAdd(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
         magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
@@ -87,14 +87,14 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
         }
     }
 
-    @Command("levels add <player> <amount> points")
+    @Command("levels add <player> <amount> points [silent]")
     @Permission("magenta.levels.experience.add")
     @CommandDescription("This command add to other player points")
     fun onLevelPointsAdd(
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int,
-        @Flag(value = "silent", aliases = ["s"]) silent: Boolean
+        @Argument(value = "silent") @Default("false") silent: Boolean
     ) {
         if (!magenta.levelAPI.hasAccount(target.uniqueId))
             return commandSender.sendMessage(
@@ -109,12 +109,11 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("experience", amount.toString()))
             ))
 
-            if (silent)
-                return@thenApply target.player.let { it?.sendMessage(
-                    magenta.locale.translation("magenta.command.levels.success.experience.add.silent",
+            if (silent) {
+                return@thenApply target.player?.sendMessage(magenta.locale.translation("magenta.command.levels.success.experience.add.silent",
                         Placeholder.parsed("experience", amount.toString())
-                    ))
-                }
+                ))
+            }
 
             target.player?.sendMessage(
                 magenta.locale.translation("magenta.command.levels.success.experience.add",

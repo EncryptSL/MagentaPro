@@ -23,6 +23,9 @@ class MenuUI(private val magenta: Magenta) {
 
     private enum class ButtonAction { CLOSE, BACK }
 
+    fun isEmptyItem(): ItemStack
+        = ItemCreator(Material.REDSTONE, 1).setName(ModernText.miniModernText("<red>Bohužel nemám žádná data :'(")).create()
+
     fun simpleBuilderGui(rows: Int, title: Component, config: FileConfiguration): Gui {
         val builder = Gui.gui(GuiType.CHEST).rows(rows).title(title).disableAllInteractions().create()
 

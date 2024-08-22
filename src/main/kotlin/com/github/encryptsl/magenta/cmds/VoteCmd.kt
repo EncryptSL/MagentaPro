@@ -81,19 +81,6 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         }
     }
 
-    @Command("vote claim rewards")
-    @Permission("magenta.vote.claim.rewards")
-    @CommandDescription("This command claim your rewards from voting")
-    fun onVoteClaimRewards(player: Player) {
-        val user = magenta.user.getUser(player.uniqueId)
-        if (!user.getAccount().contains("votifier.rewards"))
-            return player.sendMessage(magenta.locale.translation("magenta.command.vote.error.not.reward"))
-
-        VoteHelper.giveRewards(user.getVotifierRewards(), player.name)
-        player.sendMessage(magenta.locale.translation("magenta.command.vote.success.claim.rewards"))
-        user.set("votifier.rewards", null)
-    }
-
     @Command("voteparty|vparty|vp")
     @Permission("magenta.voteparty")
     @CommandDescription("This command send information about vote party")

@@ -1,7 +1,7 @@
-package com.github.encryptsl.magenta.common.filter
+package com.github.encryptsl.magenta.common.chat.control
 
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.filter.impl.ChatDetection
+import com.github.encryptsl.magenta.common.chat.control.impl.ChatDetection
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import kotlin.math.max

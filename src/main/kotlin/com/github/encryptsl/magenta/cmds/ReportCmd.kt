@@ -39,7 +39,7 @@ class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send report to administrators")
     fun onReport(
         player: Player,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "category", suggestions = "reportCategories") category: ReportCategories,
         @Argument(value = "message") @Default("Zpráva není specifikovaná.") @Greedy message: String
     ) {

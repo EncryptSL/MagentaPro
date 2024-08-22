@@ -1,9 +1,9 @@
-package com.github.encryptsl.magenta.common.filter.modules
+package com.github.encryptsl.magenta.common.chat.control.modules
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.filter.ChatCheck
-import com.github.encryptsl.magenta.common.filter.impl.ChatFilters
+import com.github.encryptsl.magenta.common.chat.control.ChatCheck
+import com.github.encryptsl.magenta.common.chat.control.impl.ChatFilters
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.entity.Player
@@ -18,6 +18,9 @@ class WebsiteFilter(private val magenta: Magenta) : ChatCheck() {
         val player = event.player
         val phrase = PlainTextComponentSerializer.plainText().serialize(event.message())
 
+        if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_WEBSITES))
+            return
+
         if (matches(player, phrase)) {
             chatPunishManager().action(player, event, magenta.locale.getMessage("magenta.filter.web_filter"), phrase, ChatFilters.WEBSITE)
         }
@@ -27,9 +30,6 @@ class WebsiteFilter(private val magenta: Magenta) : ChatCheck() {
         var detected = false
 
         if (!magenta.chatControl.getConfig().getBoolean("filters.website.control")) return false
-
-        if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_WEBSITES))
-            return false
 
         if(magenta.chatControl.getConfig().getStringList("filters.website.whitelist").contains(phrase))
             return false

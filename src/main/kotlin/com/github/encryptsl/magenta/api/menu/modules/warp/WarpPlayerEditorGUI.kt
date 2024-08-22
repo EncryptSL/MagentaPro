@@ -121,7 +121,9 @@ class WarpPlayerEditorGUI(private val magenta: Magenta) {
             ButtonAction.DELETE_WARP -> {
                 clicked = false
                 magenta.warpModel.deleteWarp(player.uniqueId, warpName)
-                callBack(player, warpPlayerGUI, callback)
+                Magenta.scheduler.impl.runLater( Runnable {
+                    callBack(player, warpPlayerGUI, callback)
+                }, 20)
                 player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
             }
         }

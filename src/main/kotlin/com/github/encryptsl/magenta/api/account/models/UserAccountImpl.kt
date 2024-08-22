@@ -39,6 +39,11 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
         save()
     }
 
+    override fun setTeleportEnabled(boolean: Boolean) {
+        getAccount().set("teleportenabled", boolean)
+        save()
+    }
+
     override fun forceVanish() {
         if (!Magenta.instance.config.getBoolean("vanish-on-join")) return
 

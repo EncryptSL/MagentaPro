@@ -78,6 +78,10 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
         }
     }
 
+    override fun hasTeleportEnabled(): Boolean {
+        return getAccount().getBoolean("teleportenabled", true)
+    }
+
     override fun getVotes(): Int {
         return voteAPI.getUserVotesByUUID(uuid).join()
     }
@@ -86,8 +90,8 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
         return Optional.of(voteAPI.getUserVotesByUUIDAndService(uuid, serviceName).join().vote).orElse(0)
     }
 
-    override fun getVotifierRewards(): MutableList<String> {
-        return getAccount().getStringList("votifier.rewards")
+    override fun getDepositBoxRewards(): MutableList<String> {
+        return getAccount().getStringList("depositbox.rewards")
     }
 
     override fun getLastLocation(): Location {

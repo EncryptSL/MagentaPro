@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import dev.triumphteam.gui.guis.BaseGui
+import dev.triumphteam.gui.guis.GuiItem
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Material
@@ -34,6 +35,12 @@ class WarpGUI(private val magenta: Magenta) : Menu {
 
         if (!magenta.warpMenuConfig.getConfig().contains("menu.warp-info.display")) return
         if (!magenta.warpMenuConfig.getConfig().contains("menu.warp-info.lore")) return
+
+        if (warps.isNullOrEmpty()) {
+            gui.setItem(22, GuiItem(menuUI.isEmptyItem()))
+            gui.open(player)
+            return
+        }
 
         for (warp in warps) {
             val material = Material.getMaterial(warp.warpIcon) ?: Material.OAK_SIGN
@@ -103,7 +110,7 @@ class WarpGUI(private val magenta: Magenta) : Menu {
         itemStack: ItemStack,
         config: FileConfiguration,
         el: String
-    ): dev.triumphteam.gui.guis.GuiItem {
+    ): GuiItem {
         return ItemBuilder.from(itemStack).asGuiItem { context ->
             if (context.isLeftClick) {
                 openOwnerWarps(context.whoClicked as Player, config, el)

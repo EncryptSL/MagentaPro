@@ -64,7 +64,7 @@ class MsgCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         val toggled = magenta.commandHelper.isMsgToggled(user)
 
-        player.sendMessage(magenta.locale.translation("magenta.command.msg.success.toggled", Placeholder.parsed("toggled", toggled.toString())))
+        player.sendMessage(magenta.locale.translation("magenta.command.msg.success.toggled.self", Placeholder.parsed("toggled", toggled.toString())))
     }
 
     @Command("msgtoggle <target> [toggle]")
@@ -72,20 +72,20 @@ class MsgCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command enable or disable private messages")
     fun onMsgToggleOther(
         commandSender: CommandSender,
-        @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer,
+        @Argument(value = "target", suggestions = "offlinePlayers") target: OfflinePlayer,
         @Argument(value = "toggle") @Default("true") toggle: Boolean
     ) {
-        val user = magenta.user.getUser(offlinePlayer.uniqueId)
+        val user = magenta.user.getUser(target.uniqueId)
 
         if (user.getAccount().getBoolean("commands.toggle.msg"))
-            return commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error.toggled.other", TagResolver.resolver(
-                Placeholder.parsed("target", offlinePlayer.name.toString())
+            return commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error.toggled.self.other", TagResolver.resolver(
+                Placeholder.parsed("target", target.name.toString())
             )))
 
         user.set("commands.toggle.msg", toggle)
-
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.success.toggled.other", TagResolver.resolver(
-            Placeholder.parsed("target", offlinePlayer.name.toString()),
+        target.player?.sendMessage(magenta.locale.translation("magenta.command.msg.success.toggled.self", Placeholder.parsed("toggled", toggle.toString())))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.success.toggled.self.other", TagResolver.resolver(
+            Placeholder.parsed("target", target.name.toString()),
             Placeholder.parsed("toggled", toggle.toString())
         )))
     }

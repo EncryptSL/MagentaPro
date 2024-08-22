@@ -49,6 +49,7 @@ permissions:
       magenta.broadcast.*: true
       magenta.voucher.*: true
       magenta.containers.*: true
+      magenta.depositbox.*: true
       magenta.echest.*: true
       magenta.feedback.*: true
       magenta.fly.*: true
@@ -112,6 +113,7 @@ permissions:
     children:
       magenta.afk: true
       magenta.afk.auto: true
+      magenta.depositbox.player: true
       magenta.feedback.*: true
       magenta.report.*: true
       magenta.home.player: true
@@ -170,6 +172,16 @@ permissions:
       magenta.smithingtable: true
       magenta.loom: true
       magenta.workbench: true
+  magenta.depositbox.*:
+    description: Permissions for depositbox all commands
+    default: false
+    children:
+      magenta.deposit.box.claim: true
+  magenta.depositbox.player:
+    description: Permissions for depositbox player commands
+    default: false
+    children:
+      magenta.deposit.box.claim: true
   magenta.echest.*:
     description: Permissions for virtual ender chest
     default: false
@@ -312,7 +324,6 @@ permissions:
     default: false
     children:
       magenta.random.world.tickets: true
-      magenta.random.tag: true
   magenta.repair.*:
     description: Permissions for repair
     default: false
@@ -402,7 +413,6 @@ permissions:
       magenta.vote: true
       magenta.vote.milestones: true
       magenta.vote.top: true
-      magenta.vote.claim.rewards: true
       magenta.voteparty: true
   magenta.votes.*:
     description: Permissions for managing votes

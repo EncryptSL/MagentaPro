@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.common.filter.impl
+package com.github.encryptsl.magenta.common.chat.control.impl
 
 enum class ChatFilters {
     ANTISPAM,

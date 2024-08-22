@@ -57,8 +57,6 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         safeFly(player)
         user.forceVanish()
 
-        magenta.earnBlocksProgressManager.syncInitData(player.uniqueId, user.getAccount().getInt("mined.blocks", 0))
-
         if (player.hasPlayedBefore()) {
             user.set(
                 mutableMapOf(
@@ -74,16 +72,16 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                     Placeholder.parsed("realtime", datetime())
                 )))
             }
-            if (user.getAccount().contains("votifier.rewards")) {
+            if (!user.getDepositBoxRewards().isNullOrEmpty()) {
                 player.sendMessage(magenta.locale.translation("magenta.command.vote.success.exist.rewards.to.claim"))
             }
             return
         }
 
         if (magenta.config.getString("newbies.spawnpoint").equals("spawn", true)) {
-            magenta.spawnManager.spawn(player)
+            magenta.spawnManager.spawnAsync(player)
         } else {
-            player.teleportAsync(player.world.spawnLocation)
+            magenta.spawnManager.spawnAsync(player)
         }
 
         if (magenta.config.getString("newbies.kit")?.isNullOrEmpty() != true) {
@@ -127,8 +125,6 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         magenta.playerCacheManager.reply.invalidate(player)
         magenta.playerCacheManager.antiSpam.invalidate(player.uniqueId)
         magenta.playerCacheManager.teleportRequest.invalidate(player.uniqueId)
-        magenta.earnBlocksProgressManager.save(player.uniqueId)
-        magenta.earnBlocksProgressManager.remove(player.uniqueId)
         magenta.afk.clear(player.uniqueId)
         user.saveQuitData(player)
     }
@@ -253,9 +249,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         val home = magenta.homeModel.getHomesByOwner(player.uniqueId).join().firstOrNull()
 
         if (magenta.config.getString("newbies.spawnpoint").equals("spawn", true) && !magenta.config.getBoolean("newbies.respawn-at-home") && !magenta.config.getBoolean("newbies.respawn-at-home-bed")) {
-            magenta.spawnManager.geSpawntLocation()?.let {
-                event.respawnLocation = it
-            }
+            event.respawnLocation = magenta.spawnManager.geSpawnLocation()
         }
 
         if (magenta.config.getBoolean("newbies.respawn-at-home")) {
@@ -264,13 +258,13 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 if (world != null) {
                     event.respawnLocation = Location(world, home.x.toDouble(), home.y.toDouble(), home.z.toDouble(), home.yaw, home.pitch)
                 } else {
-                    magenta.spawnManager.geSpawntLocation()?.let { event.respawnLocation = it }
+                    event.respawnLocation = magenta.spawnManager.geSpawnLocation()
                 }
             } else {
                 if (bedLocation != null) {
                     event.respawnLocation = bedLocation
                 } else {
-                    magenta.spawnManager.geSpawntLocation()?.let { event.respawnLocation = it }
+                    event.respawnLocation = magenta.spawnManager.geSpawnLocation()
                 }
             }
 
@@ -278,7 +272,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 if (bedLocation != null) {
                     event.respawnLocation = bedLocation
                 } else {
-                    magenta.spawnManager.geSpawntLocation()?.let { event.respawnLocation = it }
+                    event.respawnLocation = magenta.spawnManager.geSpawnLocation()
                 }
             }
         }

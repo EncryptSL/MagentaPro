@@ -64,7 +64,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
             val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.$serviceName.rewards")
             val expressionFormula = expressionFormula(player)
             if (!player.isOnline)
-                return VoteHelper.saveOfflineReward(magenta, player, rewards, expressionFormula)
+                return VoteHelper.saveToDepositBox(magenta, player, rewards, expressionFormula)
 
             VoteHelper.giveRewards(rewards, player.name.toString(), expressionFormula)
         }
@@ -79,7 +79,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
             val rewards: MutableList<String> = magenta.config.getStringList("votifier.services.default.rewards")
             val expressionFormula = expressionFormula(player)
             if (!player.isOnline)
-                return VoteHelper.saveOfflineReward(magenta, player, rewards, expressionFormula)
+                return VoteHelper.saveToDepositBox(magenta, player, rewards, expressionFormula)
 
             VoteHelper.giveRewards(rewards, player.name.toString(), expressionFormula)
             magenta.logger.severe("Service for vote $serviceName not set in config.yml")
@@ -98,7 +98,7 @@ class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), L
         val expressionFormula = expressionFormula(player, playerVotes)
 
         if (!player.isOnline)
-            return VoteHelper.saveOfflineReward(magenta, player, rewards, expressionFormula)
+            return VoteHelper.saveToDepositBox(magenta, player, rewards, expressionFormula)
 
         VoteHelper.giveRewards(rewards, player.name.toString(), expressionFormula)
     }

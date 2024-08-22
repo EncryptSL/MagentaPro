@@ -1,4 +1,4 @@
-package com.github.encryptsl.magenta.common.filter.impl
+package com.github.encryptsl.magenta.common.chat.control.impl
 
 import com.github.encryptsl.magenta.Magenta
 import com.google.common.cache.RemovalCause

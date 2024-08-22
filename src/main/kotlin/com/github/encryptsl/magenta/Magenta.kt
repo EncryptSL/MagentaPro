@@ -19,7 +19,7 @@ import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
-import com.github.encryptsl.magenta.common.filter.ChatChecksManager
+import com.github.encryptsl.magenta.common.chat.control.ChatChecksManager
 import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.hook.plugins.vaultunlocked.VaultUnlockedHook
 import com.github.encryptsl.magenta.common.model.*
@@ -90,7 +90,6 @@ open class Magenta : JavaPlugin() {
     val jailManager: JailManager by lazy { JailManager(this) }
 
     val newsQueueManager: NewsQueueManager by lazy { NewsQueueManager(this) }
-    val earnBlocksProgressManager: EarnBlocksProgressManager by lazy { EarnBlocksProgressManager(this) }
     val commandHelper: CommandHelper by lazy { CommandHelper(this) }
 
     val playerCacheManager by lazy { PlayerCacheManager(this) }
@@ -165,7 +164,6 @@ open class Magenta : JavaPlugin() {
 
     override fun onDisable() {
         logger.info("Plugin disabled")
-        earnBlocksProgressManager.saveMinedBlocks()
         afk.clear()
         playerCacheManager.reply.invalidateAll()
     }
@@ -205,6 +203,7 @@ open class Magenta : JavaPlugin() {
             SocialSpyListener(this),
             TpaListener(this),
             PlayerLevelUpListener(this),
+            VanishListener(this),
             WarpListeners(this)
         )
 

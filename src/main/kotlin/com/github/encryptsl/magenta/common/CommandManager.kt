@@ -105,11 +105,6 @@ class CommandManager(private val magenta: Magenta) {
                 .map { Suggestion.suggestion(it.name) }
             )
         }
-        commandManager.parserRegistry().registerSuggestionProvider("offlinePlayers") { _, _ ->
-            return@registerSuggestionProvider CompletableFuture.completedFuture(Bukkit.getOfflinePlayers()
-                .map { Suggestion.suggestion(it.name.toString()) }
-            )
-        }
         commandManager.parserRegistry().registerSuggestionProvider("materials") {_, _ ->
             return@registerSuggestionProvider CompletableFuture
                 .completedFuture(Material.entries.map { Suggestion.suggestion(it.name) })
@@ -141,6 +136,7 @@ class CommandManager(private val magenta: Magenta) {
                 BroadcastCmd(magenta),
                 VoucherCmd(magenta),
                 ContainersCmd(magenta),
+                DepositBoxCmd(magenta),
                 EnderChestCmd(magenta),
                 FeedbackCmd(magenta),
                 FlyCmd(magenta),

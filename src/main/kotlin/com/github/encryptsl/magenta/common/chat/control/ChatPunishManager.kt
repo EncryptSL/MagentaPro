@@ -1,11 +1,11 @@
-package com.github.encryptsl.magenta.common.filter
+package com.github.encryptsl.magenta.common.chat.control
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import com.github.encryptsl.kmono.lib.api.ModernText
 import com.github.encryptsl.kmono.lib.extensions.now
 import com.github.encryptsl.kmono.lib.extensions.toMinecraftAvatar
 import com.github.encryptsl.magenta.Magenta
-import com.github.encryptsl.magenta.common.filter.impl.ChatFilters
+import com.github.encryptsl.magenta.common.chat.control.impl.ChatFilters
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver

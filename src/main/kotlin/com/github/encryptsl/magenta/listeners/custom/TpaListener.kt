@@ -30,9 +30,13 @@ class TpaListener(private val magenta: Magenta) : Listener {
         val sender = event.sender
         val target = event.target
         val user = magenta.user.getUser(sender.uniqueId)
+        val targetUser = magenta.user.getUser(target.uniqueId)
 
         if (sender.uniqueId == target.uniqueId)
             return sender.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.yourself"))
+
+        if ((targetUser.isVanished() || targetUser.isPlayerIgnored(sender.uniqueId) || user.isPlayerIgnored(target.uniqueId) || targetUser.hasTeleportEnabled()) && !sender.hasPermission(Permissions.TELEPORT_EXEMPT))
+            return
 
         if (user.hasDelay("commands.tpa") && !sender.hasPermission(Permissions.KIT_DELAY_EXEMPT))
             return magenta.commandHelper.delayMessage(sender, "magenta.command.tpa.error.request.delay", user.getRemainingCooldown("commands.tpa"))

@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.listeners
 
-import com.github.encryptsl.kmono.lib.extensions.playSound
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.halloween.HalloweenAPI
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -28,9 +27,7 @@ class EntityListeners(private val magenta: Magenta) : HalloweenAPI(), Listener {
             if (event.cause == EntityDamageEvent.DamageCause.VOID) {
                 player.fallDistance = 0F
                 player.damage(0.0)
-                magenta.spawnManager.spawnAsync(player)?.thenAccept {
-                    playSound(player, magenta.config.getString("void-spawn.sound").toString(), 5f, 1f)
-                }
+                magenta.spawnManager.spawnAsync(player)
                 event.isCancelled = true
             }
         }

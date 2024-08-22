@@ -68,7 +68,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "players") target: Player,
     ) {
         val account = magenta.user.getUser(target.uniqueId)
-        if (!account.getAccount().getBoolean("teleportenabled") && !player.hasPermission(Permissions.TELEPORT_EXEMPT))
+        if (!account.hasTeleportEnabled() && !player.hasPermission(Permissions.TELEPORT_EXEMPT))
             return player.sendMessage(magenta.locale.translation("magenta.command.tp.error.exempt",
                 Placeholder.parsed("player", player.name)
             ))
@@ -90,8 +90,9 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "target", suggestions = "players") target: Player,
         @Flag(value = "location", aliases = ["l"]) location: Location?
     ) {
+        val playerAccount = magenta.user.getUser(player.uniqueId)
         val targetAccount = magenta.user.getUser(target.uniqueId)
-        if (!targetAccount.getAccount().getBoolean("teleportenabled") && !commandSender.hasPermission(Permissions.TELEPORT_EXEMPT))
+        if (!targetAccount.hasTeleportEnabled() && !playerAccount.hasTeleportEnabled() && !commandSender.hasPermission(Permissions.TELEPORT_EXEMPT))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.error.exempt",
                 Placeholder.parsed("player", player.name)
             ))
@@ -162,6 +163,36 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         commandHelper.teleportAll(player, HashSet(Bukkit.getOnlinePlayers()))
         player.sendMessage(magenta.locale.translation("magenta.command.tpall.success"))
+    }
+
+    @Command("tptoggle")
+    @Permission("mangenta.tptoggle")
+    @CommandDescription("This command toggle teleporting from other players to other player.")
+    fun onTpToggle(player: Player) {
+        val user = magenta.user.getUser(player.uniqueId)
+
+        val toggle = !user.hasTeleportEnabled()
+        user.setTeleportEnabled(toggle)
+
+        player.sendMessage(magenta.locale.translation("magenta.command.tptoggle.success", Placeholder.parsed("mode", user.hasTeleportEnabled().toString())))
+    }
+
+    @Command("tptoggle <target> [toggle]")
+    @Permission("mangenta.tptoggle.other")
+    @CommandDescription("This command toggle teleporting from other players to other player.")
+    fun onTpToggleOther(
+        commandSender: CommandSender,
+        @Argument("target", suggestions = "players") target: OfflinePlayer,
+        @Argument(value = "toggle") @Default("true") toggle: Boolean
+    ) {
+        val user = magenta.user.getUser(target.uniqueId)
+        user.setTeleportEnabled(toggle)
+
+        target.player?.sendMessage(magenta.locale.translation("magenta.command.tptoggle.success", Placeholder.parsed("mode", user.hasTeleportEnabled().toString())))
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.tptoggle.success.self.other", TagResolver.resolver(
+            Placeholder.parsed("player", target.name.toString()),
+            Placeholder.parsed("mode", toggle.toString())
+        )))
     }
 
 }

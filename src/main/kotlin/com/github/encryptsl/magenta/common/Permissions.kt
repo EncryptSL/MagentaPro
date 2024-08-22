@@ -69,5 +69,8 @@ object Permissions {
     const val PORTAL_BLACKLIST_BYPASS: String = "magenta.portal.blacklist.bypass"
 
     const val VANISH_USE: String = "magenta.vanish"
+    const val VANISH_BLOCK_DAMAGE_BYPASS: String = "magenta.vanish.block.damage.bypass"
+    const val VANISH_PLAYER_DAMAGE_BYPASS: String = "magenta.vanish.player.damage.bypass"
+    const val VANISH_PICK_UP_ITEM_BYPASS: String = "magenta.vanish.pick.up.item.bypass"
     const val VANISH_EXEMPT: String = "magenta.vanish.exempt"
 }

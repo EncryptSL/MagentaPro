@@ -21,6 +21,7 @@ interface Account {
     fun resetDelay(type: String)
     fun setJailTimeout(seconds: Long)
     fun setOnlineTime(millis: Long)
+    fun setTeleportEnabled(boolean: Boolean)
     fun forceVanish()
     fun save()
     fun isJailed(): Boolean
@@ -35,9 +36,10 @@ interface Account {
     fun getRemainingCooldown(type: String): Duration
     fun hasPunish(): Boolean
     fun hasDelay(type: String): Boolean
+    fun hasTeleportEnabled(): Boolean
     fun getVotes(): Int
     fun getVotesByService(serviceName: String): Int
-    fun getVotifierRewards(): MutableList<String>
+    fun getDepositBoxRewards(): MutableList<String>
     fun getLastLocation(): Location
     fun getPlayer(): Player?
     fun getOfflinePlayer(): OfflinePlayer?

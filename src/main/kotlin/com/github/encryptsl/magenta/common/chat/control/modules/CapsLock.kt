@@ -1,9 +1,9 @@
-package com.github.encryptsl.magenta.common.filter.modules
+package com.github.encryptsl.magenta.common.chat.control.modules
 
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.Permissions
-import com.github.encryptsl.magenta.common.filter.ChatCheck
-import com.github.encryptsl.magenta.common.filter.impl.ChatFilters
+import com.github.encryptsl.magenta.common.chat.control.ChatCheck
+import com.github.encryptsl.magenta.common.chat.control.impl.ChatFilters
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.entity.Player
@@ -17,6 +17,10 @@ class CapsLock(private val magenta: Magenta) : ChatCheck() {
     override fun handle(event: AsyncChatEvent) {
         val player = event.player
         val phrase = PlainTextComponentSerializer.plainText().serialize(event.message())
+
+        if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_CAPS))
+            return
+
         if (matches(player, phrase)) {
             chatPunishManager().action(player, event, magenta.locale.getMessage("magenta.filter.caps"), "Psát CapsLockem", ChatFilters.CAPSLOCK)
         }
@@ -24,8 +28,6 @@ class CapsLock(private val magenta: Magenta) : ChatCheck() {
 
     override fun matches(player: Player, phrase: String): Boolean {
         if (!magenta.chatControl.getConfig().getBoolean("filters.capslock.control")) return false
-
-        if (player.hasPermission(Permissions.CHAT_FILTER_BYPASS_CAPS)) return false
 
         return (countUpperCaseLetters(phrase) > magenta.chatControl.getConfig().getInt("filters.capslock.sensitive", 15))
     }

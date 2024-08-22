@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.menu.MenuUI
 import com.github.encryptsl.magenta.api.menu.components.template.Menu
 import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.guis.GuiItem
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -28,6 +29,12 @@ class OresMilestonesGUI(private val magenta: Magenta) : Menu {
         val section = magenta.config.getConfigurationSection("level.locked-progress.mining.ores")?.getKeys(false) ?: return
 
         menuUI.useAllFillers(gui, magenta.milestonesOres.getConfig())
+
+        if (!magenta.config.getBoolean("level.locked-progress.mining.enabled")) {
+            gui.setItem(22, GuiItem(menuUI.isEmptyItem()))
+            gui.open(player)
+            return
+        }
 
         for (key in section.withIndex()) {
             val material = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM).firstOrNull {

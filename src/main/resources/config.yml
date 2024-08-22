@@ -419,7 +419,7 @@ votifier:
   # supported is only command and placeholder {player} and in broadcast <player> with minimessage format.
 
   # This settings can disable cumulative-rewards
-  disable-cumulative-rewards: false
+  disable-cumulative-rewards: true
 
   cumulative:
     '10':

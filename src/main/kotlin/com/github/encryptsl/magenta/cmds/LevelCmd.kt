@@ -48,7 +48,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send other player level progress")
     fun onLevelOther(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer
     ) {
         try {
             magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {

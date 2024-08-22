@@ -28,7 +28,7 @@ class WhoisCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Command("whois|who <target>")
     @Permission("magenta.whois")
     @CommandDescription("This command send information about player")
-    fun onWhois(commandSender: CommandSender, @Argument(value = "target", suggestions = "offlinePlayers") target: OfflinePlayer) {
+    fun onWhois(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: OfflinePlayer) {
         val user = magenta.user.getUser(target.uniqueId)
 
         try {

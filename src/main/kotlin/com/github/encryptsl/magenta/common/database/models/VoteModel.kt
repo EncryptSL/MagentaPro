@@ -53,6 +53,7 @@ class VoteModel : VoteSQL {
         Magenta.scheduler.impl.runAsync {
             transaction {
                 VoteTable.update({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
+                    it[username] = voteImpl.username
                     it[vote] = vote.plus(voteImpl.vote)
                     it[last_vote] = voteImpl.lastVote
                 }

@@ -53,32 +53,4 @@ class RandomCmd(private val magenta: Magenta) : AnnotationFeatures {
             Placeholder.parsed("amount", amount.toString())
         )))
     }
-
-    @Command("random tag <type> <player>")
-    @Permission("magenta.random.tag")
-    @CommandDescription("This command give random tag to player")
-    fun onRandomTag(
-        commandSender: CommandSender,
-        @Argument(value = "type", suggestions = "tags") type: String,
-        @Argument(value = "player", suggestions = "players") target: Player
-    ) {
-        val tags: List<String> = magenta.randomConfig.getConfig().getStringList("tags.$type")
-        val randomTag = tags.random()
-        if (!target.hasPermission(randomTag)) {
-            sendConsoleCommand("lp user %player% permission set $randomTag", target)
-            return target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
-                Placeholder.parsed("category", type)
-            ))
-        }
-
-        magenta.logger.info("Hráč ${target.name} již $randomTag oprávnění vlastní proto mu byl nabídnut jiný tag !")
-        sendConsoleCommand("lp user %player% permission set $randomTag", target)
-        target.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.player",
-            Placeholder.parsed("category", type)
-        ))
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.random.tag.success.self.other", TagResolver.resolver(
-            Placeholder.parsed("category", type),
-            Placeholder.parsed("tag", randomTag)
-        )))
-    }
 }

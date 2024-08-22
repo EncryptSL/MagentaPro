@@ -32,7 +32,7 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
         annotationParser.parse(this)
     }
 
-    @Command("vipexpire")
+    @Command("vip expire")
     @Permission("magenta.vip.expire")
     @CommandDescription("This command send information about your vip expiration")
     fun onVIPExpire(player: Player) {
@@ -52,10 +52,10 @@ class VipCmd(private val magenta: Magenta) : AnnotationFeatures {
         }
     }
 
-    @Command("vipexpire <player>")
+    @Command("vip expire <player>")
     @Permission("magenta.vip.expire.other")
     @CommandDescription("This command send information about other player vip expiration")
-    fun onVIPExpireOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
+    fun onVIPExpireOther(commandSender: CommandSender, @Argument(value = "player", suggestions = "players") target: OfflinePlayer) {
         try {
             val time = luckPermsAPI.getExpireGroup(target, group) ?: return commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.vip.error.expired.other",

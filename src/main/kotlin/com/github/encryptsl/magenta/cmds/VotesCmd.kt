@@ -38,7 +38,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVotesAdd(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
         magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
@@ -63,7 +63,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVotesSet(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
         magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
@@ -88,7 +88,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command reset player votes")
     fun onVotesReset(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer
     ) {
         magenta.vote.getUserVotesByUUID(target.uniqueId).thenApply {
             magenta.vote.resetVotes(target.uniqueId)
@@ -120,7 +120,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onVotesRemove(
         commandSender: CommandSender,
         @Argument(value = "service", suggestions = "services") service: String,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
         magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
