@@ -45,7 +45,7 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onJailPlayer(
         commandSender: CommandSender,
         @Argument(value = "jailName", suggestions = "jails") jailName: String,
-        @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") offlinePlayer: OfflinePlayer,
         @Argument(value = "time") time: Long = 120,
         @Argument(value = "reason") @Default("Protože Bagr ?!") @Greedy reason: String
     ) {
@@ -57,7 +57,7 @@ class JailCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command release from jail")
     fun onJailPardon(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") offlinePlayer: OfflinePlayer,
     ) {
         magenta.pluginManager.callEvent(JailPardonEvent(offlinePlayer))
     }

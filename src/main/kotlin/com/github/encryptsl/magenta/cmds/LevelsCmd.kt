@@ -55,7 +55,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command set to other player levels")
     fun onLevelSet(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
         if (!magenta.levelAPI.hasAccount(target.uniqueId))
@@ -92,7 +92,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command add to other player points")
     fun onLevelPointsAdd(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int,
         @Argument(value = "silent") @Default("false") silent: Boolean
     ) {
@@ -134,7 +134,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command set to other player points")
     fun onLevelPointsSet(
         commandSender: CommandSender,
-        @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
         magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {

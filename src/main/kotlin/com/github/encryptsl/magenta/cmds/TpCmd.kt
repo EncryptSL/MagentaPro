@@ -118,7 +118,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command teleport you to other player logout location")
     fun onTeleportOfflineLocation(
         player: Player,
-        @Argument(value = "target", suggestions = "offlinePlayers") offlinePlayer: OfflinePlayer
+        @Argument(value = "target", suggestions = "players") offlinePlayer: OfflinePlayer
     ) {
         commandHelper.teleportOffline(player, offlinePlayer)
 

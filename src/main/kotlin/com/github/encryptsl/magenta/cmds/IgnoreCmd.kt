@@ -35,7 +35,7 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Command("ignore <player>")
     @Permission("magenta.ignore")
     @CommandDescription("This command start ignore player in chat and pm")
-    fun onIgnore(player: Player, @Argument(value = "player", suggestions = "offlinePlayers") target: OfflinePlayer) {
+    fun onIgnore(player: Player, @Argument(value = "player", suggestions = "players") target: OfflinePlayer) {
         if (player.uniqueId == target.uniqueId)
             return player.sendMessage(magenta.locale.translation("magenta.command.ignore.error.yourself"))
 

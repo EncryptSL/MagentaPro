@@ -72,7 +72,7 @@ class MsgCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command enable or disable private messages")
     fun onMsgToggleOther(
         commandSender: CommandSender,
-        @Argument(value = "target", suggestions = "offlinePlayers") target: OfflinePlayer,
+        @Argument(value = "target", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "toggle") @Default("true") toggle: Boolean
     ) {
         val user = magenta.user.getUser(target.uniqueId)
