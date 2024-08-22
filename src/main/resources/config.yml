@@ -137,6 +137,9 @@ change-world-message: true
 #    volume: 5.5f
 #    pitch: 1.2f
 level:
+  # Achieving the maximum possible level.
+  level_limit: 130
+
   effect:
     sound: "ui.toast_challenger.complete"
     volume: 5.5f
