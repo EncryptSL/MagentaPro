@@ -154,11 +154,10 @@ level:
     not_completed_fields: "<gray>"
 
   # Formatting of showed levelup message
-  format: -|
-    <gold><bold>LevelUp</bold></gold>
-    
-    Dosahl jsi levelu <yellow><bold><level>
-    Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>
+  format:
+    - <gold><bold>LevelUp</bold></gold>
+    - Dosahl jsi levelu <yellow><bold><level>
+    - Do dalšího levelu potřebuješ <yellow><bold><exp_to_level>
 
   level-up-progress:
     # Enable or disable rewards for levelup.
