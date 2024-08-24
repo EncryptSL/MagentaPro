@@ -73,7 +73,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
                 )))
             }
             if (!user.getDepositBoxRewards().isNullOrEmpty()) {
-                player.sendMessage(magenta.locale.translation("magenta.command.vote.success.exist.rewards.to.claim"))
+                player.sendMessage(magenta.locale.translation("magenta.command.depositbox.success.exist.rewards.to.claim"))
             }
             return
         }
@@ -132,6 +132,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onPlayerTeleport(event: PlayerTeleportEvent) {
         val player = event.player
+        if (event.isCancelled) return
         val user = magenta.user.getUser(player.uniqueId)
         user.saveLastLocation(player)
     }
@@ -139,6 +140,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onMove(event: PlayerMoveEvent) {
         val player = event.player
+        if (event.isCancelled) return
         magenta.afk.setTime(player.uniqueId)
     }
 

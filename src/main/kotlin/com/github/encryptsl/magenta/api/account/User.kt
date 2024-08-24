@@ -6,5 +6,5 @@ import java.util.*
 
 class User {
     fun getUser(uuid: UUID): UserAccountImpl = UserAccountImpl(uuid)
-    fun getUser(player: Player): UserAccountImpl = getUser(player.uniqueId)
+    fun getUser(player: Player): UserAccountImpl = UserAccountImpl(player.uniqueId)
 }
