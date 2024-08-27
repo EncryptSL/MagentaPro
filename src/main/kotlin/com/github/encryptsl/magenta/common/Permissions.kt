@@ -20,6 +20,9 @@ object Permissions {
 
     const val NEWS_VISIBLE_EXEMPT: String = "magenta.news.visible.exempt"
 
+    const val GAMEMODE_MODIFY_EXEMPT: String = "magenta.gamemode.modify.exempt"
+    const val GAMEMODE_BYPASS_EXEMPT: String = "magenta.gamemode.bypass.exempt"
+
     const val SILKY_SPAWNER: String = "magenta.silkyspawner"
 
     const val SOCIAL_SPY: String = "magenta.social.spy"
@@ -55,6 +58,7 @@ object Permissions {
 
     const val FLY_USE: String = "magenta.fly"
     const val FLY_SAFE_LOGIN: String = "magenta.fly.safelogin"
+    const val FLY_BYPASS_EXEMPT: String = "magenta.fly.bypass.exempt"
     const val FLY_MODIFY_EXEMPT: String = "magenta.fly.modify.exempt"
 
     const val IGNORE_EXEMPT: String = "magenta.ignore.exempt"

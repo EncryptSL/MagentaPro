@@ -6,8 +6,10 @@ import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPap
 import com.github.encryptsl.magenta.Magenta
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
 @Suppress("UNUSED")
 class WeatherCmd(private val magenta: Magenta) : AnnotationFeatures {
@@ -19,54 +21,78 @@ class WeatherCmd(private val magenta: Magenta) : AnnotationFeatures {
         annotationParser.parse(this)
     }
 
-    @Command("weather clear <world> [duration]")
+    @Command("weather clear [world] [duration]")
     @CommandDescription("This command clear thunder and raining in specific world.")
     @Permission("magenta.weather")
-    fun onWeatherClear(
+    fun onWeatherClearPlayer(
         commandSender: CommandSender,
-        @Argument(value = "world", suggestions = "worlds") world: World,
+        @Argument(value = "world", suggestions = "worlds") world: World?,
         @Argument(value = "duration") @Default("0") duration: Int
     ) {
-        world.setStorm(false)
-        world.clearWeatherDuration = duration.times(20)
+        if (commandSender is Player) {
+            val inWorld = world ?: commandSender.world
 
-        commandSender.sendMessage(
-            magenta.locale.translation(
-                "magenta.command.weather.clear", TagResolver.resolver(
-                    Placeholder.parsed("world", world.name)
-                )
-            )
-        )
+            inWorld.setStorm(false)
+            inWorld.clearWeatherDuration = duration.times(20)
+            changeWeather(commandSender, "magenta.command.weather.clear", inWorld)
+        } else {
+            val inWorld = world ?: Bukkit.getWorlds().first()
+
+            inWorld.setStorm(false)
+            inWorld.clearWeatherDuration = duration.times(20)
+            changeWeather(commandSender, "magenta.command.weather.clear", inWorld)
+        }
     }
 
-    @Command("weather rain <world> [duration]")
+    @Command("weather rain [world] [duration]")
     @CommandDescription("This command starts raining in specific world")
     @Permission("magenta.weather")
-    fun onWeatherRain(
+    fun onWeatherRainPlayer(
         commandSender: CommandSender,
-        @Argument(value = "world", suggestions = "worlds") world: World,
+        @Argument(value = "world", suggestions = "worlds") world: World?,
         @Argument(value = "duration") @Default("0") duration: Int
     ) {
-        world.setStorm(false)
-        world.weatherDuration = duration.times(20)
+        if (commandSender is Player) {
+            val inWorld = world ?: commandSender.world
 
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.weather.rain", TagResolver.resolver(
-            Placeholder.parsed("world", world.name)
-        )))
+            inWorld.setStorm(false)
+            inWorld.weatherDuration = duration.times(20)
+
+            changeWeather(commandSender, "magenta.command.weather.rain", inWorld)
+        } else {
+            val inWorld = world ?: Bukkit.getWorlds().first()
+
+            inWorld.setStorm(false)
+            inWorld.weatherDuration = duration.times(20)
+
+            changeWeather(commandSender, "magenta.command.weather.rain", inWorld)
+        }
     }
 
-    @Command("weather thunder <world> [duration]")
+
+    @Command("weather thunder [world] [duration]")
     @CommandDescription("This command make thunder where another world.")
     @Permission("magenta.weather")
-    fun onWeatherThunderByPlayer(
+    fun onWeatherThunder(
         commandSender: CommandSender,
-        @Argument(value = "world", suggestions = "worlds") world: World,
+        @Argument(value = "world", suggestions = "worlds") world: World?,
         @Argument(value = "duration") @Default("0") duration: Int
     ) {
-        world.setStorm(true)
-        world.thunderDuration = duration.times(20)
+        if (commandSender is Player) {
+            val inWorld = world ?: commandSender.world
+            inWorld.setStorm(true)
+            inWorld.thunderDuration = duration.times(20)
+            changeWeather(commandSender, "magenta.command.weather.thunder", world ?: commandSender.world)
+        } else {
+            val inWorld = world ?: Bukkit.getWorlds().first()
+            inWorld.setStorm(true)
+            inWorld.thunderDuration = duration.times(20)
+            changeWeather(commandSender, "magenta.command.weather.thunder", inWorld)
+        }
+    }
 
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.weather.thunder", TagResolver.resolver(
+    private fun changeWeather(commandSender: CommandSender, translation: String, world: World) {
+        commandSender.sendMessage(magenta.locale.translation(translation, TagResolver.resolver(
             Placeholder.parsed("world", world.name)
         )))
     }

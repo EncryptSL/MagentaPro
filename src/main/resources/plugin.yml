@@ -61,6 +61,7 @@ permissions:
       magenta.spawner.*: true
       magenta.spawnmob.*: true
       magenta.speed.*: true
+      magenta.time.*: true
       magenta.tpa.*: true
       magenta.vanish.*: true
       magenta.votes.*: true
@@ -86,6 +87,7 @@ permissions:
       magenta.lightning.*: true
       magenta.shop.*: true
       magenta.social.spy: true
+      magenta.time.*: true
       magenta.vote.expire.other: true
       magenta.weather: true
       magenta.whois.*: true
@@ -366,6 +368,14 @@ permissions:
     children:
       magenta.speed: true
       magenta.speed.other: true
+  magenta.time.*:
+    description: Permissions for changing time
+    default: false
+    children:
+      magenta.time.set: true
+      magenta.time.set.day: true
+      magenta.time.set.midnight: true
+      magenta.time.set.night: true
   magenta.tpa.*:
     description: Permissions for tpa
     default: false
@@ -450,6 +460,11 @@ permissions:
     children:
       magenta.sign.warp.place: true
       magenta.sign.warp.break: true
+  magenta.bypass.*:
+    default: false
+    children:
+      magenta.fly.bypass.exempt: true
+      magenta.gamemode.bypass.exempt: true
   magenta.exempts.*:
     default: false
     children:

@@ -118,7 +118,7 @@ class GmCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (isSenderConsole || commandSender.isOp) {
             setGameModeByConsoleOrOperator(commandSender, target, gameMode)
         } else {
-            if (target.hasPermission("magenta.gamemode.modify.exempt")) return
+            if (!commandSender.hasPermission(Permissions.GAMEMODE_BYPASS_EXEMPT) && target.hasPermission(Permissions.GAMEMODE_MODIFY_EXEMPT)) return
 
             setGameModeToTarget(target, gameMode)
             sendMessages(commandSender, target, gameMode)

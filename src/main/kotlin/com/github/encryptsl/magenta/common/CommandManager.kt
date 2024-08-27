@@ -164,6 +164,7 @@ class CommandManager(private val magenta: Magenta) {
                 SpawnerCmd(magenta),
                 SpawnMobCmd(magenta),
                 SpeedCmd(magenta),
+                TimeCmd(magenta),
                 TpCmd(magenta),
                 VanishCmd(magenta),
                 VipCmd(magenta),
