@@ -25,6 +25,6 @@ class PaperContainerProvider : ContainerProvider {
     }
 
     override fun openLoom(player: Player): InventoryView? {
-        return player.openSmithingTable(null, true)
+        return player.openLoom(null, true)
     }
 }
