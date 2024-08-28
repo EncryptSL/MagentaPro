@@ -10,6 +10,7 @@ import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.jetbrains.annotations.Nullable
 
 @Suppress("UNUSED")
 class WeatherCmd(private val magenta: Magenta) : AnnotationFeatures {
@@ -26,20 +27,20 @@ class WeatherCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.weather")
     fun onWeatherClearPlayer(
         commandSender: CommandSender,
-        @Argument(value = "world", suggestions = "worlds") world: World?,
-        @Argument(value = "duration") @Default("0") duration: Int
+        @Argument(value = "world", suggestions = "worlds") @Nullable world: World?,
+        @Argument(value = "duration") @Default("0") duration: Int?
     ) {
         if (commandSender is Player) {
-            val inWorld = world ?: commandSender.world
+            val inWorld = world ?: commandSender.location.world
 
             inWorld.setStorm(false)
-            inWorld.clearWeatherDuration = duration.times(20)
+            inWorld.clearWeatherDuration = duration?.times(20) ?: 0
             changeWeather(commandSender, "magenta.command.weather.clear", inWorld)
         } else {
             val inWorld = world ?: Bukkit.getWorlds().first()
 
             inWorld.setStorm(false)
-            inWorld.clearWeatherDuration = duration.times(20)
+            inWorld.clearWeatherDuration = duration?.times(20) ?: 0
             changeWeather(commandSender, "magenta.command.weather.clear", inWorld)
         }
     }
@@ -49,21 +50,21 @@ class WeatherCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.weather")
     fun onWeatherRainPlayer(
         commandSender: CommandSender,
-        @Argument(value = "world", suggestions = "worlds") world: World?,
-        @Argument(value = "duration") @Default("0") duration: Int
+        @Argument(value = "world", suggestions = "worlds") @Nullable world: World?,
+        @Argument(value = "duration") @Default("0") duration: Int?
     ) {
         if (commandSender is Player) {
-            val inWorld = world ?: commandSender.world
+            val inWorld = world ?: commandSender.location.world
 
             inWorld.setStorm(false)
-            inWorld.weatherDuration = duration.times(20)
+            inWorld.weatherDuration = duration?.times(20) ?: 0
 
             changeWeather(commandSender, "magenta.command.weather.rain", inWorld)
         } else {
             val inWorld = world ?: Bukkit.getWorlds().first()
 
             inWorld.setStorm(false)
-            inWorld.weatherDuration = duration.times(20)
+            inWorld.weatherDuration = duration?.times(20) ?: 0
 
             changeWeather(commandSender, "magenta.command.weather.rain", inWorld)
         }
@@ -75,18 +76,18 @@ class WeatherCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.weather")
     fun onWeatherThunder(
         commandSender: CommandSender,
-        @Argument(value = "world", suggestions = "worlds") world: World?,
-        @Argument(value = "duration") @Default("0") duration: Int
+        @Argument(value = "world", suggestions = "worlds") @Nullable world: World?,
+        @Argument(value = "duration") @Default("0") duration: Int? = 0
     ) {
         if (commandSender is Player) {
-            val inWorld = world ?: commandSender.world
+            val inWorld = world ?: commandSender.location.world
             inWorld.setStorm(true)
-            inWorld.thunderDuration = duration.times(20)
-            changeWeather(commandSender, "magenta.command.weather.thunder", world ?: commandSender.world)
+            inWorld.thunderDuration = duration?.times(20) ?: 0
+            changeWeather(commandSender, "magenta.command.weather.thunder", inWorld)
         } else {
             val inWorld = world ?: Bukkit.getWorlds().first()
             inWorld.setStorm(true)
-            inWorld.thunderDuration = duration.times(20)
+            inWorld.thunderDuration = duration?.times(20) ?: 0
             changeWeather(commandSender, "magenta.command.weather.thunder", inWorld)
         }
     }
