@@ -87,7 +87,11 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
     }
 
     override fun getVotesByService(serviceName: String): Int {
-        return Optional.of(voteAPI.getUserVotesByUUIDAndService(uuid, serviceName).join().vote).orElse(0)
+        return voteAPI.getUserVotesByUUIDAndService(uuid, serviceName).thenApply {
+            return@thenApply it.vote
+        }.exceptionally {
+            return@exceptionally 0
+        }.join()
     }
 
     override fun getDepositBoxRewards(): MutableList<String> {
@@ -96,22 +100,6 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
 
     override fun getLastLocation(): Location {
         return universalConfig.getConfig().getLocation("lastlocation") ?: throw Exception("Something bad with last saved location")
-    }
-
-    override fun set(path: String, value: Any?) {
-        universalConfig.set(path, value)
-    }
-
-    override fun set(path: MutableMap<String, Any>) {
-        for (i in path) { universalConfig.set(i.key, i.value) }
-    }
-
-    override fun set(path: String, list: MutableList<Any>) {
-        universalConfig.set(path, list)
-    }
-
-    override fun save() {
-        universalConfig.save()
     }
 
     override fun getPlayer(): Player? {
@@ -128,5 +116,9 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
 
     override fun getAccount(): FileConfiguration {
         return universalConfig.getConfig()
+    }
+
+    override fun save() {
+        universalConfig.save()
     }
 }

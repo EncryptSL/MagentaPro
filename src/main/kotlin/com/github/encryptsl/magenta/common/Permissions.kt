@@ -40,6 +40,8 @@ object Permissions {
     const val HOME_DELAY_EXEMPT: String = "magenta.home.delay.exempt"
     const val HOME_WHITELIST_EXEMPT: String = "magenta.home.whitelist.exempt"
 
+    const val MSG_EXEMPT: String = "magenta.msg.exempt"
+
     const val WARP_SIGN_PLACE: String = "magenta.warp.sign.place"
     const val WARP_SIGN_BREAK: String = "magenta.warp.sign.break"
     const val WARP_TELEPORT_OTHER: String = "magenta.warp.other"

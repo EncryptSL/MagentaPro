@@ -35,12 +35,14 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
 
         val services = magenta.config.getConfigurationSection("votifier.services")?.getKeys(false) ?: return
 
-        for (service in services) {
-            if(service.contains("default")) continue
-            val replace = VoteHelper.replaceService(service, "_", ".")
-            player.sendMessage(ModernText.miniModernText(magenta.config.getString("votifier.services.$service.link").toString(), TagResolver.resolver(
+        val iterator = services.stream().filter { !it.equals("default") }.iterator()
+
+        while (iterator.hasNext()) {
+            val serviceName = iterator.next()
+            val service = VoteHelper.replaceService(serviceName, "_", ".")
+            player.sendMessage(ModernText.miniModernText(magenta.config.getString("votifier.services.$serviceName.link").toString(), TagResolver.resolver(
                 Placeholder.component("hover", magenta.locale.translation("magenta.command.vote.hover")),
-                Placeholder.parsed("vote", (user.getVotesByService(replace)).toString()),
+                Placeholder.parsed("vote", user.getVotesByService(service).toString()),
                 Placeholder.parsed("username", player.name)
             )))
         }

@@ -94,4 +94,16 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
     override fun resetDelay(type: String) {
         set("timestamps.$type", 0)
     }
+
+    override fun set(path: String, value: Any?) {
+        getAccount().set(path, value)
+    }
+
+    override fun set(path: MutableMap<String, Any>) {
+        for (i in path) { getAccount().set(i.key, i.value) }
+    }
+
+    override fun set(path: String, list: MutableList<Any>) {
+        getAccount().set(path, list)
+    }
 }

@@ -26,18 +26,18 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error.yourself"))
 
         if (commandSender is Player) {
-            val receiverUser = magenta.user.getUser(receiver.uniqueId)
             val whisper = magenta.user.getUser(commandSender.uniqueId)
+            val receiverUser = magenta.user.getUser(receiver.uniqueId)
 
             val receiverHasBlockedWhisper = receiverUser.isPlayerIgnored(commandSender.uniqueId)
             val whisperHaveBlockedReceiver = whisper.isPlayerIgnored(receiver.uniqueId)
-            val haveReceiverBlockedMsg = receiverUser.getAccount().getBoolean("commands.toggle.msg")
+            val haveReceiverBlockedMsg = receiverUser.getAccount().getBoolean("commands.toggle.msg", true)
 
             if (receiverUser.isVanished() && !commandSender.hasPermission(Permissions.VANISH_EXEMPT)) {
                 event.isCancelled = true
             }
 
-            if (receiverHasBlockedWhisper || whisperHaveBlockedReceiver || haveReceiverBlockedMsg) {
+            if (!commandSender.hasPermission(Permissions.MSG_EXEMPT) && (receiverHasBlockedWhisper || whisperHaveBlockedReceiver || !haveReceiverBlockedMsg)) {
                 commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error"))
                 event.isCancelled = true
             }

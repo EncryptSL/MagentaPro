@@ -77,7 +77,7 @@ class MsgCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         val user = magenta.user.getUser(target.uniqueId)
 
-        if (user.getAccount().getBoolean("commands.toggle.msg"))
+        if (user.getAccount().getBoolean("commands.toggle.msg", true))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error.toggled.self.other", TagResolver.resolver(
                 Placeholder.parsed("target", target.name.toString())
             )))

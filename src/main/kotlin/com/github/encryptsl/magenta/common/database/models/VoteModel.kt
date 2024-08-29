@@ -85,8 +85,7 @@ class VoteModel : VoteSQL {
         val future = CompletableFuture<VoteEntity>()
         transaction {
             val row = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
-                .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
-                .firstOrNull()
+                .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName)).firstOrNull()
             if (row == null) {
                 future.completeExceptionally(RuntimeException("Votes by service and uuid not found !"))
             } else {

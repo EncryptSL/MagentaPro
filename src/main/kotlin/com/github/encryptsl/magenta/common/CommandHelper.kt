@@ -125,7 +125,7 @@ class CommandHelper(private val magenta: Magenta) {
     }
 
     fun isMsgToggled(user: UserAccountImpl): Boolean {
-      return if (user.getAccount().getBoolean("commands.toggle.msg")) {
+      return if (user.getAccount().getBoolean("commands.toggle.msg", true)) {
             user.set("commands.toggle.msg", false)
             false
         } else {

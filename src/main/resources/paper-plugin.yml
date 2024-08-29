@@ -488,6 +488,7 @@ permissions:
       magenta.gamemode.modify.exempt: true
       magenta.home.delay.exempt: true
       magenta.heal.delay.exempt: true
+      magenta.msg.exempt: true
       magenta.ignore.exempt: true
       magenta.invsee.prevent.modify.exempt: true
       magenta.jail.exempt: true
