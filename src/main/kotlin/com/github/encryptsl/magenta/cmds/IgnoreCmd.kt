@@ -23,7 +23,7 @@ class IgnoreCmd(private val magenta: Magenta) : AnnotationFeatures {
         annotationParser: AnnotationParser<CommandSender>,
         commandManager: LegacyPaperCommandManager<CommandSender>
     ) {
-        commandManager.parserRegistry().registerSuggestionProvider("ignoredPlayers") {sender, _ ->
+        commandManager.parserRegistry().registerSuggestionProvider("ignoredPlayers") { sender, _ ->
             val c = sender as Player
             return@registerSuggestionProvider CompletableFuture.completedFuture(
                 magenta.user.getUser(c.uniqueId).getAccount().getStringList("ignore").map { Suggestion.suggestion(Bukkit.getOfflinePlayer(it).name.toString()) }

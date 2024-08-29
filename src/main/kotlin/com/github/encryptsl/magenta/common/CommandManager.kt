@@ -23,25 +23,23 @@ import java.util.concurrent.CompletableFuture
 
 class CommandManager(private val magenta: Magenta) {
 
-    private val messages = mutableMapOf<String, String>()
+    private val messages = mapOf(
+        "help" to "MagentaPro Příkazy",
+        "command" to "Příkaz",
+        "description" to "Popisek",
+        "no_description" to "Není žádný popisek..",
+        "arguments" to "Argumenty",
+        "optional" to "Volitelné",
+        "showing_results_for_query" to "Zobrazené výsledky",
+        "no_results_for_query" to "Žádné výsledky...",
+        "available_commands" to "Dostupné příkazy",
+        "click_to_show_help" to "Klikni pro podrobnosti",
+        "page_out_of_range" to "<red>[<bold>!</bold>] <red>Chyba: <gray>Stránka <yellow><page><gray> je nad limitem. Musí být v rozsahu <yellow>[1, <max_pages>]",
+        "click_for_next_page" to "Klikni na další stránku",
+        "click_for_previous_page" to "Klikni pro předchozí stránku",
+    )
 
     var help: MinecraftHelp<CommandSender>? = null
-
-    init {
-        messages.put("help", "MagentaPro Příkazy")
-        messages.put("command", "Příkaz")
-        messages.put("description", "Popisek")
-        messages.put("no_description", "Není žádný popisek..")
-        messages.put("arguments", "Argumenty")
-        messages.put("optional", "Volitelné")
-        messages.put("showing_results_for_query", "Zobrazené výsledky")
-        messages.put("no_results_for_query", "Žádné výsledky...")
-        messages.put("available_commands", "Dostupné příkazy")
-        messages.put("click_to_show_help", "Klikni pro podrobnosti")
-        messages.put("page_out_of_range", "<red>[<bold>!</bold>] <red>Chyba: <gray>Stránka <yellow><page><gray> je nad limitem. Musí být v rozsahu <yellow>[1, <max_pages>]")
-        messages.put("click_for_next_page", "Klikni na další stránku")
-        messages.put("click_for_previous_page", "Klikni pro předchozí stránku")
-    }
 
     private fun createCommandManager(): LegacyPaperCommandManager<CommandSender> {
         val commandManager = LegacyPaperCommandManager(

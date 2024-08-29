@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta
 
+import com.github.encryptsl.kmono.lib.api.ListenersHandler
 import com.github.encryptsl.kmono.lib.api.config.UniversalConfig
 import com.github.encryptsl.kmono.lib.api.config.loader.ConfigLoader
 import com.github.encryptsl.kmono.lib.api.config.locale.Locale
@@ -13,13 +14,13 @@ import com.github.encryptsl.magenta.api.votes.MagentaVotePartyAPI
 import com.github.encryptsl.magenta.common.CommandHelper
 import com.github.encryptsl.magenta.common.CommandManager
 import com.github.encryptsl.magenta.common.PlayerCacheManager
+import com.github.encryptsl.magenta.common.chat.control.ChatChecksManager
 import com.github.encryptsl.magenta.common.database.DatabaseConnector
 import com.github.encryptsl.magenta.common.database.GeoMaxMindDatabase
 import com.github.encryptsl.magenta.common.database.models.HomeModel
 import com.github.encryptsl.magenta.common.database.models.LevelModel
 import com.github.encryptsl.magenta.common.database.models.VotePartyModel
 import com.github.encryptsl.magenta.common.database.models.WarpModel
-import com.github.encryptsl.magenta.common.chat.control.ChatChecksManager
 import com.github.encryptsl.magenta.common.hook.HookManager
 import com.github.encryptsl.magenta.common.hook.plugins.vaultunlocked.VaultUnlockedHook
 import com.github.encryptsl.magenta.common.model.*
@@ -32,7 +33,6 @@ import com.github.encryptsl.magenta.common.utils.StringUtils
 import com.github.encryptsl.magenta.listeners.*
 import com.github.encryptsl.magenta.listeners.custom.*
 import com.tcoded.folialib.FoliaLib
-import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
@@ -100,6 +100,7 @@ open class Magenta : JavaPlugin() {
     private val configLoader: ConfigLoader by lazy { ConfigLoader(this) }
     private val hookManger: HookManager by lazy { HookManager(this) }
     private val chatChecksManager: ChatChecksManager by lazy { ChatChecksManager(this) }
+    private val listenersHandler: ListenersHandler by lazy { ListenersHandler(this, pluginManager, slF4JLogger) }
 
     override fun onLoad() {
         instance = this
@@ -154,7 +155,24 @@ open class Magenta : JavaPlugin() {
             newsQueueManager.loadQueue()
             registerTasks()
             chatChecksManager.initializeChecks()
-            handlerListener()
+            listenersHandler.registerHandlers(
+                AsyncChatListener(this),
+                EntityListeners(this),
+                BlockListener(this),
+                PlayerListener(this),
+                CommandListener(this),
+                SignListener(this),
+                PrivateMessageListener(this),
+                PortalListener(this),
+                HomeListeners(this),
+                JailListeners(this),
+                KitListeners(this),
+                SocialSpyListener(this),
+                TpaListener(this),
+                PlayerLevelUpListener(this),
+                VanishListener(this),
+                WarpListeners(this)
+            )
             hookManger.hookPlugins()
         }
         logger.info("Plugin enabled in time ${time.inWholeSeconds}")
@@ -185,34 +203,5 @@ open class Magenta : JavaPlugin() {
         scheduler.impl.runTimer(JailCountDownTask(this), 20, 20)
         scheduler.impl.runTimer(LevelUpTask(this), 20, 1)
         scheduler.impl.runTimer(VanishAnnouncerTask(this), 20, 40)
-    }
-
-    private fun handlerListener() {
-        val list: ArrayList<Listener> = arrayListOf(
-            AsyncChatListener(this),
-            EntityListeners(this),
-            BlockListener(this),
-            PlayerListener(this),
-            CommandListener(this),
-            SignListener(this),
-            PrivateMessageListener(this),
-            PortalListener(this),
-            HomeListeners(this),
-            JailListeners(this),
-            KitListeners(this),
-            SocialSpyListener(this),
-            TpaListener(this),
-            PlayerLevelUpListener(this),
-            VanishListener(this),
-            WarpListeners(this)
-        )
-
-        val time = measureTime {
-            val iterator = list.iterator()
-            while (iterator.hasNext()) { pluginManager.registerEvents(iterator.next(), this) }
-        }
-
-        logger.info("Bukkit listeners registered (${list.size}) in time ${time.inWholeSeconds}")
-        list.removeAll(list.toSet())
     }
 }
