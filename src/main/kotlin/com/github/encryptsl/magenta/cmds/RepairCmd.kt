@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.magenta.Magenta
@@ -9,6 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import java.math.BigDecimal
 import java.time.Duration
 
 @Suppress("UNUSED")
@@ -29,6 +32,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
         val inventory = player.inventory
         val user = magenta.user.getUser(player.uniqueId)
         val delay = magenta.config.getLong("repair-cooldown")
+        val cost = magenta.commandHelper.trader.getCommandCost(player, "repair")
 
         if (inventory.itemInMainHand.type.isEmpty || inventory.itemInMainHand.type.isAir || inventory.itemInMainHand.isEmpty)
             return player.sendMessage(magenta.locale.translation("magenta.command.repair.error.empty.hand"))
@@ -37,11 +41,20 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT) && delay != 0L)
             return magenta.commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
-        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT)) {
-            user.setDelay(Duration.ofSeconds(delay), "repair")
-        }
+        val response = EconomyWithdraw(player, "dollars", cost)
+            .transaction(magenta.vaultUnlockedHook)
 
-        magenta.commandHelper.repairItemFromHand(player)
+        if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
+            return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+
+        if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
+            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT)) {
+                user.setDelay(Duration.ofSeconds(delay), "repair")
+            }
+
+            player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+            magenta.commandHelper.repairItemFromHand(player)
+        }
     }
 
     @ProxiedBy("fixall")
@@ -51,6 +64,7 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onRepairAll(player: Player) {
         val user = magenta.user.getUser(player.uniqueId)
         val delay = magenta.config.getLong("repair-cooldown")
+        val cost = magenta.commandHelper.trader.getCommandCost(player, "repair-all")
 
         val inventory = player.inventory
         if (inventory.isEmpty)
@@ -60,13 +74,21 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT))
             return magenta.commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
-        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT)) {
-            user.setDelay(Duration.ofSeconds(delay), "repair")
+        val response = EconomyWithdraw(player, "dollars", cost)
+            .transaction(magenta.vaultUnlockedHook)
+
+        if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
+            return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+
+        if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
+            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT)) {
+                user.setDelay(Duration.ofSeconds(delay), "repair")
+            }
+            player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+            magenta.commandHelper.repairItems(player)
+
+            player.sendMessage(magenta.locale.translation("magenta.command.repair.success.all"))
         }
-
-        magenta.commandHelper.repairItems(player)
-
-        player.sendMessage(magenta.locale.translation("magenta.command.repair.success.all"))
     }
 
     @ProxiedBy("fixall")

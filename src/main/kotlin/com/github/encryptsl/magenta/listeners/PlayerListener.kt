@@ -137,6 +137,23 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         user.saveLastLocation(player)
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
+    fun onPlayerTeleportWithLowLevel(event: PlayerTeleportEvent) {
+        val player = event.player
+        val world = player.location.world
+
+        if (!magenta.stringUtils.inInList("level.locked-progress.worlds", world.name)) return
+        if (!magenta.config.getBoolean("level.locked-progress.blocked-worlds.enabled", true)) return
+
+        magenta.levelAPI.getUserByUUID(player.uniqueId).thenApply {
+            if (magenta.config.getInt("level.locked-progress.blocked-worlds.list.${world.name}") > it.level) {
+                event.isCancelled = true
+            }
+        }.exceptionally {
+            event.isCancelled = false
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     fun onMove(event: PlayerMoveEvent) {
         val player = event.player

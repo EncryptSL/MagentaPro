@@ -59,14 +59,12 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.vote.top")
     @CommandDescription("This command shows leaderboards in vote")
     fun onVoteLeaderBoard(commandSender: CommandSender, @Argument(value = "page", description = "page of leaderboard") @Default("1") page: Int) {
-        commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.top.header"))
-
         val leaderBoard = magenta.vote.votesLeaderBoard().toList().positionIndexed { k, v ->
             magenta.locale.translation("magenta.command.vote.top", TagResolver.resolver(
                 Placeholder.parsed("position", k.toString()),
                 Placeholder.parsed("player", v.first),
                 Placeholder.parsed("votes", v.second.toString())
-            )).appendNewline().append(magenta.locale.translation("magenta.command.vote.top.footer"))
+            ))
         }
 
         if (leaderBoard.isEmpty()) return
@@ -78,9 +76,11 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
                 Placeholder.parsed("max_page", paginator.maxPages.toString())
             ))
 
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.top.header"))
         for (component in paginator.display()) {
             commandSender.sendMessage(component)
         }
+        commandSender.sendMessage(magenta.locale.translation("magenta.command.vote.top.footer"))
     }
 
     @Command("voteparty|vparty|vp")

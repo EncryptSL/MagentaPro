@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.kit.*
@@ -10,6 +12,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import java.math.BigDecimal
 import java.time.Duration
 
 class KitListeners(private val magenta: Magenta) : Listener {
@@ -92,6 +95,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
         val delay = event.delay
         val kitManager = event.kitManager
         val user = magenta.user.getUser(player.uniqueId)
+        val cost = commandHelper.trader.getCommandCost(player, "kit-$kitName")
 
         val timeLeft: Duration = user.getRemainingCooldown("kits.$kitName")
 
@@ -99,11 +103,19 @@ class KitListeners(private val magenta: Magenta) : Listener {
             return commandHelper.delayMessage(player, "magenta.command.kit.error.delay", timeLeft)
 
         try {
-            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.KIT_DELAY_EXEMPT)) {
-                user.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
+            val response = EconomyWithdraw(player, "dollars", cost)
+                .transaction(magenta.vaultUnlockedHook)
+            if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
+                return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+
+            if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
+                if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.KIT_DELAY_EXEMPT)) {
+                    user.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
+                }
+                player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+                kitManager.giveKit(player, kitName)
+                player.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
             }
-            kitManager.giveKit(player, kitName)
-            player.sendMessage(magenta.locale.translation("magenta.command.kit.success.given.self", Placeholder.parsed("kit", kitName)))
         } catch (e : Exception) { player.sendMessage(ModernText.miniModernText(e.message ?: e.localizedMessage)) }
     }
 

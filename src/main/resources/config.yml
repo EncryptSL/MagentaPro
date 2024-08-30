@@ -117,13 +117,6 @@ max-fly-speed: 0.8
 #Set the max walk speed, values range from 0.1 to 1.0
 max-walk-speed: 0.8
 
-# Portal Section
-# There you can block creating of portals.
-# Methods https://jd.papermc.io/paper/1.20/org/bukkit/event/world/PortalCreateEvent.CreateReason.html
-portal:
-  enabled: false
-  blacklist: [NETHER_PAIR, END_PLATFORM, FIRE]
-
 # Change world settings
 # Enable or disable message about change world !
 # true = enabled, false = disabled.
@@ -168,25 +161,71 @@ level:
     # For celebratory with players you can add broadcast.
     # Key represent player level to reach.
     level-up-rewards:
-      5:
-        broadcast: '<gray>Hráč <yellow><player> <gray>dosáhl levelu 5 nebo <level>, a dostal něco...'
+      '5':
+        broadcast: <gray>Hráč <yellow><player> <gray>dosáhl levelu <level> a [200
+          DOLARŮ, 10 XP].
         commands:
-          - 'eco add %player% 50 -s'
-      # 10:
-      #   commands:
-      #     - ''
-      # 20:
-      #   commands:
-      #     - ''
-      # 30:
-      #   commands:
-      #     - ''
+          - eco add %player% 200 -s¨
+          - levels add %player% 10 points true
+          - experience add %player% 30 points
+      '10':
+        broadcast: <gray>Hráč <yellow><player> <gray>dosáhl levelu <level> a [250
+          DOLARŮ, 30 XP].
+        commands:
+          - eco add %player% 250 -s¨
+          - levels add %player% 30 points true
+          - experience add %player% 60 points
+      '30':
+        broadcast: <gray>Hráč <yellow><player> <gray>dosáhl levelu <level> a [500
+          DOLARŮ, 50 XP].
+        commands:
+          - eco add %player% 500 -s¨
+          - levels add %player% 50 points true
+          - experience add %player% 80 points
+      '50':
+        broadcast: <gray>Hráč <yellow><player> <gray>dosáhl levelu <level> a [750
+          DOLARŮ, 80 XP].
+        commands:
+          - eco add %player% 750 -s¨
+          - levels add %player% 80 points true
+          - experience add %player% 100 points
+      '100':
+        broadcast: <gray>Hráč <yellow><player> <gray>dosáhl levelu <level> a [1750
+          DOLARŮ, 100 XP].
+        commands:
+          - eco add %player% 1750 -s¨
+          - levels add %player% 100 points true
+          - experience add %player% 30 levels
+      '130':
+        broadcast: <gray>Hráč <yellow><player> <gray>dosáhl levelu <level> a [2500
+          DOLARŮ, 250 XP].
+        commands:
+          - eco add %player% 2500 -s¨
+          - levels add %player% 250 points true
+          - experience add %player% 60 levels
 
 
   # Locked progress behind level.
   locked-progress:
     # Locked progress enabled in this worlds !
-    worlds: [world, world_nether, mineworld]
+    worlds: [world, mineworld, priroda]
+
+    # Portal Section
+    # There you can block creating of portals.
+    # Methods https://jd.papermc.io/paper/1.20/org/bukkit/event/world/PortalCreateEvent.CreateReason.html
+    portal:
+      enabled: true
+      blacklist:
+        NETHER_PAIR: 25
+        FIRE: 25
+        END_PLATFORM: 50
+
+    blocked-worlds:
+      enabled: true
+      list:
+        mineworld: 5
+        priroda_nether: 25
+        priroda_world_end: 50
 
     # Locked progress for mining ores.
     # Showcase how working locking ores behind level.
@@ -195,19 +234,11 @@ level:
     mining:
       enabled: true
       ores:
-        COAL_ORE: 2
-        DEEPSLATE_COAL_ORE: 2
-        IRON_ORE: 3
-        DEEPSLATE_IRON_ORE: 3
-        REDSTONE_ORE: 4
-        DEEPSLATE_REDSTONE_ORE: 4
-        GOLD_ORE: 5
-        DEEPSLATE_GOLD_ORE: 5
-        DIAMOND_ORE: 10
-        DEEPSLATE_DIAMOND_ORE: 10
-        EMERALD_ORE: 11
-        DEEPSLATE_EMERALD_ORE: 11
-        ANCIENT_DEBRIS: 12
+        IRON_ORE: 10
+        DEEPSLATE_IRON_ORE: 10
+        DIAMOND_ORE: 20
+        DEEPSLATE_DIAMOND_ORE: 20
+        ANCIENT_DEBRIS: 35
 
 #########################################################
 #                    MENTIONS                           #
@@ -383,20 +414,12 @@ votifier:
       link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/neveland/vote/?user=<username>'><bold><aqua>|</bold>
         <yellow>czech-craft.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - give {player} minecraft:experience_bottle 5
-        - cc give p basicbox 1 {player}
-        - cc give p votebox 1 {player}
-        - eco add {player} 200 -s
-        - levels add {player} points 35 -s
+        - crate key give {player} vote 1
     Craftlist_org:
       link: <hover:show_text:'<hover>'><click:open_url:'https://craftlist.org/neverland?nick=<username>'><bold><aqua>|</bold>
         <yellow>craftlist.org</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
-        - give {player} minecraft:experience_bottle 5
-        - cc give p basicbox 1 {player}
-        - cc give p votebox 1 {player}
-        - eco add {player} 200 -s
-        - levels add {player} points 35 -s
+        - crate key give {player} vote 1
 
   # Voteparty is disabled by default, this reward in based on saved votes in party.
   # rewards from voteparty can receive only online players in game.
@@ -407,10 +430,9 @@ votifier:
     countdown: 15
     countdown_at: [15, 10, 5, 4, 3, 2, 1]
     random:
-      - 'crazycrates give p partybox 1 {player}'
+      - 'crate key give {player} party 1'
     rewards:
       - 'give {player} minecraft:experience_bottle 32'
-      - 'crazycrates give physical votebox 3 {player}'
       - 'eco add {player} 1000'
     format: -|
       <color:#32C4FF>Ve voteparty je aktuálně <color:#0581B3><current_votes>
@@ -437,6 +459,19 @@ votifier:
         - eco add {player} {expression_reward} -s
         - levels add {player} 250 points -s
         - crazycrates give physical votecrate 1 {player}
+
+############################################################
+# +------------------------------------------------------+ #
+# |                       ECONOMY                        | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Defines the cost to use the given commands PER USE.
+# Works only for kit-tools, kit-vip and other kits
+# Other command setwarp, heal, repair, repair-all
+commands-cost:
+  kit-tools: 100
+  kit-vip: 300
 
 ############################################################
 # +------------------------------------------------------+ #

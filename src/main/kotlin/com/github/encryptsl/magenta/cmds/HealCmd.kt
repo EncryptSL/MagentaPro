@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.magenta.Magenta
@@ -9,6 +11,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import java.math.BigDecimal
 import java.time.Duration
 
 @Suppress("UNUSED")
@@ -27,6 +30,7 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onHeal(player: Player) {
         val delay = magenta.config.getLong("heal-cooldown")
         val user = magenta.user.getUser(player.uniqueId)
+        val cost = magenta.commandHelper.trader.getCommandCost(player, "heal")
 
         val timeLeft = user.getRemainingCooldown("heal")
 
@@ -34,13 +38,23 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
             return magenta.commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
         }
 
-        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HEAL_DELAY_EXEMPT)) {
-            user.setDelay(Duration.ofSeconds(delay), "heal")
-        }
+        val response = EconomyWithdraw(player, "dollars", cost)
+            .transaction(magenta.vaultUnlockedHook)
 
-        player.sendMessage(magenta.locale.translation("magenta.command.heal"))
-        player.health = 20.0
-        player.foodLevel = 20
+        if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
+            return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+
+
+        if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
+            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HEAL_DELAY_EXEMPT)) {
+                user.setDelay(Duration.ofSeconds(delay), "heal")
+            }
+
+            player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+            player.sendMessage(magenta.locale.translation("magenta.command.heal"))
+            player.health = 20.0
+            player.foodLevel = 20
+        }
     }
 
     @Command("heal <player>")

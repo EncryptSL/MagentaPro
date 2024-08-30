@@ -1,6 +1,8 @@
 package com.github.encryptsl.magenta.listeners.custom
 
 import com.github.encryptsl.kmono.lib.api.ModernText
+import com.github.encryptsl.kmono.lib.api.economy.EconomyTransactionResponse
+import com.github.encryptsl.kmono.lib.api.economy.components.EconomyWithdraw
 import com.github.encryptsl.kmono.lib.utils.BlockUtils
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
@@ -12,6 +14,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import java.math.BigDecimal
 
 class WarpListeners(private val magenta: Magenta) : Listener {
 
@@ -20,6 +23,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val warpName = event.warpName
         val player: Player = event.player
         val location: Location = event.location
+        val cost =  magenta.commandHelper.trader.getCommandCost(player, "setwarp")
 
         if (!BlockUtils.isLocationSafe(location))
             return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.safe.create"))
@@ -31,8 +35,16 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                 if (!canSetWarp) {
                     player.sendMessage(magenta.locale.translation("magenta.command.warp.error.limit"))
                 } else {
-                    magenta.warpModel.creteWarp(player, location, warpName)
-                    player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
+                    val response = EconomyWithdraw(player, "dollars", cost)
+                        .transaction(magenta.vaultUnlockedHook)
+                    if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
+                        return@thenAccept player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+
+                    if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
+                        player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+                        magenta.warpModel.creteWarp(player, location, warpName)
+                        player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
+                    }
                 }
             }
         }

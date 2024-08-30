@@ -498,6 +498,7 @@ permissions:
       magenta.tpa.delay.exempt: true
       magenta.warp.delay.exempt: true
       magenta.news.visible.exempt: true
+      magenta.noncommandcost: true
   magenta.restriction.bypass.*:
     default: false
     children:

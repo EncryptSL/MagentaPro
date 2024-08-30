@@ -43,27 +43,31 @@ class ReportCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "category", suggestions = "reportCategories") category: ReportCategories,
         @Argument(value = "message") @Default("Zpráva není specifikovaná.") @Greedy message: String
     ) {
-        if (player.name.equals(target.name, ignoreCase = true))
-            return player.sendMessage(magenta.locale.translation("magenta.command.report.error.yourself"))
+        try {
+            if (player.name.equals(target.name, ignoreCase = true))
+                return player.sendMessage(magenta.locale.translation("magenta.command.report.error.yourself"))
 
-        if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()) || luckPermsAPI.hasPermission(target, "magenta.report.exempt"))
-            return player.sendMessage(magenta.locale.translation("magenta.command.report.error.exempt"))
+            if (magenta.stringUtils.inInList("exempt-blacklist", target.name.toString()) || luckPermsAPI.hasPermission(target, "magenta.report.exempt"))
+                return player.sendMessage(magenta.locale.translation("magenta.command.report.error.exempt"))
 
-        player.sendMessage(magenta.locale.translation("magenta.command.report.success", TagResolver.resolver(
-            Placeholder.parsed("player", target.name.toString()),
-            Placeholder.parsed("category", category.name)
-        )))
+            player.sendMessage(magenta.locale.translation("magenta.command.report.success", TagResolver.resolver(
+                Placeholder.parsed("player", target.name.toString()),
+                Placeholder.parsed("category", category.name)
+            )))
 
-        magenta.serverFeedback.addEmbed {
-            setTitle(WebhookEmbed.EmbedTitle("Nahlášen hráč ${target.name.toString()} (#${magenta.random})", null))
-            setColor(0xde4343)
-            setDescription(category.message)
-            setThumbnailUrl(target.uniqueId.toMinecraftAvatar())
-            addField(WebhookEmbed.EmbedField(true, "Nahlásil", player.name))
-            addField(WebhookEmbed.EmbedField(true, "Důvod", category.name))
-            addField(WebhookEmbed.EmbedField(false, "Zpráva", message))
-            setFooter(WebhookEmbed.EmbedFooter("Byl nahlášen ${now()}", null))
-        }?.let { magenta.serverFeedback.client.send(it) }
+            magenta.serverFeedback.addEmbed {
+                setTitle(WebhookEmbed.EmbedTitle("Nahlášen hráč ${target.name.toString()} (#${magenta.random})", null))
+                setColor(0xde4343)
+                setDescription(category.message)
+                setThumbnailUrl(target.uniqueId.toMinecraftAvatar())
+                addField(WebhookEmbed.EmbedField(true, "Nahlásil", player.name))
+                addField(WebhookEmbed.EmbedField(true, "Důvod", category.name))
+                addField(WebhookEmbed.EmbedField(false, "Zpráva", message))
+                setFooter(WebhookEmbed.EmbedFooter("Byl nahlášen ${now()}", null))
+            }?.let { magenta.serverFeedback.client.send(it) }
+        } catch (e : Exception) {
+            player.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", e.message ?: e.localizedMessage)))
+        }
     }
 
 }

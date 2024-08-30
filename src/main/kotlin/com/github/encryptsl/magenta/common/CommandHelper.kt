@@ -4,6 +4,7 @@ import com.github.encryptsl.kmono.lib.extensions.experienceFormula
 import com.github.encryptsl.kmono.lib.extensions.getProgressBar
 import com.github.encryptsl.kmono.lib.extensions.levelProgress
 import com.github.encryptsl.magenta.Magenta
+import com.github.encryptsl.magenta.api.Trader
 import com.github.encryptsl.magenta.api.account.models.UserAccountImpl
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
@@ -16,6 +17,8 @@ import org.bukkit.inventory.meta.Damageable
 import java.time.Duration
 
 class CommandHelper(private val magenta: Magenta) {
+
+    val trader: Trader by lazy { Trader(magenta) }
 
     fun delayMessage(sender: Player, message: String, duration: Duration) {
         sender.sendMessage(
