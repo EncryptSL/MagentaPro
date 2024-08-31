@@ -21,9 +21,7 @@ dependencies:
       required: false
       join-classpath: true
     PlaceholderAPI:
-      required: false
-      join-classpath: true
-    CreditLite:
+      load: BEFORE
       required: false
       join-classpath: true
     MythicMobs:

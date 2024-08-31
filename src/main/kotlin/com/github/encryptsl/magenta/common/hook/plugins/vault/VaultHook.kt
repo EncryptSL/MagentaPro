@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.plugin.ServicesManager
 import java.math.BigDecimal
 
+@Suppress("DEPRECATION")
 class VaultHook(private val magenta: Magenta) : PluginHook("Vault"), Economy {
 
     private var eco: net.milkbowl.vault.economy.Economy? = null
