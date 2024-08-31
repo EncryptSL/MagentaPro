@@ -35,10 +35,10 @@ class TpaListener(private val magenta: Magenta) : Listener {
         if (sender.uniqueId == target.uniqueId)
             return sender.sendMessage(magenta.locale.translation("magenta.command.tpa.error.request.yourself"))
 
-        if ((targetUser.isVanished() || targetUser.isPlayerIgnored(sender.uniqueId) || user.isPlayerIgnored(target.uniqueId) || targetUser.hasTeleportEnabled()) && !sender.hasPermission(Permissions.TELEPORT_EXEMPT))
+        if ((targetUser.isVanished() || targetUser.isPlayerIgnored(sender.uniqueId) || user.isPlayerIgnored(target.uniqueId) || targetUser.hasTeleportEnabled()) && !sender.hasPermission(Permissions.TELEPORT_TOGGLE_BYPASS))
             return
 
-        if (user.hasDelay("commands.tpa") && !sender.hasPermission(Permissions.KIT_DELAY_EXEMPT))
+        if (user.hasDelay("commands.tpa") && !sender.hasPermission(Permissions.KIT_DELAY_BYPASS))
             return magenta.commandHelper.delayMessage(sender, "magenta.command.tpa.error.request.delay", user.getRemainingCooldown("commands.tpa"))
 
         if (!magenta.tpaManager.createRequest(sender, target))

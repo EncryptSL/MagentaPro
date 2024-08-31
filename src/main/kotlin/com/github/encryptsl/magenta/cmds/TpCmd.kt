@@ -68,7 +68,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "players") target: Player,
     ) {
         val account = magenta.user.getUser(target.uniqueId)
-        if (!account.hasTeleportEnabled() && !player.hasPermission(Permissions.TELEPORT_EXEMPT))
+        if (!account.hasTeleportEnabled() && !player.hasPermission(Permissions.TELEPORT_TOGGLE_BYPASS))
             return player.sendMessage(magenta.locale.translation("magenta.command.tp.error.exempt",
                 Placeholder.parsed("player", player.name)
             ))
@@ -92,7 +92,7 @@ class TpCmd(private val magenta: Magenta) : AnnotationFeatures {
     ) {
         val playerAccount = magenta.user.getUser(player.uniqueId)
         val targetAccount = magenta.user.getUser(target.uniqueId)
-        if (!targetAccount.hasTeleportEnabled() && !playerAccount.hasTeleportEnabled() && !commandSender.hasPermission(Permissions.TELEPORT_EXEMPT))
+        if (!targetAccount.hasTeleportEnabled() && !playerAccount.hasTeleportEnabled() && !commandSender.hasPermission(Permissions.TELEPORT_TOGGLE_BYPASS))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.tp.error.exempt",
                 Placeholder.parsed("player", player.name)
             ))

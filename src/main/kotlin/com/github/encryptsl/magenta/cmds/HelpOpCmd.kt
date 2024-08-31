@@ -34,7 +34,7 @@ class HelpOpCmd(private val magenta: Magenta) : AnnotationFeatures {
     fun onHelpOp(player: Player, @Argument(value = "message") @Greedy message: String) {
         val component = chat(player, null, message, "magenta.command.helpop.chat")
 
-        Bukkit.broadcast(component, Permissions.HELPOP_STAFF_CHAT)
+        Bukkit.broadcast(component, Permissions.HELPOP_RECEIVE)
         player.sendMessage(component)
     }
 
@@ -57,7 +57,7 @@ class HelpOpCmd(private val magenta: Magenta) : AnnotationFeatures {
     private fun sendChannelMessage(commandSender: CommandSender, target: Player, message: String) {
         try {
             val component = chat(commandSender, target, message, "magenta.command.helpop.answer.chat")
-            Bukkit.broadcast(component, Permissions.HELPOP_STAFF_CHAT)
+            Bukkit.broadcast(component, Permissions.HELPOP_RECEIVE)
             target.sendMessage(component)
         } catch (_ : Exception) {}
     }

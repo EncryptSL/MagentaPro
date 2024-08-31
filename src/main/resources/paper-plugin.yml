@@ -94,7 +94,10 @@ permissions:
       magenta.player: true
       magenta.broadcast: true
       magenta.hat.*: true
+      magenta.helpop.*: true
+      magenta.homes.moderator: true
       magenta.ignore.*: true
+      magenta.invsee: true
       magenta.jail: true
       magenta.jail.list: true
       magenta.jail.info: true
@@ -104,6 +107,8 @@ permissions:
       magenta.shop.*: true
       magenta.social.spy: true
       magenta.vote.expire.other: true
+      magenta.warp.default: true
+      magenta.warps.moderator: true
       magenta.weather: true
       magenta.whois.*: true
       magenta.chat.filter.bypass.*: true
@@ -112,17 +117,19 @@ permissions:
     default: true
     children:
       magenta.afk: true
-      magenta.afk.auto: true
       magenta.depositbox.player: true
       magenta.feedback.*: true
       magenta.report.*: true
+      magenta.helpop: true
       magenta.home.player: true
       magenta.ignore: true
       magenta.unignore: true
       magenta.kit: true
+      magenta.kits.tools: true
       magenta.kit.list: true
       magenta.level.*: true
       magenta.warp: true
+      magenta.warp.list: true
       magenta.tpa.*: true
       magenta.msg.*: true
       magenta.vip.expire: true
@@ -139,8 +146,6 @@ permissions:
     children:
       magenta.afk: true
       magenta.afk.other: true
-      magenta.afk.auto: true
-      magenta.afk.kick.exempt: true
   magenta.back.*:
     description: Permissions for back
     default: false
@@ -225,13 +230,13 @@ permissions:
     children:
       magenta.heal: true
       magenta.heal.other: true
-      magenta.heal.delay.exempt: true
+      magenta.heal.delay.bypass: true
   magenta.helpop.*:
     description: Permissions for helpop
     default: false
     children:
       magenta.helpop: true
-      magenta.helpop.staff.chat: true
+      magenta.helpop.receive: true
   magenta.home.*:
     description: Permissions for all home commands
     default: false
@@ -244,13 +249,14 @@ permissions:
       magenta.renamehome: true
       magenta.home.list: true
       magenta.homes.unlimited: true
-      magenta.home.delay.exempt: true
+      magenta.home.delay.bypass: true
   magenta.home.player:
     description: Permissions for all home commands
     default: false
     children:
       magenta.home: true
       magenta.sethome: true
+      magenta.sethomeicon: true
       magenta.delhome: true
       magenta.move.home: true
       magenta.renamehome: true
@@ -268,8 +274,7 @@ permissions:
     children:
       magenta.invsee: true
       magenta.invsee.modify: true
-      magenta.invsee.prevent.modify: true
-      magenta.invsee.prevent.modify.exempt: true
+      magenta.invsee.modify.exempt: true
   magenta.jail.*:
     description: Permissions for all jail commands
     default: false
@@ -288,7 +293,7 @@ permissions:
       magenta.kit: true
       magenta.kit.other: true
       magenta.kit.list: true
-      magenta.kit.delay.exempt: true
+      magenta.kit.delay.bypass: true
       magenta.showkit: true
       magenta.createkit: true
       magenta.deletekit: true
@@ -332,7 +337,7 @@ permissions:
       magenta.repair.all: true
       magenta.repair.all.other: true
       magenta.repair.enchanted: true
-      magenta.repair.delay.exempt: true
+      magenta.repair.delay.bypass: true
   magenta.report.*:
     description: Permissions for report
     default: false
@@ -407,7 +412,7 @@ permissions:
       magenta.tpo: true
       magenta.tphere: true
       magenta.tpall: true
-      magenta.tp.exempt: true
+      magenta.tp.toggle.bypass: true
   magenta.vanish.*:
     description: Permisisons for vanish
     default: false
@@ -452,7 +457,7 @@ permissions:
       magenta.rename.warp: true
       magenta.rename.warp.other: true
       magenta.warp.list: true
-      magenta.warp.delay.exempt: true
+      magenta.warp.delay.delay: true
       magenta.warps.unlimited: true
   magenta.warp.default:
     description: Permissions for all warp commands
@@ -475,42 +480,57 @@ permissions:
     children:
       magenta.sign.warp.place: true
       magenta.sign.warp.break: true
-  magenta.bypass.*:
-    default: false
-    children:
-      magenta.fly.bypass.exempt: true
-      magenta.gamemode.bypass.exempt: true
   magenta.exempts.*:
     default: false
     children:
-      magenta.afk.kick.exempt: true
       magenta.fly.modify.exempt: true
       magenta.gamemode.modify.exempt: true
-      magenta.home.delay.exempt: true
-      magenta.heal.delay.exempt: true
-      magenta.msg.exempt: true
       magenta.ignore.exempt: true
       magenta.invsee.prevent.modify.exempt: true
       magenta.jail.exempt: true
-      magenta.kit.delay.exempt: true
-      magenta.repair.delay.exempt: true
-      magenta.social.spy.exempt: true
-      magenta.tpa.delay.exempt: true
-      magenta.warp.delay.exempt: true
       magenta.news.visible.exempt: true
+      magenta.social.spy.exempt: true
       magenta.noncommandcost: true
+  magenta.bypass.*:
+    default: false
+    children:
+      magenta.fly.modify.exempt.bypass: true
+      magenta.invsee.exempt.bypass: true
+      magenta.msgignore.bypass: true
+      magenta.msgtoggle.bypass: true
+      magenta.gamemode.modify.exempt.bypass: true
+      magenta.tp.toggle.bypass: true
+      essentials.command.delay.bypass.*: true
+      magenta.restriction.bypass.*: true
+      magenta.chat.filter.bypass.*: true
+  essentials.command.delay.bypass.*:
+    default: false
+    children:
+      magenta.kit.delay.bypass: true
+      magenta.repair.delay.bypass: true
+      magenta.tpa.delay.bypass: true
+      magenta.warp.delay.bypass: true
+      magenta.msg.actions.bypass: true
+      magenta.home.delay.bypass: true
+      magenta.heal.delay.bypass: true
   magenta.restriction.bypass.*:
     default: false
     children:
       magenta.level.mining.bypass: true
       magenta.portal.blacklist.bypass: true
+  magenta.vanish.secure.bypass:
+    default: false
+    children:
+      magenta.vanish.block.damage.bypass: true
+      magenta.vanish.player.damage.bypass: true
+      magenta.vanish.pick.up.item.bypass: true
   magenta.chat.filter.bypass.*:
     default: false
     children:
-      magenta.chat.filter.bypass.websites: true
-      magenta.chat.filter.bypass.ipfilter: true
-      magenta.chat.filter.bypass.swear: true
-      magenta.chat.filter.bypass.antispam: true
-      magenta.chat.filter.bypass.capslock: true
+      magenta.chat.filter.websites.bypass: true
+      magenta.chat.filter.ipfilter.bypass: true
+      magenta.chat.filter.swear.bypass: true
+      magenta.chat.filter.antispam.bypass: true
+      magenta.chat.filter.capslock.bypass: true
   magenta.silky.spawner:
     default: false

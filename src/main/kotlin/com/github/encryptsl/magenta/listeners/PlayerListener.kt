@@ -22,7 +22,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
-import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.*
@@ -166,18 +165,38 @@ class PlayerListener(private val magenta: Magenta) : Listener {
         val top = event.view.topInventory
         val type = top.type
 
-        val whoClicked = event.whoClicked
+        val viewer = event.whoClicked
+
         if (type == InventoryType.PLAYER) {
-            val ownerInv = top.holder ?: return
-            if (ownerInv is HumanEntity) {
-                if (!whoClicked.hasPermission(Permissions.INVSEE_MODIFY) && ownerInv.hasPermission(Permissions.INVSEE_PREVENT_MODIFY)) {
-                    if (whoClicked.hasPermission(Permissions.INVSEE_PREVENT_MODIFY_EXEMPT)) return
+            val ownerOfInventory = top.holder ?: return
+            if (ownerOfInventory is HumanEntity) {
+                val viewerHasInvseeModify = viewer.hasPermission(Permissions.INVSEE_MODIFY)
+                val ownerHasExempt = ownerOfInventory.hasPermission(Permissions.INVSEE_MODIFY_EXEMPT)
+
+                if (!viewerHasInvseeModify) {
                     event.isCancelled = true
+                    return
+                }
+
+                if (viewerHasInvseeModify && ownerHasExempt) {
+                    event.isCancelled = true
+                    return
                 }
             }
         } else if (type == InventoryType.ENDER_CHEST) {
-            if (!whoClicked.hasPermission(Permissions.ECHEST_MODIFY)) {
-                event.isCancelled = true
+            val ownerOfInventory = top.holder ?: return
+            if (ownerOfInventory is HumanEntity) {
+                val viewerHasEchestModify = viewer.hasPermission(Permissions.ECHEST_MODIFY)
+                val ownerHasExempt = ownerOfInventory.hasPermission(Permissions.ECHEST_MODIFY_EXEMPT)
+
+                if (!viewerHasEchestModify) {
+                    event.isCancelled = true
+                    return
+                }
+
+                if (viewerHasEchestModify && ownerHasExempt) {
+                    event.isCancelled = true
+                }
             }
         }
     }

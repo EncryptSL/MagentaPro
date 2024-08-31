@@ -38,10 +38,10 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                     val response = EconomyWithdraw(player, "dollars", cost)
                         .transaction(magenta.vaultUnlockedHook)
                     if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
-                        return@thenAccept player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+                        return@thenAccept magenta.commandHelper.trader.notEnoughDollars(player)
 
                     if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
-                        player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+                        magenta.commandHelper.trader.successTradeWithDraw(player, cost)
                         magenta.warpModel.creteWarp(player, location, warpName)
                         player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
                     }

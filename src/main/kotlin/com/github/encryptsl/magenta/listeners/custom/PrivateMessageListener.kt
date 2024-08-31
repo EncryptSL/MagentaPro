@@ -37,7 +37,12 @@ class PrivateMessageListener(private val magenta: Magenta) : Listener {
                 event.isCancelled = true
             }
 
-            if (!commandSender.hasPermission(Permissions.MSG_EXEMPT) && (receiverHasBlockedWhisper || whisperHaveBlockedReceiver || !haveReceiverBlockedMsg)) {
+            if (!commandSender.hasPermission(Permissions.MSG_TOGGLE_BYPASS) && !haveReceiverBlockedMsg) {
+                commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error"))
+                event.isCancelled = true
+            }
+
+            if (!commandSender.hasPermission(Permissions.MSG_IGNORE_BYPASS) && (receiverHasBlockedWhisper || whisperHaveBlockedReceiver)) {
                 commandSender.sendMessage(magenta.locale.translation("magenta.command.msg.error"))
                 event.isCancelled = true
             }

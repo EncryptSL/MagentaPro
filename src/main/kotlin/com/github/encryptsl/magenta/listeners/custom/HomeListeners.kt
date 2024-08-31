@@ -24,7 +24,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", location.world.name)
         val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_BYPASS))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                     TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
@@ -50,7 +50,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", player.location.world.name)
         val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_BYPASS))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                 TagResolver.resolver(Placeholder.parsed("world", player.location.world.name))))
 
@@ -71,7 +71,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", player.location.world.name)
         val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_BYPASS))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                 TagResolver.resolver(Placeholder.parsed("world", player.location.world.name))))
 
@@ -98,7 +98,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", location.world.name)
         val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
 
-        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
+        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_BYPASS))
             return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
                 TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
@@ -117,23 +117,15 @@ class HomeListeners(private val magenta: Magenta) : Listener {
         val homeName = event.homeName
         val player: Player = event.player
         val delay = event.delay
-        val location: Location = player.location
         val user = magenta.user.getUser(player.uniqueId)
-
-        val isInListWorld = magenta.stringUtils.inInList("homes.whitelist", location.world.name)
-        val isInListAll = magenta.stringUtils.inInList("homes.whitelist", "*")
-
-        if ((!isInListWorld && !isInListAll) && !player.hasPermission(Permissions.HOME_WHITELIST_EXEMPT))
-            return player.sendMessage(magenta.locale.translation("magenta.command.home.error.blocked",
-                TagResolver.resolver(Placeholder.parsed("world", location.world.name))))
 
         val timeLeft: Duration = user.getRemainingCooldown("home")
 
-        if (user.hasDelay("home") && !player.hasPermission(Permissions.HOME_DELAY_EXEMPT) && delay != 0L) {
+        if (user.hasDelay("home") && !player.hasPermission(Permissions.HOME_DELAY_BYPASS) && delay != 0L) {
             return commandHelper.delayMessage(player, "magenta.command.home.error.delay", timeLeft)
         }
 
-        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HOME_DELAY_EXEMPT)) {
+        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HOME_DELAY_BYPASS)) {
             user.setDelay(Duration.ofSeconds(delay), "home")
         }
 

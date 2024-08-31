@@ -24,7 +24,7 @@ class InvseeCmd(private val magenta: Magenta) : AnnotationFeatures {
     @Permission("magenta.invsee")
     @CommandDescription("This command open other player inventory")
     fun onInvseePlayer(player: Player, @Argument(value = "target", suggestions = "players") target: Player) {
-        if (target.hasPermission(Permissions.INVSEE_EXEMPT)) return
+        if (!player.hasPermission(Permissions.INVSEE_EXEMPT_BYPASS) && target.hasPermission(Permissions.INVSEE_EXEMPT)) return
 
         player.openInventory(target.inventory)
     }

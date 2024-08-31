@@ -6,22 +6,23 @@ object Permissions {
     const val CREDIT_SHOP_CATEGORY = "magenta.credit.shop.category.%s"
 
     const val ECHEST_MODIFY: String = "magenta.echest.modify"
+    const val ECHEST_MODIFY_EXEMPT: String = "magenta.echest.modify.exempt"
 
     const val GAME_MODES: String = "magenta.gamemodes.%s"
 
-    const val HEAL_DELAY_EXEMPT: String = "magenta.heal.delay.exempt"
-    const val HELPOP_STAFF_CHAT: String = "magenta.helpop.staff.chat"
+    const val HEAL_DELAY_BYPASS: String = "magenta.heal.delay.bypass"
+    const val HELPOP_RECEIVE: String = "magenta.helpop.receive"
 
-    const val CHAT_FILTER_BYPASS_SPAM: String = "magenta.chat.filter.bypass.antispam"
-    const val CHAT_FILTER_BYPASS_CAPS: String = "magenta.chat.filter.bypass.capslock"
-    const val CHAT_FILTER_BYPASS_IP_ADDRESS: String = "magenta.chat.filter.bypass.ipfilter"
-    const val CHAT_FILTER_BYPASS_SWEAR: String = "magenta.chat.filter.bypass.swear"
-    const val CHAT_FILTER_BYPASS_WEBSITES: String = "magenta.chat.filter.bypass.websites"
+    const val CHAT_FILTER_BYPASS_SPAM: String = "magenta.chat.filter.antispam.bypass"
+    const val CHAT_FILTER_BYPASS_CAPS: String = "magenta.chat.filter.capslock.bypass"
+    const val CHAT_FILTER_BYPASS_IP_ADDRESS: String = "magenta.chat.filter.ipfilter.bypass"
+    const val CHAT_FILTER_BYPASS_SWEAR: String = "magenta.chat.filter.swear.bypass"
+    const val CHAT_FILTER_BYPASS_WEBSITES: String = "magenta.chat.filter.websites.bypass"
 
     const val NEWS_VISIBLE_EXEMPT: String = "magenta.news.visible.exempt"
 
     const val GAMEMODE_MODIFY_EXEMPT: String = "magenta.gamemode.modify.exempt"
-    const val GAMEMODE_BYPASS_EXEMPT: String = "magenta.gamemode.bypass.exempt"
+    const val GAMEMODE_MODIFY_BYPASS: String = "magenta.gamemode.modify.exempt.bypass"
 
     const val SILKY_SPAWNER: String = "magenta.silkyspawner"
 
@@ -30,17 +31,18 @@ object Permissions {
     const val SHOP_CATEGORY_ALL: String = "magenta.shop.category.*"
     const val SHOP_CATEGORY: String = "magenta.shop.category.%s"
 
-    const val TPA_DELAY_EXEMPT: String = "magenta.tpa.delay.exempt"
-    const val TELEPORT_EXEMPT: String = "magenta.tp.exempt"
+    const val TPA_DELAY_BYPASS: String = "magenta.tpa.delay.bypass"
+    const val TELEPORT_TOGGLE_BYPASS: String = "magenta.tp.toggle.bypass"
 
     const val REPAIR_ENCHANTED: String = "magenta.repair.enchanted"
-    const val REPAIR_DELAY_EXEMPT: String = "magenta.repair.delay.exempt"
+    const val REPAIR_DELAY_BYPASS: String = "magenta.repair.delay.bypass"
 
     const val HOME_UNLIMITED: String = "magenta.homes.unlimited"
-    const val HOME_DELAY_EXEMPT: String = "magenta.home.delay.exempt"
-    const val HOME_WHITELIST_EXEMPT: String = "magenta.home.whitelist.exempt"
+    const val HOME_DELAY_BYPASS: String = "magenta.home.delay.bypass"
+    const val HOME_WHITELIST_BYPASS: String = "magenta.home.whitelist.bypass"
 
-    const val MSG_EXEMPT: String = "magenta.msg.exempt"
+    const val MSG_IGNORE_BYPASS: String = "magenta.msgignore.bypass"
+    const val MSG_TOGGLE_BYPASS: String = "magenta.msgtoggle.bypass"
 
     const val WARP_SIGN_PLACE: String = "magenta.warp.sign.place"
     const val WARP_SIGN_BREAK: String = "magenta.warp.sign.break"
@@ -56,19 +58,19 @@ object Permissions {
     const val LEVEL_MINE_BYPASS: String = "magenta.level.mining.bypass"
 
     const val KITS = "magenta.kits.%s"
-    const val KIT_DELAY_EXEMPT: String = "magenta.kit.delay.exempt"
+    const val KIT_DELAY_BYPASS: String = "magenta.kit.delay.bypass"
 
     const val FLY_USE: String = "magenta.fly"
     const val FLY_SAFE_LOGIN: String = "magenta.fly.safelogin"
-    const val FLY_BYPASS_EXEMPT: String = "magenta.fly.bypass.exempt"
+    const val FLY_MODIFY_EXEMPT_BYPASS: String = "magenta.fly.modify.exempt.bypass"
     const val FLY_MODIFY_EXEMPT: String = "magenta.fly.modify.exempt"
 
     const val IGNORE_EXEMPT: String = "magenta.ignore.exempt"
 
     const val INVSEE_EXEMPT: String = "magenta.invsee.exempt"
     const val INVSEE_MODIFY: String = "magenta.invsee.modify"
-    const val INVSEE_PREVENT_MODIFY: String = "magenta.invsee.prevent.modify"
-    const val INVSEE_PREVENT_MODIFY_EXEMPT: String = "magenta.invsee.prevent.modify.exempt"
+    const val INVSEE_MODIFY_EXEMPT: String = "magenta.invsee.modify.exempt"
+    const val INVSEE_EXEMPT_BYPASS: String = "magenta.invsee.exempt.bypass"
 
     const val JAIL_PLAYER_EXEMPT: String = "magenta.jail.exempt"
 
@@ -81,4 +83,5 @@ object Permissions {
     const val VANISH_EXEMPT: String = "magenta.vanish.exempt"
 
     const val NON_COMMAND_COST: String = "magenta.noncommandcost"
+    const val NON_COMMAND_COST_COMMAND: String = "magenta.noncommandcost.%s"
 }

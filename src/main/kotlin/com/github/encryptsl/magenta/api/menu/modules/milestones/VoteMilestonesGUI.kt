@@ -35,7 +35,7 @@ class VoteMilestonesGUI(private val magenta: Magenta) : Menu {
 
         menuUI.useAllFillers(gui, magenta.milestonesVotePass.getConfig())
 
-        if (magenta.config.getBoolean("votifier.disable-cumulative-rewards")) {
+        if (magenta.config.getBoolean("votifier.disable-cumulative-rewards") || menuSection.isEmpty()) {
             gui.setItem(22, GuiItem(menuUI.isEmptyItem()))
             gui.open(player)
             return

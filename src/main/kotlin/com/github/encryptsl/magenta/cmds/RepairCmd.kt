@@ -38,21 +38,21 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
             return player.sendMessage(magenta.locale.translation("magenta.command.repair.error.empty.hand"))
 
         val timeLeft = user.getRemainingCooldown("repair")
-        if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT) && delay != 0L)
+        if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_BYPASS) && delay != 0L)
             return magenta.commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
         val response = EconomyWithdraw(player, "dollars", cost)
             .transaction(magenta.vaultUnlockedHook)
 
         if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
-            return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+            return magenta.commandHelper.trader.notEnoughDollars(player)
 
         if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
-            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT)) {
+            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_BYPASS)) {
                 user.setDelay(Duration.ofSeconds(delay), "repair")
             }
 
-            player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+            magenta.commandHelper.trader.successTradeWithDraw(player, cost)
             magenta.commandHelper.repairItemFromHand(player)
         }
     }
@@ -71,20 +71,20 @@ class RepairCmd(private val magenta: Magenta) : AnnotationFeatures {
             return player.sendMessage(magenta.locale.translation("magenta.command.repair.error.empty.inventory"))
 
         val timeLeft = user.getRemainingCooldown("repair")
-        if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT))
+        if (user.hasDelay("repair") && !player.hasPermission(Permissions.REPAIR_DELAY_BYPASS))
             return magenta.commandHelper.delayMessage(player, "magenta.command.repair.error.delay", timeLeft)
 
         val response = EconomyWithdraw(player, "dollars", cost)
             .transaction(magenta.vaultUnlockedHook)
 
         if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
-            return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+            return magenta.commandHelper.trader.notEnoughDollars(player)
 
         if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
-            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_EXEMPT)) {
+            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.REPAIR_DELAY_BYPASS)) {
                 user.setDelay(Duration.ofSeconds(delay), "repair")
             }
-            player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+            magenta.commandHelper.trader.successTradeWithDraw(player, cost)
             magenta.commandHelper.repairItems(player)
 
             player.sendMessage(magenta.locale.translation("magenta.command.repair.success.all"))

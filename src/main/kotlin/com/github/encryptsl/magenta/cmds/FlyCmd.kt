@@ -33,7 +33,7 @@ class FlyCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command enable or disable other player flying")
     fun onFlyTarget(commandSender: CommandSender, @Argument(value = "target", suggestions = "players") target: Player) {
 
-        if (!commandSender.hasPermission(Permissions.FLY_BYPASS_EXEMPT) && target.hasPermission(Permissions.FLY_MODIFY_EXEMPT)) return
+        if (!commandSender.hasPermission(Permissions.FLY_MODIFY_EXEMPT_BYPASS) && target.hasPermission(Permissions.FLY_MODIFY_EXEMPT)) return
 
         magenta.commandHelper.allowFly(commandSender, target)
     }

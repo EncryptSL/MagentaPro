@@ -99,7 +99,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
 
         val timeLeft: Duration = user.getRemainingCooldown("kits.$kitName")
 
-        if (user.hasDelay("kits.$kitName") && !player.hasPermission(Permissions.KIT_DELAY_EXEMPT))
+        if (user.hasDelay("kits.$kitName") && !player.hasPermission(Permissions.KIT_DELAY_BYPASS))
             return commandHelper.delayMessage(player, "magenta.command.kit.error.delay", timeLeft)
 
         try {
@@ -109,7 +109,7 @@ class KitListeners(private val magenta: Magenta) : Listener {
                 return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
 
             if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
-                if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.KIT_DELAY_EXEMPT)) {
+                if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.KIT_DELAY_BYPASS)) {
                     user.setDelay(Duration.ofSeconds(delay), "kits.$kitName")
                 }
                 player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))

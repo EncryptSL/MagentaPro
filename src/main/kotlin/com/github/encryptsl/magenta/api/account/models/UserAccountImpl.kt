@@ -97,13 +97,20 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
 
     override fun set(path: String, value: Any?) {
         getAccount().set(path, value)
+        save()
     }
 
     override fun set(path: MutableMap<String, Any>) {
         for (i in path) { getAccount().set(i.key, i.value) }
+        save()
     }
 
     override fun set(path: String, list: MutableList<Any>) {
         getAccount().set(path, list)
+        save()
+    }
+
+    override fun save() {
+        universalConfig.save()
     }
 }

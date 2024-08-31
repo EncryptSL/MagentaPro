@@ -34,7 +34,7 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
 
         val timeLeft = user.getRemainingCooldown("heal")
 
-        if (user.hasDelay("heal") && !player.hasPermission(Permissions.HEAL_DELAY_EXEMPT)) {
+        if (user.hasDelay("heal") && !player.hasPermission(Permissions.HEAL_DELAY_BYPASS)) {
             return magenta.commandHelper.delayMessage(player, "magenta.command.heal.error.delay", timeLeft)
         }
 
@@ -42,15 +42,15 @@ class HealCmd(private val magenta: Magenta) : AnnotationFeatures {
             .transaction(magenta.vaultUnlockedHook)
 
         if (response == EconomyTransactionResponse.ERROR_ENOUGH_BALANCE && cost != BigDecimal.ZERO)
-            return player.sendMessage(magenta.locale.translation("magenta.error.not.enough.balance.to.use.command"))
+            return magenta.commandHelper.trader.notEnoughDollars(player)
 
 
         if (response == EconomyTransactionResponse.SUCCESS || response == null || cost == BigDecimal.ZERO) {
-            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HEAL_DELAY_EXEMPT)) {
+            if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.HEAL_DELAY_BYPASS)) {
                 user.setDelay(Duration.ofSeconds(delay), "heal")
             }
 
-            player.sendMessage(magenta.locale.translation("magenta.success.economy.withdraw", Placeholder.parsed("cost", cost.toPlainString())))
+            magenta.commandHelper.trader.successTradeWithDraw(player, cost)
             player.sendMessage(magenta.locale.translation("magenta.command.heal"))
             player.health = 20.0
             player.foodLevel = 20

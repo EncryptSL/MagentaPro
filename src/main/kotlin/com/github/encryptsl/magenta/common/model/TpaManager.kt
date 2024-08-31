@@ -32,7 +32,7 @@ class TpaManager(private val magenta: Magenta) {
         val user = magenta.user.getUser(requester.uniqueId)
         val delay = magenta.config.getLong("teleport-cooldown", 0)
 
-        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.TPA_DELAY_EXEMPT)) {
+        if (delay != 0L && delay != -1L || !player.hasPermission(Permissions.TPA_DELAY_BYPASS)) {
             user.setDelay(Duration.ofSeconds(delay), "commands.tpa")
         }
 

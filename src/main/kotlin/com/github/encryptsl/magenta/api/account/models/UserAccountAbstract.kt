@@ -16,7 +16,7 @@ import java.util.*
 
 abstract class UserAccountAbstract(private val uuid: UUID) : Account {
 
-    private val universalConfig = UniversalConfig("${Magenta.instance.path}/players/$uuid.yml")
+    val universalConfig = UniversalConfig("${Magenta.instance.path}/players/$uuid.yml")
     private val voteAPI: MagentaVoteAPI by lazy { MagentaVoteAPI() }
 
     override fun getGameMode(): GameMode {
@@ -116,9 +116,5 @@ abstract class UserAccountAbstract(private val uuid: UUID) : Account {
 
     override fun getAccount(): FileConfiguration {
         return universalConfig.getConfig()
-    }
-
-    override fun save() {
-        universalConfig.save()
     }
 }
