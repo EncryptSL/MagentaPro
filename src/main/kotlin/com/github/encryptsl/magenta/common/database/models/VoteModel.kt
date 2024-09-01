@@ -6,6 +6,7 @@ import com.github.encryptsl.magenta.common.database.sql.VoteSQL
 import com.github.encryptsl.magenta.common.database.tables.VoteTable
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.last_vote
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.serviceName
+import com.github.encryptsl.magenta.common.database.tables.VoteTable.username
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.uuid
 import com.github.encryptsl.magenta.common.database.tables.VoteTable.vote
 import org.jetbrains.exposed.sql.*
@@ -84,12 +85,12 @@ class VoteModel : VoteSQL {
     override fun getUserVotesByUUIDAndService(uuid: UUID, serviceName: String): CompletableFuture<VoteEntity> {
         val future = CompletableFuture<VoteEntity>()
         transaction {
-            val row = VoteTable.select(VoteTable.username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
+            val row = VoteTable.select(username, VoteTable.uuid, vote, VoteTable.serviceName, last_vote)
                 .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName)).firstOrNull()
             if (row == null) {
                 future.completeExceptionally(RuntimeException("Votes by service and uuid not found !"))
             } else {
-                future.completeAsync { VoteEntity(row[VoteTable.username], UUID.fromString(row[VoteTable.uuid]), row[vote], row[VoteTable.serviceName], row[last_vote]) }
+                future.completeAsync { VoteEntity(row[username], UUID.fromString(row[VoteTable.uuid]), row[vote], row[VoteTable.serviceName], row[last_vote]) }
             }
         }
         return future
@@ -141,8 +142,8 @@ class VoteModel : VoteSQL {
     }
 
     override fun topVotes(): MutableMap<String, Int> = transaction {
-        VoteTable.selectAll().orderBy(vote, SortOrder.DESC).associate {
-            it[VoteTable.username] to getUserVotesByUUID(UUID.fromString(it[uuid])).join()
+        VoteTable.selectAll().groupBy(username).orderBy(vote, SortOrder.DESC).associate {
+            it[username] to getUserVotesByUUID(UUID.fromString(it[uuid])).join()
         }.toMutableMap()
     }
 }
