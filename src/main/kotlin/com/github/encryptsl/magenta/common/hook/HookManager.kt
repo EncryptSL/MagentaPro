@@ -19,14 +19,14 @@ class HookManager(private val magenta: Magenta) {
 
     fun hookPlugins() {
         MythicMobsListener(magenta).runIfSuccess {
-            magenta.logger.info("MythicMobs Found Hook Success")
             magenta.pluginManager.registerEvents(MythicMobsListener(magenta), magenta)
+            magenta.logger.info("MythicMobs Found Hook Success")
         }.runIfElse {
             magenta.logger.warning("MythicMobs not found, you can't use damage rewarding !")
         }
         OraxenListener(magenta).runIfSuccess {
-            magenta.logger.info("Oraxen found, now you can allow or ban item in worlds.")
             magenta.pluginManager.registerEvents(OraxenListener(magenta), magenta)
+            magenta.logger.info("Oraxen found, now you can allow or ban item in worlds.")
         }.runIfElse {
             magenta.logger.warning("Oraxen not found, you can't allow or ban item in worlds !")
         }
@@ -46,17 +46,18 @@ class HookManager(private val magenta: Magenta) {
             magenta.logger.warning("VaultUnlocked not found, please download !")
         }
         MagentaMiniPlaceholders(magenta).runIfSuccess {
-            magenta.logger.info("MiniPlaceholders found, placeholders are registered !")
             MagentaMiniPlaceholders(magenta).register()
+            magenta.logger.info("MiniPlaceholders found, placeholders are registered !")
         }.runIfElse {
             magenta.logger.warning("Warning plugin MiniPlaceholders not found !")
             magenta.logger.warning("Keep in mind without MiniPlaceholders, you can't use MagentaPro MiniPlaceholders.")
         }
-        VotifierListener(magenta).runIfSuccess {
-            magenta.logger.info("NuVotifier found hook success !")
+        try {
+            Class.forName("com.vexsoftware.votifier.model.VotifierEvent")
             magenta.pluginManager.registerEvents(VotifierListener(magenta), magenta)
-        }.runIfElse {
-            magenta.logger.warning("NuVotifier not found, rewarding from voting not working now !")
+            magenta.logger.info("Votifier, VotifierPlus or NuVotifier found hook success !")
+        } catch (e : ClassNotFoundException) {
+            magenta.logger.warning("Votifier, VotifierPlus or NuVotifier not found, rewarding from voting not working now !")
         }
         hookPAPI()
     }

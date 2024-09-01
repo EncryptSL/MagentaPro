@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.common.hook.nuvotifier
 
-import com.github.encryptsl.kmono.lib.api.hook.PluginHook
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerStartedEvent
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
@@ -13,7 +12,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
-class VotifierListener(private val magenta: Magenta) : PluginHook("Votifier"), Listener {
+class VotifierListener(private val magenta: Magenta) : Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     fun onVote(event: VotifierEvent) {
