@@ -40,7 +40,6 @@ dependencies {
         exclude("com.google")
     }
     compileOnly("com.zaxxer:HikariCP:5.1.0")
-    compileOnly(":VotifierPlus")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.5")
