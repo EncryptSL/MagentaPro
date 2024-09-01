@@ -41,6 +41,7 @@ dependencies {
     }
     compileOnly("com.zaxxer:HikariCP:5.1.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("com.vexsoftware:nuvotifier-universal:2.7.2")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.5")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
