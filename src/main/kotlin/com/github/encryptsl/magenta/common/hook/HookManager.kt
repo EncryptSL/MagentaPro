@@ -7,6 +7,7 @@ import com.github.encryptsl.magenta.common.hook.mythicmobs.MythicMobsListener
 import com.github.encryptsl.magenta.common.hook.nuvotifier.VotifierListener
 import com.github.encryptsl.magenta.common.hook.oraxen.OraxenListener
 import com.github.encryptsl.magenta.common.hook.placeholderapi.MagentaPlaceholderAPI
+import com.github.encryptsl.magenta.common.hook.plugins.nuvotifier.VotifierPlusListener
 import com.github.encryptsl.magenta.common.hook.plugins.vaultunlocked.VaultUnlockedHook
 import com.github.encryptsl.magenta.common.hook.vault.VaultHook
 import org.bukkit.Bukkit
@@ -57,6 +58,12 @@ class HookManager(private val magenta: Magenta) {
             magenta.pluginManager.registerEvents(VotifierListener(magenta), magenta)
         }.runIfElse {
             magenta.logger.warning("NuVotifier not found, rewarding from voting not working now !")
+        }
+        VotifierPlusListener(magenta).runIfSuccess {
+            magenta.logger.info("VotifierPlus found hook success !")
+            magenta.pluginManager.registerEvents(VotifierListener(magenta), magenta)
+        }.runIfElse {
+            magenta.logger.warning("VotifierPlus not found, rewarding from voting not working now !")
         }
         hookPAPI()
     }

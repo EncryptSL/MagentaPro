@@ -10,14 +10,18 @@ description = providers.gradleProperty("plugin_description").get()
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://jitpack.io")
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io")
     maven("https://mvn.lumine.io/repository/maven-public/")
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.oraxen.com/releases")
     maven("https://repo.codemc.io/repository/maven-public/") //VaultUnlockedAPI
+    maven("https://nexus.bencodez.com/repository/maven-public/")
     maven("https://nexuslite.gcnt.net/repos/other/")
+    flatDir {
+        dirs("libs")
+    }
 }
 
 kotlin {
@@ -36,7 +40,7 @@ dependencies {
         exclude("com.google")
     }
     compileOnly("com.zaxxer:HikariCP:5.1.0")
-    compileOnly("com.github.NuVotifier:NuVotifier:2.7.2")
+    compileOnly(":VotifierPlus")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.5")
