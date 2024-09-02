@@ -28,13 +28,15 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
     @CommandDescription("This command send your level progress")
     fun onLevel(player: Player) {
         try {
-            magenta.levelAPI.getUserByUUID(player.uniqueId).thenApply {
+            magenta.levelAPI.getUserByUUID(player.uniqueId).thenAccept {
                 magenta.commandHelper.showLevelProgress(player, it.level, it.experience)
             }.exceptionally {
                 player.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
                     Placeholder.parsed("player", player.name)
                 ))
-            }
+
+                return@exceptionally null
+            }.join()
         } catch (e : Exception) {
             player.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -51,13 +53,15 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "players") target: OfflinePlayer
     ) {
         try {
-            magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
+            magenta.levelAPI.getUserByUUID(target.uniqueId).thenAccept {
                 magenta.commandHelper.showLevelProgress(commandSender, it.level, it.experience)
             }.exceptionally {
                 commandSender.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
                     Placeholder.parsed("player", target.name.toString())
                 ))
-            }
+
+                return@exceptionally null
+            }.join()
         } catch (e : IllegalArgumentException) {
             commandSender.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -101,7 +105,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
             for (component in paginator.display()) {
                 commandSender.sendMessage(component)
             }
-        }
+        }.join()
         commandSender.sendMessage(
             magenta.locale.translation("magenta.command.level.top.footer")
         )

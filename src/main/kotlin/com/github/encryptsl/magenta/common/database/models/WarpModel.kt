@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.Permissions
 import com.github.encryptsl.magenta.common.database.entity.WarpEntity
 import com.github.encryptsl.magenta.common.database.sql.WarpSQL
@@ -10,6 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture
 class WarpModel(private val plugin: Plugin) : WarpSQL {
 
     override fun creteWarp(player: Player, location: Location, warpName: String) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 WarpTable.insertIgnore {
                     it[username] = player.name
@@ -37,19 +37,19 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun deleteWarp(warpName: String) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { WarpTable.deleteWhere { WarpTable.warpName eq warpName } }
         }
     }
 
     override fun deleteWarp(uuid: UUID, warpName: String) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { WarpTable.deleteWhere { (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName) } }
         }
     }
 
     override fun moveWarp(warpName: String, location: Location) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { WarpTable.update( { WarpTable.warpName eq warpName }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -62,7 +62,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun moveWarp(uuid: UUID, warpName: String, location: Location) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { WarpTable.update( { (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName) }) {
                 it[world] = location.world.name
                 it[x] = location.x.toInt()
@@ -75,7 +75,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun renameWarp(oldWarpName: String, newWarpName: String) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 WarpTable.update({ WarpTable.warpName eq oldWarpName }) {
                     it[warpName] = newWarpName
@@ -85,7 +85,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun renameWarp(uuid: UUID, oldWarpName: String, newWarpName: String) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 WarpTable.update({ (WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq oldWarpName) }) {
                     it[warpName] = newWarpName
@@ -95,7 +95,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun setWarpIcon(uuid: UUID, warpName: String, icon: String) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 WarpTable.update({(WarpTable.uuid eq uuid.toString()) and (WarpTable.warpName eq warpName)}) {
                     it[warpIcon] = icon
@@ -106,37 +106,44 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
 
 
     override fun getWarpExist(warpName: String): CompletableFuture<Boolean> {
-        val future = CompletableFuture<Boolean>()
-        val boolean = transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
-        return future.completeAsync { boolean }
+        val future: CompletableFuture<Boolean> = CompletableFuture.supplyAsync {
+            val boolean = transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
+
+            return@supplyAsync boolean
+        }
+
+        return future
     }
 
     override fun canSetWarp(player: Player): CompletableFuture<Boolean> {
-        val future = CompletableFuture<Boolean>()
+        val future: CompletableFuture<Boolean> = CompletableFuture.supplyAsync {
+            val createdWarpsCount = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() }
 
-        val createdWarpsCount = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() }
+            if (player.hasPermission(Permissions.WARPS_UNLIMITED)) {
+                return@supplyAsync true
+            }
 
-        if (player.hasPermission(Permissions.WARPS_UNLIMITED)) {
-            return CompletableFuture.completedFuture(true)
+            val section = plugin.config.getConfigurationSection("warps.groups") ?: return@supplyAsync false
+
+            val max = section.getKeys(false).filter { player.hasPermission(Permissions.WARPS_LIMIT.format(it)) }.map { section.getInt(it) }.first()
+
+            if (max == -1) return@supplyAsync false
+
+            return@supplyAsync !(createdWarpsCount >= max)
         }
 
-        val section = plugin.config.getConfigurationSection("warps.groups") ?: return CompletableFuture.completedFuture(false)
-
-        val max = section.getKeys(false).filter { player.hasPermission(Permissions.WARPS_LIMIT.format(it)) }.map { section.getInt(it) }.first()
-
-        if (max == -1) return CompletableFuture.completedFuture(true)
-
-        return future.completeAsync { !(createdWarpsCount >= max) }
+        return future
     }
 
     override fun getWarpByName(warpName: String): CompletableFuture<WarpEntity> {
-        val future = CompletableFuture<WarpEntity>()
-        transaction {
-            val warp = WarpTable.selectAll().where(WarpTable.warpName eq warpName).firstOrNull()
-            if (warp == null) {
-                future.completeExceptionally(RuntimeException("Warp not found !"))
-            } else {
-                future.completeAsync { rowResultToWarpEntity(warp) }
+        val future: CompletableFuture<WarpEntity> = CompletableFuture.supplyAsync {
+            transaction {
+                try {
+                    val warp = WarpTable.selectAll().where(WarpTable.warpName eq warpName).first()
+                    rowResultToWarpEntity(warp)
+                } catch (e : ExposedSQLException) {
+                    throw RuntimeException("Warp not found !")
+                }
             }
         }
         return future
@@ -150,15 +157,18 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun getWarpsByOwner(uuid: UUID): CompletableFuture<List<WarpEntity>> {
-        val future = CompletableFuture<List<WarpEntity>>()
-        val map = transaction { WarpTable.selectAll().where(WarpTable.uuid eq uuid.toString()).mapNotNull { rowResultToWarpEntity(it) } }
-        return future.completeAsync { map }
+        val future: CompletableFuture<List<WarpEntity>> = CompletableFuture.supplyAsync {
+            transaction { WarpTable.selectAll().where(WarpTable.uuid eq uuid.toString()).mapNotNull { rowResultToWarpEntity(it) } }
+        }
+
+        return future
     }
 
     override fun getWarps(): CompletableFuture<List<WarpEntity>> {
-        val future = CompletableFuture<List<WarpEntity>>()
-        val map = transaction { WarpTable.selectAll().mapNotNull {rowResultToWarpEntity(it)} }
-        return future.completeAsync { map }
+        val future: CompletableFuture<List<WarpEntity>> = CompletableFuture.supplyAsync {
+            transaction { WarpTable.selectAll().mapNotNull {rowResultToWarpEntity(it)} }
+        }
+        return future
     }
 
     private fun rowResultToWarpEntity(row: ResultRow): WarpEntity {

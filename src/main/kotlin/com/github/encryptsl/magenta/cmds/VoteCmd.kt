@@ -94,7 +94,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
 
         val format = magenta.config.getString("votifier.voteparty.format") ?: return
 
-        magenta.voteParty.getVoteParty().thenApply { voteParty ->
+        magenta.voteParty.getVoteParty().thenAccept { voteParty ->
             commandSender.sendMessage(ModernText.miniModernText(format, TagResolver.resolver(
                 Placeholder.parsed("remaining_votes", startAt.minus(voteParty.currentVotes).toString()),
                 Placeholder.parsed("current_votes", voteParty.currentVotes.toString()),
@@ -105,7 +105,9 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         }.exceptionally { ex ->
             commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", ex.message ?: ex.localizedMessage)))
             magenta.logger.severe(ex.message ?: ex.localizedMessage)
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("voteparty|vparty|vp set <votes>")
@@ -115,13 +117,15 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.error"))
 
-        magenta.voteParty.getVoteParty().thenApply {
+        magenta.voteParty.getVoteParty().thenAccept {
             magenta.voteParty.updateParty(votes)
             commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.success.set", Placeholder.parsed("votes", votes.toString())))
         }.exceptionally { ex ->
             commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", ex.message ?: ex.localizedMessage)))
             magenta.logger.severe(ex.message ?: ex.localizedMessage)
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("voteparty|vparty|vp reset")
@@ -131,12 +135,14 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
         if (!magenta.config.getBoolean("votifier.voteparty.enabled"))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.error"))
 
-        magenta.voteParty.getVoteParty().thenApply {
+        magenta.voteParty.getVoteParty().thenAccept {
             magenta.voteParty.resetParty()
             commandSender.sendMessage(magenta.locale.translation("magenta.command.voteparty.success.reset"))
         }.exceptionally { ex ->
             commandSender.sendMessage(magenta.locale.translation("magenta.exception", Placeholder.parsed("exception", ex.message ?: ex.localizedMessage)))
             magenta.logger.severe(ex.message ?: ex.localizedMessage)
-        }
+
+            return@exceptionally null
+        }.join()
     }
 }

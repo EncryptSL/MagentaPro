@@ -41,7 +41,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
-        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
+        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenAccept {
             magenta.vote.addVote(VoteEntity(target.name.toString(), target.uniqueId, amount, service, Instant.fromEpochMilliseconds(System.currentTimeMillis())))
             commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.votes.success.add", TagResolver.resolver(
@@ -54,7 +54,9 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("player", target.name.toString()),
                     Placeholder.parsed("service", service)
             )))
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("votes set <service> <player> <amount>")
@@ -66,7 +68,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
-        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
+        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenAccept {
             magenta.vote.setVote(target.uniqueId, service, amount)
             commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.votes.success.set", TagResolver.resolver(
@@ -80,7 +82,8 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("player", target.name.toString()),
                     Placeholder.parsed("service", service)
                 )))
-        }
+            return@exceptionally null
+        }.join()
     }
 
     @Command("votes reset player <player>")
@@ -90,7 +93,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         commandSender: CommandSender,
         @Argument(value = "player", suggestions = "players") target: OfflinePlayer
     ) {
-        magenta.vote.getUserVotesByUUID(target.uniqueId).thenApply {
+        magenta.vote.getUserVotesByUUID(target.uniqueId).thenAccept {
             magenta.vote.resetVotes(target.uniqueId)
             commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.votes.success.reset",
@@ -102,7 +105,9 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("player", target.name.toString()),
                     Placeholder.parsed("service", "")
                 )))
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("votes reset all")
@@ -123,7 +128,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
-        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenApply {
+        magenta.vote.getUserVotesByUUIDAndService(target.uniqueId, service).thenAccept {
             magenta.vote.removeVote(target.uniqueId, service, amount)
             commandSender.sendMessage(
                 magenta.locale.translation("magenta.command.votes.success.remove", TagResolver.resolver(
@@ -137,7 +142,9 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("player", target.name.toString()),
                     Placeholder.parsed("service", service)
                 )))
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("votes remove all")

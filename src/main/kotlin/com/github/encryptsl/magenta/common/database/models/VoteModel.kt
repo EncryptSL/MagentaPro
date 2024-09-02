@@ -1,6 +1,5 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
 import com.github.encryptsl.magenta.common.database.sql.VoteSQL
 import com.github.encryptsl.magenta.common.database.tables.VoteTable
@@ -19,7 +18,7 @@ import java.util.concurrent.CompletableFuture
 
 class VoteModel : VoteSQL {
     override fun createAccount(voteImpl: VoteEntity) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 VoteTable.insertIgnore {
                     it[username] = voteImpl.username
@@ -33,25 +32,23 @@ class VoteModel : VoteSQL {
     }
 
     override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> {
-        val future = CompletableFuture<Boolean>()
         val boolean = transaction { !VoteTable.select(VoteTable.uuid).where(VoteTable.uuid eq uuid.toString()).empty() }
-        return future.completeAsync { boolean }
+        return CompletableFuture.supplyAsync { boolean }
     }
 
     override fun hasAccount(uuid: UUID, serviceName: String): CompletableFuture<Boolean> {
-        val future = CompletableFuture<Boolean>()
         val boolean = transaction {
             !VoteTable
                 .select(VoteTable.uuid, VoteTable.serviceName)
                 .where((VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName))
                 .empty()
         }
-        return future.completeAsync { boolean }
+        return CompletableFuture.supplyAsync { boolean }
     }
 
 
     override fun addVote(voteImpl: VoteEntity) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 VoteTable.update({ (uuid eq voteImpl.uuid.toString()) and (serviceName eq voteImpl.serviceName) }) {
                     it[username] = voteImpl.username
@@ -63,7 +60,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun setVote(uuid: UUID, serviceName: String, amount: Int) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 VoteTable.update ({ (VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName) }) {
                     it[vote] = amount
@@ -73,7 +70,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun removeVote(uuid: UUID, serviceName: String, amount: Int) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 VoteTable.update ({ (VoteTable.uuid eq uuid.toString()) and (VoteTable.serviceName eq serviceName) }) {
                     it[vote] = vote.minus(amount)
@@ -97,15 +94,14 @@ class VoteModel : VoteSQL {
     }
 
     override fun getUserVotesByUUID(uuid: UUID): CompletableFuture<Int> {
-        val future = CompletableFuture<Int>()
-        val user = transaction {
+        val votes = transaction {
             VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString()).groupBy(vote).sumOf { row -> row[vote] }
         }
-        return future.completeAsync { user }
+        return CompletableFuture.supplyAsync { votes }
     }
 
     override fun removeAccount(uuid: UUID) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 VoteTable.deleteWhere { (VoteTable.uuid eq uuid.toString()) }
             }
@@ -113,7 +109,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun resetVotes(uuid: UUID) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction {
                 VoteTable.update({ VoteTable.uuid eq uuid.toString() }) {
                     it[vote] = 0
@@ -123,7 +119,7 @@ class VoteModel : VoteSQL {
     }
 
     override fun resetVotes() {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { VoteTable.selectAll().forEach {
                 it[vote] = 0
             } }
@@ -131,14 +127,13 @@ class VoteModel : VoteSQL {
     }
 
     override fun deleteAll() {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { VoteTable.deleteAll() }
         }
     }
     override fun totalVotes(): CompletableFuture<Int> {
-        val future = CompletableFuture<Int>()
         val int = transaction { VoteTable.selectAll().sumOf { row -> row[vote] } }
-        return future.completeAsync { int }
+        return CompletableFuture.supplyAsync { int }
     }
 
     override fun topVotes(): MutableMap<String, Int> = transaction {

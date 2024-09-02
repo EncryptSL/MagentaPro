@@ -1,7 +1,6 @@
 package com.github.encryptsl.magenta.cmds
 
 import com.github.encryptsl.kmono.lib.api.commands.AnnotationFeatures
-import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotation.specifier.Range
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.annotations.*
 import com.github.encryptsl.kmono.lib.dependencies.incendo.cloud.paper.LegacyPaperCommandManager
 import com.github.encryptsl.kmono.lib.extensions.experienceFormula
@@ -33,9 +32,9 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (amount >= magenta.config.getInt("level.level_limit"))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.reached"))
 
-        magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
+        magenta.levelAPI.getUserByUUID(target.uniqueId).thenAccept {
             if (it.level >= magenta.config.getInt("level.level_limit"))
-                return@thenApply commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.reached"))
+                return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.reached"))
 
             magenta.levelAPI.addLevel(target.uniqueId, amount)
             target.player?.sendMessage(
@@ -55,7 +54,9 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                 magenta.locale.translation("magenta.command.level.error.not.account",
                     Placeholder.parsed("player", target.name.toString()))
             )
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("levels set <player> <amount> level")
@@ -66,18 +67,12 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "player", suggestions = "players") target: OfflinePlayer,
         @Argument(value = "amount") amount: Int
     ) {
-        if (!magenta.levelAPI.hasAccount(target.uniqueId))
-            return commandSender.sendMessage(
-                magenta.locale.translation("magenta.command.level.error.not.account",
-                Placeholder.parsed("player", target.name.toString())
-            ))
-
         if (amount > magenta.config.getInt("level.level_limit"))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.reached"))
 
-        magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
+        magenta.levelAPI.getUserByUUID(target.uniqueId).thenAccept {
             if (it.level >= magenta.config.getInt("level.level_limit") && amount > 1)
-                return@thenApply commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.reached"))
+                return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.reached"))
 
             magenta.levelAPI.setLevel(target.uniqueId, amount)
             magenta.levelAPI.setExperience(target.uniqueId, 0)
@@ -98,7 +93,9 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                 magenta.locale.translation("magenta.command.level.error.not.account",
                     Placeholder.parsed("player", target.name.toString())
                 ))
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("levels add <player> <amount> points [silent]")
@@ -111,18 +108,12 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
         @Argument(value = "silent") @Default("false") silent: Boolean
     ) {
 
-        if (!magenta.levelAPI.hasAccount(target.uniqueId))
-            return commandSender.sendMessage(
-                magenta.locale.translation("magenta.command.level.error.not.account",
-                Placeholder.parsed("player", target.name.toString())
-            ))
-
         if (amount >= experienceFormula(magenta.config.getInt("level.level_limit")))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.points.reached"))
 
-        magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
+        magenta.levelAPI.getUserByUUID(target.uniqueId).thenAccept {
             if (it.experience >= experienceFormula(magenta.config.getInt("level.level_limit")))
-                return@thenApply commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.points.reached"))
+                return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.points.reached"))
 
             magenta.levelAPI.addExperience(target.uniqueId, amount)
             commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.success.experience.add.self.other", TagResolver.resolver(
@@ -131,9 +122,11 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
             ))
 
             if (silent) {
-                return@thenApply target.player?.sendMessage(magenta.locale.translation("magenta.command.levels.success.experience.add.silent",
+                target.player?.sendMessage(magenta.locale.translation("magenta.command.levels.success.experience.add.silent",
                         Placeholder.parsed("experience", amount.toString())
                 ))
+
+                return@thenAccept
             }
 
             target.player?.sendMessage(
@@ -147,7 +140,9 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                 magenta.locale.translation("magenta.command.level.error.not.account",
                     Placeholder.parsed("player", target.name.toString())
                 ))
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
     @Command("levels set <player> <amount> points")
@@ -162,9 +157,9 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
         if (amount > experienceFormula(magenta.config.getInt("level.level_limit")))
             return commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.points.reached"))
 
-        magenta.levelAPI.getUserByUUID(target.uniqueId).thenApply {
+        magenta.levelAPI.getUserByUUID(target.uniqueId).thenAccept {
             if (it.experience >= experienceFormula(magenta.config.getInt("level.level_limit")))
-                return@thenApply commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.points.reached"))
+                return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.command.levels.error.max.level.points.reached"))
 
             magenta.levelAPI.setExperience(target.uniqueId, amount)
             target.player?.sendMessage(
@@ -183,7 +178,9 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
             commandSender.sendMessage(magenta.locale.translation("magenta.command.level.error.not.account",
                 Placeholder.parsed("player", target.name.toString())
             ))
-        }
+
+            return@exceptionally null
+        }.join()
     }
 
 }

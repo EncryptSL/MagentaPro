@@ -1,10 +1,10 @@
 package com.github.encryptsl.magenta.common.database.models
 
-import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.VotePartyEntity
 import com.github.encryptsl.magenta.common.database.sql.VotePartySQL
 import com.github.encryptsl.magenta.common.database.tables.VotePartyTable
 import kotlinx.datetime.Clock
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.insert
@@ -28,7 +28,7 @@ class VotePartyModel : VotePartySQL {
     }
 
     override fun updateParty(vote: Int) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { VotePartyTable.update({ VotePartyTable.voteParty eq fieldPartyName }) {
                 it[currentVotes] = currentVotes.plus(vote)
             } }
@@ -36,7 +36,7 @@ class VotePartyModel : VotePartySQL {
     }
 
     override fun partyFinished(winner: String) {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { VotePartyTable.update({VotePartyTable.voteParty eq fieldPartyName}) {
                 it[currentVotes] = 0
                 it[lastVoteParty] = Clock.System.now()
@@ -46,7 +46,7 @@ class VotePartyModel : VotePartySQL {
     }
 
     override fun resetParty() {
-        Magenta.scheduler.impl.runAsync {
+        CompletableFuture.runAsync {
             transaction { VotePartyTable.update({ VotePartyTable.voteParty eq fieldPartyName }) {
                 it[currentVotes] = 0
                 it[lastVoteParty] = null
@@ -56,19 +56,21 @@ class VotePartyModel : VotePartySQL {
     }
 
     override fun getExistTable(): CompletableFuture<Boolean> {
-        val future = CompletableFuture<Boolean>()
-        val boolean = transaction { VotePartyTable.exists() }
-        return future.completeAsync { boolean }
+        val future: CompletableFuture<Boolean> = CompletableFuture.supplyAsync {
+            transaction { VotePartyTable.exists() }
+        }
+        return future
     }
 
     override fun getVoteParty(): CompletableFuture<VotePartyEntity> {
-        val future = CompletableFuture<VotePartyEntity>()
-        transaction {
-            val partyData = VotePartyTable.selectAll().where { VotePartyTable.voteParty eq fieldPartyName }.firstOrNull()
-            if (partyData == null) {
-                future.completeExceptionally(Exception("Vote Party not created or table is empty :'( !"))
-            } else {
-                future.completeAsync { VotePartyEntity(partyData[VotePartyTable.currentVotes], partyData[VotePartyTable.lastVoteParty]?.toEpochMilliseconds() ?: 0L, partyData[VotePartyTable.lastWinnerOfParty] ?: "NEVER") }
+        val future: CompletableFuture<VotePartyEntity> = CompletableFuture.supplyAsync {
+            transaction {
+                try {
+                    val partyData = VotePartyTable.selectAll().where { VotePartyTable.voteParty eq fieldPartyName }.first()
+                    VotePartyEntity(partyData[VotePartyTable.currentVotes], partyData[VotePartyTable.lastVoteParty]?.toEpochMilliseconds() ?: 0L, partyData[VotePartyTable.lastWinnerOfParty] ?: "NEVER")
+                } catch (e : ExposedSQLException) {
+                    throw RuntimeException("Vote Party not created or table is empty :'( !")
+                }
             }
         }
         return future
