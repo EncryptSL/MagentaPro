@@ -47,10 +47,10 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4") {
         constraints {
-            implementation("com.squareup.okio", "okio-jvm", "3.9.0") {
+            compileOnly("com.squareup.okio", "okio-jvm", "3.9.0") {
                 because("CVE")
             }
-            implementation("org.json", "json", "20240303") {
+            compileOnly("org.json", "json", "20240303") {
                 because("CVE")
             }
         }

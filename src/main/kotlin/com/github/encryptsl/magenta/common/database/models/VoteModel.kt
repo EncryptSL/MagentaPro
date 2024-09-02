@@ -97,7 +97,7 @@ class VoteModel : VoteSQL {
 
     override fun getUserVotesByUUID(uuid: UUID): CompletableFuture<Int> {
         return CompletableFuture.supplyAsync {
-            VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString()).groupBy(vote).sumOf { row -> row[vote] }
+            transaction { VoteTable.select(VoteTable.uuid, vote).where(VoteTable.uuid eq uuid.toString()).groupBy(vote).sumOf { row -> row[vote] } }
         }
     }
 
