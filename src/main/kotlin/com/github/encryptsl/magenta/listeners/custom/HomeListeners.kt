@@ -39,7 +39,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
                     player.sendMessage(magenta.locale.translation("magenta.command.home.success.created", Placeholder.parsed("home", homeName)))
                 }
             }.join()
-        }.join()
+        }
     }
 
     @EventHandler
@@ -61,7 +61,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @EventHandler
@@ -89,7 +89,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", homeName)))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @EventHandler
@@ -116,7 +116,7 @@ class HomeListeners(private val magenta: Magenta) : Listener {
             player.sendMessage(magenta.locale.translation("magenta.command.home.error.not.exist", Placeholder.parsed("home", oldHomeName)))
 
             return@exceptionally null
-        }.join()
+        }
     }
     @EventHandler
     fun onHomeTeleport(event: HomeTeleportEvent) {

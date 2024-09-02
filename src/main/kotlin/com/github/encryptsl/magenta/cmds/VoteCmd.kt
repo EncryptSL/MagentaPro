@@ -107,7 +107,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
             magenta.logger.severe(ex.message ?: ex.localizedMessage)
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("voteparty|vparty|vp set <votes>")
@@ -125,7 +125,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
             magenta.logger.severe(ex.message ?: ex.localizedMessage)
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("voteparty|vparty|vp reset")
@@ -143,6 +143,6 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
             magenta.logger.severe(ex.message ?: ex.localizedMessage)
 
             return@exceptionally null
-        }.join()
+        }
     }
 }

@@ -56,7 +56,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
             )))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("votes set <service> <player> <amount>")
@@ -83,7 +83,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
                     Placeholder.parsed("service", service)
                 )))
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("votes reset player <player>")
@@ -107,7 +107,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
                 )))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("votes reset all")
@@ -144,7 +144,7 @@ class VotesCmd(private val magenta: Magenta) : AnnotationFeatures {
                 )))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("votes remove all")

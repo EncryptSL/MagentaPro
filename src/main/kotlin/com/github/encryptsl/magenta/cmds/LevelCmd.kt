@@ -36,7 +36,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
                 ))
 
                 return@exceptionally null
-            }.join()
+            }
         } catch (e : Exception) {
             player.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -61,7 +61,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
                 ))
 
                 return@exceptionally null
-            }.join()
+            }
         } catch (e : IllegalArgumentException) {
             commandSender.sendMessage(magenta.locale.translation("magenta.exception",
                 Placeholder.parsed("exception", e.message ?: e.localizedMessage)
@@ -105,7 +105,7 @@ class LevelCmd(private val magenta: Magenta) : AnnotationFeatures {
             for (component in paginator.display()) {
                 commandSender.sendMessage(component)
             }
-        }.join()
+        }
         commandSender.sendMessage(
             magenta.locale.translation("magenta.command.level.top.footer")
         )

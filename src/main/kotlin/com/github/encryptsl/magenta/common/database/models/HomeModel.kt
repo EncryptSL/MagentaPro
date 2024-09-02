@@ -31,13 +31,13 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
                     it[pitch] = location.pitch
                 }
             }
-        }.join()
+        }
     }
 
     override fun deleteHome(uuid: UUID, home: String) {
         CompletableFuture.runAsync {
             transaction { HomeTable.deleteWhere { (HomeTable.uuid eq uuid) and (HomeTable.home eq home) } }
-        }.join()
+        }
     }
 
     override fun moveHome(uuid: UUID, home: String, location: Location) {
@@ -50,7 +50,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
                 it[yaw] = location.yaw
                 it[pitch] = location.pitch
             } }
-        }.join()
+        }
     }
 
     override fun renameHome(uuid: UUID, oldHomeName: String, newHomeName: String) {
@@ -60,7 +60,7 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
                     it[home] = newHomeName
                 }
             }
-        }.join()
+        }
     }
 
     override fun setHomeIcon(uuid: UUID, home: String, icon: String) {
@@ -68,12 +68,13 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
             transaction { HomeTable.update({HomeTable.uuid eq uuid and (HomeTable.home eq home)}) {
                 it[homeIcon] = icon
             } }
-        }.join()
+        }
     }
 
     override fun getHomeExist(uuid: UUID, home: String): CompletableFuture<Boolean> {
-        val boolean = transaction { !HomeTable.select(HomeTable.home).where(HomeTable.uuid eq uuid and (HomeTable.home eq home)).empty() }
-        return CompletableFuture.supplyAsync { boolean }
+        return CompletableFuture.supplyAsync {
+            transaction { !HomeTable.select(HomeTable.home).where(HomeTable.uuid eq uuid and (HomeTable.home eq home)).empty() }
+        }
     }
 
     override fun canSetHome(player: Player):  CompletableFuture<Boolean> {
@@ -93,8 +94,9 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun getHome(home: String): CompletableFuture<HomeEntity> {
-        val homeRow = transaction { HomeTable.selectAll().where( HomeTable.home eq home).first() }
-        return CompletableFuture.supplyAsync { rowResultToHomeEntity(homeRow) }
+        return CompletableFuture.supplyAsync {
+            return@supplyAsync rowResultToHomeEntity(transaction { HomeTable.selectAll().where( HomeTable.home eq home).first() })
+        }
     }
 
     override fun getHomeByNameAndUUID(uuid: UUID, home: String): CompletableFuture<HomeEntity> {
@@ -113,8 +115,9 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun getHomesByOwner(uuid: UUID): CompletableFuture<List<HomeEntity>> {
-        val homes = transaction { HomeTable.selectAll().where(HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
-        return CompletableFuture.supplyAsync { homes }
+        return CompletableFuture.supplyAsync {
+            transaction { HomeTable.selectAll().where(HomeTable.uuid eq uuid).mapNotNull{rowResultToHomeEntity(it)} }
+        }
     }
 
     override fun toLocation(player: Player, home: String): Location {
@@ -123,8 +126,9 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
     }
 
     override fun getHomes(): CompletableFuture<List<HomeEntity>> {
-        val homes = transaction { HomeTable.selectAll().mapNotNull {rowResultToHomeEntity(it)} }
-        return CompletableFuture.supplyAsync { homes }
+        return CompletableFuture.supplyAsync {
+            transaction { HomeTable.selectAll().mapNotNull {rowResultToHomeEntity(it)} }
+        }
     }
 
     private fun rowResultToHomeEntity(row: ResultRow): HomeEntity {

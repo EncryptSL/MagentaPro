@@ -56,7 +56,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
             )
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("levels set <player> <amount> level")
@@ -95,7 +95,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                 ))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("levels add <player> <amount> points [silent]")
@@ -142,7 +142,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
                 ))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @Command("levels set <player> <amount> points")
@@ -180,7 +180,7 @@ class LevelsCmd(private val magenta: Magenta) : AnnotationFeatures {
             ))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
 }

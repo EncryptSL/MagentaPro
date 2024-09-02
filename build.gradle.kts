@@ -46,8 +46,14 @@ dependencies {
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.5")
     compileOnly("io.lumine:Mythic-Dist:5.3.5")
     compileOnly("club.minnced:discord-webhooks:0.8.4") {
-        exclude("com.squareup.okio", "okio-jvm")
-        exclude("org.json")
+        constraints {
+            implementation("com.squareup.okio", "okio-jvm", "3.9.0") {
+                because("CVE")
+            }
+            implementation("org.json", "json", "20240303") {
+                because("CVE")
+            }
+        }
     }
     compileOnly("com.maxmind.geoip2:geoip2:4.2.0")
     compileOnly("io.th0rgal:oraxen:1.174.0") {

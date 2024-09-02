@@ -46,9 +46,9 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                         player.sendMessage(magenta.locale.translation("magenta.command.warp.success.created", Placeholder.parsed("warp", warpName)))
                     }
                 }
-            }.join()
+            }
             return@exceptionally null
-        }.join()
+        }
     }
 
     @EventHandler
@@ -64,7 +64,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
             player.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", warpName)))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @EventHandler
@@ -107,7 +107,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                         Placeholder.parsed("warp", warpName))
                     )
                     return@exceptionally null
-                }.join()
+                }
             }
         }
     }
@@ -137,7 +137,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
             player.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", warpName)))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @EventHandler
@@ -159,7 +159,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
             player.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", fromWarpName)))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
     @EventHandler
@@ -214,7 +214,7 @@ class WarpListeners(private val magenta: Magenta) : Listener {
                 Placeholder.parsed("warp", warpName)))
 
             return@exceptionally null
-        }.join()
+        }
     }
 
 }

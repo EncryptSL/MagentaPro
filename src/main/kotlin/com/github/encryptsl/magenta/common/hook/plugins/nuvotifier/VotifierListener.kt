@@ -3,6 +3,7 @@ package com.github.encryptsl.magenta.common.hook.nuvotifier
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyPlayerStartedEvent
 import com.github.encryptsl.magenta.common.database.entity.VoteEntity
+import com.github.encryptsl.magenta.common.tasks.VotePartyTask
 import com.vexsoftware.votifier.model.Vote
 import com.vexsoftware.votifier.model.VotifierEvent
 import kotlinx.coroutines.Dispatchers
@@ -120,9 +121,12 @@ class VotifierListener(private val magenta: Magenta) : Listener {
             if (it.currentVotes == magenta.config.getInt("votifier.voteparty.start_at")) {
                 val rewards: MutableList<String> = magenta.config.getStringList("votifier.voteparty.rewards")
                 magenta.pluginManager.callEvent(VotePartyPlayerStartedEvent(player.name.toString()))
-                VoteHelper.startVoteParty(magenta, rewards)
+                Magenta.scheduler.impl.runTimer(VotePartyTask(magenta, rewards), 20, 20)
                 magenta.logger.info("DEBUG: VoteParty started")
             }
+        }.exceptionally {
+            magenta.logger.severe(it.message ?: it.localizedMessage)
+            return@exceptionally null
         }
     }
 

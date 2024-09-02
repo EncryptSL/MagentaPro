@@ -1,5 +1,6 @@
 package com.github.encryptsl.magenta.common.database.models
 
+import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.common.database.entity.LevelEntity
 import com.github.encryptsl.magenta.common.database.sql.LevelSQL
 import com.github.encryptsl.magenta.common.database.tables.LevelTable
@@ -17,37 +18,50 @@ import java.util.concurrent.CompletableFuture
 class LevelModel : LevelSQL {
     override fun createAccount(levelEntity: LevelEntity) {
         CompletableFuture.runAsync {
-            transaction { LevelTable.insertIgnore {
-                it[username] = levelEntity.username
-                it[uuid] = levelEntity.uuid
-                it[level] = levelEntity.level
-                it[experience] = levelEntity.experience
+            transaction { try {
+                LevelTable.insertIgnore {
+                    it[username] = levelEntity.username
+                    it[uuid] = levelEntity.uuid
+                    it[level] = levelEntity.level
+                    it[experience] = levelEntity.experience
+                }
+            } catch (e : ExposedSQLException) {
+                Magenta.instance.logger.severe(e.message ?: e.localizedMessage)
             } }
-        }.join()
+        }
     }
     override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> {
-        val boolean = transaction { !LevelTable.select(LevelTable.uuid).where(LevelTable.uuid eq uuid.toString()).empty() }
-        return CompletableFuture.supplyAsync { boolean }
+        return CompletableFuture.supplyAsync {
+            transaction { !LevelTable.select(LevelTable.uuid).where(LevelTable.uuid eq uuid.toString()).empty() }
+        }
     }
 
     override fun addLevel(uuid: UUID, level: Int) {
         CompletableFuture.runAsync  {
             transaction {
-                LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
-                    it[LevelTable.level] = LevelTable.level plus level
+                try {
+                    LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
+                        it[LevelTable.level] = LevelTable.level plus level
+                    }
+                } catch (e : ExposedSQLException) {
+                    Magenta.instance.logger.severe(e.message ?: e.localizedMessage)
                 }
             }
-        }.join()
+        }
     }
 
     override fun addExperience(uuid: UUID, experience: Int) {
         CompletableFuture.runAsync  {
             transaction {
-                LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
-                    it[LevelTable.experience] = LevelTable.experience plus experience
+                try {
+                    LevelTable.update({LevelTable.uuid eq uuid.toString()}) {
+                        it[LevelTable.experience] = LevelTable.experience plus experience
+                    }
+                } catch (e : ExposedSQLException) {
+                    Magenta.instance.logger.severe(e.message ?: e.localizedMessage)
                 }
             }
-        }.join()
+        }
     }
 
     override fun setLevel(uuid: UUID, level: Int) {
@@ -57,7 +71,7 @@ class LevelModel : LevelSQL {
                     it[LevelTable.level] = level
                 }
             }
-        }.join()
+        }
     }
 
     override fun setExperience(uuid: UUID, experience: Int) {
@@ -67,7 +81,7 @@ class LevelModel : LevelSQL {
                     it[LevelTable.experience] = experience
                 }
             }
-        }.join()
+        }
     }
 
     override fun getUserByUUID(uuid: UUID): CompletableFuture<LevelEntity> {

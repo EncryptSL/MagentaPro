@@ -23,8 +23,8 @@ class CommandListener(private val magenta: Magenta) : Listener {
 
         if (player.hasPermission(Permissions.SOCIAL_SPY_EXEMPT)) return
 
-        val isListed = magenta.stringUtils.inInList("socialspy-commands", command) || magenta.stringUtils.inInList("socialspy-commands", "*")
-        if (!isListed) return
+        if(magenta.stringUtils.inInList("socialspy-commands", command) || magenta.stringUtils.inInList("socialspy-commands", "*"))
+            return
 
         val filteredPlayers = Bukkit.getOnlinePlayers().filter { it.hasPermission(Permissions.SOCIAL_SPY) && magenta.user.getUser(it.uniqueId).isSocialSpy() }
 

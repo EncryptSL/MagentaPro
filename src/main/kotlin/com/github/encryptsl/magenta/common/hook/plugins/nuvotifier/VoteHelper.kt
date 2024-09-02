@@ -4,7 +4,6 @@ import com.github.encryptsl.kmono.lib.api.config.locale.Locale
 import com.github.encryptsl.kmono.lib.extensions.datetime
 import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.events.vote.VotePartyEvent
-import com.github.encryptsl.magenta.common.tasks.VotePartyTask
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
@@ -28,13 +27,6 @@ object VoteHelper {
         val userAccount = magenta.user.getUser(offlinePlayer.uniqueId)
         userAccount.set("depositbox.rewards", rewards)
         magenta.logger.info("Player ${offlinePlayer.name ?: offlinePlayer.uniqueId} vote and rewards are saved because he is offline !")
-    }
-    @JvmStatic
-    fun startVoteParty(
-        magenta: Magenta,
-        commands: MutableList<String>,
-    ) {
-        Magenta.scheduler.impl.runTimer(VotePartyTask(magenta, commands), 20, 20)
     }
 
     @JvmStatic

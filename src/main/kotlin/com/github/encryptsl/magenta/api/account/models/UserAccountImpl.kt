@@ -11,20 +11,22 @@ import java.util.*
 class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
 
     override fun createDefaultData(player: Player) {
-        getAccount().set("teleportenabled", true)
-        getAccount().set("jailed", false)
-        getAccount().set("afk", false)
-        getAccount().set("vanished", false)
-        getAccount().set("ip-address", player.address.address.hostAddress)
-        getAccount().set("socialspy", false)
-        getAccount().set("timestamps.lastteleport", 0)
-        getAccount().set("timestamps.lastheal", 0)
-        getAccount().set("timestamps.jail", 0)
-        getAccount().set("timestamps.onlinejail", 0)
-        getAccount().set("timestamps.logout", 0)
-        getAccount().set("timestamps.login", System.currentTimeMillis())
-        getAccount().set("lastlocation", player.location)
-        save()
+        set(mutableMapOf(
+            "teleportenabled" to false,
+            "jailed" to false,
+            "afk" to false,
+            "vanished" to false,
+            "ip-address" to player.address.address.hostAddress,
+            "socialspy" to false,
+            "timestamps.lastteleport" to 0,
+            "timestamps.lastheal" to 0,
+            "timestamps.jail" to 0,
+            "timestamps.onlinejail" to 0,
+            "timestamps.onlinejail" to 0,
+            "timestamps.logout" to 0,
+            "timestamps.login" to System.currentTimeMillis(),
+            "lastlocation" to player.location
+        ))
     }
 
     override fun saveLastLocation(player: Player) {
