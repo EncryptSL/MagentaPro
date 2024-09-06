@@ -35,7 +35,7 @@ class VoteCmd(val magenta: Magenta) : AnnotationFeatures {
 
         val services = magenta.config.getConfigurationSection("votifier.services")?.getKeys(false) ?: return
 
-        val iterator = services.stream().filter { !it.equals("default") }.iterator()
+        val iterator = services.stream().filter { !it.equals("default") || magenta.config.getBoolean("votifier.services.$it.enabled", true) }.iterator()
 
         while (iterator.hasNext()) {
             val serviceName = iterator.next()

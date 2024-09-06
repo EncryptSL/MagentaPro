@@ -411,11 +411,13 @@ votifier:
   #    in link you can set <username> and this is a placeholder replaced to real player name.
   services:
     Czech-Craft_eu:
+      enabled: false
       link: <hover:show_text:'<hover>'><click:open_url:'https://czech-craft.eu/server/neveland/vote/?user=<username>'><bold><aqua>|</bold>
         <yellow>czech-craft.eu</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
         - crate key give {player} vote 1
     Craftlist_org:
+      enabled: true
       link: <hover:show_text:'<hover>'><click:open_url:'https://craftlist.org/neverland?nick=<username>'><bold><aqua>|</bold>
         <yellow>craftlist.org</yellow> <gray>(<vote>) <aqua>| <green>Klikni zde !</click></hover>
       rewards:
