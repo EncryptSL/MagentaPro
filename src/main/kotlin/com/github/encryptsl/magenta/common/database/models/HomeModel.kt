@@ -79,17 +79,24 @@ class HomeModel(private val plugin: Plugin) : HomeSQL {
 
     override fun canSetHome(player: Player):  CompletableFuture<Boolean> {
         return CompletableFuture.supplyAsync {
-            val createdHomesCount = transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() }
+            val createdHomesCount =
+                transaction { HomeTable.select(HomeTable.uuid).where(HomeTable.uuid eq player.uniqueId).count() }
             if (player.hasPermission(Permissions.HOME_UNLIMITED))
-                return@supplyAsync false
+                return@supplyAsync true
 
             val section = plugin.config.getConfigurationSection("homes.groups") ?: return@supplyAsync false
 
-            val max = section.getKeys(false).filter { player.hasPermission("magenta.homes.$it") }.firstNotNullOf { section.getInt(it) }
+            val group = section.getKeys(false).firstOrNull { player.hasPermission(Permissions.HOME_LIMIT.format(it)) }
 
-            if (max == -1) return@supplyAsync true
+            if (group == null) {
+                return@supplyAsync createdHomesCount < section.getInt("default")
+            } else {
+                if (section.getInt(group) == -1) {
+                    return@supplyAsync true
+                }
 
-            return@supplyAsync !(createdHomesCount >= max)
+                return@supplyAsync createdHomesCount < section.getInt(group)
+            }
         }
     }
 

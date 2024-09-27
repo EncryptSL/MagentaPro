@@ -38,6 +38,7 @@ object Permissions {
     const val REPAIR_DELAY_BYPASS: String = "magenta.repair.delay.bypass"
 
     const val HOME_UNLIMITED: String = "magenta.homes.unlimited"
+    const val HOME_LIMIT: String = "magenta.homes.%s"
     const val HOME_DELAY_BYPASS: String = "magenta.home.delay.bypass"
     const val HOME_WHITELIST_BYPASS: String = "magenta.home.whitelist.bypass"
 

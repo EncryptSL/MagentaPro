@@ -56,10 +56,13 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val warpName = event.warpName
         val player: Player = event.player
         magenta.warpModel.getWarpByName(warpName).thenAccept {
-            if (player.hasPermission(Permissions.WARPS_DELETE_OTHER))
+            if (player.hasPermission(Permissions.WARPS_DELETE_OTHER)) {
                 magenta.warpModel.deleteWarp(warpName)
-            else
+                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
+            } else {
                 magenta.warpModel.deleteWarp(player.uniqueId, warpName)
+                player.sendMessage(magenta.locale.translation("magenta.command.warp.success.deleted", Placeholder.parsed("warp", warpName)))
+            }
         }.exceptionally {
             player.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist", Placeholder.parsed("warp", warpName)))
 
