@@ -1,7 +1,7 @@
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:2.0.20
   - com.github.ben-manes.caffeine:caffeine:3.1.8
-  - com.zaxxer:HikariCP:5.1.0
+  - com.zaxxer:HikariCP:6.0.0
   - org.jetbrains.exposed:exposed-core:0.54.0
   - org.jetbrains.exposed:exposed-jdbc:0.54.0
   - org.jetbrains.exposed:exposed-kotlin-datetime:0.54.0

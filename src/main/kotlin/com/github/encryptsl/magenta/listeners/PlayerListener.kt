@@ -60,7 +60,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             user.set(
                 mutableMapOf(
                     "timestamps.login" to System.currentTimeMillis(),
-                    "ip-address" to player.address.address.hostAddress
+                    "ip-address" to player.address?.address?.hostAddress.toString()
                 )
             )
             TextFilReader.getReadableFile(magenta.dataFolder, "motd.txt").forEach { text ->

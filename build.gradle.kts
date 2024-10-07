@@ -39,7 +39,7 @@ dependencies {
     compileOnly("com.github.ben-manes.caffeine:caffeine:3.1.8") {
         exclude("com.google")
     }
-    compileOnly("com.zaxxer:HikariCP:5.1.0")
+    compileOnly("com.zaxxer:HikariCP:6.0.0")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.vexsoftware:nuvotifier-universal:2.7.2")
     compileOnly("net.luckperms:api:5.4")

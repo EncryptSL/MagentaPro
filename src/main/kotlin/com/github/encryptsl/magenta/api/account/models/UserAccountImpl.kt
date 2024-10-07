@@ -16,7 +16,7 @@ class UserAccountImpl(uuid: UUID) : UserAccountAbstract(uuid) {
             "jailed" to false,
             "afk" to false,
             "vanished" to false,
-            "ip-address" to player.address.address.hostAddress,
+            "ip-address" to player.address?.address?.hostAddress.toString(),
             "socialspy" to false,
             "timestamps.lastteleport" to 0,
             "timestamps.lastheal" to 0,
