@@ -16,7 +16,7 @@ interface WarpSQL {
     fun renameWarp(oldWarpName: String, newWarpName: String)
     fun renameWarp(uuid: UUID, oldWarpName: String, newWarpName: String)
     fun setWarpIcon(uuid: UUID, warpName: String, icon: String)
-    fun getWarpExist(warpName: String): CompletableFuture<Boolean>
+    fun getWarpNotExist(warpName: String): CompletableFuture<Boolean>
     fun canSetWarp(player: Player): CompletableFuture<Boolean>
     fun getWarpByName(warpName: String): CompletableFuture<WarpEntity>
     fun toLocation(warpName: String): Location

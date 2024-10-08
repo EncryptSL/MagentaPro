@@ -105,9 +105,9 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
 
-    override fun getWarpExist(warpName: String): CompletableFuture<Boolean> {
+    override fun getWarpNotExist(warpName: String): CompletableFuture<Boolean> {
         val future: CompletableFuture<Boolean> = CompletableFuture.supplyAsync {
-            val boolean = transaction { !WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
+            val boolean = transaction { WarpTable.select(WarpTable.warpName).where(WarpTable.warpName eq warpName).empty() }
 
             return@supplyAsync boolean
         }
@@ -145,7 +145,7 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
                 try {
                     val warp = WarpTable.selectAll().where(WarpTable.warpName eq warpName).first()
                     rowResultToWarpEntity(warp)
-                } catch (e : ExposedSQLException) {
+                } catch (_ : ExposedSQLException) {
                     throw RuntimeException("Warp not found !")
                 }
             }

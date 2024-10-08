@@ -171,10 +171,6 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val target = event.target
         val warpName = event.warpName
 
-        if (!magenta.warpModel.getWarpExist(warpName).join())
-            return commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist",
-                   Placeholder.parsed("warp", warpName)))
-
         magenta.warpModel.getWarpByName(warpName).thenAccept {
             val location = magenta.warpModel.toLocation(warpName)
             val teleportSelfMessage = magenta.locale.translation("magenta.command.warp.success.teleport.self",

@@ -250,7 +250,7 @@ class PlayerListener(private val magenta: Magenta) : Listener {
             return player.sendMessage(magenta.locale.translation("magenta.sign.warp.error.name.empty"))
         }
 
-        if (!magenta.warpModel.getWarpExist(convertedWarpName).join()) {
+        if (magenta.warpModel.getWarpNotExist(convertedWarpName).join()) {
             block.breakNaturally()
             return player.sendMessage(magenta.locale.translation("magenta.sign.warp.error.not.exist", Placeholder.component("warp", side.line(1))))
         }
