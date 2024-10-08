@@ -140,17 +140,18 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
     }
 
     override fun getWarpByName(warpName: String): CompletableFuture<WarpEntity> {
-        val future: CompletableFuture<WarpEntity> = CompletableFuture.supplyAsync {
-            transaction {
+        return CompletableFuture.supplyAsync<WarpEntity> {
+            val row = transaction {
                 try {
-                    val warp = WarpTable.selectAll().where(WarpTable.warpName eq warpName).first()
-                    rowResultToWarpEntity(warp)
+                    WarpTable.selectAll().where(WarpTable.warpName eq warpName).single()
                 } catch (_ : ExposedSQLException) {
+                    throw RuntimeException("Warp not found !")
+                } catch (_ : RuntimeException) {
                     throw RuntimeException("Warp not found !")
                 }
             }
+            return@supplyAsync rowResultToWarpEntity(row)
         }
-        return future
     }
 
     override fun toLocation(warpName: String): Location {
@@ -158,6 +159,10 @@ class WarpModel(private val plugin: Plugin) : WarpSQL {
             Location(Bukkit.getWorld(rowResult.world), rowResult.x.toDouble(),
                 rowResult.y.toDouble(), rowResult.z.toDouble(), rowResult.yaw, rowResult.pitch)
         }.join()
+    }
+
+    override fun toLocation(warp: WarpEntity): Location {
+        return Location(Bukkit.getWorld(warp.world), warp.x.toDouble(), warp.y.toDouble(), warp.z.toDouble(), warp.yaw, warp.pitch)
     }
 
     override fun getWarpsByOwner(uuid: UUID): CompletableFuture<List<WarpEntity>> {

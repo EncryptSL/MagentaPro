@@ -20,6 +20,7 @@ interface WarpSQL {
     fun canSetWarp(player: Player): CompletableFuture<Boolean>
     fun getWarpByName(warpName: String): CompletableFuture<WarpEntity>
     fun toLocation(warpName: String): Location
+    fun toLocation(warp: WarpEntity): Location
     fun getWarpsByOwner(uuid: UUID): CompletableFuture<List<WarpEntity>>
     fun getWarps(): CompletableFuture<List<WarpEntity>>
 }

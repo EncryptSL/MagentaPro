@@ -67,7 +67,7 @@ class WarpGUI(private val magenta: Magenta) : Menu {
                     ItemCreator(material, 1).setName(itemComponentName).addLore(lore.toMutableList()).create()
                 ).asGuiItem { context ->
                     if (context.isLeftClick || context.isRightClick) {
-                        context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
+                        context.whoClicked.teleport(magenta.warpModel.toLocation(warp))
                     }
                 }
             )

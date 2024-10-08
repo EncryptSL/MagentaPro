@@ -75,7 +75,7 @@ class WarpPlayerGUI(private val magenta: Magenta, private val warpGUI: WarpGUI, 
     private fun getItem(itemStack: ItemStack, warp: WarpEntity): GuiItem {
         return ItemBuilder.from(itemStack).asGuiItem { context ->
             if (context.isLeftClick) {
-                context.whoClicked.teleport(magenta.warpModel.toLocation(warp.warpName))
+                context.whoClicked.teleport(magenta.warpModel.toLocation(warp))
                 return@asGuiItem
             }
             if (context.isRightClick) {

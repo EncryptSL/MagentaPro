@@ -8,9 +8,11 @@ import com.github.encryptsl.magenta.Magenta
 import com.github.encryptsl.magenta.api.InfoType
 import com.github.encryptsl.magenta.api.events.warp.*
 import com.github.encryptsl.magenta.common.Permissions
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import org.bukkit.Location
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -171,49 +173,56 @@ class WarpListeners(private val magenta: Magenta) : Listener {
         val target = event.target
         val warpName = event.warpName
 
+        val teleportSelfMessage = magenta.locale.translation("magenta.command.warp.success.teleport.self",
+            Placeholder.parsed("warp", warpName))
+        val teleportSelfMessageOther = magenta.locale.translation("magenta.command.warp.success.teleport.self.other",
+            TagResolver.resolver(Placeholder.parsed("warp", warpName), Placeholder.parsed("target", target?.name ?: "")))
+
         magenta.warpModel.getWarpByName(warpName).thenAccept {
-            val location = magenta.warpModel.toLocation(warpName)
-            val teleportSelfMessage = magenta.locale.translation("magenta.command.warp.success.teleport.self",
-                Placeholder.parsed("warp", warpName))
-            val teleportSelfMessageOther = magenta.locale.translation("magenta.command.warp.success.teleport.self.other",
-                TagResolver.resolver(Placeholder.parsed("warp", warpName), Placeholder.parsed("target", target?.name ?: "")))
-
+            val location = magenta.warpModel.toLocation(it)
             if (commandSender is Player) {
-                if (target == null) {
-                    if (!BlockUtils.isLocationSafe(magenta.warpModel.toLocation(warpName)))
-                        return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.safe.teleport.self"))
-
-                    commandSender.teleport(location)
-                    commandSender.sendMessage(teleportSelfMessage)
-                    return@thenAccept
-                }
-
-                if (!commandSender.hasPermission(Permissions.WARP_TELEPORT_OTHER)) return@thenAccept
-
-                if (!BlockUtils.isLocationSafe(magenta.warpModel.toLocation(warpName)))
-                    return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.safe.teleport.self.other",
-                        Placeholder.parsed("target", target.name)))
-
-                target.teleport(location)
-                target.sendMessage(teleportSelfMessage)
-                return@thenAccept commandSender.sendMessage(teleportSelfMessageOther)
+                teleportByPlayer(commandSender, target, location, teleportSelfMessage, teleportSelfMessageOther)
+            } else {
+                teleportByCommandSender(commandSender, target, location, teleportSelfMessage)
             }
-
-            if (target != null) {
-                if (!BlockUtils.isLocationSafe(magenta.warpModel.toLocation(warpName)))
-                    return@thenAccept commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.safe.teleport.self.other",
-                        Placeholder.parsed("target", target.name)))
-
-                target.teleport(location)
-                target.sendMessage(teleportSelfMessage)
-            }
-            commandSender.sendMessage(teleportSelfMessage)
         }.exceptionally {
+            commandSender.sendMessage(it.message ?: it.localizedMessage)
             commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.not.exist",
                 Placeholder.parsed("warp", warpName)))
-
             return@exceptionally null
         }
+    }
+
+    private fun teleportByCommandSender(commandSender: CommandSender, target: Player?, location: Location, selfMessage: Component) {
+        if (target != null) {
+            if (!BlockUtils.isLocationSafe(location))
+                return commandSender.sendMessage(magenta.locale.translation("magenta.command.warp.error.safe.teleport.self.other",
+                    Placeholder.parsed("target", target.name)))
+
+            target.teleportAsync(location)
+            target.sendMessage(selfMessage)
+        }
+        commandSender.sendMessage(selfMessage)
+    }
+
+    private fun teleportByPlayer(player: Player, target: Player?, location: Location, selfMessage: Component, teleportSelfMessageOther: Component) {
+        if (target == null) {
+            if (!BlockUtils.isLocationSafe(location))
+                return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.safe.teleport.self"))
+
+            player.teleportAsync(location)
+            return player.sendMessage(selfMessage)
+        }
+
+        if (!player.hasPermission(Permissions.WARP_TELEPORT_OTHER)) return
+
+        if (!BlockUtils.isLocationSafe(location))
+            return player.sendMessage(magenta.locale.translation("magenta.command.warp.error.safe.teleport.self.other",
+                Placeholder.parsed("target", target.name)))
+
+        target.teleportAsync(location)
+        target.sendMessage(selfMessage)
+        player.sendMessage(teleportSelfMessageOther)
     }
 
 }
